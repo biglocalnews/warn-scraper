@@ -11,10 +11,12 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
+root = pathlib.Path(__file__).parent.resolve()
 
 def arizona():
     # '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/arizona_warn_raw.csv'
-    output_csv = pathlib.Path(__file__).parent.resolve() / 'data' / 'arizona_warn_raw.csv'
+    (root / 'data').mkdir(exist_ok=True)
+    output_csv = root / 'data' / 'arizona_warn_raw.csv'
     max_entries = 550 # manually inserted
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 550, otherwise we could be missing data.
     start_row_list = range(1, max_entries, 50)
