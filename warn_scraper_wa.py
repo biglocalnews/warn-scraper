@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -10,8 +11,11 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
+root = pathlib.Path(__file__).parent.resolve()
+
 def washington():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/washington_warn_raw.csv'
+    output_csv = root / 'data' / 'washington_warn_raw.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/washington_warn_raw.csv'
     # pages = range(2, 60, 1)
     page = 2
 
