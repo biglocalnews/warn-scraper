@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -11,9 +12,13 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
-def districtcolumbia():
+root = pathlib.Path(__file__).parent.resolve()
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/districtcolumbia_warn_raw.csv'
+def districtcolumbia():
+    
+    output_csv = root / 'data' / 'districtcolumbia_warn_raw.csv'
+
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/districtcolumbia_warn_raw.csv'
 
     url_12 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202012'
     url_13 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-updated%202013'
