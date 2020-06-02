@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -12,8 +13,11 @@ import re
 # spot-checked and linked-checked
 # scraper looks good
 
+root = pathlib.Path(__file__).parent.resolve()
+
 def tennessee():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
+    output_csv = root / 'data' / 'tennessee_warn_raw.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
     url = 'https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html'
 
     page = requests.get(url)
