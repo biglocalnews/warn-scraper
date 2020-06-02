@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -11,6 +12,8 @@ import json
 Made while loop where page is < 50. Need to check periodically to make sure the data hasn't reached page 55.
 It should be a while, as we are currently on page 44 (5/5/2020).
 """
+root = pathlib.Path(__file__).parent.resolve()
+
 
 # spot-checked and linked-checked
 # scraper looks good - but have to add while loop
@@ -84,8 +87,10 @@ def oregon():
 
     # page range needs to be updated from 55 when there are enough notices for an additional page
     # as of 5/5/2020, this version of the scraper is fine
+        
+    output_csv = root / 'data' / 'oregon_warn_raw.csv'    
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oregon_warn_raw.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oregon_warn_raw.csv'
     # pages = range(1, 44, 1)
     pages = 1
 
