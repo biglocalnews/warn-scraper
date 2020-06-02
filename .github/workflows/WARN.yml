@@ -7,7 +7,7 @@ name: Try to run WARN Scraper/save data
 on:
   schedule:
   - cron:  '31 11 * * *' # figure out which time zone. 
-  push:
+  #push:
     
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
