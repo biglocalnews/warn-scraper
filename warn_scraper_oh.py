@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -10,8 +11,13 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
+root = pathlib.Path(__file__).parent.resolve()
+
+
 def ohio():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/ohio_warn_raw.csv'
+    output_csv = root / 'data' / 'ohio_warn_raw.csv'
+
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/ohio_warn_raw.csv'
     url = 'http://jfs.ohio.gov/warn/current.stm'
     page = requests.get(url)
 
