@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -11,8 +12,13 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
+root = pathlib.Path(__file__).parent.resolve()
+
 def florida():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/florida_warn_raw.csv'
+    
+    output_csv = root / 'data' / 'florida_warn_raw.csv'
+    
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/florida_warn_raw.csv'
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     years = ['2019', '2020']
