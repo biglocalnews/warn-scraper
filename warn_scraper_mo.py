@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -9,8 +10,11 @@ import json
 
 # link-checked and spot-checked, looks good
 
+root = pathlib.Path(__file__).parent.resolve()
+
 def missouri():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
+    output_csv = root / 'data' / 'missouri_warn_raw.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
     years = range(2018, 2014, -1)
 
     url = 'https://jobs.mo.gov/warn2019'
