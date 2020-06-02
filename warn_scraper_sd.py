@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -9,10 +10,12 @@ import json
 
 # spot-checked and linked-checked
 # scraper looks good
+root = pathlib.Path(__file__).parent.resolve()
 
 
 def southdakota():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/southdakota_warn_raw.csv'
+    output_csv = root / 'data' / 'southdakota_warn_raw.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/southdakota_warn_raw.csv'
     url = 'https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx'
     page = requests.get(url)
 
