@@ -1,4 +1,5 @@
 from os import path
+import pathlib
 
 import csv 
 from datetime import datetime
@@ -9,10 +10,12 @@ import json
 
 # spot-checked and linked-checked
 # scraper looks good
+root = pathlib.Path(__file__).parent.resolve()
 
 
 def nebraska():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv'
+    output_csv = root / 'data' / 'nebraska_warn_raw1.csv'
+    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv'
     years = range(2019, 2009, -1)
 
     url = 'https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020'
