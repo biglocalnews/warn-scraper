@@ -34,39 +34,39 @@ from ks_add_affected_employees import add_affected_ks
 
 def main():
 
-    alabama()
-    arizona()
-#     add_links_az()
+#     alabama()
+#     arizona()
+#     add_links_az() #
 #     add_affected()
-#     california()
-    districtcolumbia()
-#     delaware()
+#     california() #
+#     districtcolumbia()
+#     delaware() #
 #     add_links_de()
 #     add_affected_de()
-    florida()
-    indiana()
-#     kansas()
+#     florida()
+#     indiana()
+#     kansas() #
 #     add_links_ks()
 #     add_affected_ks()
-    maryland()
-    michigan()
-    missouri()
-#     nebraska()
-#     nebraska_two()
-#     combine()
-    newjersey()
-#     newyork()
-    ohio()
-    oklahoma()
-    oregon()
-    rhodeisland()
-    southdakota()
-    tennessee()
-    utah()
-    washington()
-    wisconsin()
-#     send_query()
-#     move_data()
+#     maryland()
+#     michigan()
+#     missouri()
+    nebraska()
+    nebraska_two()
+    combine()
+#     newjersey()
+#     newyork() #
+#     ohio()
+#     oklahoma()
+#     oregon()
+#     rhodeisland()
+#     southdakota()
+#     tennessee()
+#     utah()
+#     washington()
+#     wisconsin()
+#     send_query()#
+#     move_data()#
 
 if __name__ == '__main__':
     main()
