@@ -20,7 +20,7 @@ def combine():
     merged_file = os.path.join(data_dir, 'nebraska_warn_raw.csv')
     with open(merged_file, 'w') as outfile:
         for source_file in files_to_concat:
-            with open(os.path.join(data_dir, source_file) as infile:
+            with open(os.path.join(data_dir, source_file), 'r') as infile:
                 for row in open(infile, 'r'):
                     #TODO: Add filter to pluck out the header row
                     # in second file
