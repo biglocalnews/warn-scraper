@@ -14,6 +14,7 @@ import json
 def combine():
     print("GH_WORKSPACE {}".format(os.environ['GITHUB_WORKSPACE']))
     print("CWD: {}".format(os.getcwd()))
+    print(os.listdir())
     data_dir = os.path.join(os.environ['GITHUB_WORKSPACE'], 'data')
     files_to_concat = [
         'nebraska_warn_raw1.csv',
