@@ -51,8 +51,8 @@ def main():
 #     maryland()
 #     michigan()
 #     missouri()
-    nebraska()
-    nebraska_two()
+    #nebraska()
+    #nebraska_two()
     combine()
 #     newjersey()
 #     newyork() #
