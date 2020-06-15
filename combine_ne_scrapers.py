@@ -12,7 +12,9 @@ import json
 #root = pathlib.Path(__file__).parent.resolve()
 
 def combine():
-    data_dir = os.path.join(os.environ['GITHUB_WORKSPACE'], 'WARN/data')
+    print("GH_WORKSPACE {}".format(os.environ['GITHUB_WORKSPACE']))
+    print("CWD: {}".format(os.getcwd()))
+    data_dir = os.path.join(os.environ['GITHUB_WORKSPACE'], 'data')
     files_to_concat = [
         'nebraska_warn_raw1.csv',
         'nebraska_warn_raw2.csv'
