@@ -7,42 +7,22 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 import json
-#import pandas as pd
 
-#root = pathlib.Path(__file__).parent.resolve()
 
 def combine():
-    print("GH_WORKSPACE {}".format(os.environ['GITHUB_WORKSPACE']))
-    print("CWD: {}".format(os.getcwd()))
-    print(os.listdir())
-    data_dir = os.path.join(os.environ['GITHUB_WORKSPACE'], 'data')
     files_to_concat = [
         'nebraska_warn_raw1.csv',
         'nebraska_warn_raw2.csv'
     ]
-    merged_file = os.path.join(data_dir, 'nebraska_warn_raw.csv')
+    merged_file = os.path.join('data', 'nebraska_warn_raw.csv')
     with open(merged_file, 'w') as outfile:
         for source_file in files_to_concat:
-            with open(os.path.join(data_dir, source_file), 'r') as infile:
+            with open(os.path.join('data', source_file), 'r') as infile:
                 for row in infile:
                     #TODO: Add filter to pluck out the header row
-                    # in second file
+                    # in second file;
+                    # TODO: Align the files into a standard data structure?
                     outfile.write(row)
-
-#   ne_one = root / 'data' / 'nebraska_warn_raw1.csv'
-#   ne_two = root / 'data' / 'nebraska_warn_raw2.csv'
-    #gh_link = 'https://raw.githubusercontent.com/biglocalnews/WARN/master/data/maryland_warn_raw.csv'
-    #gh_link2 = 'https://github.com/biglocalnews/WARN/blob/master/data/nebraska_warn_raw2.csv'
-    #ne_one = pd.read_csv(gh_link)
-#     ne_two = pd.read_csv(gh_link2)
-#     ne_two = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
-#     ne_one = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
-#     ne_two = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
-
-#     ne_all_data = pd.concat([ne_one, ne_two])
-#     ne_all_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw.csv')
-#     os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
-#     os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
 
 
 if __name__ == '__main__':
