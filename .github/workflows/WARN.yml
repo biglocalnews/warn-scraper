@@ -1,52 +1,52 @@
-# This is a basic workflow to help you get started with Actions
+# # This is a basic workflow to help you get started with Actions
 
-name: Try to run WARN Scraper/save data
+# name: Try to run WARN Scraper/save data
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
-on:
-  schedule:
-  #- cron:  '31 11 * * *' # figure out which time zone. 
-  #push:
+# # Controls when the action will run. Triggers the workflow on push or pull request
+# # events but only for the master branch
+# on:
+#   schedule:
+#   #- cron:  '31 11 * * *' # figure out which time zone. 
+#   #push:
     
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   # This workflow contains a single job called "build"
+#   build:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - uses: actions/cache@v1
-      name: Configure pip caching
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Install Python dependencies
-      run: |
-        pip install -r requirements.txt
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#     - uses: actions/checkout@v2
+#     - name: Set up Python
+#       uses: actions/setup-python@v1
+#       with:
+#         python-version: 3.8
+#     - uses: actions/cache@v1
+#       name: Configure pip caching
+#       with:
+#         path: ~/.cache/pip
+#         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+#         restore-keys: |
+#           ${{ runner.os }}-pip-
+#     - name: Install Python dependencies
+#       run: |
+#         pip install -r requirements.txt
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: python run_scrapers.py
-    - name: Commit and push if it changed
-      run: |-
-        git config user.name "Automated"
-        git config user.email "actions@users.noreply.github.com"
-        git add -A
-        timestamp=$(date -u)
-        git commit -m "Latest data: ${timestamp}" || exit 0
-        git push
+#     # Runs a single command using the runners shell
+#     - name: Run a one-line script
+#       run: python run_scrapers.py
+#     - name: Commit and push if it changed
+#       run: |-
+#         git config user.name "Automated"
+#         git config user.email "actions@users.noreply.github.com"
+#         git add -A
+#         timestamp=$(date -u)
+#         git commit -m "Latest data: ${timestamp}" || exit 0
+#         git push
 
 #     # Runs a set of commands using the runners shell
 #     - name: Run a multi-line script
