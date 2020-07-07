@@ -1,11 +1,49 @@
 DateReceived,Company,City/County,Potential NumberAffected,LayoffDate(s),PhoneNumber,Union,Notice ID
+07/06/2020,"Fiserv, Inc.",Dublin/Franklin,79,09/04/2020-09/18/2020,(262) 328-7587,None,011-20-102
+07/06/2020,Raymond Management Company (Hilton Garden Inn Hotel),Mason/Warren,29,06/30/2020,(608) 662-8332,None,012-20-101
+07/06/2020,Raymond Management Company (AC by Marriott Hotel),Liberty Township/Butler,20,06/30/2020,(608) 662-8332,None,012-20-100
+07/06/2020,The Salvation Army Family Store,Dayton/Greene,8,05/11/2020,(216) 621-7860,None,007-20-099
+07/01/2020,Levy Premium Foodservice - The Greater Columbus Convention Center,Columbus/Franklin,59,08/01/2020,(312) 877-1134,None,011-20-098
+06/30/2020,Levy Premium Foodservice - Huntington Convention Center of Cleveland,Cleveland/Cuyahoga,19,08/01/2020,(312) 877-1134,United Here Local #24,003-20-097
+06/30/2020,Oberlin College,Oberlin/Lorain,57,07/15/2020,(440) 775-5573,"International Union, United Automobile, Aerospace, and Agricultural Implement Workers of America, Local 2912",004-20-096
+06/30/2020,"Magna Industries, Inc.",Cleveland/Cuyahoga,102,08/31/2020,(216) 251-3334,None,003-20-095
+06/30/2020,Copart,Columbus/Franklin,72,06/29/2020,(972) 391-5184,None,011-20-094
+06/29/2020,"Allpro Parking, Ohio, LLC",Columbus/Franklin,23,06/07/2020,(716) 849-7275,None,011-20-093
+06/29/2020,"Allpro Parking, Ohio, LLC",Cleveland/CuyahogaBeachwood/Cuyahoga,22,06/07/2020,(716) 849-7275,None,003-20-092
+06/29/2020,"Sumaria Systems, Inc.",Wright-Patterson AFB/Greene,72,08/31/2020,(978) 739-4200,None,007-20-091
+06/29/2020,"J-Lenco, Inc.",La Rue/Marion,7,07/05/2020,(740) 499-2260,None,119-20-156*
+06/25/2020,AFP 116 Corp. - Embassy Suites Columbus Airport,Columbus/Franklin,57,05/15/2020,(614) 536-0201,None,119-20-155*
+06/25/2020,"Allpro Parking Ohio, LLC",Cincinnati/Hamilton,18,06/07/2020,(716) 849-7275,None,013-20-090
+06/24/2020,TIMET,Toronto/Jefferson,200,04/12/2020-06/26/2020,(740) 537-5885,United Steel Workers,119-20-154*
+06/24/2020,Levy Premium Foodservice-The Ohio State University,Columbus/Franklin,34,08/01/2020,(614) 219-9836,None,011-20-089
+06/24/2020,"ADESA Ohio, LLC - Automotive Finance Corporation (AFC)",Northfield/Summit,28,08/01/2020,(317) 843-3167,None,002-20-088
+06/24/2020,Cleveland Indians Baseball Company LLC,Cleveland/Cuyahoga,85,07/15/2020,(216) 420-4563,SEIU (Local 1),003-20-087
+06/23/2020,General Electric Aviation,Cincinnati/Hamilton,529,04/17/2020-07/24/2020,(513) 325-9199,"IAM, UAW",119-20-153*
+06/22/2020,Hollywood Gaming Mahoning Valley Race Course,Youngstown/Mahoning,7,08/15/2020,(330) 505-8722,None,017-20-086
+06/22/2020,"Westin Cincinnati (Merritt Hospitality, LLC)",Cincinnati/Hamilton,98,05/30/2020,(513) 852-2716,"Chicago and Midwest Regional Joint Board, Workers United",119-20-152*
+06/18/2020,Marriott International Customer Engagement Center,Solon/Cuyahoga,200,03/24/2020,(440) 542-2389,None,119-20-151*
+06/17/2020,"Certech, Inc.",Twinsburg/Summit,15,08/24/2020-09/04/2020,(440) 600-4764,None,002-20-085
+06/16/2020,Northeast Projections Inc.,Valley View/Cuyahoga,13,06/16/2020,(216) 514-5023,None,119-20-150*
+06/15/2020,Hollywood Casino Columbus,Columbus/Franklin,188,08/15/2020,(614) 308-4489,None,011-20-084
+06/15/2020,Hollywood Casino Toledo,Toledo/Lucas,116,08/15/2020,(419) 661-5413,None,009-20-083
+06/11/2020,"HFI, Inc.",Canal Winchester/Franklin,99,08/03/2020,(614) 491-0700,None,011-20-082
+06/11/2020,ArcelorMittal Columbus LLC/ArcelorMittal USA LLC,Columbus/Franklin,121,08/02/2020,(614) 492-6816,"United Steel Workers Local #9309, Obetz Local #2342-01",011-20-081
+06/10/2020,Credit First National Association,Akron/Summit,52,08/15/2020,(216) 362-3355,None,002-20-080
+06/09/2020,Hyatt Regency Columbus,Columbus/Franklin,192,06/20/2020,(614) 280-3033,None,011-20-079
+06/08/2020,"Green Bay Dressed Beef, LLC",Sharonville/Hamilton,95,08/07/2020,(513) 543-5466,United Food and Commercial Workers Local Union 75,013-20-078
+06/03/2020,The Ritz-Carlton Hotel Co. LLC,Cleveland/Cuyahoga,200,03/21/2020,(216) 902-5232,None,119-20-149*
+06/03/2020,"Homewood Suites Columbus (Crescent Hotels & Resorts, LLC)",Columbus/Franklin,4,03/20/2020,(703) 563-4931,None,119-20-148*
+06/03/2020,"GSW Manufacturing, Inc.",Findlay/Hancock,57,07/31/2020-08/04/2020,(419) 423-7111,None,007-20-077
+06/02/2020,"Renaissance Hotel Mgmt Co., LLC",Columbus/Franklin,158,03/21/2020,(614) 233-7501,None,119-20-147*
+06/02/2020,"Cleveland Indians Baseball Company, LLC",Cleveland/Cuyahoga,1146,03/13/2020,(216) 420-4563,"IATSE Treasurers and Ticket Sellers (Local 756), SEIU (Local 1) and IATSE (Local 27)",119-20-146*
+06/01/2020,Cincinnati Museum Center,Cincinnati/Hamilton,175,07/01/2020-08/01/2020,(513) 287-7010,None,013-20-076
 05/26/2020,Boyd Gaming - Belterra Park Gaming & Entertainment Center,Cincinnati/Hamilton,361,07/01/2020-07/14/2020,(702) 692-4153,"Local B754 of the International Alliance of Theatrical Stage Employees, Moving Picture Technicians, Artists and Allied Crafts of the United States, its Territories and Canada, AFL-CIO, CLC (“IATSE”)",119-20-145*
 05/22/2020,21C Museum Hotel,Cincinnati/Hamilton,158,05/20/2020-07/01/2020,(502) 882-6228,None,013-20-075
 05/21/2020,"Schneller, Inc.",Kent/Portage,50,05/18/2020,(330) 676-7141,None,119-20-144*
 05/21/2020,"Poma Glass and Specialty Windows, Inc.",Boardman/Mahoning,57,07/25/2020,(404) 446-4256,None,017-20-074
 05/18/2020,Verso Corporation,Miamisburg/Montgomery,59,Unknown,(937) 528-3457,None,007-20-073
 05/20/2020,"PCC Airfoils, LLC",Crooksville/Perry,122,05/22/2020,(740) 469-1134,None,014-20-072
-05/18/2020,The Michaels Companies,Strongsville/Cuyahoga,146,07/18/2020,(972) 409-7628,None,003-20-071
+05/18/2020 Updated 06/23/2020,The Michaels Companies,Strongsville/Cuyahoga,217,07/18/2020-09/04/2020,(972) 409-7628,None,003-20-071
 05/14/2020,"LAZ Parking Midwest, LLC",Cleveland/Cuyahoga,62,03/12/2020-04/16/2020,(312) 771-1939,None,119-20-143*
 05/14/2020,"LAZ Parking Midwest, LLC",Columbus/Franklin,154,03/15/2020-04/11/2020,(312) 771-1939,None,119-20-142*
 05/14/2020,Nine Energy Service,Marietta/Washington,60,03/12/2020-04/09/2020,(346) 266-4604,None,015-20-070
@@ -25,7 +63,7 @@ DateReceived,Company,City/County,Potential NumberAffected,LayoffDate(s),PhoneNum
 05/11/2020,"Specialty Retailers, Inc. (Stage Distribution Center)",Jeffersonville/Fayette,287,05/07/2020,(713) 331-5010,None,007-20-063
 05/07/2020,QMax America Inc.,Newcomerstown/TuscarawasWellsville/Columbiana,3931,05/08/2020,(918) 549-1561,None,006-20-062
 05/07/2020,DoubleTree Cleveland Downtown,Cleveland/Cuyahoga,97,03/21/2020,(703) 563-4931,"CMRJB/Workers United Local 10, Textile Processors, Service Trades, Health Care, Professionals and Technical Employees Local 1",119-20-134*
-05/07/2020,Hilton Columbus Polaris,Columbus/Delaware,94,03/21/2020,(703) 563-4931,None,119-20-133*
+05/07/2020 Updated 07/02/2020,Hilton Columbus Polaris,Columbus/Delaware,94,03/21/2020-08/31/2020,(703) 563-4931,None,119-20-133*
 05/06/2020,Hyatt Regency Cincinnati,Cincinnati/Hamilton,73,05/06/2020,(513) 354-4110,None,119-20-132*
 05/06/2020,Northfield Park Associates -MGM Northfield Park,Northfield/Summit,937,03/02/2020-03/15/2020,(855)464-6747,"Unite Here, Teamsters Local 436, Teamsters Local 473, IATSE Local 756",119-20-131*
 05/05/2020,MGM Resorts Satellite LLC,Northfield/Summit,1,03/02/2020-03/15/2020,(855) 464-6747,None,119-20-130*
@@ -73,7 +111,7 @@ DateReceived,Company,City/County,Potential NumberAffected,LayoffDate(s),PhoneNum
 04/15/2020,"Fulton County Processing, LTD",Delta/Fulton,58,04/17/2020,(419) 822-9266,None,119-20-102*
 04/15/2020,ArcelorMittal Columbus LLC,Columbus/Franklin,122,04/19/2020,(614) 492-6816,"United Steel Workers Local #9309, United Steel Workers Local #2342-01",119-20-101*
 04/15/2020,"Profusion Industries, LLC",Marietta/Washington,159,03/30/2020-04/20/2020,(740) 374-0803,"The International Chemical Workers Union Council, Local 343C",119-20-100*
-04/15/2020,Pier 1,Groveport/Franklin,124,06/01/2020,(817) 252-7700,None,011-20-047
+04/15/2020 Updated 06/03/2020,"Pier 1 Imports, Inc.",Groveport/Franklin,221,08/31/2020,(817) 252-7700,None,011-20-047
 04/15/2020,Hilton Cincinnati Netherland Plaza,Cincinnati/Hamilton,229,03/19/2020,(865) 293-5251,None,119-20-099*
 04/15/2020,CBCS,Dayton/Montgomery,17,03/23/2020,(919) 281-8336,None,119-20-098*
 04/15/2020,Scholastic Book Fairs,West Chester/Butler,142,03/18/2020,(513) 714-1023,None,119-20-097*
@@ -122,12 +160,12 @@ DateReceived,Company,City/County,Potential NumberAffected,LayoffDate(s),PhoneNum
 04/03/2020,InterContinental Cleveland Conference Center,Cleveland/Cuyahoga,120,04/10/2020,(216) 707-4127,None,119-20-065*
 04/02/2020,"RTW Retailwinds, Inc.",Various Cities/Various Counties,176,03/29/2020,(212) 884-2030,None,119-20-064*
 04/01/2020,YUSA Corporation,Washington Court House/Fayette,350,03/30/2020,(740) 572-2081,None,119-20-063*
-04/01/2020,"Murray American Energy, Inc.",Saint Clairsville/Belmont,26,06/02/2020,(740) 338-3100,None,016-20-036
-04/01/2020,"American Natural Gas, Inc.",Saint Clairsville/Belmont,12,06/02/2020,(740) 338-3100,None,016-20-035
-04/01/2020,"American Mine Services, Inc.",Clarington/Monroe,37,06/02/2020,(740) 338-3100,None,015-20-034
-04/01/2020,American Energy Corporation,Beallsville/Monroe,358,06/02/2020,(740) 338-3100,None,015-20-033
-04/01/2020,The Ohio Valley Transloading Company,Powhatan Point/Belmont,6,06/02/2020,(740) 338-3100,United Mine Workers of America,016-20-032
-04/01/2020,The Ohio Valley Coal Company,Alledonia/Belmont,69,06/02/2020,(740) 338-3100,None,016-20-031
+04/01/2020 Updated 06/30/2020,"Murray American Energy, Inc.",Saint Clairsville/Belmont,23,07/11/2020,(740) 338-3100,None,016-20-036
+04/01/2020 Updated 06/30/2020,"American Natural Gas, Inc.",Saint Clairsville/Belmont,9,07/11/2020,(740) 338-3100,None,016-20-035
+04/01/2020 Updated 06/30/2020,"American Mine Services, Inc.",Clarington/Monroe,37,07/11/2020,(740) 338-3100,None,015-20-034
+04/01/2020 Updated 06/30/2020,American Energy Corporation,Beallsville/Monroe,210,07/11/2020,(740) 338-3100,None,015-20-033
+04/01/2020 Updated 06/30/2020,The Ohio Valley Transloading Company,Powhatan Point/Belmont,4,07/11/2020,(740) 338-3100,United Mine Workers of America,016-20-032
+04/01/2020 Updated 06/30/2020,The Ohio Valley Coal Company,Alledonia/Belmont,64,07/11/2020,(740) 338-3100,None,016-20-031
 04/01/2020,Talbert House,Cincinnati/Hamilton,50,04/03/2020,(513) 751-7747,None,119-20-062*
 04/01/2020,"Aramark Educational Services, LLC-John Carroll University",University Heights/Cuyahoga,102,05/15/2020,(617) 529-2435,Bakers' Union Local 19,003-20-030
 03/31/2020,"MountainVision Enterprises, Inc.(The Maids of Cincinnati)",Cincinnati/Hamilton,23,03/23/2020,(513) 396-6900,None,119-20-061*
@@ -173,13 +211,13 @@ DateReceived,Company,City/County,Potential NumberAffected,LayoffDate(s),PhoneNum
 03/24/2020,Kleeberger Contracting Services,Liberty Center/Henry,5,03/23/2020,(567) 202-1237,None,119-20-026*
 03/24/2020Updated04/01/2020,"Brentwood Originals, Inc.",Youngstown/Mahoning,198,03/23/2020-03/31/2020,(310) 637-6804,"United Steelworkers District 1, Sub-District 1",119-20-025*
 03/24/2020,Things Remembered Fulfillment Center,North Jackson/Mahoning,158,03/24/2020,(330) 538-2125,None,119-20-024*
-03/24/2020,Hilton Garden Inn-Toledo/Perrysburg,Perrysburg/Wood,102,03/20/2020-03/27/2020,(419) 873-3600,None,119-20-023*
+03/24/2020 Updated 06/11/2020,Hilton Garden Inn-Toledo/Perrysburg,Perrysburg/Wood,112,03/20/2020-06/30/2020,(419) 873-3600,None,119-20-023*
 03/24/2020,"Ultimate Home Services, LLC",Various Cities/Various Counties,62,03/24/2020,(614) 888-8698,None,119-20-022*
 03/24/2020,Ross Casting & Innovation,Sidney/Shelby,167,03/24/2020,(937) 497-4500,None,119-20-021*
 03/24/2020,Wright Tool,Barberton/Summit,140,03/23/2020,(330) 419-1733,None,119-20-020*
 03/24/2020,Gissing North America,Sidney/Shelby,120,03/23/2020,(207) 784-1118,None,119-20-019*
 03/24/2020 Updated 05/22/2020,Renaissance Cleveland Hotel,Cleveland/Cuyahoga,143,03/23/2020-04/08/2020,(972) 830-3123,None,119-20-018*
-03/24/2020Revised 03/25/2020,Spire Hospitality,Blue Ash/Hamilton,80,03/20/2020,(469) 788-8710,None,013-20-024*
+03/24/2020Updated 06/29/2020,Spire Hospitality,Blue Ash/Hamilton,79,07/01/2020,(469) 788-8710,None,013-20-024
 03/24/2020,"JACK Ohio Finance, LLC (JACK Entertainment)",Cleveland/CuyahogaNorth Randall/Cuyahoga,1561,03/31/2020,(216) 297-4896,"UAW Region 2B, IBT Local 436, USW District 1, Unite HERE Local 24, IATSE Local 756, CMJRB, affiliated with Workers United and SEIU, SPFPA",119-20-017*
 03/24/2020 Updated 05/22/2020,Embassy Suites Cleveland Rockside,Independence/Cuyahoga,72,03/19/2020-03/31/2020,(972) 830-3123,None,119-20-016*
 03/23/2020,Norcold Incorporated,Sidney/ShelbyGettysburg/Darke,345,03/23/2020,(734) 769-0721,None,119-20-015*
@@ -208,7 +246,7 @@ LLC",Cleveland/Cuyahoga,102,03/16/2020,(720) 414-2726,None,119-20-003*
 02/14/2020,Worthington Industries,Wooster/Wayne,120,02/11/2020-05/31/2020,(614) 840-4296,None,007-20-017
 02/13/2020,Miami University,Oxford/Butler,39,07/01/2020,(513) 529-5716,None,012-20-016
 02/12/2020Updated04/06/2020,Bear Down Logistics,Fairfield/Butler,105,04/02/2020,(708) 707-0461,None,012-20-015
-02/10/2020,JCPenney Store 1097,Akron/Summit,97,04/25/2020-05/09/2020,(779) 205-8624,None,002-20-014
+02/10/2020 Updated 06/03/2020,JCPenney Store 1071,Akron/Summit,66,07/17/2020-07/31/2020,(779) 205-8624,None,002-20-014
 02/10/2020,"Vantage Partners, LLC",Brook Park/Cuyahoga,216,03/31/2020,(301) 922-0733,None,003-20-013
 02/10/2020,U.S. Bank Lunken Operations Center,Cincinnati/Hamilton,65,04/06/2020,(651) 468-2611,None,013-20-012
 02/05/2020,Macy's Lorain,Lorain/Lorain,161,04/05/2020-10/07/2020,(678) 474-3281,None,004-20-011
