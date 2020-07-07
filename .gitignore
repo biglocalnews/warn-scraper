@@ -1,6 +1,7 @@
 old_data/
 .DS_Store
 data/
+warn_scrapers/
 .ipynb_checkpoints/
 .python-version
 __pycache__/
