@@ -12,6 +12,7 @@ bs4 = "*"
 pandas = "*"
 html5lib = "*"
 xlrd = "*"
+tqdm = "*"
 
 [requires]
 python_version = "3.7"
