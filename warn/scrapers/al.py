@@ -13,7 +13,7 @@ import json
 
 root = pathlib.Path(__file__).parent.resolve()
 
-def alabama():
+def scrape():
     output_csv = root / 'data' / 'alabama_warn_raw.csv'
     #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/alabama_warn_raw.csv'
     url = 'https://www.madeinalabama.com/warn-list/'
