@@ -55,3 +55,35 @@ def scrape():
 
 if __name__ == '__main__':
     alabama()
+
+
+'''
+
+
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+<<<<<<< HEAD
+bs4 = "*"
+requests = "*"
+pandas = "*"
+xlrd = "*"
+=======
+jupyterlab = "*"
+requests = "*"
+bs4 = "*"
+pandas = "*"
+html5lib = "*"
+xlrd = "*"
+tqdm = "*"
+>>>>>>> master
+
+[requires]
+python_version = "3.7"
+
+'''
