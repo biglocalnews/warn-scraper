@@ -6,10 +6,20 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+<<<<<<< HEAD
 bs4 = "*"
 requests = "*"
 pandas = "*"
 xlrd = "*"
+=======
+jupyterlab = "*"
+requests = "*"
+bs4 = "*"
+pandas = "*"
+html5lib = "*"
+xlrd = "*"
+tqdm = "*"
+>>>>>>> master
 
 [requires]
 python_version = "3.7"
