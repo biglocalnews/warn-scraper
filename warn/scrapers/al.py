@@ -11,13 +11,12 @@ import json
 # spot-checked and linked-checked
 # scraper looks good
 
-root = pathlib.Path(__file__).parent.resolve()
-
 def scrape():
-    output_csv = root / 'data' / 'alabama_warn_raw.csv'
-    #output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/alabama_warn_raw.csv'
+    
+    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/alabama_warn_raw.csv'
     url = 'https://www.madeinalabama.com/warn-list/'
     page = requests.get(url)
+    print('Hello')
 
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
 
