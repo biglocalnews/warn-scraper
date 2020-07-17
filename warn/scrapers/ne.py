@@ -180,19 +180,13 @@ def nebraska_two():
 
 
 def combine():
-    files_to_concat = [
-        'nebraska_warn_raw1.csv',
-        'nebraska_warn_raw2.csv'
-    ]
-    merged_file = os.path.join('data', 'nebraska_warn_raw1.csv')
-    with open(merged_file, 'w') as outfile:
-        for source_file in files_to_concat:
-            with open(os.path.join('data', source_file), 'r') as infile:
-                for row in infile:
-                    #TODO: Add filter to pluck out the header row
-                    # in second file;
-                    # TODO: Align the files into a standard data structure?
-                    outfile.write(row)
+
+    ne_one = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
+    ne_two = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
+    ne_all_data = pd.concat([ne_one, ne_two])
+    ne_all_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw.csv')
+    os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
+    os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
 
 if __name__ == '__main__':
     scrape()
