@@ -1,17 +1,11 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests 
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
+# spot-check once more
 
-# spot-checked and linked-checked
-# scraper looks good
-
-def districtcolumbia():
+def scrape():
 
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/districtcolumbia_warn_raw.csv'
 
@@ -73,4 +67,4 @@ def districtcolumbia():
             writer.writerows(output_rows)
 
 if __name__ == '__main__':
-    districtcolumbia()
+    scrape()

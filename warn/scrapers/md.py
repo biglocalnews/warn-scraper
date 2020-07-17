@@ -1,16 +1,12 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-# spot-checked and linked-checked
-# scraper looks good
+# spot-check once more
 
-def maryland():
+def scrape():
+
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/maryland_warn_raw.csv'
     # max_entries = 378 # manually inserted
     years = range(2019, 2009, -1)
@@ -86,4 +82,4 @@ def maryland():
                 writer.writerows(output_rows)
 
 if __name__ == '__main__':
-    maryland()
+    scrape()

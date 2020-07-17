@@ -1,10 +1,14 @@
-import pandas as pd
 import requests
 import xlrd
+import pandas as pd
+
 from bs4 import BeautifulSoup
 from datetime import date
 
-def california():
+# spot-check once more
+
+def scrape():
+
     url = 'https://www.edd.ca.gov/jobs_and_training/warn/WARN_Report.xlsx'
     df = pd.read_excel(url)
     df.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/california_warn_raw.csv', index = None)
@@ -36,4 +40,4 @@ def california():
 
 
 if __name__ == '__main__':
-    california()
+    scrape()

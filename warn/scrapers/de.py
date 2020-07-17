@@ -1,18 +1,14 @@
-from os import path
 
-import csv 
-from datetime import datetime
+import csv
+import requests
+import pandas as pd
 
 from bs4 import BeautifulSoup
-import requests
-import json
-from de_add_links_tofile import add_links_de
-from de_add_affected_employees import add_affected_de
 
-# spot-checked and linked-checked
-# scraper looks good
+# spot-check once more
 
-def delaware():
+def scrape():
+
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
     max_entries = 200 # manually inserted
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 200, otherwise we could be missing data.
@@ -99,7 +95,7 @@ def add_links_de():
             table = soup.find_all('table') # output is list-type
             for a in soup.find_all('a', href=True, text=True):
                 link_text = a['href']
-    #             print(link_text)
+    
                 if 'callingfile' in link_text:
                     links.append(link_text)
 
@@ -124,7 +120,6 @@ def add_affected_de():
         full_url_list.append(full_url)
 
     employees_affected = [['URL','Affected Employees']]
-    # short_list = full_url_list[39:42]
     for url in full_url_list:
         print(url)
         page = requests.get(url)
@@ -138,29 +133,21 @@ def add_affected_de():
                 affected_num = data[1].get_text()
                 affected_num = affected_num.replace(u'\xa0', u'')
                 if 'Company' in affected_num:
-    #                 print('doing nothing')
                     company = 'doing nothing'
                 else:
                     keep_data = [url, affected_num]
                     employees_affected.append(keep_data)
 
-    # print(employees_affected)
     headers = employees_affected.pop(0)
     df = pd.DataFrame(employees_affected, columns=headers)
-    # print(len(df))
-    # df['Suffix'] = df['URL'].str.strip('https://joblink.delaware.gov/ada/')
-    # df['Suffix'] = df['URL'].str.split('/ada/').str[-1]
     df['Suffix'] = df['URL'].str.strip('https://joblink.delaware.gov/ada')
-    print(df['Suffix'])
 
+    df = df.drop_duplicates(subset='URL', keep="first")
+    all_de_data = pd.merge(de_data, df, left_on='url_suffix', right_on='Suffix')
+    all_de_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
 
-    # df = df.drop_duplicates(subset='URL', keep="first")
-    # all_de_data = pd.merge(de_data, df, left_on='url_suffix', right_on='Suffix')
-    # all_de_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
-
-    # all_de_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
-
+    all_de_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
 
 
 if __name__ == '__main__':
-    delaware()
+    scrape()

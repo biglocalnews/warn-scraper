@@ -1,21 +1,14 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import re
+import requests
 
 from bs4 import BeautifulSoup
 from bs4 import NavigableString
 
-import requests
-import json
+# spot-check once more
 
-import re
+def scrape():
 
-
-# spot-checked and linked-checked
-# scraper looks good
-
-def michigan():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/michigan_warn_raw.csv'
     year_list = range(2014, 2021, 1)
     month_list = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
@@ -122,4 +115,4 @@ def michigan():
                 writer.writerows(fixed_rows)
 
 if __name__ == '__main__':
-    michigan()
+    scrape()

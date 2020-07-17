@@ -1,27 +1,12 @@
+import csv
 import requests
-from bs4 import BeautifulSoup
-import gzip
-import re
-
-from os import path
-
-import csv 
-from datetime import datetime
-
-from bs4 import NavigableString
-import os
-import requests
-import json
 import pandas as pd
-import re
-from ks_add_links_tofile import add_links_ks
-from ks_add_affected_employees import add_affected_ks
 
+from bs4 import BeautifulSoup
 
-# spot-checked and linked-checked
-# scraper looks good
+# spot-check once more
 
-def kansas():
+def scrape():
     
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv'
     max_entries = 950 # manually inserted
@@ -30,7 +15,6 @@ def kansas():
 
     # Load for first time => get header
     start_row = 1
-    # url = 'https://okjobmatch.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
     url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
     page = requests.get(url)
 
@@ -113,7 +97,7 @@ def add_links_ks():
             table = soup.find_all('table') # output is list-type
             for a in soup.find_all('a', href=True, text=True):
                 link_text = a['href']
-    #             print(link_text)
+    
                 if 'callingfile' in link_text:
                     links.append(link_text)
 
@@ -140,14 +124,13 @@ def add_affected_ks():
         full_url_list.append(full_url)
 
     employees_affected = [['URL','Affected Employees']]
-    short_list = full_url_list[39:42]
     for url in full_url_list:
         print(url)
-        # print('1')
+        
         page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
         table = soup.find('table') # output is list-type
-    #     print(table)
+    
         rows = table.find_all('tr')
         for row in rows:
             if 'employees' in row.text:
@@ -155,38 +138,20 @@ def add_affected_ks():
                 affected_num = data[1].get_text()
                 affected_num = affected_num.replace(u'\xa0', u'')
                 if 'Company' in affected_num:
-    #                 print('doing nothing')
                     company = 'doing nothing'
                 else:
                     keep_data = [url, affected_num]
                     employees_affected.append(keep_data)
-# https://www.kansasworks.com/ada/
-    # print(employees_affected)
+
     headers = employees_affected.pop(0)
     df = pd.DataFrame(employees_affected, columns=headers)
     df['Suffix'] = df['URL'].str.split('/ada/').str[-1]
     print(df)
-   
 
     df = df.drop_duplicates(subset='URL', keep="first")
-    # pd.options.display.max_rows = 999
-    # print(df)
-    # print(ks_data)
-    # # print(' ')
-    # # print(' ')
     all_ks_data = pd.merge(ks_data, df, left_on='url_suffix', right_on='Suffix')
-    # print(all_ks_data)
     all_ks_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
-    # print(ks_data)
-    # print(' ')
-    # print(' ')
-
-    # print(all_ks_data)
-
     all_ks_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
 
-
-
-
 if __name__ == '__main__':
-    kansas()
+    scrape()

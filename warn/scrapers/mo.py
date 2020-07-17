@@ -1,15 +1,11 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-# link-checked and spot-checked, looks good
+# spot-check once more
 
-def missouri():
+def scrape():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
     years = range(2018, 2014, -1)
 
@@ -86,4 +82,4 @@ def missouri():
 
 
 if __name__ == '__main__':
-    missouri()
+    scrape()

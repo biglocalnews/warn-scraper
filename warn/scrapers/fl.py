@@ -1,17 +1,12 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-# needs to be checked periodically to make sure we are not on page 25 - other wise we risk not getting all the data
-# spot-checked and linked-checked
-# scraper looks good
+# spot-check once more
 
-def florida():
+def scrape():
+
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/florida_warn_raw.csv'
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
@@ -79,43 +74,7 @@ def florida():
 
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-
-        # page_count = 1
-        # for year in years:
-        #     while True:
-        #         try:
-                    
-        #             url = 'http://reactwarn.floridajobs.org/WarnList/Records?year={}&page={}'.format(year,page_count)
-        #             page = requests.get(url)
-        #             print(page.status_code) # should be 200
-                    
-        #             soup = BeautifulSoup(page.text, 'html5lib')
-
-        #             table = soup.find_all('table')
-
-        #             output_rows = []
-        #             for table_row in table[0].find_all('tr'):    
-        #                 columns = table_row.find_all('td')
-        #                 output_row = []
-        #                 for column in columns:
-        #                     output_row.append(column.text)
-        #                 output_row = [x.strip() for x in output_row]
-        #                 output_rows.append(output_row)
-        #             output_rows.pop(0)
-        #             output_rows.pop(0)
-
-        #             with open(output_csv, 'a') as csvfile:
-        #                 writer = csv.writer(csvfile)
-        #                 writer.writerows(output_rows)
-
-        #             page_count += 1
-        #             print(url)
-
-        #         except IndexError:
-        #             print(url + ' not found')
-
-                    
+                writer.writerows(output_rows)           
 
 if __name__ == '__main__':
-    florida()
+    scrape()
