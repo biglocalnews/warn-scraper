@@ -27,7 +27,6 @@ def scrape_warn_sites(state):
     state_mod.scrape()
 
 
-
 if __name__ == '__main__':
     states  = sys.argv[1:]
     main(states)
