@@ -1,17 +1,32 @@
 # import argparse
-from importlib import import_module
+import re
+import os
 import sys
+from importlib import import_module
 
 
 def main(states):
-    for state in states:
-        # TODO: Aggressive exception handling here
-        # (and alerting)
-        # import ipdb
-        # ipdb.set_trace()
-        state_clean = state.strip().lower()
-        state_mod = import_module('warn.scrapers.{}'.format(state_clean))
-        state_mod.scrape()
+    
+    if 'all' or 'ALL' in states:
+        print('Scraping all warn notices')
+        dirs = os.listdir('warn/scrapers/')
+        for state in dirs:
+            if not state.startswith('.'):
+                state = state[0:2]
+                scrape_warn_sites(state)
+
+    else:
+        for state in states:
+            scrape_warn_sites(state)
+            
+
+def scrape_warn_sites(state):
+
+    state_clean = state.strip().lower()
+    state_mod = import_module('warn.scrapers.{}'.format(state_clean))
+    state_mod.scrape()
+
+
 
 if __name__ == '__main__':
     states  = sys.argv[1:]
