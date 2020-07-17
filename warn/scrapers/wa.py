@@ -1,16 +1,12 @@
-from os import path
-
-import csv 
-from datetime import datetime
-from time import sleep
-from bs4 import BeautifulSoup
+import csv
 import requests
-import json
 
-# spot-checked and linked-checked
-# scraper looks good
+from bs4 import BeautifulSoup
 
-def washington():
+# spot-check once more
+
+def scrape():
+    
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/washington_warn_raw.csv'
     # pages = range(2, 60, 1)
     page = 2
@@ -96,4 +92,4 @@ def washington():
 
 
 if __name__ == '__main__':
-    washington()
+    scrape()

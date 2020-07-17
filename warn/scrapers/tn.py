@@ -1,18 +1,13 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import re
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-import re
+# spot-check once more
 
-# spot-checked and linked-checked
-# scraper looks good
+def scrape():
 
-def tennessee():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
     url = 'https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html'
 
@@ -85,4 +80,4 @@ def tennessee():
         writer.writerows(output_rows)
 
 if __name__ == '__main__':
-    tennessee()
+    scrape()

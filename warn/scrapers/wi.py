@@ -1,18 +1,13 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import re
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-import re
+# spot-check once more
 
-# spot-checked and linked-checked
-# scraper looks good
+def scrape():
 
-def wisconsin():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/wisconsin_warn_raw.csv'
     years = [2016, 2017, 2018, 2019]
 
@@ -77,4 +72,4 @@ def wisconsin():
 
 
 if __name__ == '__main__':
-    wisconsin()
+    scrape()

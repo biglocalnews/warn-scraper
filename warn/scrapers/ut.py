@@ -1,17 +1,12 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-# spot-checked and linked-checked
-# scraper looks good
+# spot-check once more
 
+def scraper():
 
-def utah():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/utah_warn_raw.csv'
 
     url = 'https://jobs.utah.gov/employer/business/warnnotices.html'
@@ -57,4 +52,4 @@ def utah():
 
 
 if __name__ == '__main__':
-    utah()
+    scraper()

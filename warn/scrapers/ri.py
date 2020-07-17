@@ -1,17 +1,12 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
+# spot-check once more
 
-# spot-checked and linked-checked
-# scraper looks good
+def scrape():
 
-def rhodeisland():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/rhodeisland_warn_raw.csv'
     url = 'http://www.dlt.ri.gov/bwc/WARN.htm'
     page = requests.get(url)
@@ -53,4 +48,4 @@ def rhodeisland():
         writer.writerows(output_rows)
 
 if __name__ == '__main__':
-    rhodeisland()
+    scrape()

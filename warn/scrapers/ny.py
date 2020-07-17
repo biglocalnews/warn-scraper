@@ -1,17 +1,17 @@
-#!/usr/bin/env python
-
 import gzip
-import re
 import os
+import re
 import requests
 import subprocess
-
-from bs4 import BeautifulSoup
-from os import path
-from datetime import datetime
+import time
 import pandas as pd
 
-def newyork():
+from bs4 import BeautifulSoup
+from tqdm import tqdm
+
+# spot-check once more
+
+def scrape():
 
     subprocess.call([
         'curl',
@@ -66,13 +66,6 @@ def newyork():
             missed_dict = {'url':i, 'title':missed}
             missing_titles.append(missed_dict)
 
-    # Import the time library to let us wait in between each request
-    import time
-
-    # gzip allows us to unzip improperly zipped files
-    import gzip
-
-    from tqdm import tqdm
 
     def get_page(url):
 
@@ -282,6 +275,6 @@ def newyork():
 
 
 if __name__ == '__main__':
-    newyork()
+    scrape()
 
 

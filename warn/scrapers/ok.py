@@ -1,19 +1,13 @@
-from os import path
-
-import csv 
-from datetime import datetime
+import csv
+import requests
+import pandas as pd
 
 from bs4 import BeautifulSoup
-import requests
-import json
 
-from ok_add_links_to_file import add_links_ok
-from ok_add_affected_employees import add_affected_ok
+# spot-check once more
 
-# spot-checked and linked-checked
-# scraper looks good
+def scrape():
 
-def oklahoma():
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oklahoma_warn_raw.csv'
     max_entries = 550 # manually inserted
     # script should be checked periodically to make sure the entries are below 550 - otherwise, there will be missing info
@@ -164,4 +158,4 @@ def add_affected_ok():
     
 
 if __name__ == '__main__':
-    oklahoma()
+    scrape()
