@@ -5,9 +5,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
     
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/washington_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/washington_warn_raw.csv'
+    output_csv = '{}/washington_warn_raw.csv'.format(output_dir)
     # pages = range(2, 60, 1)
     page = 2
 

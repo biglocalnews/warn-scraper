@@ -5,14 +5,15 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scraper():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/utah_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/utah_warn_raw.csv'
+    output_csv = '{}/utah_warn_raw.csv'.format(output_dir)
 
     url = 'https://jobs.utah.gov/employer/business/warnnotices.html'
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
+    print(page.status_code) 
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
@@ -43,7 +44,6 @@ def scraper():
             output_row = [x.strip() for x in output_row]
             output_rows.append(output_row)
         output_rows.pop(0)
-        # print(output_rows[0])
         
         if len(output_rows) > 0:
             with open(output_csv, 'a') as csvfile:
@@ -52,4 +52,4 @@ def scraper():
 
 
 if __name__ == '__main__':
-    scraper()
+    scrape()

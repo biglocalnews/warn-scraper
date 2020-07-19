@@ -7,7 +7,7 @@ from datetime import date
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
     url = 'https://www.edd.ca.gov/jobs_and_training/warn/WARN_Report.xlsx'
     df = pd.read_excel(url)
@@ -36,7 +36,8 @@ def scrape():
 
     all_ca_data = pd.concat([ca_data, recent])
     all_ca_data.drop_duplicates(inplace=True)
-    all_ca_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/california_warn_raw.csv', index=False)
+    output_file = '{}/california_warn_raw.csv'.format(output_dir)
+    all_ca_data.to_csv(output_file, index=False)
 
 
 if __name__ == '__main__':

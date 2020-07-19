@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
+def scrape(output_dir):
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
+    output_csv = '{}/missouri_warn_raw.csv'.format(output_dir)
     years = range(2018, 2014, -1)
 
     url = 'https://jobs.mo.gov/warn2019'

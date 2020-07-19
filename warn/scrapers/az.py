@@ -6,9 +6,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
     
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/arizona_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/arizona_warn_raw.csv'
+    output_csv = '{}/arizona_warn_raw.csv'.format(output_dir)
     max_entries = 550 # manually inserted
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 550, otherwise we could be missing data.
     start_row_list = range(1, max_entries, 50)

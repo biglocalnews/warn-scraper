@@ -5,9 +5,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/southdakota_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/southdakota_warn_raw.csv'
+    output_csv = '{}/southdakota_warn_raw.csv'.format(output_dir)
     url = 'https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx'
     page = requests.get(url)
 

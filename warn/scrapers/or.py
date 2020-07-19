@@ -11,12 +11,13 @@ It should be a while, as we are currently on page 44 (5/5/2020).
 """
 
 
-def scrape():
+def scrape(output_dir):
 
     # page range needs to be updated from 55 when there are enough notices for an additional page
     # as of 5/5/2020, this version of the scraper is fine
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oregon_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oregon_warn_raw.csv'
+    output_csv = '{}/oregon_warn_raw.csv'.format(output_dir)
     # pages = range(1, 44, 1)
     pages = 1
 

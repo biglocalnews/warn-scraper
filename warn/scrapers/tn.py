@@ -6,9 +6,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
+    output_csv = '{}/tennessee_warn_raw.csv'.format(output_dir)
     url = 'https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html'
 
     page = requests.get(url)

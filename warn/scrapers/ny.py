@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
     subprocess.call([
         'curl',
@@ -270,7 +270,9 @@ def scrape():
 
     final = pd.concat([final_df, recent])
     final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
-    final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/newyork_warn_raw.csv')
+    output_csv = '{}/michigan_warn_raw.csv'.format(output_dir)
+    final.to_csv(output_csv)
+
     final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
 
 

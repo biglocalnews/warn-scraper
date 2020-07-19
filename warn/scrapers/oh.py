@@ -5,9 +5,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
     
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/ohio_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/ohio_warn_raw.csv'
+    output_csv = '{}/ohio_warn_raw.csv'.format(output_dir)
     url = 'https://jfs.ohio.gov/warn/current.stm'
     page = requests.get(url, verify=False)
 

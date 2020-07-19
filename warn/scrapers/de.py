@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
+    output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
     max_entries = 200 # manually inserted
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 200, otherwise we could be missing data.
     # it will be a while, we are at 65 entries.

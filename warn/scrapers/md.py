@@ -5,9 +5,10 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/maryland_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/maryland_warn_raw.csv'
+    output_csv = '{}/maryland_warn_raw.csv'.format(output_dir)
     # max_entries = 378 # manually inserted
     years = range(2019, 2009, -1)
 

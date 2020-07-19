@@ -7,9 +7,10 @@ from bs4 import NavigableString
 
 # spot-check once more
 
-def scrape():
+def scrape(output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/michigan_warn_raw.csv'
+    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/michigan_warn_raw.csv'
+    output_csv = '{}/michigan_warn_raw.csv'.format(output_dir)
     year_list = range(2014, 2021, 1)
     month_list = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
     # https://www.michigan.gov/leo/0,5863,7-336-78421_95539_64178_64179---Y_2020,00.html#April2020
