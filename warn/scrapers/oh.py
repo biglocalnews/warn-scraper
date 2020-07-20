@@ -28,12 +28,6 @@ def scrape(output_dir):
     output_header = [x.strip() for x in output_header]
     output_header
 
-    # with open(output_csv, 'w') as csvfile:
-    #     writer = csv.writer(csvfile)
-    #     writer.writerow(output_header)
-    #     writer.writerows(output_rows)
-
-
     # if len(table) == 1:
     output_rows = []
     for table_row in table[1].find_all('tr'):    
