@@ -1,4 +1,4 @@
-# import argparse
+import argparse
 import re
 import os
 import sys
@@ -8,17 +8,31 @@ from importlib import import_module
 
 def main(states):
 
-    opts = [opt for opt in sys.argv[1:] if opt.startswith("-")]
-    if '--output-dir' in opts[0]:
-        output_dir = opts[0].split('=')[1]
-        states = states[:-1]
+    args = create_argparser()
+    output_dir = args.output_dir[0]
+    states = args.states
 
-        if 'all' in states or 'ALL' in states:
-            run_scraper_for_all_states(output_dir)
-        else:
-            for state in states:
-                scrape_warn_sites(state, output_dir)
-            
+    if args.all:
+        run_scraper_for_all_states(output_dir)
+    else:
+        for state in states:
+            scrape_warn_sites(state, output_dir)
+
+def create_argparser():
+    my_parser = argparse.ArgumentParser()
+    my_parser.add_argument(
+        '--output-dir', 
+        help='specify output directory', 
+        action='store', 
+        nargs='+', 
+        type=str, 
+        default=["/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/"]
+        )
+    my_parser.add_argument('--states', '-s', help='one or more state postals', nargs='+', action='store')
+    my_parser.add_argument('--all', '-a',action='store_true', help='run all scrapers' )
+
+    args = my_parser.parse_args()
+    return args
 
 def scrape_warn_sites(state, output_dir):
     state_clean = state.strip().lower()
