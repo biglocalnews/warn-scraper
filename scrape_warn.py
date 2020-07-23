@@ -37,7 +37,10 @@ def create_argparser():
 def scrape_warn_sites(state, output_dir):
     state_clean = state.strip().lower()
     state_mod = import_module('warn.scrapers.{}'.format(state_clean))
-    state_mod.scrape(output_dir)
+    try:
+        state_mod.scrape(output_dir)
+    except:
+        print('{} scraper did not run.'.format(state_clean))
 
 def run_scraper_for_all_states(output_dir):
     print('Scraping all warn notices')
