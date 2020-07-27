@@ -237,48 +237,52 @@ def newyork():
 
     file_path_short = file_path[0:2]
     page_data = []
-    for html_page in missing_pages:
-        file = html_page.split('warn_ny_')[1]
-        file = file.split('_2020.html')[0]
-        url = 'https://labor.ny.gov/app/warn/details.asp?id='
-        full_url = url + file
-        resp = open(html_page, 'r', encoding="utf-8", errors='ignore')
-        try:
-            page_data = parse_warn_page(resp, full_url)
-            data.append(page_data)
-        except AttributeError:
-            print(url)   
 
-    df = pd.DataFrame(data)
-    df2 = pd.DataFrame.from_dict(missing_titles)
+    if missing_pages == []:
+        print('no new files')
+    else:
+        for html_page in missing_pages:
+            file = html_page.split('warn_ny_')[1]
+            file = file.split('_2020.html')[0]
+            url = 'https://labor.ny.gov/app/warn/details.asp?id='
+            full_url = url + file
+            resp = open(html_page, 'r', encoding="utf-8", errors='ignore')
+            try:
+                page_data = parse_warn_page(resp, full_url)
+                data.append(page_data)
+            except AttributeError:
+                print(url)   
 
-    df = df[['URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
-        'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
-        'Contact', 'Phone', 'Business Type', 'Number Affected',
-        'Total Employees', 'Layoff Date', 'Closing Date',
-        'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
+        df = pd.DataFrame(data)
+        df2 = pd.DataFrame.from_dict(missing_titles)
 
-
-    df_and_titles = pd.merge(df, df2, left_on='URL', right_on='url')
-    df_and_titles.rename(columns={'title':'notice_title'}, inplace=True)
-    final_df = df_and_titles[['notice_title','URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
-        'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
-        'Contact', 'Phone', 'Business Type', 'Number Affected',
-        'Total Employees', 'Layoff Date', 'Closing Date',
-        'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
+        df = df[['URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
+            'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
+            'Contact', 'Phone', 'Business Type', 'Number Affected',
+            'Total Employees', 'Layoff Date', 'Closing Date',
+            'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
 
 
-    final_df['New Notice'] = final_df['Date of Notice'].str.strip(' ')
-    final_df['Amended'] = final_df['New Notice'].str.split(' ', 1)
-    final_df['Amended'] = final_df['Amended'].apply(lambda x: x[1] if len(x) > 1 else '')
-    final_df.drop(columns='New Notice', inplace = True)
+        df_and_titles = pd.merge(df, df2, left_on='URL', right_on='url')
+        df_and_titles.rename(columns={'title':'notice_title'}, inplace=True)
+        final_df = df_and_titles[['notice_title','URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
+            'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
+            'Contact', 'Phone', 'Business Type', 'Number Affected',
+            'Total Employees', 'Layoff Date', 'Closing Date',
+            'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
 
-    recent = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
 
-    final = pd.concat([final_df, recent])
-    final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
-    final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/newyork_warn_raw.csv')
-    final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
+        final_df['New Notice'] = final_df['Date of Notice'].str.strip(' ')
+        final_df['Amended'] = final_df['New Notice'].str.split(' ', 1)
+        final_df['Amended'] = final_df['Amended'].apply(lambda x: x[1] if len(x) > 1 else '')
+        final_df.drop(columns='New Notice', inplace = True)
+
+        recent = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
+
+        final = pd.concat([final_df, recent])
+        final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
+        final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/newyork_warn_raw.csv')
+        final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
 
 
 if __name__ == '__main__':
