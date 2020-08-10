@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -16,7 +17,7 @@ def scrape(output_dir):
     # page range needs to be updated from 55 when there are enough notices for an additional page
     # as of 5/5/2020, this version of the scraper is fine
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/oregon_warn_raw.csv'
+    logger = logging.getLogger(__name__)
     output_csv = '{}/oregon_warn_raw.csv'.format(output_dir)
     # pages = range(1, 44, 1)
     pages = 1
@@ -24,13 +25,9 @@ def scrape(output_dir):
     url = 'https://ccwd.hecc.oregon.gov/Layoff/WARN?page=1'
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
-
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
-
-
     table = soup.find_all('table') # output is list-type
-    len(table)
 
     # find header
     first_row = table[3].find_all('tr')[0]
@@ -39,7 +36,6 @@ def scrape(output_dir):
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
-    output_header
 
     # save header
     with open(output_csv, 'w') as csvfile:
@@ -52,16 +48,12 @@ def scrape(output_dir):
 
     # for page_number in pages:
             url = 'https://ccwd.hecc.oregon.gov/Layoff/WARN?page={}'.format(pages)
-            print(url)
+            logger.info(url)
 
             page = requests.get(url)
-
-            print(page.status_code) # should be 200
-
+            logger.info("Page status code is {}".format(page.status_code))
             soup = BeautifulSoup(page.text, 'html.parser')
-            
             table = soup.find_all('table') # output is list-type
-            print(len(table))
             
             output_rows = []
             for table_row in table[3].find_all('tr'):    
@@ -81,6 +73,8 @@ def scrape(output_dir):
 
         except:
             break
+
+    logger.info("OR successfully scraped.")
 
 
 if __name__ == '__main__':
