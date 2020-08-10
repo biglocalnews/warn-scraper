@@ -1,4 +1,5 @@
 import csv
+import logging
 import re
 import requests
 
@@ -8,14 +9,13 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/tennessee_warn_raw.csv'
+    logger = logging.getLogger(__name__)
     output_csv = '{}/tennessee_warn_raw.csv'.format(output_dir)
     url = 'https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html'
 
     page = requests.get(url)
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html5lib')
-
     output_header = [
         "Date Notice Posted",
         "Company",
@@ -35,7 +35,6 @@ def scrape(output_dir):
     for p in p_list:
         p_ind = p.text
         p_ind_list = p_ind.split("|")
-        # p_ind_list = [x.strip() for x in p_ind_list]
         
         if len(p_ind_list) == 6:
             output_row = []
@@ -51,12 +50,12 @@ def scrape(output_dir):
             # print(output_row)
             output_rows.append(output_row)
         else:
-            print("Error: row != 6 items")
-            print("Row: {}".format(p_ind_list))
+            logger.info("Error: row != 6 items")
+            logger.info("Row: {}".format(p_ind_list))
             excluded_rows.append(p_ind_list)
 
 
-    print(excluded_rows)
+    logger.info(excluded_rows)
 
     # manually add excluded rows
     output_rows.append([
@@ -79,6 +78,8 @@ def scrape(output_dir):
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
         writer.writerows(output_rows)
+
+    logger.info("TN successfully scraper.")
 
 if __name__ == '__main__':
     scrape()

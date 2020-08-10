@@ -1,4 +1,5 @@
 import csv
+import logging
 import re
 import requests
 
@@ -8,27 +9,23 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/wisconsin_warn_raw.csv'
+    logger = logging.getLogger(__name__)
     output_csv = '{}/wisconsin_warn_raw.csv'.format(output_dir)
     years = [2016, 2017, 2018, 2019]
 
     url = 'https://sheets.googleapis.com/v4/spreadsheets/1cyZiHZcepBI7ShB3dMcRprUFRG24lbwEnEDRBMhAqsA/values/Originals?key=AIzaSyDP0OltIjcmRQ6-9TTmEVDZPIX6BSFcunw'
     response = requests.get(url)
-    print(response.status_code)
-
+    logger.info(response.status_code)
     data = response.json()
 
     # find header
     headers = data['values'][0]
     output_header = headers[3:len(headers)-1]
 
-    output_header
-
     output_rows = []
     for row in data['values'][1:len(data['values'])]:
         output_row = row[3:len(row)]
         output_rows.append(output_row)
-
 
     # save header
     with open(output_csv, 'w') as csvfile:
@@ -36,17 +33,13 @@ def scrape(output_dir):
         writer.writerow(output_header)
         writer.writerows(output_rows)
 
-
     for year in years:
         url = 'https://dwd.wisconsin.gov/dislocatedworker/warn/{}/default.htm'.format(year)
         page = requests.get(url)
 
-        print(page.status_code) # should be 200
-
+        logger.info("Page status code is {}".format(page.status_code))
         soup = BeautifulSoup(page.text, 'html.parser')
-        
         tables = soup.find_all('table') # output is list-type
-        print(len(tables))
         
         for table in tables:
             output_rows = []
@@ -62,7 +55,7 @@ def scrape(output_dir):
                 output_row = [x.strip() for x in output_row]
                 # filter "Updates to Previously Filed Notices"
                 if len(output_row) != 9:
-                    print(output_row)
+                    logger.info(output_row)
                 else:
                     output_rows.append(output_row)
                     
@@ -70,6 +63,8 @@ def scrape(output_dir):
                 with open(output_csv, 'a') as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerows(output_rows)
+
+    logger.info("WI successfully scraped.")
 
 
 if __name__ == '__main__':
