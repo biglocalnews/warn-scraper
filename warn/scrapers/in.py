@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/indiana_warn_raw.csv'
+    logger  = logging.getLogger(__name__)
     output_csv = '{}/indiana_warn_raw.csv'.format(output_dir)
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
@@ -15,7 +16,7 @@ def scrape(output_dir):
     url1 = 'https://www.in.gov/dwd/2567.htm'
     page = requests.get(url1)
 
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
@@ -56,7 +57,7 @@ def scrape(output_dir):
     url2 = 'https://www.in.gov/dwd/3125.htm'
     page = requests.get(url2)
 
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
@@ -79,6 +80,8 @@ def scrape(output_dir):
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
+
+    logger.info("IN successfully scraped.") 
 
 
 if __name__ == '__main__':

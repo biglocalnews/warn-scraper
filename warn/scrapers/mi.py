@@ -1,4 +1,5 @@
 import csv
+import logging
 import re
 import requests
 
@@ -9,7 +10,8 @@ from bs4 import NavigableString
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/michigan_warn_raw.csv'
+    logger = logging.getLogger(__name__)
+
     output_csv = '{}/michigan_warn_raw.csv'.format(output_dir)
     year_list = range(2014, 2021, 1)
     month_list = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
@@ -34,17 +36,16 @@ def scrape(output_dir):
 
     for year in year_list:
         year = str(year)
-        print(year)
         url = 'https://www.michigan.gov/leo/0,5863,7-336-78421_95539_64178_64179---Y_{},00.html'.format(year)
 
         page = requests.get(url)
-        print(page.status_code) # should be 200
+        logger.info("Page status code is {}".format(page.status_code))
         soup = BeautifulSoup(page.text, 'html5lib')
 
         month_headers = soup.find_all("div", class_="row archive-year-section")
 
         for month_element in month_headers:
-            print(month_element.text)
+            logger.info("Month Element {}".format(month_element.text))
 
             month_data = []
             for element in month_element.next_siblings:
@@ -64,13 +65,13 @@ def scrape(output_dir):
                     date = ' '.join([day, month_element.text, year])
                     company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
                 except AttributeError as err:
-                    print("Attribute Error: {}".format(err))
+                    logger.info("Attribute Error {}".format(err))
                     error_data.append(element)
 
                 try:
                     details = element.find("p").text
                 except AttributeError as err:
-                    print("Attribute Error for p: {}".format(err))
+                    logger.info("Attribute Error for p:  {}".format(err))
                     details = element.find("span").text
 
                 try: 
@@ -89,7 +90,7 @@ def scrape(output_dir):
                     output_row = [date, company_name, closure_type, city, county, number_affected]
                     output_rows.append(output_row)
                 except AttributeError as err:
-                    print("Attribute Error: {}".format(err))
+                    logger.info("Attribute Error {}".format(err))
                     error_row = [date, company_name, details]
                     error_data.append(error_row)
 
@@ -97,7 +98,7 @@ def scrape(output_dir):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
 
-    print(error_data)
+    logger.info("Error data {}".format(error_data))
 
     fixed_rows = []
     fixed_rows.append(['30 September 2014', 'Detroit Medical Center (DMC)', 'Closure', 'Madison Heights', 'Oakland', '127'])
@@ -114,6 +115,8 @@ def scrape(output_dir):
     with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(fixed_rows)
+                
+    logger.info("MI successfully scraped.")
 
 if __name__ == '__main__':
     scrape()

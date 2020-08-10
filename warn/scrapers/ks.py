@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 import pandas as pd
 
@@ -7,8 +8,9 @@ from bs4 import BeautifulSoup
 # spot-check once more
 
 def scrape(output_dir):
+
+    logger = logging.getLogger(__name__)
     
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv'
     output_csv = '{}/kansas_warn_raw.csv'.format(output_dir)
     max_entries = 950 # manually inserted
     # script should be checked periodically to make sure the entries are below 550 - otherwise, there will be missing info
@@ -19,7 +21,7 @@ def scrape(output_dir):
     url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
@@ -45,11 +47,7 @@ def scrape(output_dir):
             url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
 
             page = requests.get(url)
-
-            print(page.status_code) # should be 200
-
             soup = BeautifulSoup(page.text, 'html.parser')
-
             table = soup.find_all('table') # output is list-type
 
             output_rows = []
@@ -62,20 +60,19 @@ def scrape(output_dir):
                 output_rows.append(output_row)
             output_rows.pop(0)
             output_rows.pop(0)
-            print(output_rows[0])
 
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
 
         except IndexError:
-            print(url + ' not found')
+            logger.info(url + ' not found')
 
-    add_links_ks()
-    add_affected_ks()
+    add_links_ks(logger)
+    add_affected_ks(logger)
 
 
-def add_links_ks():
+def add_links_ks(logger):
 
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv'
     max_entries = 950 # manually inserted
@@ -91,8 +88,6 @@ def add_links_ks():
             url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
             page = requests.get(url)
 
-            print(page.status_code) # should be 200
-
             soup = BeautifulSoup(page.text, 'html.parser')
 
             table = soup.find_all('table') # output is list-type
@@ -103,7 +98,7 @@ def add_links_ks():
                     links.append(link_text)
 
         except IndexError:
-            print(url + ' not found')
+            logger.info(url + ' not found')
 
     data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
     data['url_suffix'] = links
@@ -111,10 +106,9 @@ def add_links_ks():
     data['City'] = data['City'].str.replace('\r', '')
     data.drop(columns='Employer', inplace=True)
     data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
-    print(data)
     data.to_csv(output_csv)
 
-def add_affected_ks():
+def add_affected_ks(logger):
 
     ks_data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
     base_url = 'https://www.kansasworks.com/ada/'
@@ -126,7 +120,7 @@ def add_affected_ks():
 
     employees_affected = [['URL','Affected Employees']]
     for url in full_url_list:
-        print(url)
+        logger.info('scraper is on {}'.format(url))
         
         page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
@@ -147,12 +141,13 @@ def add_affected_ks():
     headers = employees_affected.pop(0)
     df = pd.DataFrame(employees_affected, columns=headers)
     df['Suffix'] = df['URL'].str.split('/ada/').str[-1]
-    print(df)
 
     df = df.drop_duplicates(subset='URL', keep="first")
     all_ks_data = pd.merge(ks_data, df, left_on='url_suffix', right_on='Suffix')
     all_ks_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
     all_ks_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
+
+    logger.info("KS successfully scraped.")
 
 if __name__ == '__main__':
     scrape()
