@@ -1,5 +1,6 @@
 
 import csv
+import logging
 import requests
 import pandas as pd
 
@@ -9,7 +10,8 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
+    logger  = logging.getLogger(__name__)
+
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
     max_entries = 200 # manually inserted
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 200, otherwise we could be missing data.
@@ -22,7 +24,7 @@ def scrape(output_dir):
     url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
@@ -47,8 +49,6 @@ def scrape(output_dir):
         try:
             url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
             page = requests.get(url)
-
-            print(page.status_code) # should be 200
             
             soup = BeautifulSoup(page.text, 'html.parser')
             
@@ -64,19 +64,18 @@ def scrape(output_dir):
                 output_rows.append(output_row)
             output_rows.pop(0)
             output_rows.pop(0)
-            print(output_rows[0])
             
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
         except IndexError:
-            print(url + ' not found')
+            logger.info(url + ' not found')
 
-    add_links_de()
-    add_affected_de()
+    add_links_de(logger)
+    add_affected_de(logger)
 
 
-def add_links_de():
+def add_links_de(logger):
 
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
     max_entries = 200 # manually inserted
@@ -89,8 +88,6 @@ def add_links_de():
             url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
             page = requests.get(url)
 
-            print(page.status_code) # should be 200
-
             soup = BeautifulSoup(page.text, 'html.parser')
 
             table = soup.find_all('table') # output is list-type
@@ -101,7 +98,7 @@ def add_links_de():
                     links.append(link_text)
 
         except IndexError:
-            print(url + ' not found')
+            logger.info(url + ' not found')
 
     data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
     data['url_suffix'] = links
@@ -110,7 +107,7 @@ def add_links_de():
     data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
     data.to_csv(output_csv)
 
-def add_affected_de():
+def add_affected_de(logger):
 
     de_data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
     base_url = 'https://joblink.delaware.gov/ada/'
@@ -122,7 +119,7 @@ def add_affected_de():
 
     employees_affected = [['URL','Affected Employees']]
     for url in full_url_list:
-        print(url)
+        logger.info('scraper is on {}'.format(url))
         page = requests.get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
         table = soup.find('table') # output is list-type
@@ -148,6 +145,8 @@ def add_affected_de():
     all_de_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
 
     all_de_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
+
+    logger.info("DE successfully scraped.")
 
 
 if __name__ == '__main__':

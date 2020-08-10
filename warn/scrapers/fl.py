@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/florida_warn_raw.csv'
+    logger  = logging.getLogger(__name__)
     output_csv = '{}/florida_warn_raw.csv'.format(output_dir)
     
     # max_entries = 378 # manually inserted
@@ -20,8 +21,7 @@ def scrape(output_dir):
     url = 'http://reactwarn.floridajobs.org/WarnList/Records?year={}&page={}'.format(year, page)
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
-
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
 
     table = soup.find_all('table') # output is list-type
@@ -56,11 +56,8 @@ def scrape(output_dir):
             
         for page in pages:
             url = 'http://reactwarn.floridajobs.org/WarnList/Records?year={}&page={}'.format(year,page)
-            page = requests.get(url)
-            print(page.status_code) # should be 200
-            
+            page = requests.get(url)            
             soup = BeautifulSoup(page.text, 'html5lib')
-
             table = soup.find_all('table')
 
             output_rows = []
@@ -76,7 +73,9 @@ def scrape(output_dir):
 
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerows(output_rows)           
+                writer.writerows(output_rows)  
+
+    logger.info("FL successfully scraped.")         
 
 if __name__ == '__main__':
     scrape()

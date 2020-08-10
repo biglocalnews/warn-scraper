@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests 
 
 from bs4 import BeautifulSoup
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/districtcolumbia_warn_raw.csv'
+    logger  = logging.getLogger(__name__)
     output_csv = '{}/districtcolumbia_warn_raw.csv'.format(output_dir)
 
     url_12 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202012'
@@ -24,7 +25,7 @@ def scrape(output_dir):
 
     # get data for headers
     page = requests.get(url_12)
-    print(page.status_code) # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
     table = soup.find_all('table') # output is list-type
@@ -36,7 +37,6 @@ def scrape(output_dir):
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
-    print(output_header)
 
     # save header
     with open(output_csv, 'w') as csvfile:
@@ -46,7 +46,7 @@ def scrape(output_dir):
     # loop through for data
     for url in url_list:
         page = requests.get(url)
-        print(page.status_code) # should be 200
+        logger.info("Page status code is {}".format(page.status_code))
 
         soup = BeautifulSoup(page.text, 'html.parser')
         table = soup.find_all('table') # output is list-type
@@ -66,6 +66,8 @@ def scrape(output_dir):
         with open(output_csv, 'a') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(output_rows)
+
+    logger.info("DC successfully scraped.")
 
 if __name__ == '__main__':
     scrape()
