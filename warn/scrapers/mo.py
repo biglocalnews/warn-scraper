@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -6,19 +7,17 @@ from bs4 import BeautifulSoup
 # spot-check once more
 
 def scrape(output_dir):
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/missouri_warn_raw.csv'
+
+    logger = logging.getLogger(__name__)
     output_csv = '{}/missouri_warn_raw.csv'.format(output_dir)
     years = range(2018, 2014, -1)
 
     url = 'https://jobs.mo.gov/warn2019'
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
-
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
-
     table = soup.find_all('table') # output is list-type
-    len(table)
 
     # find header
     first_row = table[0].find_all('tr')[0]
@@ -27,7 +26,6 @@ def scrape(output_dir):
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
-    output_header
 
     # save header
     with open(output_csv, 'w') as csvfile:
@@ -58,12 +56,8 @@ def scrape(output_dir):
         url = 'https://jobs.mo.gov/warn{}'.format(year)
         page = requests.get(url)
 
-        print(page.status_code) # should be 200
-
         soup = BeautifulSoup(page.text, 'html.parser')
-        
         table = soup.find_all('table') # output is list-type
-        print(len(table))
         
         output_rows = []
         for table_row in table[0].find_all('tr'):    
@@ -80,6 +74,8 @@ def scrape(output_dir):
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
+
+    logger.info("MO successfully scraped.")
 
 
 if __name__ == '__main__':

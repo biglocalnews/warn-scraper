@@ -1,5 +1,6 @@
 import gzip
 import os
+import logging
 import re
 import requests
 import subprocess
@@ -67,7 +68,7 @@ def scrape(output_dir):
             missing_titles.append(missed_dict)
 
 
-    def get_page(url):
+    def get_page(url, logger):
 
         response = requests.get(url)
 
@@ -80,7 +81,7 @@ def scrape(output_dir):
                 
             except UnicodeDecodeError:
 
-                print(url)
+                logger.info("Unicode Decode Error.")
                 html = gzip.decompress(response.content).decode('utf-8', errors='ignore')
 
 
@@ -96,17 +97,17 @@ def scrape(output_dir):
     # Create a list of HTML pages
     year = 2020
     # warn_pages = []
+    logger = logging.getLogger(__name__)
     links_short = links[0:4]
     for link in tqdm(missing_links):
-        html = get_page(link)
+        html = get_page(link, logger)
         last = link.split('=')[1]
-    #     print(last)
         open(f'/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files/warn_ny_{last}_{year}.html', 'w').write(html)
     #     warn_pages.append(html)
 
         time.sleep(1)
         
-    print('done fetching data')
+    logger.info('done fetching data')
 
 
     file_path = os.listdir('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files')
@@ -122,22 +123,15 @@ def scrape(output_dir):
         missing_pages.append(full_page)
 
 
-    import re
-
-    def parse_warn_page(html, url):
+    def parse_warn_page(html, url, logger):
 
         # Create a dictionary to store the data for a single WARN listing
         page_data = {'URL': url}
-        #  print(page_data)
 
         # Make the soup for the single page
         page_soup = BeautifulSoup(html, 'html.parser')
 
-        # Sanity check
-        # print(page_soup.prettify())
-
         # Get the first table (there should only be one)
-        
         table = page_soup.table
 
         # Get all text in the table
@@ -176,7 +170,6 @@ def scrape(output_dir):
             line = line.replace('W DB Name', 'WDB Name')
             line = line.replace('Company ', 'Company:')
             split_text = line.split(':', 1)
-    #         print(line)
             
             if len(split_text) == 2:
                 key = split_text[0]
@@ -192,7 +185,6 @@ def scrape(output_dir):
                         split_row = value.split('|')
                         page_data['County'] = split_row[0]
                         for loc_data in split_row[1:]:
-    #                         print(loc_data)
                             split_loc_data = loc_data.split(':')
                             
                             #these lines below fixed it
@@ -202,7 +194,7 @@ def scrape(output_dir):
                                 page_data[key] = value
                             
                 except IndexError:
-                    print("*****************************************************")
+                    logger.info("Index Error.")
 
         
             if len(split_text) < 2:
@@ -213,10 +205,9 @@ def scrape(output_dir):
             missing_data = missing_data[1:]
     
             value = ' '.join(map(str, missing_data))
-    #         print(value)
             page_data[new_key] = value
         except IndexError:
-            a = 'a'
+            logger.info('Index Error.')
                     
         return page_data
 
@@ -227,11 +218,11 @@ def scrape(output_dir):
     data = []
 
     """ Comment out loop below when testing individual links"""
-
+    # logger = logging.getLogger(__name__)
     file_path_short = file_path[0:2]
     page_data = []
     if missing_pages == []:
-        print('no new pages')
+        logger.info('No new pages.')
     else:
         for html_page in missing_pages:
             file = html_page.split('warn_ny_')[1]
@@ -240,10 +231,10 @@ def scrape(output_dir):
             full_url = url + file
             resp = open(html_page, 'r', encoding="utf-8", errors='ignore')
             try:
-                page_data = parse_warn_page(resp, full_url)
+                page_data = parse_warn_page(resp, full_url, logger)
                 data.append(page_data)
             except AttributeError:
-                print(url)   
+                logger.info(url + ' not found') 
 
         df = pd.DataFrame(data)
         df2 = pd.DataFrame.from_dict(missing_titles)
@@ -273,10 +264,12 @@ def scrape(output_dir):
 
         final = pd.concat([final_df, recent])
         final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
-        output_csv = '{}/michigan_warn_raw.csv'.format(output_dir)
+        output_csv = '{}/newyork_warn_raw.csv'.format(output_dir)
         final.to_csv(output_csv)
 
         final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
+
+        logger.info("NY successfully scraped.")
 
 
 if __name__ == '__main__':

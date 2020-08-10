@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 import os
 import pandas as pd
@@ -8,6 +9,8 @@ from bs4 import BeautifulSoup
 # spot-check once more
 
 def scrape(output_dir):
+
+    logger = logging.getLogger(__name__)
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv'
     
     years = range(2019, 2009, -1)
@@ -15,13 +18,10 @@ def scrape(output_dir):
     url = 'https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020'
     page = requests.get(url)
 
-    print(page.status_code) # should be 200
-
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
-
-
     table = soup.find_all('table') # output is list-type
-    len(table)
+  
 
     # find header
     first_row = table[0].find_all('tr')[2]
@@ -30,14 +30,11 @@ def scrape(output_dir):
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
-    output_header
-
 
     # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
-
 
     # save 2020
     output_rows = []
@@ -63,13 +60,9 @@ def scrape(output_dir):
         url = 'https://dol.nebraska.gov/LayoffServices/WARNReportData/?year={}'.format(year)
 
         page = requests.get(url)
-
-        print(page.status_code) # should be 200
-
-        soup = BeautifulSoup(page.text, 'html.parser')
-        
+        logger.info("Page status code is {}".format(page.status_code))
+        soup = BeautifulSoup(page.text, 'html.parser')       
         table = soup.find_all('table') # output is list-type
-        print(len(table))
         
         output_rows = []
         for table_row in table[0].find_all('tr'):    
@@ -88,27 +81,20 @@ def scrape(output_dir):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
 
-    nebraska_two()
-    combine()
+    nebraska_two(logger)
+    combine(logger, output_dir)
 
 
-def nebraska_two():
+def nebraska_two(logger):
 
     output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv'
     years = range(2019, 2009, -1)
-
-
     url = 'https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020'
 
     page = requests.get(url)
-
-    print(page.status_code) # should be 200
-
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
-
-
     table = soup.find_all('table') # output is list-type
-    len(table)
 
     # find header
     first_row = table[0].find_all('tr')[2]
@@ -117,14 +103,11 @@ def nebraska_two():
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
-    output_header
-
 
     # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
-
 
     # save 2020
     output_rows = []
@@ -149,16 +132,10 @@ def nebraska_two():
     for year in years:
 
         url = 'https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year={}'.format(year)
-
-
         page = requests.get(url)
-
-        print(page.status_code) # should be 200
-
+        logger.info("Page status code is {}".format(page.status_code))
         soup = BeautifulSoup(page.text, 'html.parser')
-
         table = soup.find_all('table') # output is list-type
-        print(len(table))
 
         output_rows = []
         for table_row in table[0].find_all('tr'):    
@@ -180,7 +157,7 @@ def nebraska_two():
                 writer.writerows(output_rows)
 
 
-def combine():
+def combine(logger, output_dir):
 
     ne_one = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
     ne_two = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
@@ -189,6 +166,8 @@ def combine():
     ne_all_data.to_csv(output_csv)
     os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
     os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
+
+    logger.info("NE successfully scraped.")
 
 if __name__ == '__main__':
     scrape()
