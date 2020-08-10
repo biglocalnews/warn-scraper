@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests 
 
 from bs4 import BeautifulSoup
@@ -6,20 +7,19 @@ from bs4 import BeautifulSoup
 # spot-check once more
 
 def scrape(output_dir):
-    
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/alabama_warn_raw.csv'
+
+    logger = logging.getLogger(__name__)
     output_csv = '{}/alabama_warn_raw.csv'.format(output_dir)
     url = 'https://www.madeinalabama.com/warn-list/'
     page = requests.get(url)
 
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
 
-    page.status_code # should be 200
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
     table = soup.find_all('table') # output is list-type
-    len(table)
 
     # if len(table) == 1:
     output_rows = []
@@ -46,6 +46,8 @@ def scrape(output_dir):
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
         writer.writerows(output_rows)
+
+    logger.info("AL successfully scraped.")
 
 if __name__ == '__main__':
     scrape()

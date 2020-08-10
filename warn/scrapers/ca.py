@@ -1,3 +1,4 @@
+import logging
 import requests
 import xlrd
 import pandas as pd
@@ -8,6 +9,8 @@ from datetime import date
 # spot-check once more
 
 def scrape(output_dir):
+
+    logger  = logging.getLogger(__name__)
 
     url = 'https://www.edd.ca.gov/jobs_and_training/warn/WARN_Report.xlsx'
     df = pd.read_excel(url)
@@ -39,6 +42,7 @@ def scrape(output_dir):
     output_file = '{}/california_warn_raw.csv'.format(output_dir)
     all_ca_data.to_csv(output_file, index=False)
 
+    logger.info("CA successfully scraped.")
 
 if __name__ == '__main__':
     scrape()
