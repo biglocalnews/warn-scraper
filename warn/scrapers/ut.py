@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -7,18 +8,17 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/utah_warn_raw.csv'
+    logger = logging.getLogger(__name__)
     output_csv = '{}/utah_warn_raw.csv'.format(output_dir)
 
     url = 'https://jobs.utah.gov/employer/business/warnnotices.html'
     page = requests.get(url)
 
-    print(page.status_code) 
+    logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
     tables = soup.find_all('table') # output is list-type
-    len(tables)
 
     # find header
     first_row = tables[0].find_all('tr')[0]
@@ -49,6 +49,8 @@ def scrape(output_dir):
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
+
+    logger.info("UT successfully scraped.")
 
 
 if __name__ == '__main__':
