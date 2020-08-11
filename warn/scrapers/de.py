@@ -71,13 +71,13 @@ def scrape(output_dir):
         except IndexError:
             logger.info(url + ' not found')
 
-    add_links_de(logger)
-    add_affected_de(logger)
+    add_links_de(logger, output_dir)
+    add_affected_de(logger, output_dir)
 
 
-def add_links_de(logger):
+def add_links_de(logger, output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv'
+    output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
     max_entries = 200 # manually inserted
 
     start_row_list = range(1, max_entries, 50)
@@ -100,16 +100,16 @@ def add_links_de(logger):
         except IndexError:
             logger.info(url + ' not found')
 
-    data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
+    data = pd.read_csv('{}/delaware_warn_raw.csv'.format(output_dir))
     data['url_suffix'] = links
     data['Employer Name'] = data['Employer'].str.replace('\r', '')
     data.drop(columns='Employer', inplace=True)
     data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
     data.to_csv(output_csv)
 
-def add_affected_de(logger):
+def add_affected_de(logger, output_dir):
 
-    de_data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
+    de_data = pd.read_csv('{}/delaware_warn_raw.csv'.format(output_dir))
     base_url = 'https://joblink.delaware.gov/ada/'
 
     full_url_list = []
@@ -144,7 +144,7 @@ def add_affected_de(logger):
     all_de_data = pd.merge(de_data, df, left_on='url_suffix', right_on='Suffix')
     all_de_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
 
-    all_de_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/delaware_warn_raw.csv')
+    all_de_data.to_csv('{}/delaware_warn_raw.csv'.format(output_dir))
 
     logger.info("DE successfully scraped.")
 
