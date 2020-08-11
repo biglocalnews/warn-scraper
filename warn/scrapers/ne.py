@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 def scrape(output_dir):
 
     logger = logging.getLogger(__name__)
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv'
+    output_csv = '{}/nebraska_warn_raw1.csv'.format(output_dir)
     
     years = range(2019, 2009, -1)
 
@@ -81,13 +81,13 @@ def scrape(output_dir):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
 
-    nebraska_two(logger)
+    nebraska_two(logger, output_dir)
     combine(logger, output_dir)
 
 
-def nebraska_two(logger):
-
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv'
+def nebraska_two(logger, output_dir):
+    
+    output_csv = '{}/nebraska_warn_raw2.csv'.format(output_dir)
     years = range(2019, 2009, -1)
     url = 'https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020'
 
@@ -159,13 +159,13 @@ def nebraska_two(logger):
 
 def combine(logger, output_dir):
 
-    ne_one = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
-    ne_two = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
+    ne_one = pd.read_csv('{}/nebraska_warn_raw1.csv'.format(output_dir))
+    ne_two = pd.read_csv('{}/nebraska_warn_raw2.csv'.format(output_dir))
     ne_all_data = pd.concat([ne_one, ne_two])
     output_csv = '{}/nebraska_warn_raw.csv'.format(output_dir)
     ne_all_data.to_csv(output_csv)
-    os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw1.csv')
-    os.remove('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/nebraska_warn_raw2.csv')
+    os.remove('{}/nebraska_warn_raw1.csv'.format(output_dir))
+    os.remove('{}/nebraska_warn_raw2.csv'.format(output_dir))
 
     logger.info("NE successfully scraped.")
 
