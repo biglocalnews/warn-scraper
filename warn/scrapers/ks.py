@@ -68,13 +68,13 @@ def scrape(output_dir):
         except IndexError:
             logger.info(url + ' not found')
 
-    add_links_ks(logger)
-    add_affected_ks(logger)
+    add_links_ks(logger, output_dir)
+    add_affected_ks(logger, output_dir)
 
 
-def add_links_ks(logger):
+def add_links_ks(logger, output_dir):
 
-    output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv'
+    output_csv = '{}/kansas_warn_raw.csv'.format(output_dir)
     max_entries = 950 # manually inserted
     start_row_list = range(1, max_entries, 25)
 
@@ -100,7 +100,7 @@ def add_links_ks(logger):
         except IndexError:
             logger.info(url + ' not found')
 
-    data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
+    data = pd.read_csv('{}/kansas_warn_raw.csv'.format(output_dir))
     data['url_suffix'] = links
     data['Employer Name'] = data['Employer'].str.replace('\r', '')
     data['City'] = data['City'].str.replace('\r', '')
@@ -108,9 +108,9 @@ def add_links_ks(logger):
     data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
     data.to_csv(output_csv)
 
-def add_affected_ks(logger):
+def add_affected_ks(logger, output_dir):
 
-    ks_data = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
+    ks_data = pd.read_csv('{}/kansas_warn_raw.csv'.format(output_dir))
     base_url = 'https://www.kansasworks.com/ada/'
 
     full_url_list = []
@@ -145,7 +145,7 @@ def add_affected_ks(logger):
     df = df.drop_duplicates(subset='URL', keep="first")
     all_ks_data = pd.merge(ks_data, df, left_on='url_suffix', right_on='Suffix')
     all_ks_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
-    all_ks_data.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/kansas_warn_raw.csv')
+    all_ks_data.to_csv('{}/kansas_warn_raw.csv'.format(output_dir))
 
     logger.info("KS successfully scraped.")
 
