@@ -7,13 +7,22 @@ from bs4 import BeautifulSoup
 
 # spot-check once more
 
+# some changes made to make 'max_entries' var dynamic.
+
+
+def get_total_results_count(soup):
+    # Pull total results count from top of page
+    # return count as an integer
+    pass
+
 def scrape(output_dir):
 
     logger  = logging.getLogger(__name__)
     output_csv = '{}/arizona_warn_raw.csv'.format(output_dir)
-    max_entries = 550 # manually inserted
+ 
     # this scraper has to be checked in on periodically to make sure that the data entries are still below 550, otherwise we could be missing data.
-    start_row_list = range(1, max_entries, 50)
+    
+    
 
     # Load for first time => get header
     start_row = 1
@@ -23,6 +32,11 @@ def scrape(output_dir):
     logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
+    
+    #max_entries = 550 # manually inserted
+    max_entries = get_total_results_count(soup)
+
+    start_row_list = range(1, max_entries, 50)
 
     table = soup.find_all('table') # output is list-type
     len(table)
