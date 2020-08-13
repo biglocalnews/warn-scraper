@@ -6,20 +6,11 @@ import pandas as pd
 
 from bs4 import BeautifulSoup
 
-# spot-check once more
-
 def scrape(output_dir):
 
     logger  = logging.getLogger(__name__)
-
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
-    max_entries = 200 # manually inserted
-    # this scraper has to be checked in on periodically to make sure that the data entries are still below 200, otherwise we could be missing data.
-    # it will be a while, we are at 65 entries.
 
-    start_row_list = range(1, max_entries, 50)
-
-    # Load for first time => get header
     start_row = 1
     url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
     page = requests.get(url)
@@ -27,9 +18,9 @@ def scrape(output_dir):
     logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
-
+    max_entries = get_total_results_count(soup)
+    start_row_list = range(1, max_entries, 50)
     table = soup.find_all('table') # output is list-type
-    len(table)
 
     # find header
     first_row = table[1].find_all('tr')[0]
@@ -71,14 +62,13 @@ def scrape(output_dir):
         except IndexError:
             logger.info(url + ' not found')
 
-    add_links_de(logger, output_dir)
+    add_links_de(logger, output_dir, max_entries)
     add_affected_de(logger, output_dir)
 
 
-def add_links_de(logger, output_dir):
+def add_links_de(logger, output_dir, max_entries):
 
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
-    max_entries = 200 # manually inserted
 
     start_row_list = range(1, max_entries, 50)
     start_row = 1
@@ -147,6 +137,14 @@ def add_affected_de(logger, output_dir):
     all_de_data.to_csv('{}/delaware_warn_raw.csv'.format(output_dir))
 
     logger.info("DE successfully scraped.")
+
+def get_total_results_count(soup):
+
+    header_num = soup.find("td", class_="cfHeaderTitle")
+    max_entries = header_num.text.split('of ')[1]
+    max_entries = int(max_entries.split(')')[0])
+
+    return max_entries
 
 
 if __name__ == '__main__':
