@@ -5,19 +5,6 @@ import pandas as pd
 
 from bs4 import BeautifulSoup
 
-# spot-check once more
-
-# some changes made to make 'max_entries' var dynamic.
-def get_total_results_count(soup):
-    # Pull total results count from top of page
-    # return count as an integer
-
-    header_num = soup.find("td", class_="cfHeaderTitle")
-    max_entries = header_num.text.split('of ')[1]
-    max_entries = int(max_entries.split(')')[0])
-
-    return max_entries
-
 def scrape(output_dir):
 
     logger  = logging.getLogger(__name__)
@@ -155,6 +142,14 @@ def add_affected(logger, output_dir):
     all_az_data.to_csv('{}/arizona_warn_raw.csv'.format(output_dir))
 
     logger.info("AZ successfully scraped.")
+
+def get_total_results_count(soup):
+
+    header_num = soup.find("td", class_="cfHeaderTitle")
+    max_entries = header_num.text.split('of ')[1]
+    max_entries = int(max_entries.split(')')[0])
+
+    return max_entries
 
 
 if __name__ == '__main__':
