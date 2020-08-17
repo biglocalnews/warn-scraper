@@ -82,6 +82,10 @@ def scrape_warn_site(state, output_dir, cache_dir, alert):
         finally:
             logger.warning(alert_msg)
 
+    #alert_manager=alert_manager
+    #slackAlertManager(alert_manager=alert_manager)
+    #not sure how to initiate slack alert manager
+
 
     state_clean = state.strip().lower()
     state_mod = import_module('warn.scrapers.{}'.format(state_clean))
@@ -92,6 +96,8 @@ def scrape_warn_site(state, output_dir, cache_dir, alert):
             #runner.send_alerts() # I don't have a runner class so this doesn't work
             #alert.send() #is a bool, doesn't work
             #alerts.send() #alerts is not defined, doesn't work
+            print("Right before .send() ")
+            alert_manager.send()
             print("We don't know what to add here.")
     except Exception as e:
         traceback_str = ''.join(traceback.format_tb(e.__traceback__))
