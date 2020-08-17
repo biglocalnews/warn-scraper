@@ -12,6 +12,7 @@ tqdm = "*"
 requests = "*"
 pandas = "*"
 xlrd = "*"
+slackclient = "*"
 
 [requires]
 python_version = "3.8"
