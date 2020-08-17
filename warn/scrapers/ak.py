@@ -11,6 +11,7 @@ def scrape(output_dir):
     url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
     page = requests.get(url)
     soup = BeautifulSoup(page.text, 'html.parser')
+    print(soup)
 
     table = soup.find_all('table') # output is list-type
     print(len(table))
