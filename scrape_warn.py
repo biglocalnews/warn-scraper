@@ -82,25 +82,14 @@ def scrape_warn_site(state, output_dir, cache_dir, alert):
         finally:
             logger.warning(alert_msg)
 
-    #alert_manager=alert_manager
-    #slackAlertManager(alert_manager=alert_manager)
-    #not sure how to initiate slack alert manager
-    #slack_class = SlackAlertManager() # needs API key and channel name
-
-
     state_clean = state.strip().lower()
     state_mod = import_module('warn.scrapers.{}'.format(state_clean))
     try:
         state_mod.scrape(output_dir)
         if alert and alert_manager:
-            #SlackAlertManager.send() this doesn't work
-            #runner.send_alerts() # I don't have a runner class so this doesn't work
-            #alert.send() #is a bool, doesn't work
-            #alerts.send() #alerts is not defined, doesn't work
-            print("Right before .send() ")
-            #alert_manager.send()
-            #slack_class.send()
-            print("We don't know what to add here.")
+            alert_manager.add('WARN Test', 'INFO')
+            alert_manager.add('WARN Test 2', 'INFO')
+            alert_manager.send()
     except Exception as e:
         traceback_str = ''.join(traceback.format_tb(e.__traceback__))
         logger.error('{} scraper did not run.'.format(state_clean))
