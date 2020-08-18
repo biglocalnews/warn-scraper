@@ -10,6 +10,7 @@ from importlib import import_module
 from pathlib import Path
 
 # Top-Level CLI script
+# Now has slack alerts
 
 def main(states):
 
