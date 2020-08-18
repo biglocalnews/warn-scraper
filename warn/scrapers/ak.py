@@ -1,4 +1,5 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
@@ -7,14 +8,20 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
 
+    logger = logging.getLogger(__name__)
     output_csv = '{}/alaska_warn_raw.csv'.format(output_dir)
-    url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
+    # output_csv = '{}/alaska_warn_raw.csv'.format(new_dir)
+
+    # url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
+    url = 'https://jobs.alaska.gov/RR/WARN_notices.htmz'
+
     page = requests.get(url)
+    logger.info("Page status code is {}".format(page.status_code))
+
     soup = BeautifulSoup(page.text, 'html.parser')
-    print(soup)
+    # print(soup)
 
     table = soup.find_all('table') # output is list-type
-    print(len(table))
     output_header = [
         'Company',
         'Location',
@@ -37,7 +44,8 @@ def scrape(output_dir):
         output_row = [x.strip() for x in output_row]
         output_rows.append(output_row)
 
-    print(output_rows)
+    # print(output_rows)
+    logger.info("AK successfully scraped.")
     
 
     
