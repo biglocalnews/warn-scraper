@@ -10,7 +10,6 @@ from importlib import import_module
 from pathlib import Path
 
 # Top-Level CLI script
-# Now has slack alerts
 
 def main(states):
 
@@ -57,27 +56,13 @@ def main(states):
 
     if args.all:
         error_states, traceback_str = run_scraper_for_all_states(output_dir, cache_dir, alert, logger)
-        # slack_messages(alert, alert_manager, error_states, traceback_str)
-        if error_states != []:
-            error_sates = [x.upper() for x in error_states]
-            states_failed.append(error_states[0])
-            traceback_msg.append(traceback_str)
+        states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
     else:
         for state in states:
             error_states, traceback_str = scrape_warn_site(state, output_dir, cache_dir, alert, logger)
-            # slack_messages(alert, alert_manager, error_states, traceback_str)
-            if error_states != []:
-                error_states = [x.upper() for x in error_states]
-                states_failed.append(error_states[0])
-                traceback_msg.append(traceback_str)
+            states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
 
-    print(states_failed, ' these states failed')
-    print('   ')
-    print('   ')
-    print(traceback_msg)
-    print('   ')
-    print('   ')
-    print(states)
+    slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
 
 
 def create_argparser():
@@ -113,7 +98,6 @@ def scrape_warn_site(state, output_dir, cache_dir, alert, logger):
     try:
         state_mod.scrape(output_dir)
         scraped_site.append(state_clean)
-        print(scraped_site, ' in scrape_warn_site')
         traceback_str = 'No errors in scraping.'
     except Exception as e:
         traceback_str = ''.join(traceback.format_tb(e.__traceback__))
@@ -131,14 +115,27 @@ def run_scraper_for_all_states(output_dir, cache_dir, alert, logger):
             state = state[0:2]
             scrape_warn_site(state, output_dir, cache_dir, alert, logger)
 
-def slack_messages(alert, alert_manager, error_states, traceback_str):
+def slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger):
     if alert and alert_manager:
-        if error_states != []:
-            error_str = ', '.join(map(str, error_states))
-            alert_manager.add('Scrapers for {} failed'.format(error_str), 'ERROR')
-            alert_manager.add(traceback_str, 'ERROR')
-            alert_manager.send()
+        
+        count_of_states_run = len(states)- len(states_failed)
+        successfully_run = list(set(states) - set(states_failed))
+        successfully_run = ', '.join(map(str, successfully_run))
+        overall_state_msg = '{} scraper(s) ran successfully: {}'.format(count_of_states_run, successfully_run)
+        logger.info(overall_state_msg)
+        alert_manager.add(overall_state_msg, 'INFO')
 
+        for fail in traceback_msg:
+            logger.error(fail)
+            alert_manager.add(fail, 'ERROR')
+        alert_manager.send()
+
+
+def states_not_scraped(states_failed, error_states, traceback_msg, traceback_str):
+    if error_states != []:
+        error_states = [x.upper() for x in error_states]
+        states_failed.append(error_states[0])
+        traceback_msg.append(traceback_str)
 
 
 if __name__ == '__main__':
