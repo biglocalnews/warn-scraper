@@ -84,6 +84,5 @@ with open('try_michigan.csv', 'a') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(table_row_list)
 
-print('We did it!')
         
 
