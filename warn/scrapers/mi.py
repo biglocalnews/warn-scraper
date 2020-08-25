@@ -100,21 +100,25 @@ def scrape(output_dir):
 
     logger.info("Error data {}".format(error_data))
 
-    fixed_rows = []
-    fixed_rows.append(['30 September 2014', 'Detroit Medical Center (DMC)', 'Closure', 'Madison Heights', 'Oakland', '127'])
-    fixed_rows.append(['23 October 2015', 'FTE Automotive', 'Closure', 'Auburn Hills', 'Oakland', '85'])
-    fixed_rows.append(['30 September 2016', 'Kmart - Sault Saint Marie', 'Closure', 'Sault Saint Marie', 'Chippewa', '47'])
-    # fixed_rows.append(['12 September 2016', 'Midwest Medical Center'])
-    fixed_rows.append(['14 August 2017', 'Great Lakes Wine & Spirits', 'Closure, Layoff, Layoff', 
-                    'Petoskey, Traverse City, Gaylord', 'Emmet, Grand Traverse, Otsego', '101'])
-    fixed_rows.append(['20 July 2017', 'Kindred Hospital - Detroit', 'Closure', 'Detroit', 'Wayne', '145'])
-    fixed_rows.append(['06 March 2017', 'Yanfeng', 'Layoff', 'Lansing', 'Ingham', '27'])
+    only_errors = []
+    for row in error_data:
+        if isinstance(row, list):
+            only_errors.append(row)
+ 
+    for row in only_errors:
+        counter = 0
+        for i in row:
+            i = i.replace('\t', '')
+            i = i.replace('\n', '')
+            i = i.replace('\xa0', '')
 
+            row[counter] = i
+            counter += 1
 
 
     with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerows(fixed_rows)
+                writer.writerows(only_errors)
                 
     logger.info("MI successfully scraped.")
 
