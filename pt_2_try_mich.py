@@ -38,28 +38,46 @@ def main():
             # print(month_data)
             output_rows = []
             for element in month_data:
-                try: 
-                    day = element.find("div", class_="meDate").text
-                    date = ' '.join([day, month_element.text, year])
-                    company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
-                    print(company_name)
-                    # data = element.find("a")["title"]
-                    # print('DATAAAAAA ', data)
-                    # print(' ')
+                try:
+
+                    extra_info = element.find("p").text
+                    extra_string = 'WARN notices are required by the Federal Worker Adjustment and Retraining Notification'
+                    if extra_string in extra_info:
+                        continue
+                    else:
+                        day = element.find("div", class_="meDate").text
+                        date = ' '.join([day, month_element.text, year])
+                        company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
+
                 except:
                     print('ELEMENT ', element)
 
                 try:
                     details = element.find("p").text
+                    details = details.replace('<br/>', '') #doesn't change anything
                 except:
-                    print('ELEMENT NO "P!!!"', element)
-                    # details = element.find("span").text
+                    details = element.find("span").text
+                    details = details.replace('<br/>', '') #doesn't change anything
 
                 try: 
-                    closure_type = re.search('^(.*)(-)', details).group(1).strip()
-                    print('CLOSURE TYPE ', closure_type)
+                    closure_type = re.search('(Layoff|Closure|Closing|LayOff)', details).group()
+
+                    city = re.search('(City:|Cities:|City)(.*)(County|Couny|Counties|County Name)', details).group(2).strip()
+                    if city[len(city)-1] in [",", ";"]:
+                        city = city[0:len(city)-1]
+
+                    county = re.search('(County:|County |Couny:|Counties:|County Name:)(.*)(Number|Numbers|Total Number|Program|Programs)(.*)(Affected|Affercted|of Affected)', details).group(2).strip()
+                    if county[len(county)-1] == ",":
+                        county = county[0:len(county)-1]
+                    # else:
+                    #     county = 'multiple counties'
+
+                    # print('City ', city)
+                    # print(element)
                 except:
-                    print('NO CLOSURE ', element)
+                    print('NO CITY ', element)
+                    print(details)
+                    a = 'a'
          
 
 

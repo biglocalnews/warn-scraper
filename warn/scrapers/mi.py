@@ -84,6 +84,7 @@ def scrape(output_dir):
                     county = re.search('(County:|Counties:|County Name:)(.*)(Number|Numbers|Program|Programs) Affected', details).group(2).strip()
                     if county[len(county)-1] == ",":
                         county = county[0:len(county)-1]
+                        
 
                     number_affected = re.search('(Number|Numbers|Program|Programs) Affected(:|;| )(.*)', details).group(3).strip()
 
