@@ -47,37 +47,56 @@ def main():
                     else:
                         day = element.find("div", class_="meDate").text
                         date = ' '.join([day, month_element.text, year])
-                        company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
+                        index_title = list(element.find('div', class_='indexTitle').children)
+                        company_name = index_title[0].text
+                        short_desc = index_title[-1]
+
+                        for desc in short_desc.strings:
+                            #this takes care of page breaks
+                            items = desc.split(',')
+                            print(items)
+                            print(desc)
+                            # for item in items:
+                            #     if not item.contains(':'):
+                            #         print(desc)
+                            #parse out the results
+
+                        # print(list(index_title[-1].strings))
+                        # company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
 
                 except:
-                    print('ELEMENT ', element)
-
-                try:
-                    details = element.find("p").text
-                    details = details.replace('<br/>', '') #doesn't change anything
-                except:
-                    details = element.find("span").text
-                    details = details.replace('<br/>', '') #doesn't change anything
-
-                try: 
-                    closure_type = re.search('(Layoff|Closure|Closing|LayOff)', details).group()
-
-                    city = re.search('(City:|Cities:|City)(.*)(County|Couny|Counties|County Name)', details).group(2).strip()
-                    if city[len(city)-1] in [",", ";"]:
-                        city = city[0:len(city)-1]
-
-                    county = re.search('(County:|County |Couny:|Counties:|County Name:)(.*)(Number|Numbers|Total Number|Program|Programs)(.*)(Affected|Affercted|of Affected)', details).group(2).strip()
-                    if county[len(county)-1] == ",":
-                        county = county[0:len(county)-1]
-                    # else:
-                    #     county = 'multiple counties'
-
-                    # print('City ', city)
-                    # print(element)
-                except:
-                    print('NO CITY ', element)
-                    print(details)
+                    # print('ELEMENT ', element)
                     a = 'a'
+
+                # try:
+                #     details = element.find("p").text
+                #     # details = details.replace('<br/>', '') #doesn't change anything
+                # except:
+                #     # details = element.find("span").text
+                #     # details = details.replace('<br/>', '') #doesn't change anything
+                #     # print(list(list(element.children)[-1].children))
+                #     print(list(element.find('div', class_='indexTitle').children))
+                #     print('')
+
+                # try: 
+                #     closure_type = re.search('(Layoff|Closure|Closing|LayOff)', details).group()
+
+                #     city = re.search('(City:|Cities:|City)(.*)(County|Couny|Counties|County Name)', details).group(2).strip()
+                #     if city[len(city)-1] in [",", ";"]:
+                #         city = city[0:len(city)-1]
+
+                #     county = re.search('(County:|County |Couny:|Counties:|County Name:)(.*)(Number|Numbers|Total Number|Program|Programs)(.*)(Affected|Affercted|of Affected)', details).group(2).strip()
+                #     if county[len(county)-1] == ",":
+                #         county = county[0:len(county)-1]
+                #     # else:
+                #     #     county = 'multiple counties'
+
+                #     # print('City ', city)
+                #     # print(element)
+                # except:
+                #     print('NO CITY ', element)
+                #     print(details)
+                #     a = 'a'
          
 
 
