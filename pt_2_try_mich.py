@@ -48,67 +48,64 @@ def main():
                         day = element.find("div", class_="meDate").text
                         date = ' '.join([day, month_element.text, year])
                         index_title = list(element.find('div', class_='indexTitle').children)
-                        company_name = index_title[0].text
-                        short_desc = index_title[-1]
-
-                        for desc in short_desc.strings:
-                            #this takes care of page breaks
-                            items = desc.split(',')
-                            print(items)
-                            print(desc)
-                            # for item in items:
-                            #     if not item.contains(':'):
-                            #         print(desc)
-                            #parse out the results
-
-                        # print(list(index_title[-1].strings))
-                        # company_name = element.find("a", class_="bodylinks").text.strip() # strange white space between items
+                        company_name = element.find("a", class_="bodylinks").text.strip() # strange white
+                        # print(company_name) #space between items
 
                 except:
                     # print('ELEMENT ', element)
                     a = 'a'
 
-                # try:
-                #     details = element.find("p").text
-                #     # details = details.replace('<br/>', '') #doesn't change anything
-                # except:
-                #     # details = element.find("span").text
-                #     # details = details.replace('<br/>', '') #doesn't change anything
-                #     # print(list(list(element.children)[-1].children))
-                #     print(list(element.find('div', class_='indexTitle').children))
-                #     print('')
+                try:
+                    details = element.find("p").text
 
-                # try: 
-                #     closure_type = re.search('(Layoff|Closure|Closing|LayOff)', details).group()
+                    pattern = re.compile("""
+                        (?P<category>.*) #grabs the type of notice
+                        \s-\sCit(?:y|ies):?\s #identifies city/cities
+                        (?P<city>.*)
+                        ,\sCount(?:y|ies)(?:\sName)?:?\s
+                        (?P<county>.*)
+                        ,\s
+                        (?P<unit>Number\w?|Program\w?)
+                        \sAffected[:|;|\s]
+                        (?P<count>.*)
+                        """, re.VERBOSE)
+                    match = re.search(pattern, details)
+                    category, city, county, unit, count = match.groups()
 
-                #     city = re.search('(City:|Cities:|City)(.*)(County|Couny|Counties|County Name)', details).group(2).strip()
-                #     if city[len(city)-1] in [",", ";"]:
-                #         city = city[0:len(city)-1]
+                except:
+                    details = element.find("span").text
 
-                #     county = re.search('(County:|County |Couny:|Counties:|County Name:)(.*)(Number|Numbers|Total Number|Program|Programs)(.*)(Affected|Affercted|of Affected)', details).group(2).strip()
-                #     if county[len(county)-1] == ",":
-                #         county = county[0:len(county)-1]
-                #     # else:
-                #     #     county = 'multiple counties'
+                    # use this:
+                    try:
+                        pattern = re.compile("""
+                            (?P<category>.*) #grabs the type of notice
+                            \s-\sCit(?:y|ies):?\s #identifies city/cities
+                            (?P<city>.*)
+                            ,\sCount(?:y|ies)(?:\sName)?:?\s
+                            (?P<county>.*)
+                            ,\s
+                            (?P<unit>Number\w?|Program\w?)
+                            \sAffected[:|;|\s]|\sAffercted[:|;|\s]
+                            (?P<count>.*)
+                            """, re.VERBOSE)
+                        match = re.search(pattern, details)
+                        category, city, county, unit, count = match.groups()
 
-                #     # print('City ', city)
-                #     # print(element)
-                # except:
-                #     print('NO CITY ', element)
-                #     print(details)
-                #     a = 'a'
-         
+                        # This errors out
+                        # Try it in Pythex
+                    except:
+                        print(details)
+                        print('------')
+                        print(' ')
+
+                        # This returns none
 
 
+# Output for this script currently prints out only the lines that have not been properly parsed by the REGEX.
+                    
 
 
-
-# def extract_div_data(div_element):
-
-#     month_list = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
-
-#     data = div_element.find("a")["title"]
-#     print(data)
+                    
 
 
 main()
