@@ -71,6 +71,7 @@ def main():
                         """, re.VERBOSE)
                     match = re.search(pattern, details)
                     category, city, county, unit, count = match.groups()
+                    # print(details)
 
                 except:
                     details = element.find("span").text
@@ -85,7 +86,7 @@ def main():
                             (?P<county>.*)
                             ,\s
                             (?P<unit>Number\w?|Program\w?)
-                            \sAffected[:|;|\s]|\sAffercted[:|;|\s]
+                            \sAffected[:|;|\s]
                             (?P<count>.*)
                             """, re.VERBOSE)
                         match = re.search(pattern, details)
@@ -97,6 +98,7 @@ def main():
                         print(details)
                         print('------')
                         print(' ')
+                        # a = 'This is fun'
 
                         # This returns none
 
