@@ -96,6 +96,7 @@ def main():
                         # Try it in Pythex
                     except:
                         print(details)
+                        print(index_title[3])
                         print('------')
                         print(' ')
                         # a = 'This is fun'
