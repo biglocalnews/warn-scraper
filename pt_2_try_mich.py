@@ -10,7 +10,20 @@ from bs4 import NavigableString
 def main():
     # year_list = [2014, 2015, 2016, 2017, 2018, 2019, 2020]
     year_list = [2016, 2017]
-    month_list = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
+    month_list = [
+        "December", 
+        "November", 
+        "October", 
+        "September", 
+        "August", 
+        "July", 
+        "June", 
+        "May", 
+        "April", 
+        "March", 
+        "February", 
+        "January"
+        ]
 
     for year in year_list:
         year = str(year)
@@ -74,32 +87,38 @@ def main():
                     # print(details)
 
                 except:
-                    details = element.find("span").text
+                    
+                    details = element.find("span").text.split("\n")
+                    # print(details)
+                    for detail in details:
+                
 
                     # use this:
-                    try:
-                        pattern = re.compile("""
-                            (?P<category>.*) #grabs the type of notice
-                            \s-\sCit(?:y|ies):?\s #identifies city/cities
-                            (?P<city>.*)
-                            ,\sCount(?:y|ies)(?:\sName)?:?\s
-                            (?P<county>.*)
-                            ,\s
-                            (?P<unit>Number\w?|Program\w?)
-                            \sAffected[:|;|\s]
-                            (?P<count>.*)
-                            """, re.VERBOSE)
-                        match = re.search(pattern, details)
-                        category, city, county, unit, count = match.groups()
-
+                        try:
+                            print("Matching...", detail)
+                            pattern = re.compile("""
+                                (?P<category>.*) #grabs the type of notice
+                                \s-\sCit(?:y|ies):?\s #identifies city/cities
+                                (?P<city>.*)
+                                ,\sCount(?:y|ies)(?:\sName)?:?\s
+                                (?P<county>.*)
+                                ,\s
+                                (?P<unit>Number\w?|Program\w?)
+                                \sAffected[:|;|\s]
+                                (?P<count>.*)
+                                """, re.VERBOSE)
+                            match = re.search(pattern, detail)
+                            category, city, county, unit, count = match.groups()
+                            print(category)
                         # This errors out
                         # Try it in Pythex
-                    except:
-                        print(details)
-                        print(index_title[3])
-                        print('------')
-                        print(' ')
-                        # a = 'This is fun'
+                        except:
+                            print('Error', detail)
+                            # print(detail)
+                            # print(index_title[3])
+                        # print('------')
+                        # print(' ')
+                            a = 'This is fun'
 
                         # This returns none
 
