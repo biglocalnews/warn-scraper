@@ -35,7 +35,8 @@ def main():
         month_headers = soup.find_all("div", class_="row archive-year-section")
 
         for month_element in month_headers:
-            print("Month Element {}".format(month_element.text))
+            # print("Month Element {}".format(month_element.text))
+            a = "a"
 
             month_data = []
             for element in month_element.next_siblings:
@@ -88,30 +89,24 @@ def main():
 
                 except:
                     
-                    details = element.find("span").text.split("\n")
+                    details = element.find("span").text #.split("\n")
                     # print(details)
-                    for detail in details:
+                    # for detail in details:
             
                     # use this:
-                        try:
-                            # print("Matching...", detail)
-                            pattern = re.compile("""
-                                (?P<category>.*) #grabs the type of notice
-                                \s-\sCit(?:y|ies):?\s #identifies city/cities
-                                (?P<city>.*)
-                                ,\sCount(?:y|ies)(?:\sName)?:?\s
-                                (?P<county>.*)
-                                ,\s
-                                (?P<unit>Number\w?|Program\w?)
-                                \sAffected[:|;|\s]
-                                (?P<count>.*)
-                                """, re.VERBOSE)
-                            match = re.search(pattern, detail)
-                            category, city, county, unit, count = match.groups()
+                    try:
+                        # print("Matching...", detail)
+                        pattern = re.compile("""
+                            (?P<category>.*)\s-\sCit(?:y|ies):?\s(?P<city>.*),
+                            \sCount(?:y|ies)(?:\sName)?:?\s(?P<county>.*),
+                            \s(?P<unit>Number\w?|Program\w?)\sAffected[:|;|\s](?P<count>.*)
+                            """, re.VERBOSE)
+                        match = re.search(pattern, details)
+                        category, city, county, unit, count = match.groups()
 
-                        except:
-                            print('Error', detail)
-                            a = 'This is fun'
+                    except:
+                        print(details)
+                        a = 'This is fun'
 
                         # This returns none
 
