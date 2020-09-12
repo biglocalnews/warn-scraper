@@ -91,11 +91,10 @@ def main():
                     details = element.find("span").text.split("\n")
                     # print(details)
                     for detail in details:
-                
-
+            
                     # use this:
                         try:
-                            print("Matching...", detail)
+                            # print("Matching...", detail)
                             pattern = re.compile("""
                                 (?P<category>.*) #grabs the type of notice
                                 \s-\sCit(?:y|ies):?\s #identifies city/cities
@@ -109,15 +108,9 @@ def main():
                                 """, re.VERBOSE)
                             match = re.search(pattern, detail)
                             category, city, county, unit, count = match.groups()
-                            print(category)
-                        # This errors out
-                        # Try it in Pythex
+
                         except:
                             print('Error', detail)
-                            # print(detail)
-                            # print(index_title[3])
-                        # print('------')
-                        # print(' ')
                             a = 'This is fun'
 
                         # This returns none
