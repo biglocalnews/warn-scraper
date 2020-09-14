@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 from bs4 import NavigableString
 
 def main():
-    # year_list = [2014, 2015, 2016, 2017, 2018, 2019, 2020]
-    year_list = [2016, 2017]
+    year_list = [2014, 2015, 2016, 2017, 2018, 2019, 2020]
+    # year_list = [2016, 2017]
     month_list = [
         "December", 
         "November", 
@@ -75,7 +75,7 @@ def main():
                     pattern = re.compile("""
                         (?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*
                         (?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s
-                        (?P<county>.*)(?:,|;)(?:\s\S|\s)
+                        (?P<county>.*)(?:,|;|\S)(?:\s\S|\s)
                         (?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s]
                         (?P<count>.*)
                         """, re.VERBOSE)
@@ -95,7 +95,7 @@ def main():
                         pattern = re.compile("""
                             (?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*
                             (?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s
-                            (?P<county>.*)(?:,|;)(?:\s\S|\s)
+                            (?P<county>.*)(?:,|;|\S)(?:\s\S|\s)
                             (?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s]
                             (?P<count>.*)
                             """, re.VERBOSE)
