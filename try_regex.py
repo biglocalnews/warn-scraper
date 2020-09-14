@@ -25,7 +25,7 @@ category, city, county, unit, count = match.groups()
 "(?P<category>.*)\s-\sCit(?:y|ies):?\s(?P<city>.*),(?:\s|\s\S)Coun(?:ty|ies)(?:\sName)?:?\s(?P<county>.*),\s(?P<unit>Number\w?|Program\w?)\sAffe(?:cted|rcted)[:|;|\s](?P<count>.*)"
 
 # Updated Version 2: all above + Closure: instead of Closure - 
-"(?P<category>.*)(?:\s-\s|:\s)Cit(?:y|ies):?\s(?P<city>.*),(?:\s|\s\S)Coun(?:ty|ies)(?:\sName)?:?\s(?P<county>.*),\s(?P<unit>Number\w?|Program\w?)\sAffe(?:cted|rcted)[:|;|\s](?P<count>.*)"
+"(?P<category>.*)(?:\s-\s|:\s)Cit(?:y|ies):?\s(?P<city>.*),(?:\s|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s(?P<county>.*),\s(?P<unit>Number\w?|Program\w?)\sAffe(?:cted|rcted)[:|;|\s](?P<count>.*)"
 
 # This string is an issue, figure it out later
 # Layoff - City: Lansing,  Couny: Ingham, Number Affected: 27
@@ -90,3 +90,21 @@ Closure: City: Detroit, County: Wayne, Number Affected: 145
 
 # saved regex, the most recent
 # https://regex101.com/r/PgAtOM/1
+
+
+## (?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*(?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s(?P<county>.*),(?:\s\S|\s)(?P<unit>Number\w?|Program\w?)(?:\sof\s:\s)Affe(?:cted|rcted)[:|;|\s](?P<count>.*)
+
+
+## Most up to date:
+"""
+(?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*
+(?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s
+(?P<county>.*)(?:,|;)(?:\s\S|\s)
+(?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s]
+(?P<count>.*)
+""" 
+
+"""
+(?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*(?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s(?P<county>.*)(?:,|;)(?:\s\S|\s)(?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s](?P<count>.*)
+"""
+

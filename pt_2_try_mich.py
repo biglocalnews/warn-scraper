@@ -73,14 +73,10 @@ def main():
                     details = element.find("p").text
 
                     pattern = re.compile("""
-                        (?P<category>.*) #grabs the type of notice
-                        \s-\sCit(?:y|ies):?\s #identifies city/cities
-                        (?P<city>.*)
-                        ,\sCount(?:y|ies)(?:\sName)?:?\s
-                        (?P<county>.*)
-                        ,\s
-                        (?P<unit>Number\w?|Program\w?)
-                        \sAffected[:|;|\s]
+                        (?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*
+                        (?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s
+                        (?P<county>.*)(?:,|;)(?:\s\S|\s)
+                        (?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s]
                         (?P<count>.*)
                         """, re.VERBOSE)
                     match = re.search(pattern, details)
@@ -97,25 +93,23 @@ def main():
                     try:
                         # print("Matching...", detail)
                         pattern = re.compile("""
-                            (?P<category>.*)\s-\sCit(?:y|ies):?\s(?P<city>.*),
-                            \sCount(?:y|ies)(?:\sName)?:?\s(?P<county>.*),
-                            \s(?P<unit>Number\w?|Program\w?)\sAffected[:|;|\s](?P<count>.*)
+                            (?P<category>.*)(?:\s-|:)(?:\S\s|\s|\S)Cit(?:y|ies):?\s*
+                            (?P<city>.*)(?:,|;)(?:\s|\S\s|\S|\s\s|\S\S|\s\S)Coun(?:ty|ies|y)(?:\sName)?:?\s
+                            (?P<county>.*)(?:,|;)(?:\s\S|\s)
+                            (?P<unit>Number\w?|Program\w?)(?:\sof\s|\s)Affe(?:cted|rcted)[:|;|\s]
+                            (?P<count>.*)
                             """, re.VERBOSE)
                         match = re.search(pattern, details)
                         category, city, county, unit, count = match.groups()
 
                     except:
-                        print(details)
+                        print('ERROR ', details)
                         a = 'This is fun'
 
                         # This returns none
 
 
-# Output for this script currently prints out only the lines that have not been properly parsed by the REGEX.
-                    
-
-
-                    
+# Output for this script currently prints out only the lines that have not been properly parsed by the REGEX.             
 
 
 main()
