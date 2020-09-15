@@ -8,6 +8,7 @@ import traceback
 from alerts import SlackAlertManager
 from importlib import import_module
 from pathlib import Path
+from warn_uploads import send_query
 
 # Top-Level CLI script
 
@@ -63,6 +64,9 @@ def main(states):
             states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
 
     slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
+    send_query()
+
+
 
 
 def create_argparser():
