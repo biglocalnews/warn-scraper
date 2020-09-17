@@ -40,7 +40,7 @@ def send_query():
         }
     }
     '''
-
+    uploaded_files = []
     dirs = os.listdir(path)
     for file in dirs:
 
@@ -57,8 +57,13 @@ def send_query():
         upload_uri = res["data"]["createFileUploadUri"]["ok"]["uri"]
         upload_uri
         upload(f'{path}/{file}', upload_uri)
+
         
-        logger.info("{} uploaded.".format(file))
+        msg = "{} uploaded.".format(file)
+        logger.info(msg)
+        uploaded_files.append(msg)
+
+    return uploaded_files
 
 
 if __name__ == '__main__':
