@@ -1,6 +1,9 @@
 import requests as req
 from pathlib import Path
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 def send_query():
 
@@ -55,7 +58,7 @@ def send_query():
         upload_uri
         upload(f'{path}/{file}', upload_uri)
         
-        print(file, ' uploaded')
+        logger.info("{} uploaded.".format(file))
 
 
 if __name__ == '__main__':
