@@ -9,6 +9,7 @@ from alerts import SlackAlertManager
 from importlib import import_module
 from pathlib import Path
 from warn_uploads import send_query
+from remove_data import move_data
 
 # Top-Level CLI script
 
@@ -66,6 +67,9 @@ def main(states):
     slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
     logged_info = send_query()
     slack_messages_two(alert, alert_manager, logged_info)
+
+    data_dir = os.environ['WARN_DATA_DIR']
+    move_data(data_dir)
 
 
 def create_argparser():
