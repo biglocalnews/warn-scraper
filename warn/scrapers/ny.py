@@ -1,18 +1,56 @@
 import gzip
-import os
-import logging
+import time
 import re
+import os
 import requests
 import subprocess
-import time
-import pandas as pd
+import logging
 
 from bs4 import BeautifulSoup
+from os import path
+from datetime import datetime
 from tqdm import tqdm
+import pandas as pd
 
-# spot-check once more
+"""
+
+This scraper is a heavily-modified version of the WARN Notices scraper the Brown Institute created for their tutorial: 
+Introduction to Web Scraping with Python.
+
+Link: https://browninstitute.github.io/at_home/python/jupyter/2020/04/28/web-scraping.html
+
+"""
+logger = logging.getLogger(__name__)
 
 def scrape(output_dir):
+
+    make_call()
+    missing_links, missing_titles = missing_html_list()
+    missing_pages = download_new_notices(missing_links)
+
+    data = []
+    # page_data = []
+
+    if missing_pages == []:
+        logger.info('no new files')
+    else:
+        for html_page in missing_pages:
+            file = html_page.split('warn_ny_')[1]
+            file = file.split('_2020.html')[0]
+            url = 'https://labor.ny.gov/app/warn/details.asp?id='
+            full_url = url + file
+            resp = open(html_page, 'r', encoding="utf-8", errors='ignore')
+            try:
+                page_data = parse_warn_page(resp, full_url)
+                data.append(page_data)
+                logger.info("data appended for url: {}".format(full_url))
+            except AttributeError:
+                logger.info("attribute error: {}".format(url))
+        
+        data_to_csv(data, missing_titles, output_dir)
+    
+
+def make_call():
 
     subprocess.call([
         'curl',
@@ -21,6 +59,7 @@ def scrape(output_dir):
         'https://labor.ny.gov/app/warn/default.asp?warnYr=2020'
     ])
 
+def missing_html_list():
 
     with open('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/warn_2020.html', 'r', errors='ignore') as html:
         response = html.read()
@@ -67,43 +106,38 @@ def scrape(output_dir):
             missed_dict = {'url':i, 'title':missed}
             missing_titles.append(missed_dict)
 
-
-    def get_page(url, logger):
-
-        response = requests.get(url)
-
-        # This is pretty atypical. Some of these pages are not being unzipped correctly
-        # If the request didn't automatically unzip the html, we have to do it ourselves
-        # We can check the encoding that the requests library thinks the page has returned
-        if response.apparent_encoding is None:
-            try:
-                html = gzip.decompress(response.content).decode('utf-8')
-                
-            except UnicodeDecodeError:
-
-                logger.info("Unicode Decode Error.")
-                html = gzip.decompress(response.content).decode('utf-8', errors='ignore')
+    return missing_links, missing_titles
 
 
-        else:
-            html = response.text
+def get_page(url):
 
-        # Remove non-breaking space characters in the HTML
-        html = html.replace('&nbsp;', ' ')
+    response = requests.get(url)
+    # This is pretty atypical. Some of these pages are not being unzipped correctly
+    # If the request didn't automatically unzip the html, we have to do it ourselves
+    # We can check the encoding that the requests library thinks the page has returned
+    if response.apparent_encoding is None:
+        try:
+            html = gzip.decompress(response.content).decode('utf-8')
+            
+        except UnicodeDecodeError:
 
-        return html
+            logger.info(url)
+            html = gzip.decompress(response.content).decode('utf-8', errors='ignore')
+    else:
+        html = response.text
 
+    # Remove non-breaking space characters in the HTML
+    html = html.replace('&nbsp;', ' ')
+    return html
 
+def download_new_notices(missing_links):
     # Create a list of HTML pages
     year = 2020
-    # warn_pages = []
-    logger = logging.getLogger(__name__)
-    links_short = links[0:4]
+
     for link in tqdm(missing_links):
-        html = get_page(link, logger)
+        html = get_page(link)
         last = link.split('=')[1]
         open(f'/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files/warn_ny_{last}_{year}.html', 'w').write(html)
-    #     warn_pages.append(html)
 
         time.sleep(1)
         
@@ -114,7 +148,7 @@ def scrape(output_dir):
     actual_path = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files'
     warn_url = 'https://labor.ny.gov/app/warn/details.asp?id='
 
-
+    # rename missing_pages to a more descriptive name
     missing_pages = []
     for i in missing_links:
         file = i.split('=')[1]
@@ -122,157 +156,131 @@ def scrape(output_dir):
         full_page = f'{actual_path}/{html}'
         missing_pages.append(full_page)
 
+    return missing_pages
 
-    def parse_warn_page(html, url, logger):
 
-        # Create a dictionary to store the data for a single WARN listing
-        page_data = {'URL': url}
+def parse_warn_page(html, url):
 
-        # Make the soup for the single page
-        page_soup = BeautifulSoup(html, 'html.parser')
+    # Create a dictionary to store the data for a single WARN listing
+    page_data = {'URL': url}
+    page_soup = BeautifulSoup(html, 'html.parser')
+    table = page_soup.table
+    table_text = table.get_text()
 
-        # Get the first table (there should only be one)
-        table = page_soup.table
+    lines = table_text.split('\n')
+    missing_data = []
+    keys = []
+    split_text, line = parse_lines(lines, missing_data, page_data)
 
-        # Get all text in the table
-        # get_text() will get all text in all elements underneath the current element, 
-        # in this case all of the text in the <p> tags
-        table_text = table.get_text()
+    try:
+        missing_data = list(filter(None, missing_data))
+        new_key = missing_data[0]
+        missing_data = missing_data[1:]
 
-        # Split the text into a list of lines based on the newline character '\n'
-        lines = table_text.split('\n')
-        missing_data = []
-        keys = []
+        value = ' '.join(map(str, missing_data))
+        page_data[new_key] = value
+        logger.info('There was some missing data for this record.')
 
-        # Iterate over each line
-        counter = 0
+    except IndexError:
+        logger.info('There is no missing data for this record.')
+                
+    return page_data
 
-        for i, line in enumerate(lines):
-            counter += 1
-            line = line.strip()
-            line = line.replace('  ', ' ')
-            line = line.replace('Dates', 'Date')
-            line = line.replace('Counties', 'County')
-            line = line.replace('Contact(s)', 'Contact')
-            line = line.replace('Rapid Response Specialist ', 'Rapid Response Specialist') # add all the changes from DF replace columns & then run again
-            line = line.replace('Rapid Response Specialists', 'Rapid Response Specialist') # for all years 2015-2020
-            line = line.replace('Unions', 'Union')
-            line = line.replace('ERNUM', 'FEIN NUM')
-            line = line.replace('Control Number', ' Event Number')
-            line = line.replace('Event Number', ' Event Number')
-            line = line.replace('  Event Number', ' Event Number')
-            line = line.replace('WIB Name', 'WDB Name')
-            line = line.replace(' WDB Name', 'WDB Name')
-            line = line.replace(' WBD Name', 'WDB Name')
-            line = line.replace('WBD Name', 'WDB Name')
-            line = line.replace('Total Employees ', 'Total Employees:')
-            line = line.replace('Business Type ', 'Business Type:')
-            line = line.replace('W DB Name', 'WDB Name')
-            line = line.replace('Company ', 'Company:')
-            split_text = line.split(':', 1)
+def parse_lines(lines, missing_data, page_data):
+
+    # Iterate over each line
+    counter = 0
+    for i, line in enumerate(lines):
+        counter += 1
+        line = line.strip()
+        line = line.replace('  ', ' ')
+        line = line.replace('Dates', 'Date')
+        line = line.replace('Counties', 'County')
+        line = line.replace('Contact(s)', 'Contact')
+        line = line.replace('Rapid Response Specialist ', 'Rapid Response Specialist') # add all the changes from DF replace columns & then run again
+        line = line.replace('Rapid Response Specialists', 'Rapid Response Specialist') # for all years 2015-2020
+        line = line.replace('Unions', 'Union')
+        line = line.replace('ERNUM', 'FEIN NUM')
+        line = line.replace('Control Number', ' Event Number')
+        line = line.replace('Event Number', ' Event Number')
+        line = line.replace('  Event Number', ' Event Number')
+        line = line.replace('WIB Name', 'WDB Name')
+        line = line.replace(' WDB Name', 'WDB Name')
+        line = line.replace(' WBD Name', 'WDB Name')
+        line = line.replace('WBD Name', 'WDB Name')
+        line = line.replace('Total Employees ', 'Total Employees:')
+        line = line.replace('Business Type ', 'Business Type:')
+        line = line.replace('W DB Name', 'WDB Name')
+        line = line.replace('Company ', 'Company:')
+        split_text = line.split(':', 1)
+
+        if len(split_text) == 2:
+            split_text_twice(split_text, page_data, missing_data)
+        if len(split_text) < 2:
+            missing_data.append(line)
+
+    return split_text, line
+
+def split_text_twice(split_text, page_data, missing_data):
+    key = split_text[0]
+    value = split_text[1]
+    page_data[key] = value
+    if value == '':
+        missing_data.append(key)
+
+    # The County data is formatted weirdly, using | to delimit some columns we want in our data
+    try:
+        if key == 'County':
             
-            if len(split_text) == 2:
-                key = split_text[0]
-                value = split_text[1]
-                page_data[key] = value
-                if value == '':
-                    missing_data.append(key)
+            split_row = value.split('|')
+            page_data['County'] = split_row[0]
+            for loc_data in split_row[1:]:
+                split_loc_data = loc_data.split(':')
+                
+                #these lines below fixed it
+                if len(split_loc_data) > 1:
+                    key = split_loc_data[0]
+                    value = split_loc_data[1]
+                    page_data[key] = value
+                
+    except IndexError:
+        logger.info("Index Error with splitting key and value for county")
 
-                # The County data is formatted weirdly, using | to delimit some columns we want in our data
-                try:
-                    if key == 'County':
-                        
-                        split_row = value.split('|')
-                        page_data['County'] = split_row[0]
-                        for loc_data in split_row[1:]:
-                            split_loc_data = loc_data.split(':')
-                            
-                            #these lines below fixed it
-                            if len(split_loc_data) > 1:
-                                key = split_loc_data[0]
-                                value = split_loc_data[1]
-                                page_data[key] = value
-                            
-                except IndexError:
-                    logger.info("Index Error.")
-
-        
-            if len(split_text) < 2:
-                missing_data.append(line)
-        try:
-            missing_data = list(filter(None, missing_data))
-            new_key = missing_data[0]
-            missing_data = missing_data[1:]
+def data_to_csv(data, missing_titles, output_dir):
     
-            value = ' '.join(map(str, missing_data))
-            page_data[new_key] = value
-        except IndexError:
-            logger.info('Index Error.')
-                    
-        return page_data
+    df = pd.DataFrame(data)
+    df2 = pd.DataFrame.from_dict(missing_titles)
+
+    df = df[['URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
+        'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
+        'Contact', 'Phone', 'Business Type', 'Number Affected',
+        'Total Employees', 'Layoff Date', 'Closing Date',
+        'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
 
 
-    # # Create a list to store the data we scrape.
-    # # Each item in the list will correspond to a single WARN listing
-    # # Each column will be a piece of single labeled piece information from the listing
-    data = []
-
-    """ Comment out loop below when testing individual links"""
-    # logger = logging.getLogger(__name__)
-    file_path_short = file_path[0:2]
-    page_data = []
-    if missing_pages == []:
-        logger.info('No new pages.')
-    else:
-        for html_page in missing_pages:
-            file = html_page.split('warn_ny_')[1]
-            file = file.split('_2020.html')[0]
-            url = 'https://labor.ny.gov/app/warn/details.asp?id='
-            full_url = url + file
-            resp = open(html_page, 'r', encoding="utf-8", errors='ignore')
-            try:
-                page_data = parse_warn_page(resp, full_url, logger)
-                data.append(page_data)
-            except AttributeError:
-                logger.info(url + ' not found') 
-
-        df = pd.DataFrame(data)
-        df2 = pd.DataFrame.from_dict(missing_titles)
-
-        df = df[['URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
-            'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
-            'Contact', 'Phone', 'Business Type', 'Number Affected',
-            'Total Employees', 'Layoff Date', 'Closing Date',
-            'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
+    df_and_titles = pd.merge(df, df2, left_on='URL', right_on='url')
+    df_and_titles.rename(columns={'title':'notice_title'}, inplace=True)
+    final_df = df_and_titles[['notice_title','URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
+        'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
+        'Contact', 'Phone', 'Business Type', 'Number Affected',
+        'Total Employees', 'Layoff Date', 'Closing Date',
+        'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
 
 
-        df_and_titles = pd.merge(df, df2, left_on='URL', right_on='url')
-        df_and_titles.rename(columns={'title':'notice_title'}, inplace=True)
-        final_df = df_and_titles[['notice_title','URL', 'Date of Notice', ' Event Number', 'Rapid Response Specialist',
-            'Reason Stated for Filing', 'Company', 'County', 'WDB Name', ' Region',
-            'Contact', 'Phone', 'Business Type', 'Number Affected',
-            'Total Employees', 'Layoff Date', 'Closing Date',
-            'Reason for Dislocation', 'FEIN NUM', 'Union', 'Classification']]
+    final_df['New Notice'] = final_df['Date of Notice'].str.strip(' ')
+    final_df['Amended'] = final_df['New Notice'].str.split(' ', 1)
+    final_df['Amended'] = final_df['Amended'].apply(lambda x: x[1] if len(x) > 1 else '')
+    final_df.drop(columns='New Notice', inplace = True)
 
+    recent = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
 
-        final_df['New Notice'] = final_df['Date of Notice'].str.strip(' ')
-        final_df['Amended'] = final_df['New Notice'].str.split(' ', 1)
-        final_df['Amended'] = final_df['Amended'].apply(lambda x: x[1] if len(x) > 1 else '')
-        final_df.drop(columns='New Notice', inplace = True)
-
-        recent = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
-
-        final = pd.concat([final_df, recent])
-        final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
-        output_csv = '{}/newyork_warn_raw.csv'.format(output_dir)
-        final.to_csv(output_csv)
-
-        final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
-
-        logger.info("NY successfully scraped.")
+    final = pd.concat([final_df, recent])
+    final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
+    
+    output_csv = '{}/newyork_warn_raw.csv'.format(output_dir)
+    final.to_csv(output_csv) 
+    final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
 
 
 if __name__ == '__main__':
     scrape()
-
-
