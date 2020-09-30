@@ -6,13 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-jupyterlab = "*"
-requests = "*"
 bs4 = "*"
-pandas = "*"
 html5lib = "*"
-xlrd = "*"
 tqdm = "*"
+requests = "*"
+pandas = "*"
+xlrd = "*"
+slackclient = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

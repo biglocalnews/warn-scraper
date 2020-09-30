@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+.DS_Store
+__pycache__
+*.egg-info/
+=======
+logs/
 old_data/
 .DS_Store
 data/
@@ -5,3 +11,4 @@ warn_scraper/
 .ipynb_checkpoints/
 .python-version
 __pycache__/
+>>>>>>> master
