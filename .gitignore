@@ -4,7 +4,9 @@ logs/
 old_data/
 .DS_Store
 data/
+archive_data
 warn_scraper/
+process/
 .ipynb_checkpoints/
 .python-version
 __pycache__/

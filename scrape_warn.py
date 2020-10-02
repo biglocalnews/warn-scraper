@@ -80,14 +80,14 @@ def create_argparser():
         action='store', 
         nargs='+', 
         type=str, 
-        default=["/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/"]
+        default=["/home/ubuntu/projects/WARN/data/"]
         )
     my_parser.add_argument(
         '--cache-dir', 
         help='specify log dir', 
         action='store',
         nargs='+',
-        default=["/Users/dilcia_mercedes/Big_Local_News/prog/WARN/logs/"]
+        default=["/home/ubuntu/logs/"]
         )
     my_parser.add_argument('--states', '-s', help='one or more state postals', nargs='+', action='store')
     my_parser.add_argument('--all', '-a',action='store_true', help='run all scrapers')
