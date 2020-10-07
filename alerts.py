@@ -1,4 +1,3 @@
-
 import logging
 import os
 
@@ -67,3 +66,5 @@ class AlertMessage:
             self.level,
             self._msg
         )
+
+

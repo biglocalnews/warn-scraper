@@ -10,8 +10,7 @@ def scrape(output_dir):
 
     logger = logging.getLogger(__name__)
     output_csv = '{}/alabama_warn_raw.csv'.format(output_dir)
-    # url = 'https://www.madeinalabama.com/warn-list/'
-    url = 'https://www.madeinalabama.com/warn-listz/'
+    url = 'https://www.madeinalabama.com/warn-list/'
     page = requests.get(url)
 
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
