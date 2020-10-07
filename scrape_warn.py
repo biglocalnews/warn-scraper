@@ -21,7 +21,7 @@ def main(states):
     states = args.states
     alert = args.alert
 
-    log_file = os.path.join(cache_dir, 'log.txt')
+    log_file = os.path.join(cache_dir, 'warn-scraper.txt')
 
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
@@ -80,14 +80,14 @@ def create_argparser():
         action='store', 
         nargs='+', 
         type=str, 
-        default=["/home/ubuntu/projects/WARN/data/"]
+        default=[os.environ['WARN_DATA_PATH']]
         )
     my_parser.add_argument(
         '--cache-dir', 
         help='specify log dir', 
         action='store',
         nargs='+',
-        default=["/home/ubuntu/logs/"]
+        default=[os.environ['WARN_LOG_PATH']]
         )
     my_parser.add_argument('--states', '-s', help='one or more state postals', nargs='+', action='store')
     my_parser.add_argument('--all', '-a',action='store_true', help='run all scrapers')
@@ -127,7 +127,6 @@ def slack_messages(alert, alert_manager, states_failed, traceback_msg, states, l
     if alert and alert_manager:
 
         if states == None:
-            print("Hello")
             count = 0
             states_list = []
             dirs = os.listdir('warn/scrapers/')
