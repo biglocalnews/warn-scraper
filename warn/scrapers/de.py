@@ -136,7 +136,6 @@ def add_affected_de(logger, output_dir):
 
     all_de_data.to_csv('{}/delaware_warn_raw.csv'.format(output_dir))
 
-    logger.info("DE successfully scraped.")
 
 def get_total_results_count(soup):
 

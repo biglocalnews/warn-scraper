@@ -45,7 +45,6 @@ def scrape(output_dir):
         output_rows.append(output_row)
 
     # print(output_rows)
-    logger.info("AK successfully scraped.")
     
 
     

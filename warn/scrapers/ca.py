@@ -42,7 +42,6 @@ def scrape(output_dir):
     output_file = '{}/california_warn_raw.csv'.format(output_dir)
     all_ca_data.to_csv(output_file, index=False)
 
-    logger.info("CA successfully scraped.")
 
 if __name__ == '__main__':
     scrape()

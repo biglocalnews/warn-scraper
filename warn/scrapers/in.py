@@ -81,7 +81,6 @@ def scrape(output_dir):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
 
-    logger.info("IN successfully scraped.") 
 
 
 if __name__ == '__main__':

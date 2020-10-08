@@ -141,7 +141,6 @@ def add_affected(logger, output_dir):
 
     all_az_data.to_csv('{}/arizona_warn_raw.csv'.format(output_dir))
 
-    logger.info("AZ successfully scraped.")
 
 def get_total_results_count(soup):
 

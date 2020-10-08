@@ -167,7 +167,6 @@ def combine(logger, output_dir):
     os.remove('{}/nebraska_warn_raw1.csv'.format(output_dir))
     os.remove('{}/nebraska_warn_raw2.csv'.format(output_dir))
 
-    logger.info("NE successfully scraped.")
 
 if __name__ == '__main__':
     scrape()

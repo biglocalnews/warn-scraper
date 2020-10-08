@@ -140,7 +140,6 @@ def add_affected_ks(logger, output_dir):
     all_ks_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
     all_ks_data.to_csv('{}/kansas_warn_raw.csv'.format(output_dir))
 
-    logger.info("KS successfully scraped.")
 
 def get_total_results_count(soup):
 

@@ -74,7 +74,6 @@ def scrape(output_dir):
         except:
             break
 
-    logger.info("OR successfully scraped.")
 
 
 if __name__ == '__main__':

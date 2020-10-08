@@ -135,7 +135,6 @@ def add_affected_ok(logger, output_dir):
     all_ok_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
 
     all_ok_data.to_csv('{}/oklahoma_warn_raw.csv'.format(output_dir), index=False)
-    logger.info("OK successfully scraped.")
 
 def get_total_results_count(soup):
 

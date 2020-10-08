@@ -87,7 +87,6 @@ def scrape(output_dir):
             except:
                 break
             
-    logger.info("WA successfully scraped.")
 
 
 

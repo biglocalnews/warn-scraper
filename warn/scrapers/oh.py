@@ -42,7 +42,6 @@ def scrape(output_dir):
         writer.writerow(output_header)
         writer.writerows(output_rows)
 
-    logger.info("OH successfully scraped.")
 
 if __name__ == '__main__':
     scrape()
