@@ -55,13 +55,14 @@ def make_call():
     subprocess.call([
         'curl',
         '-o',
-        '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/warn_2020.html',
+        '{}/warn_2020.html'.format(os.environ['PROCESS_DIR']),
         'https://labor.ny.gov/app/warn/default.asp?warnYr=2020'
     ])
 
+
 def missing_html_list():
 
-    with open('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/warn_2020.html', 'r', errors='ignore') as html:
+    with open('{}/warn_2020.html'.format(os.environ['PROCESS_DIR']), 'r', errors='ignore') as html:
         response = html.read()
 
     soup = BeautifulSoup(response, 'html.parser')
@@ -81,7 +82,7 @@ def missing_html_list():
 
     already_downloaded = []
 
-    for i in os.listdir('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files'):
+    for i in os.listdir('{}/2020_files'.format(os.environ['PROCESS_DIR'])):
         if i == '.DS_Store':
             continue
         elif i == 'titles.csv':
@@ -133,19 +134,20 @@ def get_page(url):
 def download_new_notices(missing_links):
     # Create a list of HTML pages
     year = 2020
+    process_dir = os.environ['PROCESS_DIR']
 
     for link in tqdm(missing_links):
         html = get_page(link)
         last = link.split('=')[1]
-        open(f'/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files/warn_ny_{last}_{year}.html', 'w').write(html)
+        open('{}/2020_files/warn_ny_{}_{}.html'.format(process_dir, last, year), 'w').write(html)
 
         time.sleep(1)
         
     logger.info('done fetching data')
 
 
-    file_path = os.listdir('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files')
-    actual_path = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/2020_files'
+    file_path = os.listdir('{}/2020_files'.format(os.environ['PROCESS_DIR']))
+    actual_path = '{}/2020_files'.format(os.environ['PROCESS_DIR'])
     warn_url = 'https://labor.ny.gov/app/warn/details.asp?id='
 
     # rename missing_pages to a more descriptive name
@@ -272,14 +274,14 @@ def data_to_csv(data, missing_titles, output_dir):
     final_df['Amended'] = final_df['Amended'].apply(lambda x: x[1] if len(x) > 1 else '')
     final_df.drop(columns='New Notice', inplace = True)
 
-    recent = pd.read_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
+    recent = pd.read_csv('{}/newyork_warn_recent.csv'.format(os.environ['PROCESS_DIR']))
 
     final = pd.concat([final_df, recent])
     final = final.loc[:, ~final.columns.str.startswith('Unnamed')]
     
     output_csv = '{}/newyork_warn_raw.csv'.format(output_dir)
     final.to_csv(output_csv) 
-    final.to_csv('/Users/dilcia_mercedes/Big_Local_News/prog/WARN/warn_scraper/process/newyork_warn_recent.csv')
+    final.to_csv('{}/newyork_warn_recent.csv'.format(os.environ['PROCESS_DIR']))
 
 
 if __name__ == '__main__':

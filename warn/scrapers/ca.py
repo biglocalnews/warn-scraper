@@ -15,27 +15,28 @@ def scrape(output_dir):
 
     url = 'https://www.edd.ca.gov/jobs_and_training/warn/WARN_Report.xlsx'
     df = pd.read_excel(url)
-    # output_csv = '{}/california_warn_raw.csv'.format(output_dir)
-    cali_data_today = os.environ['CALI_CURRENT_DATA']
+    cali_data_today = os.environ['WARN_DATA_PATH']
     cali_data_path = '{}/california_warn_raw.csv'.format(cali_data_today)
-    df.to_csv(cali_data_path, index = None)
+    df.to_csv(cali_data_path)
     ca_data = pd.read_csv(cali_data_path)
-    ca_data = ca_data.iloc[2:-16]
 
+    ca_data = ca_data.iloc[1:-8]
     headers = ca_data.iloc[0]
     ca_data = ca_data[1:]
     ca_data.columns = headers
+    ca_data.columns = ca_data.columns.str.replace('\\n',' ')
 
-    ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure']]
+
+    ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure Type']]
     ca_data = ca_data[:-1]
 
-    cali_hist_data = os.environ['CALI_HIST_DATA']
+    cali_hist_data = os.environ['PROCESS_DIR']
     cali_hist_path = '{}/california_warn_raw_start.csv'.format(cali_hist_data)
-
+    
     recent = pd.read_csv(cali_hist_path)
     recent = recent.loc[:, ~recent.columns.str.startswith('Unnamed')]
 
-    ca_data = ca_data.rename(columns={'Notice Date':'Notice_Date', 'Effective Date':'Effective_Date', 'Received Date': 'Received_Date', 'No. Of Employees ': 'No_employees'})
+    ca_data = ca_data.rename(columns={'Notice Date':'Notice_Date', 'Effective Date':'Effective_Date', 'Received Date': 'Received_Date', 'No. Of Employees ': 'No_employees', 'Layoff/Closure Type':'Layoff/Closure'})
 
     ca_data['Notice_Date'] = pd.to_datetime(ca_data['Notice_Date'])
     ca_data['Effective_Date'] = pd.to_datetime(ca_data['Effective_Date'])
