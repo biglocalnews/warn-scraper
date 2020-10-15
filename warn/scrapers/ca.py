@@ -21,11 +21,11 @@ def scrape(output_dir):
     ca_data = pd.read_csv(cali_data_path)
 
     ca_data = ca_data.iloc[1:-8]
-    headers = ca_data.iloc[0]
+    headers = ca_data.iloc[1]
     ca_data = ca_data[1:]
     ca_data.columns = headers
     ca_data.columns = ca_data.columns.str.replace('\\n',' ')
-
+    ca_data = ca_data[1:]
 
     ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure Type']]
     ca_data = ca_data[:-1]
