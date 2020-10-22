@@ -34,21 +34,20 @@ def scrape(output_dir):
 
     cali_hist_data = os.environ['PROCESS_DIR']
     cali_hist_path = '{}/california_warn_raw_start.csv'.format(cali_hist_data)
+    cali_hist = pd.read_csv(cali_hist_path)
 
-    recent = pd.read_csv(cali_hist_path)
-    recent = recent.loc[:, ~recent.columns.str.startswith('Unnamed')]
+    ca_data.rename(columns={"No. Of Employees ": "Employees"}, inplace=True)
+    ca_data.rename(columns={"Layoff/Closure Type": "Layoff/Closure"}, inplace=True)
 
-    ca_data = ca_data.rename(columns={'Notice Date':'Notice_Date', 'Effective Date':'Effective_Date', 'Received Date': 'Received_Date', 'No. Of Employees ': 'No_employees', 'Layoff/Closure Type':'Layoff/Closure'})
+    ca_data['Notice Date'] = pd.to_datetime(ca_data['Notice Date'])
+    ca_data['Effective Date'] = pd.to_datetime(ca_data['Effective Date'])
+    ca_data['Received Date'] = pd.to_datetime(ca_data['Received Date'])
 
-    ca_data['Notice_Date'] = pd.to_datetime(ca_data['Notice_Date'])
-    ca_data['Effective_Date'] = pd.to_datetime(ca_data['Effective_Date'])
-    ca_data['Received_Date'] = pd.to_datetime(ca_data['Received_Date'])
+    ca_data['Notice Date'] = ca_data['Notice Date'].dt.strftime('%m/%d/%Y')
+    ca_data['Effective Date'] = ca_data['Effective Date'].dt.strftime('%m/%d/%Y')
+    ca_data['Received Date'] = ca_data['Received Date'].dt.strftime('%m/%d/%Y')
 
-    ca_data['Notice_Date'] = ca_data['Notice_Date'].dt.strftime('%m/%d/%Y')
-    ca_data['Effective_Date'] = ca_data['Effective_Date'].dt.strftime('%m/%d/%Y')
-    ca_data['Received_Date'] = ca_data['Received_Date'].dt.strftime('%m/%d/%Y')
-
-    all_ca_data = pd.concat([ca_data, recent])
+    all_ca_data = pd.concat([ca_data, cali_hist])
     all_ca_data.drop_duplicates(inplace=True)
 
     output_file = '{}/california_warn_raw.csv'.format(output_dir)
