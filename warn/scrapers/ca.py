@@ -20,19 +20,21 @@ def scrape(output_dir):
     df.to_csv(cali_data_path)
     ca_data = pd.read_csv(cali_data_path)
 
-    ca_data = ca_data.iloc[1:-8]
-    headers = ca_data.iloc[1]
+    ca_data = ca_data.iloc[:,1:]
+    ca_data.dropna(axis=0, how='all', inplace=True)
+
     ca_data = ca_data[1:]
+    headers = ca_data.iloc[0]
     ca_data.columns = headers
-    ca_data.columns = ca_data.columns.str.replace('\\n',' ')
     ca_data = ca_data[1:]
+    ca_data.columns = ca_data.columns.str.replace('\\n',' ')
 
     ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure Type']]
-    ca_data = ca_data[:-1]
+    ca_data = ca_data.dropna(subset=['Effective Date', 'Received Date', 'Company', 'County'])
 
     cali_hist_data = os.environ['PROCESS_DIR']
     cali_hist_path = '{}/california_warn_raw_start.csv'.format(cali_hist_data)
-    
+
     recent = pd.read_csv(cali_hist_path)
     recent = recent.loc[:, ~recent.columns.str.startswith('Unnamed')]
 
@@ -48,6 +50,7 @@ def scrape(output_dir):
 
     all_ca_data = pd.concat([ca_data, recent])
     all_ca_data.drop_duplicates(inplace=True)
+
     output_file = '{}/california_warn_raw.csv'.format(output_dir)
     all_ca_data.to_csv(output_file, index=False)
 
