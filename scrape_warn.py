@@ -56,6 +56,7 @@ def main(states):
     states_failed = []
     traceback_msg = []
 
+
     if args.all:
         error_states, traceback_str = run_scraper_for_all_states(output_dir, cache_dir, alert, logger, states_failed, traceback_msg)
         states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
@@ -63,6 +64,7 @@ def main(states):
         for state in states:
             error_states, traceback_str = scrape_warn_site(state, output_dir, cache_dir, alert, logger)
             states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
+
 
     slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
     logged_info = send_query()
@@ -123,6 +125,7 @@ def run_scraper_for_all_states(output_dir, cache_dir, alert, logger, states_fail
             error_states, traceback_str = scrape_warn_site(state, output_dir, cache_dir, alert, logger)
     return error_states, traceback_str
 
+
 def slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger):
     if alert and alert_manager:
 
@@ -147,9 +150,9 @@ def slack_messages(alert, alert_manager, states_failed, traceback_msg, states, l
         alert_manager.add(overall_state_msg, 'INFO')
 
         for fail in traceback_msg:
+
             logger.error(fail)
             alert_manager.add(fail, 'ERROR')
-        alert_manager.send()
 
 
 def slack_messages_two(alert, alert_manager, logged_info):
