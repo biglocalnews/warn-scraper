@@ -29,7 +29,9 @@ def scrape(output_dir):
     ca_data = ca_data[1:]
     ca_data.columns = ca_data.columns.str.replace('\\n',' ')
 
-    ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure Type']]
+    # print(ca_data.columns)
+
+    ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure']]
     ca_data = ca_data.dropna(subset=['Effective Date', 'Received Date', 'Company', 'County'])
 
     cali_hist_data = os.environ['PROCESS_DIR']
@@ -37,7 +39,7 @@ def scrape(output_dir):
     cali_hist = pd.read_csv(cali_hist_path)
 
     ca_data.rename(columns={"No. Of Employees ": "Employees"}, inplace=True)
-    ca_data.rename(columns={"Layoff/Closure Type": "Layoff/Closure"}, inplace=True)
+    # ca_data.rename(columns={"Layoff/Closure Type": "Layoff/Closure"}, inplace=True)
 
     ca_data['Notice Date'] = pd.to_datetime(ca_data['Notice Date'])
     ca_data['Effective Date'] = pd.to_datetime(ca_data['Effective Date'])
