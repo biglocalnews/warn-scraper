@@ -36,6 +36,10 @@ def scrape(output_dir):
 
     cali_hist_data = os.environ['PROCESS_DIR']
     cali_hist_path = '{}/california_warn_raw_start.csv'.format(cali_hist_data)
+    # cali_hist_path = '{}/bla.csv'.format(cali_hist_data)
+
+    # print(cali_hist_path)
+
     cali_hist = pd.read_csv(cali_hist_path)
 
     ca_data.rename(columns={"No. Of Employees ": "Employees"}, inplace=True)

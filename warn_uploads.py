@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 def send_query():
 
     endpoint = 'https://api.biglocalnews.org/graphql'
-    token = os.environ['QUERY_TOKEN'] 
+    token = os.environ['QUERY_2_TOKEN'] 
     token_type = 'JWT'
     project_id = os.environ['WARN_PROJECT_ID']
     path = os.environ['WARN_DATA_PATH']
