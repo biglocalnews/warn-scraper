@@ -7,7 +7,6 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import date
 
-# spot-check once more
 
 def scrape(output_dir):
 
@@ -29,16 +28,11 @@ def scrape(output_dir):
     ca_data = ca_data[1:]
     ca_data.columns = ca_data.columns.str.replace('\\n',' ')
 
-    # print(ca_data.columns)
-
     ca_data = ca_data[['Notice Date', 'Effective Date', 'Received Date', 'Company', 'City', 'County', 'No. Of Employees ', 'Layoff/Closure']]
     ca_data = ca_data.dropna(subset=['Effective Date', 'Received Date', 'Company', 'County'])
 
     cali_hist_data = os.environ['PROCESS_DIR']
     cali_hist_path = '{}/california_warn_raw_start.csv'.format(cali_hist_data)
-    # cali_hist_path = '{}/bla.csv'.format(cali_hist_data)
-
-    # print(cali_hist_path)
 
     cali_hist = pd.read_csv(cali_hist_path)
 
