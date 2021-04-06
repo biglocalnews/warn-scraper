@@ -12,13 +12,15 @@ def scrape(output_dir):
  
     # Load for first time => get header
     start_row = 1
-    url = 'https://www.azjobconnection.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=sda&choice=1'.format(start_row)
+    url = 'https://www.azjobconnection.gov/search/warn_lookups?commit=Search&page={}&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'.format(start_row)
+    # url = 'https://www.azjobconnection.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=sda&choice=1'.format(start_row)
     page = requests.get(url)
 
     logger.info("Page status code is {}".format(page.status_code))
 
     soup = BeautifulSoup(page.text, 'html.parser')
-    max_entries = get_total_results_count(soup)
+    max_entries = 25 # code logic to get error once it goes past
+    # max_entries = get_total_results_count(soup)
     start_row_list = range(1, max_entries, 50)
     table = soup.find_all('table') # output is list-type
 
@@ -142,13 +144,13 @@ def add_affected(logger, output_dir):
     all_az_data.to_csv('{}/arizona_warn_raw.csv'.format(output_dir))
 
 
-def get_total_results_count(soup):
+# def get_total_results_count(soup):
 
-    header_num = soup.find("td", class_="cfHeaderTitle")
-    max_entries = header_num.text.split('of ')[1]
-    max_entries = int(max_entries.split(')')[0])
+#     header_num = soup.find("td", class_="cfHeaderTitle")
+#     max_entries = header_num.text.split('of ')[1]
+#     max_entries = int(max_entries.split(')')[0])
 
-    return max_entries
+#     return max_entries
 
 
 if __name__ == '__main__':

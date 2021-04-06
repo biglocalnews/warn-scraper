@@ -1,7 +1,6 @@
 import os
 import logging
 import requests
-import xlrd
 import pandas as pd
 
 def scrape(output_dir):
