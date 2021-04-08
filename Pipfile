@@ -13,6 +13,7 @@ requests = "*"
 pandas = "*"
 xlrd = "*"
 slackclient = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.8"
