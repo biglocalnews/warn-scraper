@@ -13,9 +13,9 @@ def scrape(output_dir):
 
     warn_links = get_warn_links()
     scrape_warn_table(warn_links, logger)
+
     return
 
-    
 
 def get_warn_links():
 
@@ -37,6 +37,7 @@ def get_warn_links():
             warn_links.append(full_link)
 
     return warn_links
+    
 
 def scrape_warn_table(warn_links, logger):
 
