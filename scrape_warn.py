@@ -67,11 +67,11 @@ def main(states):
 
 
     slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
-    # logged_info = send_query()
-    # slack_messages_two(alert, alert_manager, logged_info)
+    logged_info = send_query()
+    slack_messages_two(alert, alert_manager, logged_info)
 
-    # data_dir = os.environ['WARN_DATA_PATH']
-    # move_data(data_dir)
+    data_dir = os.environ['WARN_DATA_PATH']
+    move_data(data_dir)
 
 
 def create_argparser():
