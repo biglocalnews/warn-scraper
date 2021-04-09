@@ -12,7 +12,9 @@ def scrape(output_dir):
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
 
     warn_links = get_warn_links()
-    scrape_warn_table(warn_links, logger)
+    output_rows, list_info = scrape_warn_table(warn_links, logger)
+    # print(list_info)
+
 
     return
 
@@ -41,30 +43,33 @@ def get_warn_links():
 
 def scrape_warn_table(warn_links, logger):
 
-    # for link in warn_links:
-
-    #     page = requests.get(link)
-    #     logger.info("Page status code is {}".format(page.status_code))
-    #     soup = BeautifulSoup(page.text, 'html.parser')
-    #     print(soup)
-
-    headers =  ['Employer', 'City', 'ZIP', 'LWIB Area', 'Notice Date', 'WARN Type']
+    #headers =  ['Employer', 'City', 'ZIP', 'LWIB Area', 'Notice Date', 'WARN Type']
         
-    link = warn_links[0]
+    link = warn_links[0] # delete when program is done
     page = requests.get(link)
+    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
-    # print(soup)
 
     table = soup.table
-    # print(table.prettify())
-    tr = table.find_all('tr')
-    for table_row in tr:
-        td = table_row.find_all('td')
-        print(td)
-        print(' ')
+    output_rows = []
+    for table_row in table.find_all('tr'):    
+        columns = table_row.find_all('td')
+        output_row = []
 
+        for column in columns:
+            output_row.append(column.text)
+        output_row = [x.strip() for x in output_row]
+        output_rows.append(output_row)
 
-    return
+    list_info = []
+    for a in table.find_all('a', href=True, text=True):
+        link_text = a['href']
+        company_name = [a.text]
+        list_info.append(company_name)
+        list_info.extend(link_text)
+        
+
+    return output_rows, list_info
 
 
 if __name__ == '__main__':
