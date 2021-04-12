@@ -13,8 +13,7 @@ def scrape(output_dir):
 
     warn_links = get_warn_links()
     output_rows, list_info = scrape_warn_table(warn_links, logger)
-    # print(list_info)
-
+    print(list_info)
 
     return
 
@@ -23,8 +22,12 @@ def get_warn_links():
 
     warn_links = ['https://joblink.delaware.gov/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93']
 
-    page = requests.get(warn_links[0])
-    soup = BeautifulSoup(page.text, 'html.parser')
+    # page = requests.get(warn_links[0])
+    # soup = BeautifulSoup(page.text, 'html.parser')
+
+    with open('delaware_warn.html', 'r', errors='ignore') as html:
+        response = html.read() 
+    soup = BeautifulSoup(response, 'html.parser')
     pag_div = soup.find_all("div", class_="pagination")
 
     elem_a = pag_div[0].find_all('a')
@@ -62,12 +65,15 @@ def scrape_warn_table(warn_links, logger):
         output_rows.append(output_row)
 
     list_info = []
+
     for a in table.find_all('a', href=True, text=True):
-        link_text = a['href']
-        company_name = [a.text]
-        list_info.append(company_name)
-        list_info.extend(link_text)
-        
+        link_text = [a['href']]
+
+        if len(link_text[0]) <= 23:
+            company_name = [a.text]
+            company_name.extend(link_text)
+            list_info.append(company_name)
+
 
     return output_rows, list_info
 
