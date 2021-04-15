@@ -13,10 +13,9 @@ def scrape(output_dir):
 
     warn_links = get_warn_links()
     output_rows, list_info = scrape_warn_table(warn_links, logger)
-    print(list_info)
+    
 
     return
-
 
 def get_warn_links():
 
@@ -73,7 +72,6 @@ def scrape_warn_table(warn_links, logger):
             company_name = [a.text]
             company_name.extend(link_text)
             list_info.append(company_name)
-
 
     return output_rows, list_info
 
