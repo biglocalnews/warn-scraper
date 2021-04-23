@@ -12,21 +12,27 @@ def scrape(output_dir):
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
 
     warn_links = get_warn_links()
-    output_rows, list_info = scrape_warn_table(warn_links, logger)
-    
+    # output_rows, list_info = scrape_warn_table(warn_links, logger)
+    all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
+    for link in warn_links:
+        output_rows, list_info = scrape_warn_table(link, logger)
+        list_of_records = scrape_record_link(list_info)
 
+        full_records = combination(output_rows, list_of_records)
+        all_records.extend(full_records)
+
+    with open(output_csv, 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(all_records)
+    
     return
 
 def get_warn_links():
 
     warn_links = ['https://joblink.delaware.gov/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93']
 
-    # page = requests.get(warn_links[0])
-    # soup = BeautifulSoup(page.text, 'html.parser')
-
-    with open('delaware_warn.html', 'r', errors='ignore') as html:
-        response = html.read() 
-    soup = BeautifulSoup(response, 'html.parser')
+    page = requests.get(warn_links[0])
+    soup = BeautifulSoup(page.text, 'html.parser')
     pag_div = soup.find_all("div", class_="pagination")
 
     elem_a = pag_div[0].find_all('a')
@@ -43,11 +49,8 @@ def get_warn_links():
     return warn_links
     
 
-def scrape_warn_table(warn_links, logger):
-
-    #headers =  ['Employer', 'City', 'ZIP', 'LWIB Area', 'Notice Date', 'WARN Type']
+def scrape_warn_table(link, logger):
         
-    link = warn_links[0] # delete when program is done
     page = requests.get(link)
     logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
@@ -75,159 +78,51 @@ def scrape_warn_table(warn_links, logger):
 
     return output_rows, list_info
 
+def scrape_record_link(list_info):
+    
+    base_url = 'https://joblink.delaware.gov/'
+    
+    all_records = []
+    for record in list_info:
+        record_link = record[1]
+        full_link = base_url + record_link
+        single_record = scrape_again(full_link)
+        all_records.append(single_record)
+        
+    return all_records
+
+def scrape_again(link):
+    
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'html.parser')
+    data = soup.find("dl", class_="data")
+    
+    do_not_add = ['Company Name', 'Notice Date', 'Number of Employees Affected', 'Address', '', None]
+    
+    single_record = []
+    for i in data:
+        i = i.string
+        if i != None:
+            i = i.strip('\n')
+        if i in do_not_add:
+            continue
+        single_record.append(i)
+        
+    return single_record
+
+def combination(output_rows, list_of_records):
+    output_rows = output_rows[1:]
+    indexes = [0, 4]
+    for row in output_rows:
+        for index in sorted(indexes, reverse=True):
+            del row[index]
+            
+    for row, record in zip(output_rows, list_of_records):
+        record.extend(row)
+        
+    return list_of_records
+
 
 if __name__ == '__main__':
     scrape()
-
-
-
-
-    # page = 0
-
-    # while True:
-    #     try:
-    #         page += 1
-    #         drug_data(page)
-    #     except Exception as ex:
-    #         print(ex)
-    #         print("probably last page:", page)
-    #         break # exit `while` loop
-
-    # url = 'https://joblink.delaware.gov/search/warn_lookups?commit=Search&page=5&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'
-    # page = requests.get(url)
-    # logger.info("Page status code is {}".format(page.status_code)) #200 even if page has no content
-    
-    # for i in range()
-    # page = requests.get(url)
-    # logger.info("Page status code is {}".format(page.status_code))
-
-    # try:
-    #     page = requests.get(url)
-    # except 
-
-
-
-#     start_row = 1
-#     url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
-#     page = requests.get(url)
-
-#     logger.info("Page status code is {}".format(page.status_code))
-
-#     soup = BeautifulSoup(page.text, 'html.parser')
-#     max_entries = get_total_results_count(soup)
-#     start_row_list = range(1, max_entries, 50)
-#     table = soup.find_all('table') # output is list-type
-
-#     # find header
-#     first_row = table[1].find_all('tr')[0]
-#     headers = first_row.find_all('th')
-#     output_header = []
-#     for header in headers:
-#         output_header.append(header.text)
-#     output_header = [x.strip() for x in output_header]
-#     output_header
-
-#     # save header
-#     with open(output_csv, 'w') as csvfile:
-#         writer = csv.writer(csvfile)
-#         writer.writerow(output_header)
-
-#     for start_row in start_row_list:
-#         try:
-#             url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
-#             page = requests.get(url)
-            
-#             soup = BeautifulSoup(page.text, 'html.parser')
-            
-#             table = soup.find_all('table') # output is list-type
-
-#             output_rows = []
-#             for table_row in table[1].find_all('tr'):    
-#                 columns = table_row.find_all('td')
-#                 output_row = []
-#                 for column in columns:
-#                     output_row.append(column.text)
-#                 output_row = [x.strip() for x in output_row]
-#                 output_rows.append(output_row)
-#             output_rows.pop(0)
-#             output_rows.pop(0)
-            
-#             with open(output_csv, 'a') as csvfile:
-#                 writer = csv.writer(csvfile)
-#                 writer.writerows(output_rows)
-#         except IndexError:
-#             logger.info(url + ' not found')
-
-#     add_links_de(logger, output_dir, max_entries)
-#     add_affected_de(logger, output_dir)
-
-
-# def add_links_de(logger, output_dir, max_entries):
-
-#     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
-
-#     start_row_list = range(1, max_entries, 50)
-#     start_row = 1
-#     links = []
-#     for start_row in start_row_list:
-#         try:
-#             url = 'https://joblink.delaware.gov/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=50&orderby=employer&choice=1'.format(start_row)
-#             page = requests.get(url)
-
-#             soup = BeautifulSoup(page.text, 'html.parser')
-
-#             table = soup.find_all('table') # output is list-type
-#             for a in soup.find_all('a', href=True, text=True):
-#                 link_text = a['href']
-    
-#                 if 'callingfile' in link_text:
-#                     links.append(link_text)
-
-#         except IndexError:
-#             logger.info(url + ' not found')
-
-#     data = pd.read_csv('{}/delaware_warn_raw.csv'.format(output_dir))
-#     data['url_suffix'] = links
-#     data['Employer Name'] = data['Employer'].str.replace('\r', '')
-#     data.drop(columns='Employer', inplace=True)
-#     data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
-#     data.to_csv(output_csv)
-
-# def add_affected_de(logger, output_dir):
-
-#     de_data = pd.read_csv('{}/delaware_warn_raw.csv'.format(output_dir))
-#     base_url = 'https://joblink.delaware.gov/ada/'
-
-#     full_url_list = []
-#     for url_suffix in de_data['url_suffix']:
-#         full_url = base_url + url_suffix
-#         full_url_list.append(full_url)
-
-#     employees_affected = [['URL','Affected Employees']]
-#     for url in full_url_list:
-#         logger.info('scraper is on {}'.format(url))
-#         page = requests.get(url)
-#         soup = BeautifulSoup(page.text, 'html.parser')
-#         table = soup.find('table') # output is list-type
-#     #     print(table)
-#         rows = table.find_all('tr')
-#         for row in rows:
-#             if 'employees' in row.text:
-#                 data = row.find_all('td')
-#                 affected_num = data[1].get_text()
-#                 affected_num = affected_num.replace(u'\xa0', u'')
-#                 if 'Company' in affected_num:
-#                     company = 'doing nothing'
-#                 else:
-#                     keep_data = [url, affected_num]
-#                     employees_affected.append(keep_data)
-
-#     headers = employees_affected.pop(0)
-#     df = pd.DataFrame(employees_affected, columns=headers)
-#     df['Suffix'] = df['URL'].str.strip('https://joblink.delaware.gov/ada')
-
-#     df = df.drop_duplicates(subset='URL', keep="first")
-#     all_de_data = pd.merge(de_data, df, left_on='url_suffix', right_on='Suffix')
-#     all_de_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
-
-#     all_de_data.to_csv('{}/delaware_warn_raw.csv'.format(output_dir))
+       
