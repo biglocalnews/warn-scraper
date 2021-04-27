@@ -45,12 +45,16 @@ def scrape_links(last_page_num, logger):
     return all_records
 
 def scrape_warn_table(link, logger):
+
+    # not working for page 5 and on
         
     page = requests.get(link)
+    # print(link)
     logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
 
     table = soup.table
+    # print(table)
     output_rows = []
     for table_row in table.find_all('tr'):    
         columns = table_row.find_all('td')
@@ -67,6 +71,7 @@ def scrape_warn_table(link, logger):
         link_text = [a['href']]
 
         if len(link_text[0]) <= 23:
+            print(link_text[0])
             company_name = [a.text]
             company_name.extend(link_text)
             list_info.append(company_name)
