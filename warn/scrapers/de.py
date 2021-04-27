@@ -12,7 +12,6 @@ def scrape(output_dir):
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
 
     warn_links = get_warn_links()
-    # output_rows, list_info = scrape_warn_table(warn_links, logger)
     all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
     for link in warn_links:
         output_rows, list_info = scrape_warn_table(link, logger)
