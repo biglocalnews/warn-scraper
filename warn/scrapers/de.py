@@ -11,14 +11,8 @@ def scrape(output_dir):
     logger  = logging.getLogger(__name__)
     output_csv = '{}/delaware_warn_raw.csv'.format(output_dir)
 
-    warn_links = get_warn_links()
-    all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
-    for link in warn_links:
-        output_rows, list_info = scrape_warn_table(link, logger)
-        list_of_records = scrape_record_link(list_info)
-
-        full_records = combination(output_rows, list_of_records)
-        all_records.extend(full_records)
+    last_page_num = get_last_page_num()
+    all_records = scrape_links(last_page_num, logger)
 
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
@@ -26,27 +20,32 @@ def scrape(output_dir):
     
     return
 
-def get_warn_links():
+def get_last_page_num():
 
-    warn_links = ['https://joblink.delaware.gov/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93']
+    warn_link = 'https://joblink.delaware.gov/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'
 
-    page = requests.get(warn_links[0])
+    page = requests.get(warn_link)
     soup = BeautifulSoup(page.text, 'html.parser')
     pag_div = soup.find_all("div", class_="pagination")
-
     elem_a = pag_div[0].find_all('a')
+    last_page_num = elem_a[-2].get_text()
 
-    base = 'https://joblink.delaware.gov'
-    for link in elem_a:
-        label = link.get('aria-label')
+    return last_page_num
 
-        if label != None:
-            link = link.get('href')
-            full_link = base + link
-            warn_links.append(full_link)
+def scrape_links(last_page_num, logger):
 
-    return warn_links
-    
+    all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
+
+    for page in range(1, int(last_page_num) + 1):
+        link = 'https://joblink.delaware.gov/search/warn_lookups?commit=Search&page={}&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'.format(str(page))
+        output_rows, list_info = scrape_warn_table(link, logger)
+        list_of_records = scrape_record_link(list_info)
+
+        full_records = combination(output_rows, list_of_records)
+        all_records.extend(full_records)
+
+    return all_records
+
 
 def scrape_warn_table(link, logger):
         
@@ -124,4 +123,3 @@ def combination(output_rows, list_of_records):
 
 if __name__ == '__main__':
     scrape()
-       

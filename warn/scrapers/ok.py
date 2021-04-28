@@ -35,7 +35,6 @@ def scrape_links(last_page_num, logger):
     all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
 
     for page in range(1, int(last_page_num) + 1):
-    # for page in range(5, 6):
         link = 'https://okjobmatch.com/search/warn_lookups?commit=Search&page={}&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'.format(str(page))
         output_rows, list_info = scrape_warn_table(link, logger)
         list_of_records = scrape_record_link(list_info)
@@ -46,16 +45,12 @@ def scrape_links(last_page_num, logger):
     return all_records
 
 def scrape_warn_table(link, logger):
-
-    # not working for page 5 and on
         
     page = requests.get(link)
-    # print(link)
     logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
 
     table = soup.table
-    # print(table)
     output_rows = []
     for table_row in table.find_all('tr'):    
         columns = table_row.find_all('td')
