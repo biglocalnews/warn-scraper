@@ -62,7 +62,6 @@ def scrape_warn_table(link, logger):
         output_rows.append(output_row)
 
     list_info = []
-
     for a in table.find_all('a', href=True, text=True):
         link_text = [a['href']]
 

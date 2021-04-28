@@ -9,145 +9,112 @@ def scrape(output_dir):
 
     logger = logging.getLogger(__name__)
     output_csv = '{}/kansas_warn_raw.csv'.format(output_dir)
- 
-    # Load for first time => get header
-    start_row = 1
-    url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
-    page = requests.get(url)
 
-    logger.info("Page status code is {}".format(page.status_code))
+    last_page_num = get_last_page_num()
+    all_records = scrape_links(last_page_num, logger)
 
-    soup = BeautifulSoup(page.text, 'html.parser')
-    max_entries = get_total_results_count(soup)
-    start_row_list = range(1, max_entries, 25)
-    table = soup.find_all('table') # output is list-type
-
-    # find header
-    first_row = table[1].find_all('tr')[0]
-    headers = first_row.find_all('th')
-    output_header = []
-    for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
-    output_header
-
-    # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(output_header)
+        writer.writerows(all_records)
+ 
+    return
 
-    for start_row in start_row_list:
-        try:
-            url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
+def get_last_page_num():
 
-            page = requests.get(url)
-            soup = BeautifulSoup(page.text, 'html.parser')
-            table = soup.find_all('table') # output is list-type
+    warn_link = 'https://www.kansasworks.com/search/warn_lookups?utf8=%E2%9C%93&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bzipcode_code_start%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bnotice_eq%5D=true&commit=Search'
 
-            output_rows = []
-            for table_row in table[1].find_all('tr'):    
-                columns = table_row.find_all('td')
-                output_row = []
-                for column in columns:
-                    output_row.append(column.text)
-                output_row = [x.strip() for x in output_row]
-                output_rows.append(output_row)
-            output_rows.pop(0)
-            output_rows.pop(0)
+    page = requests.get(warn_link)
+    soup = BeautifulSoup(page.text, 'html.parser')
+    pag_div = soup.find_all("div", class_="pagination")
+    elem_a = pag_div[0].find_all('a')
+    last_page_num = elem_a[-2].get_text()
 
-            with open(output_csv, 'a') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
+    return last_page_num
 
-        except IndexError:
-            logger.info(url + ' not found')
+def scrape_links(last_page_num, logger):
 
-    add_links_ks(logger, output_dir, max_entries)
-    add_affected_ks(logger, output_dir)
+    all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
 
+    for page in range(1, int(last_page_num) + 1):
+        link = 'https://www.kansasworks.com/search/warn_lookups?commit=Search&page={}&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=true&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'.format(str(page))
+        output_rows, list_info = scrape_warn_table(link, logger)
+        list_of_records = scrape_record_link(list_info)
 
-def add_links_ks(logger, output_dir, max_entries):
+        full_records = combination(output_rows, list_of_records)
+        all_records.extend(full_records)
 
-    output_csv = '{}/kansas_warn_raw.csv'.format(output_dir)
-    start_row_list = range(1, max_entries, 25)
+    return all_records
 
-    # Load for first time => get header
-    pd.options.display.max_rows = 999
-    pd.options.display.max_columns = 99
-    start_row = 1
-    links = []
-    for start_row in start_row_list:
-        try:
-            url = 'https://www.kansasworks.com/ada/mn_warn_dsp.cfm?securitysys=on&start_row={}&max_rows=25&orderby=employer&choice=1'.format(start_row)
-            page = requests.get(url)
-
-            soup = BeautifulSoup(page.text, 'html.parser')
-
-            table = soup.find_all('table') # output is list-type
-            for a in soup.find_all('a', href=True, text=True):
-                link_text = a['href']
-    
-                if 'callingfile' in link_text:
-                    links.append(link_text)
-
-        except IndexError:
-            logger.info(url + ' not found')
-
-    data = pd.read_csv('{}/kansas_warn_raw.csv'.format(output_dir))
-    data['url_suffix'] = links
-    data['Employer Name'] = data['Employer'].str.replace('\r', '')
-    data['City'] = data['City'].str.replace('\r', '')
-    data.drop(columns='Employer', inplace=True)
-    data = data[['url_suffix', 'Employer Name', 'City', 'Zip', 'LWIB Area', 'Notice Date']]
-    data.to_csv(output_csv)
-
-def add_affected_ks(logger, output_dir):
-
-    ks_data = pd.read_csv('{}/kansas_warn_raw.csv'.format(output_dir))
-    base_url = 'https://www.kansasworks.com/ada/'
-
-    full_url_list = []
-    for url_suffix in ks_data['url_suffix']:
-        full_url = base_url + url_suffix
-        full_url_list.append(full_url)
-
-    employees_affected = [['URL','Affected Employees']]
-    for url in full_url_list:
-        logger.info('scraper is on {}'.format(url))
+def scrape_warn_table(link, logger):
         
-        page = requests.get(url)
-        soup = BeautifulSoup(page.text, 'html.parser')
-        table = soup.find('table') # output is list-type
+    page = requests.get(link)
+    logger.info("Page status code is {}".format(page.status_code))
+    soup = BeautifulSoup(page.text, 'html.parser')
+
+    table = soup.table
+    output_rows = []
+    for table_row in table.find_all('tr'):    
+        columns = table_row.find_all('td')
+        output_row = []
+
+        for column in columns:
+            output_row.append(column.text)
+        output_row = [x.strip() for x in output_row]
+        output_rows.append(output_row)
+
+    list_info = []
+    for a in table.find_all('a', href=True, text=True):
+        link_text = [a['href']]
+
+        if len(link_text[0]) <= 25:
+            company_name = [a.text]
+            company_name.extend(link_text)
+            list_info.append(company_name)
+
+    return output_rows, list_info
+
+def scrape_record_link(list_info):    
+    base_url = 'https://www.kansasworks.com'
     
-        rows = table.find_all('tr')
-        for row in rows:
-            if 'employees' in row.text:
-                data = row.find_all('td')
-                affected_num = data[1].get_text()
-                affected_num = affected_num.replace(u'\xa0', u'')
-                if 'Company' in affected_num:
-                    company = 'doing nothing'
-                else:
-                    keep_data = [url, affected_num]
-                    employees_affected.append(keep_data)
+    all_records = []
+    for record in list_info:
+        record_link = record[1]
+        full_link = base_url + record_link
+        single_record = scrape_again(full_link)
+        all_records.append(single_record)
+        
+    return all_records
 
-    headers = employees_affected.pop(0)
-    df = pd.DataFrame(employees_affected, columns=headers)
-    df['Suffix'] = df['URL'].str.split('/ada/').str[-1]
+def scrape_again(link):
+    
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'html.parser')
+    data = soup.find("dl", class_="data")
+    
+    do_not_add = ['Company Name', 'Notice Date', 'Number of Employees Affected', 'Address', '', None]
+    
+    single_record = []
+    for i in data:
+        i = i.string
+        if i != None:
+            i = i.strip('\n')
+        if i in do_not_add:
+            continue
+        single_record.append(i)
+        
+    return single_record
 
-    df = df.drop_duplicates(subset='URL', keep="first")
-    all_ks_data = pd.merge(ks_data, df, left_on='url_suffix', right_on='Suffix')
-    all_ks_data.drop(columns=['Unnamed: 0','Suffix', 'url_suffix'], inplace=True)
-    all_ks_data.to_csv('{}/kansas_warn_raw.csv'.format(output_dir))
-
-
-def get_total_results_count(soup):
-
-    header_num = soup.find("td", class_="cfHeaderTitle")
-    max_entries = header_num.text.split('of ')[1]
-    max_entries = int(max_entries.split(')')[0])
-
-    return max_entries
+def combination(output_rows, list_of_records):
+    output_rows = output_rows[1:]
+    indexes = [0, 4]
+    for row in output_rows:
+        for index in sorted(indexes, reverse=True):
+            del row[index]
+            
+    for row, record in zip(output_rows, list_of_records):
+        record.extend(row)
+        
+    return list_of_records
 
 
 if __name__ == '__main__':
