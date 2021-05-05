@@ -1,5 +1,8 @@
 import csv
+import logging
 import requests
+
+import pandas as pd
 
 from bs4 import BeautifulSoup
 
@@ -7,19 +10,19 @@ from bs4 import BeautifulSoup
 
 def scrape(output_dir):
     
-    # output_csv = '/Users/dilcia_mercedes/Big_Local_News/prog/WARN/data/newjersey_warn_raw.csv'
+    logger  = logging.getLogger(__name__)
     output_csv = '{}/newjersey_warn_raw.csv'.format(output_dir)
 
     url_main = 'http://lwd.state.nj.us/WorkForceDirectory/warn.jsp'
 
     page = requests.get(url_main)
 
-    print(page.status_code) # should be 200
+    logger.info(page.status_code) # should be 200
 
     soup = BeautifulSoup(page.text, 'html.parser')
 
     tables = soup.find_all('table') # output is list-type
-    len(tables)
+    logger.info(len(tables))
 
     # find header
     first_row = tables[0].find_all('tr')[0]
@@ -61,12 +64,12 @@ def scrape(output_dir):
 
             page = requests.get(url)
 
-            print(page.status_code) # should be 200
+            logger.info(page.status_code) # should be 200
 
             soup = BeautifulSoup(page.text, 'html.parser')
         
             table = soup.find_all('table') # output is list-type
-            print(len(table))
+            logger.info(len(table))
             
             output_rows = []
             for table_row in table[0].find_all('tr'):    
@@ -83,8 +86,7 @@ def scrape(output_dir):
                     writer = csv.writer(csvfile)
                     writer.writerows(output_rows)
 
-
-    import pandas as pd
+    
     df = pd.read_csv(output_csv, keep_default_na = False)
     df.shape
 
