@@ -41,6 +41,7 @@ def scrape(output_dir):
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
     tables.pop(0)
+    logger.info(f'these are the tables: {tables}')
 
     # save rest of rows
     for table in tables:
@@ -51,6 +52,7 @@ def scrape(output_dir):
         for content in row_contents:
             output_row.append(content.text)
         output_row = [x.strip() for x in output_row]
+        logger.info(f'an output_row from the table in tables loop: {output_row}')
         
         with open(output_csv, 'a') as csvfile:
             writer = csv.writer(csvfile)
