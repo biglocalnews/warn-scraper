@@ -26,12 +26,15 @@ def scrape(output_dir):
 
     # find header
     first_row = tables[0].find_all('tr')[0]
+    logger.info(f'this is the first row: {first_row}')
     headers = first_row.find_all('td')
+    logger.info(f'these are the headers: {headers}')
     output_header = []
     for header in headers:
         output_header.append(header.text)
     output_header = [x.strip() for x in output_header]
     output_header
+    logger.info(f'these are the output headers: {output_header}')
 
     # save header
     with open(output_csv, 'w') as csvfile:
