@@ -65,6 +65,7 @@ def scrape(output_dir):
             page = requests.get(url)
 
             logger.info(page.status_code) # should be 200
+            logger.info(url)
 
             soup = BeautifulSoup(page.text, 'html.parser')
         
