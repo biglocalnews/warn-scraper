@@ -1,6 +1,7 @@
 import csv
 import logging
 import requests
+import sleep
 
 import pandas as pd
 
@@ -45,6 +46,7 @@ def scrape(output_dir):
 
     # save rest of rows
     for table in tables:
+        time.sleep(.5)
         row = table.find_all('tr')[0]
         row_contents = row.find_all('td')
         
