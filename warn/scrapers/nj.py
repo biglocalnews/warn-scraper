@@ -1,7 +1,7 @@
 import csv
 import logging
 import requests
-import sleep
+import time
 
 import pandas as pd
 
