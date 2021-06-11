@@ -41,15 +41,15 @@ def main(states):
     alert_manager=None
     if alert:
         try:
-            api_key = os.environ['WARN_SLACK_API_KEY']
-            channel = os.environ['WARN_SLACK_CHANNEL']
+            api_key = os.environ['SLACK_API_KEY']
+            channel = os.environ['SLACK_ALERTS_CHANNEL']
             alert_msg = "Slack alerts will be sent to #{}.".format(channel)
             alert_manager = SlackAlertManager(api_key, channel)
         except KeyError:
             alert_msg = "WARNING - Slack alerts will not be sent.\n" + \
                 "Please ensure you've configured the below environment variables:\n" + \
-                "WARN_SLACK_API_KEY=YOUR_API_KEY\n" + \
-                "WARN_SLACK_CHANNEL=channel-name\n\n"
+                "SLACK_API_KEY=YOUR_API_KEY\n" + \
+                "SLACK_ALERTS_CHANNEL=channel-name\n\n"
         finally:
             logger.warning(alert_msg)
 
