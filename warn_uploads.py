@@ -8,11 +8,19 @@ logger = logging.getLogger(__name__)
 def send_query():
 
     endpoint = 'https://api.biglocalnews.org/graphql'
-    token = os.environ['WARN_QUERY_TOKEN'] 
-    token_type = 'JWT'
+    # Standardize to the key name used by bln-etl
+    # to set the stage to replace all of below with
+    # from bln_etl.api import Project
+    # project_id = os.environ['WARN_PROJECT_ID']
+    # project = Project.get(project_id)
+    # to_upload = ['/path/to/file1', '/path/to/file2'] # Generate by code to gather file list
+    # project.upload_files(to_upload)
+    # Details here: https://github.com/biglocalnews/bln-etl#api
+    token = os.environ['BLN_API_KEY']
     project_id = os.environ['WARN_PROJECT_ID']
     path = os.environ['WARN_DATA_PATH']
-    
+    # TODO: Replace most of below with above-mentioned bln_etl code
+    token_type = 'JWT'
 
     def gql(query, vars={}):
         res = req.post(
