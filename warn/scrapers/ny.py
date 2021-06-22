@@ -9,7 +9,6 @@ import logging
 from bs4 import BeautifulSoup
 from os import path
 from datetime import datetime
-from tqdm import tqdm
 import pandas as pd
 
 """
@@ -136,7 +135,7 @@ def download_new_notices(missing_links):
     year = 2020
     process_dir = os.environ['PROCESS_DIR']
 
-    for link in tqdm(missing_links):
+    for link in missing_links:
         html = get_page(link)
         last = link.split('=')[1]
         open('{}/2020_files/warn_ny_{}_{}.html'.format(process_dir, last, year), 'w').write(html)
