@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 
 requirements = [
     'bs4',
+    'html5lib',
     'pandas',
     'requests',
     'xlrd',
