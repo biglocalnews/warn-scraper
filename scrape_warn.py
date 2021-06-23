@@ -27,7 +27,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)-12s - %(message)s',
     datefmt='%m-%d %H:%M',
     filename=log_file,
-    filemode='a'
+    filemode='w'
 )
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
