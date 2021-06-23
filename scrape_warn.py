@@ -5,39 +5,58 @@ import os
 import sys
 import traceback
 
-from alerts import SlackAlertManager
 from importlib import import_module
 from pathlib import Path
-from warn_uploads import send_query
-from remove_data import move_data
 
-# Top-Level CLI script
+from alerts import SlackAlertManager
+from warn_uploads import upload
+from remove_data import delete_files
 
-def main(states):
+ETL_DIR=os.environ.get('WARN_ETL_DIR', '/tmp/etl/WARN')
+PROCESS_DIR=os.environ.get('PROCESS_DIR', Path(ETL_DIR, 'process'))
+WARN_DATA_PATH=os.environ.get('WARN_DATA_PATH', Path(ETL_DIR, 'warn'))
+WARN_LOG_PATH=os.environ.get('WARN_LOG_PATH', Path(ETL_DIR, 'logs'))
 
-    args = create_argparser()
-    output_dir = args.output_dir[0]
-    cache_dir = args.cache_dir[0]
-    states = args.states
-    alert = args.alert
+for d in [PROCESS_DIR, WARN_DATA_PATH, WARN_LOG_PATH]:
+    Path(d).mkdir(parents=True, exist_ok=True)
 
-    log_file = os.path.join(cache_dir, 'warn-scraper.txt')
+# Logging setup
+log_file = os.path.join(WARN_LOG_PATH, 'warn-scraper.txt')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)-12s - %(message)s',
+    datefmt='%m-%d %H:%M',
+    filename=log_file,
+    filemode='a'
+)
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+formatter = logging.Formatter('%(name)-12s - %(message)s')
+console.setFormatter(formatter)
+logging.getLogger('').addHandler(console)
+logger = logging.getLogger(__name__)
 
-    Path(cache_dir).mkdir(parents=True, exist_ok=True)
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)-12s - %(message)s',
-        datefmt='%m-%d %H:%M',
-        filename=log_file,
-        filemode='a'
-    )
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(name)-12s - %(message)s')
-    console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
-    logger = logging.getLogger(__name__)
+# Argparse
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--output-dir',
+    help='Directory where final outputs will be written',
+    action='store',
+    type=str,
+    default=WARN_DATA_PATH
+)
+parser.add_argument(
+    '--cache-dir',
+    help='Directory where intermediate ETL files should we written',
+    action='store',
+    default=ETL_DIR
+)
+parser.add_argument('--states', '-s', help='One or more state postals', nargs='+', action='store')
+parser.add_argument('--all', '-a',action='store_true', help='Run all scrapers')
+parser.add_argument('--alert',action='store_true', help='Send scraper status alerts to Slack.')
 
+
+def main(states, output_dir, cache_dir, alert):
     alert_manager=None
     if alert:
         try:
@@ -52,11 +71,8 @@ def main(states):
                 "SLACK_ALERTS_CHANNEL=channel-name\n\n"
         finally:
             logger.warning(alert_msg)
-
     states_failed = []
     traceback_msg = []
-
-
     if args.all:
         error_states, traceback_str = run_scraper_for_all_states(output_dir, cache_dir, alert, logger, states_failed, traceback_msg)
         states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
@@ -64,42 +80,14 @@ def main(states):
         for state in states:
             error_states, traceback_str = scrape_warn_site(state, output_dir, cache_dir, alert, logger)
             states_not_scraped(states_failed, error_states, traceback_msg, traceback_str)
+    logged_info = upload(output_dir)
+    delete_files(output_dir)
+    if alert:
+        slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
+        slack_messages_two(alert, alert_manager, logged_info)
 
-
-    slack_messages(alert, alert_manager, states_failed, traceback_msg, states, logger)
-    logged_info = send_query()
-    slack_messages_two(alert, alert_manager, logged_info)
-
-    data_dir = os.environ['WARN_DATA_PATH']
-    move_data(data_dir)
-
-
-def create_argparser():
-    my_parser = argparse.ArgumentParser()
-    my_parser.add_argument(
-        '--output-dir', 
-        help='specify output directory', 
-        action='store', 
-        nargs='+', 
-        type=str, 
-        default=[os.environ['WARN_DATA_PATH']]
-        )
-    my_parser.add_argument(
-        '--cache-dir', 
-        help='specify log dir', 
-        action='store',
-        nargs='+',
-        default=[os.environ['WARN_LOG_PATH']]
-        )
-    my_parser.add_argument('--states', '-s', help='one or more state postals', nargs='+', action='store')
-    my_parser.add_argument('--all', '-a',action='store_true', help='run all scrapers')
-    my_parser.add_argument('--alert',action='store_true', help='Send scraper status alerts to Slack.')
-
-    args = my_parser.parse_args()
-    return args
 
 def scrape_warn_site(state, output_dir, cache_dir, alert, logger):
-    
     not_scraped = []
     scraped_site = []
     state_clean = state.strip().lower()
@@ -143,7 +131,6 @@ def slack_messages(alert, alert_manager, states_failed, traceback_msg, states, l
         else:
             count_of_states_run = len(states) - len(states_failed)
             successfully_run = list(set(states) - set(states_failed))
-        
         successfully_run = ', '.join(map(str, successfully_run))
         overall_state_msg = '{} scraper(s) ran successfully: {}'.format(count_of_states_run, successfully_run)
         logger.info(overall_state_msg)
@@ -171,7 +158,5 @@ def states_not_scraped(states_failed, error_states, traceback_msg, traceback_str
 
 
 if __name__ == '__main__':
-    states  = sys.argv[1:]
-    main(states)
-
-
+    args = parser.parse_args()
+    main(args.states, args.output_dir, args.cache_dir, args.alert)
