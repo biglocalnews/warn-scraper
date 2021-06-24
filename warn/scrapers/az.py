@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 logger  = logging.getLogger(__name__)
 
 
-def scrape(output_dir):
+def scrape(output_dir, cache_dir=None):
     output_csv = '{}/arizona_warn_raw.csv'.format(output_dir)
     last_page_num = get_last_page_num()
     all_records = scrape_links(last_page_num)

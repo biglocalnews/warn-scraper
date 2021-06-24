@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape(output_dir):
+def scrape(output_dir, cache_dir=None):
     output_csv = '{}/alabama_warn_raw.csv'.format(output_dir)
     url = 'https://www.madeinalabama.com/warn-list/'
     page = requests.get(url)

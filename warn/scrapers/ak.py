@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 
 
-def scrape(output_dir):
+def scrape(output_dir, cache_dir=None):
     output_csv = f'{output_dir}/alaska_warn_raw.csv'
     url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
     page = requests.get(url)

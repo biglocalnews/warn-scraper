@@ -24,7 +24,7 @@ class Runner:
     def scrape(self, state):
         state_mod = import_module('warn.scrapers.{}'.format(state.strip().lower()))
         logger.info(f"Scraping {state}")
-        output_csv = state_mod.scrape(self.output_dir)
+        output_csv = state_mod.scrape(self.output_dir, self.working_dir)
         logger.info(f"Generated {output_csv}")
 
     def upload(self, project_id):
