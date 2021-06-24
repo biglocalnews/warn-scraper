@@ -5,16 +5,16 @@ import requests
 
 from bs4 import BeautifulSoup
 
-# spot-check once more
+
+logger = logging.getLogger(__name__)
+
 
 def scrape(output_dir):
-    logger = logging.getLogger(__name__)
-    output_csv = '{}/alaska_warn_raw.csv'.format(output_dir)
+    output_csv = f'{output_dir}/alaska_warn_raw.csv'
     url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
     page = requests.get(url)
     # Force encoding to fix dashes, apostrophes, etc. on page.text from requests reponse
     page.encoding = 'utf-8'
-    logger.info("Page status code is {}".format(page.status_code))
     soup = BeautifulSoup(page.text, 'html.parser')
     table = soup.find_all('table') # output is list-type
     output_rows = []
