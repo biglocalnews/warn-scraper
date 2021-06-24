@@ -17,7 +17,7 @@ WARN_LOG_PATH=os.environ.get('WARN_LOG_PATH', Path(ETL_DIR, 'logs'))
 
 # Set higher log-level on third-party libs that use DEBUG logging,
 # In order to limit debug logging to our library
-logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger('urllib3').setLevel(logging.ERROR)
 
 
 def main(args=None):
