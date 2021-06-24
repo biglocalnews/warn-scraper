@@ -1,16 +1,12 @@
 import argparse
 import logging
-import re
 import os
-import sys
 import traceback
 
 from importlib import import_module
 from pathlib import Path
 
 from warn import Runner
-#from warn_uploads import upload
-#from remove_data import delete_files
 
 
 ETL_DIR=os.environ.get('WARN_ETL_DIR', '/tmp/etl/WARN')
