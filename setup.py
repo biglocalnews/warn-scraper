@@ -8,7 +8,7 @@ requirements = [
     'html5lib',
     'pandas',
     'requests',
-    'xlrd',
+    'openpyxl',
     # Install non-PyPI libraries
     'bln-etl @ git+https://github.com/biglocalnews/bln-etl.git',
 ]
