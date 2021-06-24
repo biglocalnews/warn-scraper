@@ -25,6 +25,10 @@ setup(
     url='https://github.com/biglocalnews/WARN',
     packages=find_packages(),
     include_package_data=True,
+    entry_points='''
+        [console_scripts]
+        warn-scraper=warn.cli:main
+    ''',
     install_requires=requirements,
     license="Apache 2.0 license",
     zip_safe=False,

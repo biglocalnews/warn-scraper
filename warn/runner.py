@@ -1,32 +1,13 @@
+import glob
 import logging
-import re
 import os
 
 from importlib import import_module
 from pathlib import Path
 
+from bln_etl.api import Project
 
-try:
-    LOGDIR = os.environ['WARN_LOG_DIR']
-except KeyError:
-    LOGDIR = '/tmp/warn/logs'
-    Path(LOGDIR).mkdir(parents=True, exist_ok=True)
-
-log_file = os.path.join(LOGDIR, 'warn.log')
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)-12s - %(message)s',
-    datefmt='%m-%d %H:%M',
-    filename=log_file,
-    filemode='a'
-)
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-formatter = logging.Formatter('%(name)-12s - %(message)s')
-console.setFormatter(formatter)
-logging.getLogger('').addHandler(console)
 logger = logging.getLogger(__name__)
-
 
 
 class Runner:
@@ -36,23 +17,26 @@ class Runner:
         self.output_dir = output_dir
 
     def setup(self):
+        logger.info("Creating necessary dirs")
         for d in [self.working_dir, self.output_dir]:
             Path(d).mkdir(parents=True, exist_ok=True)
 
     def scrape(self, state):
         state_mod = import_module('warn.scrapers.{}'.format(state.strip().lower()))
-        status_msg = 'No errors in scraping.'
-        return state_mod.scrape(self.output_dir)
-        #TODO:
-        #logged_info = send_query()
-        #data_dir = os.environ['WARN_DATA_PATH']
-        #TODO: Below removes previously created files at end of run
-        #move_data(data_dir)
+        logger.info(f"Scraping {state}")
+        output_csv = state_mod.scrape(self.output_dir)
+        logger.info(f"Generated {output_csv}")
 
-    def upload(self, file_path):
-        #TODO: use bln-etl
-        logger.info(f"Uploading to platform: {file_path}")
+    def upload(self, project_id):
+        logger.info(f"Uploading files in {self.output_dir}")
+        project = Project.get(project_id)
+        project.upload_files(self._output_dir_files)
 
-    def cleanup(self):
-        #TODO: Clobber pre-existing files
-        pass
+    def delete(self):
+        logger.info(f"Deleting files in {self.output_dir}")
+        for f in self._output_dir_files:
+            Path(f).unlink()
+
+    @property
+    def _output_dir_files(self):
+        return [str(f) for f in Path(self.output_dir).glob('*')]
