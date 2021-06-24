@@ -61,6 +61,11 @@ def main(args=None):
             runner.scrape(state)
             succeeded.append(state)
         except Exception as e:
+            traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+            state_logfile = Path(WARN_LOG_PATH, f"{state.lower()}_err.log")
+            _log_traceback(state_logfile, traceback_str)
+            msg = f'ERROR: {state} scraper. See traceback in {state_logfile}'
+            logger.error(msg)
             failed.append(state)
     if args.upload:
         try:
@@ -91,22 +96,6 @@ def _log_traceback(logfile, traceback):
     "Write tracebacks to separate state-specific error logs"
     with open(logfile, 'w') as out:
         out.write(traceback)
-
-def scrape_warn_site(state, output_dir, cache_dir, logger):
-    status = 'succeeded'
-    state_clean = state.strip().lower()
-    state_mod = import_module('warn.scrapers.{}'.format(state_clean))
-    try:
-        state_mod.scrape(output_dir)
-    except Exception as e:
-        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
-        state_logfile = Path(WARN_LOG_PATH, f"{state_clean}_err.log")
-        _log_traceback(state_logfile, traceback_str)
-        msg = f'ERROR: {state} scraper. See traceback in {state_logfile}'
-        logger.error(msg)
-        status = 'failed'
-    finally:
-        return status
 
 if __name__ == '__main__':
     main()
