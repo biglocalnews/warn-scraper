@@ -2,8 +2,6 @@ import os
 import logging
 import pandas as pd
 
-from bs4 import BeautifulSoup
-
 
 logger  = logging.getLogger(__name__)
 
