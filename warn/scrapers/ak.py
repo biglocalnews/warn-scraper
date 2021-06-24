@@ -1,12 +1,9 @@
 import csv
-import logging
 import re
 import requests
 
 from bs4 import BeautifulSoup
 
-
-logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir):
