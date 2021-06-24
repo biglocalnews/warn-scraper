@@ -15,7 +15,13 @@ WARN_DATA_PATH=os.environ.get('WARN_DATA_PATH', Path(ETL_DIR, 'warn'))
 WARN_LOG_PATH=os.environ.get('WARN_LOG_PATH', Path(ETL_DIR, 'logs'))
 
 
+# Set higher log-level on third-party libs that use DEBUG logging,
+# In order to limit debug logging to our library
+logging.getLogger('urllib3').setLevel(logging.WARNING)
+
+
 def main(args=None):
+    log_levels = ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--output-dir',
@@ -33,15 +39,16 @@ def main(args=None):
     parser.add_argument('--upload', '-u', help='Upload to BLN platform project', action='store_true')
     parser.add_argument('--delete', '-d', help='Delete files after uploading to BLN platform project', action='store_true')
     parser.add_argument('--states', '-s', required=True, help='One or more state postals', nargs='+', action='store')
+    parser.add_argument('--log-level', '-l', default='INFO', help='Set the logging level',  choices=log_levels)
     # TODO: parser.add_argument('--all', '-a',action='store_true', help='Run all scrapers')
 
+    args = parser.parse_args()
     # Logging config
     logging.basicConfig(
-        level=logging.INFO,
+        level=args.log_level,
         format='%(asctime)s - %(name)s - %(message)s'
     )
     logger = logging.getLogger(__name__)
-    args = parser.parse_args()
     states = args.states
     output_dir = args.output_dir
     cache_dir = args.cache_dir
