@@ -34,7 +34,7 @@ def main(args=None):
         '--cache-dir',
         help='Directory where intermediate ETL files should we written',
         action='store',
-        default=ETL_DIR
+        default=PROCESS_DIR
     )
     parser.add_argument('--upload', '-u', help='Upload to BLN platform project', action='store_true')
     parser.add_argument('--delete', '-d', help='Delete files after uploading to BLN platform project', action='store_true')
@@ -61,7 +61,7 @@ def main(args=None):
             runner.scrape(state)
             succeeded.append(state)
         except Exception as e:
-            traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+            traceback_str = traceback.format_exc()
             state_logfile = Path(WARN_LOG_PATH, f"{state.lower()}_err.log")
             _log_traceback(state_logfile, traceback_str)
             msg = f'ERROR: {state} scraper. See traceback in {state_logfile}'
