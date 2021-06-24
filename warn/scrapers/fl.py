@@ -4,11 +4,10 @@ import requests
 
 from bs4 import BeautifulSoup
 
-# spot-check once more
-
 logger  = logging.getLogger(__name__)
 
-def scrape(output_dir):
+
+def scrape(output_dir, cache_dir=None):
     output_csv = '{}/florida_warn_raw.csv'.format(output_dir)
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
@@ -62,6 +61,7 @@ def scrape(output_dir):
             with open(output_csv, 'a') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
+    return output_csv
 
 def scrape_page(year, page):
     headers = {
@@ -70,5 +70,5 @@ def scrape_page(year, page):
     url = f'https://reactwarn.floridajobs.org/WarnList/Records?year={year}&page={page}'
     # FL site requires realistic User-Agent. Also sidestep SSL error
     response = requests.get(url, headers=headers, verify=False)
-    logger.info(f"Request status code is {response.status_code} for {url}")
+    logger.debug(f"Request status is {response.status_code} for {url}")
     return response.text
