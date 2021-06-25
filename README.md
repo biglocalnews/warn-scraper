@@ -52,6 +52,8 @@ If you're contributing code to this project, the general workflow is to:
 
 ### Install from GitHub
 
+Install [pipenv](https://docs.pipenv.org/en/latest/basics.html#installing-pipenv).
+
 ```bash
 git clone git@github.com:biglocalnews/WARN.git
 cd WARN/
