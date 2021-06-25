@@ -22,7 +22,7 @@ def scrape(output_dir, cache_dir=None):
     pages = 1
     url = 'https://ccwd.hecc.oregon.gov/Layoff/WARN?page=1'
     page = requests.get(url)
-    logger.info("Page status code is {}".format(page.status_code))
+    logger.debug(f"Page status is {page.status_code} for {url}")
     soup = BeautifulSoup(page.text, 'html.parser')
     table = soup.find_all('table') # output is list-type
     # find header
