@@ -1,15 +1,18 @@
 import csv
+import logging
 import requests
 
 from bs4 import BeautifulSoup
 
-def scrape(output_dir):
 
+logger = logging.getLogger(__name__)
+
+
+def scrape(output_dir, cache_dir=None):
     output_csv = '{}/connecticut_warn_raw.csv'.format(output_dir)
     years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
     header_row = ['warn_date','affected_company','layoff_location','number_workers','layoff_date','closing','closing_date','union','union_address']
     output_rows = []
-    
     for year in years: 
         url = f'https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{year}.htm'
         response = requests.get(url)
@@ -44,13 +47,14 @@ def scrape(output_dir):
                 if not output_row:
                     continue
                 output_rows.append(output_row)
-        print(f'Scraping {len(output_rows)} total rows back through year {year}.')
+        logger.debug(f'Scraping {len(output_rows)} total rows back through year {year}.')
 
     # save to csv
     with open(output_csv, 'w') as out:
         writer = csv.writer(out)
         writer.writerow(header_row)
         writer.writerows(output_rows)
+    return output_csv
 
 # function to deal with problem rows in the 2016 table
 def problem_cells(table_cells):
@@ -69,6 +73,3 @@ def problem_cells(table_cells):
             else:
                 output_row.append(current_cell)
     return output_row
-
-if __name__ == '__main__':
-    scrape()

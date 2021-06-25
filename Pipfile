@@ -8,12 +8,10 @@ verify_ssl = true
 [packages]
 bs4 = "*"
 html5lib = "*"
-tqdm = "*"
 requests = "*"
 pandas = "*"
-xlrd = "*"
-slackclient = "*"
 openpyxl = "*"
+bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
 
 [requires]
 python_version = "3.8"

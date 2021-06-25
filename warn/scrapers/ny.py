@@ -9,7 +9,6 @@ import logging
 from bs4 import BeautifulSoup
 from os import path
 from datetime import datetime
-from tqdm import tqdm
 import pandas as pd
 
 """
@@ -20,10 +19,17 @@ Introduction to Web Scraping with Python.
 Link: https://browninstitute.github.io/at_home/python/jupyter/2020/04/28/web-scraping.html
 
 """
+
 logger = logging.getLogger(__name__)
 
-def scrape(output_dir):
 
+def scrape(output_dir, cache_dir=None):
+    msg = "WARNING: NY scraper does not currently work. Code most be updated. No actions will be performed."
+    logger.info(msg)
+    raise Exception(msg)
+
+
+def scrape_legacy_function(output_dir, cache_dir=None):
     make_call()
     missing_links, missing_titles = missing_html_list()
     missing_pages = download_new_notices(missing_links)
