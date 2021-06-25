@@ -13,9 +13,9 @@ This project provides a library and command-line tool for scraping WARN (layoff)
 Use `pip` or `pipenv` to install the WARN Python library and CLI tool for normal day-to-day use:
 
 ```bash
-pip install git+ssh://git@github.com/biglocalnews/WARN.git@prefect#egg=WARN
+pip install git+ssh://git@github.com/biglocalnews/WARN.git#egg=WARN
 # or
-pipenv install git+ssh://git@github.com/biglocalnews/WARN.git@prefect#egg=WARN
+pipenv install git+ssh://git@github.com/biglocalnews/WARN.git#egg=WARN
 ```
 
 ## Usage
