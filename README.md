@@ -34,7 +34,15 @@ warn-scraper -s AK
 warn-scraper -s AK CT
 ```
 
-For additional configuration options:
+### Configuration
+
+The `warn-scraper` command-line tool will write files, by default, to a hidden directory in the user's home directory.
+
+On Mac/Linux systems, this will be `~/.warn-scraper`.
+
+You can set the `WARN_ETL_DIR` environment variale to specify a different location.
+
+Use the `--help` flag to view additional configuration and usage options:
 
 ```bash
 warn-scraper --help

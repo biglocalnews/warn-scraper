@@ -9,10 +9,12 @@ from pathlib import Path
 from warn import Runner
 
 
-ETL_DIR=os.environ.get('WARN_ETL_DIR', '/tmp/etl/WARN')
-PROCESS_DIR=os.environ.get('PROCESS_DIR', Path(ETL_DIR, 'process'))
-WARN_DATA_PATH=os.environ.get('WARN_DATA_PATH', Path(ETL_DIR, 'warn'))
-WARN_LOG_PATH=os.environ.get('WARN_LOG_PATH', Path(ETL_DIR, 'logs'))
+USER_HOME=os.path.expanduser('~')
+DEFAULT_HOME=str(Path(USER_HOME,'.warn-scraper'))
+ETL_DIR=os.environ.get('WARN_ETL_DIR', DEFAULT_HOME)
+PROCESS_DIR=str(Path(ETL_DIR, 'process'))
+WARN_DATA_PATH=str(Path(ETL_DIR, 'warn'))
+WARN_LOG_PATH=str(Path(ETL_DIR, 'logs'))
 
 
 # Set higher log-level on third-party libs that use DEBUG logging,
