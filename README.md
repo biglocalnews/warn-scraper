@@ -1,90 +1,83 @@
 ## Overview
 
-This project provides a command-line tool for scraping WARN (layoff) Notices from several state sites. 
-Currently, we are scraping the sites of 21 states, and will be adding more as we continue to build out this tool.
+This project provides a library and command-line tool for scraping WARN (layoff) Notices from several state sites.
+
+- [Install](#install)
+- [Usage](#usage)
+- [Developers](#developers)
 
 ## Install
 
-To install, git clone the link of the repo
+> If you're contributing code, see the [Developer docs](#developers) below for alternative install and usage information.
 
-`git clone git@github.com:biglocalnews/WARN.git`
+Use `pip` or `pipenv` to install the WARN Python library and CLI tool for normal day-to-day use:
 
-To start using the tool, activate the environment
-
-`pipenv shell` 
-
+```bash
+pip install git+ssh://git@github.com/biglocalnews/WARN.git@prefect#egg=WARN
+# or
+pipenv install git+ssh://git@github.com/biglocalnews/WARN.git@prefect#egg=WARN
+```
 
 ## Usage
 
-Once the environment is activated, you may use a number of commands to run the scripts.
+After [installation](#install),  you can use the command-line tool to scrape available states *by supplying one or more two-letter state postal codes*.
 
-To see the available commands:
+> See the [`warn/scrapers/`][] directory for available state modules.
 
-`python scrape_warn.py -h`
+[`warn/scrapers/`]: https://github.com/biglocalnews/WARN/tree/main/warn/scrapers
 
-You will see instructions on how to proceed:
+```bash
+# Scrape a single state
+warn-scraper -s AK
 
+# Scrape multiple states
+warn-scraper -s AK CT
 ```
 
-usage: scrape_warn.py [-h] [--output-dir OUTPUT_DIR [OUTPUT_DIR ...]] [--cache-dir CACHE_DIR [CACHE_DIR ...]] [--states STATES [STATES ...]] [--all]
-                      [--alert]
+For additional configuration options:
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --output-dir OUTPUT_DIR [OUTPUT_DIR ...]
-                        specify output directory
-  --cache-dir CACHE_DIR [CACHE_DIR ...]
-                        specify log dir
-  --states STATES [STATES ...], -s STATES [STATES ...]
-                        one or more state postals
-  --all, -a             run all scrapers
-  --alert               Send scraper status alerts to Slack.
-
+```bash
+warn-scraper --help
 ```
 
+## Developers
 
-### Basic Commands
+If you're contributing code to this project, the general workflow is to:
 
-To run one scraper:
+* Create a GitHub issue related to your feature or bugfix
+* Perform your work on a branch created from `main`
+* Push code to *your own branch*
+* On GitHub, send a Pull Request from your branch to `main`
+* Ping a BLN team member to review and merge your work
 
-`python scrape_warn.py -s UT`
+### Install from GitHub
 
-To run multiple, but not all scrapers:
+```bash
+git clone git@github.com:biglocalnews/WARN.git
+cd WARN/
+pipenv install
+```
 
-`python scrape_warn.py -s UT AL CA RI`
+### Dev CLI usage
 
-To run all scrapers:
+The WARN command-line tool provides a handy way to "manually" test code changes for a given state.
 
-`python scrape_warn.py -a`
+However, using the CLI command **in a development context** is a bit trickier compared to normal usage, due to the nature of how we've ["packaged"](https://packaging.python.org/tutorials/packaging-projects/) this project as an installable library and command-line tool.
 
+Gory details aside, here's how to run the command-line tool when developing code:
 
-### With Alerts
+> **IMPORTANT**: The below commands will *only* work from the root of the project!
 
-To run one scraper:
+```bash
+# Navigate to repo's root folder
+cd WARN/
 
-`python scrape_warn.py -s UT --alert`
+# Activate the virtual environment
+pipenv shell
 
-To run multiple, but not all scrapers:
+# Invoke the cli.py module
+python -m warn.cli -s AK
 
-`python scrape_warn.py -s UT AL CA RI --alert`
-
-To run all scrapers:
-
-`python scrape_warn.py -a --alert`
-
-
-### With Specified File Paths
-
-To run one scraper:
-
-`python scrape_warn.py -s UT --output-dir=/home/computer/file/path --alert`
-
-To run multiple, but not all scrapers:
-
-`python scrape_warn.py -s UT AL CA RI --output-dir=/home/computer/file/path --alert`
-
-To run all scrapers:
-
-`python scrape_warn.py -a --cache-dir=/home/computer/file/path/to/logs --alert`
-
-
+# For more detailed debugging output, use the -l flag
+python -m warn.cli -l DEBUG -s AK
+```
