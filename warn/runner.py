@@ -45,6 +45,7 @@ class Runner:
         logger.info(f"Scraping {state}")
         output_csv = state_mod.scrape(self.output_dir, self.working_dir)
         logger.info(f"Generated {output_csv}")
+        return output_csv
 
     def upload(self, project_id, api_token=None, files=None):
         logger.info(f"Uploading files in {self.output_dir}")
