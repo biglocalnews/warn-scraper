@@ -4,6 +4,7 @@ This project provides a library and command-line tool for scraping WARN (layoff)
 
 - [Install](#install)
 - [Usage](#usage)
+- [Platform uploads](#platform-uploads)
 - [Developers](#developers)
 
 ## Install
@@ -34,6 +35,21 @@ warn-scraper -s AK
 warn-scraper -s AK CT
 ```
 
+To use the `warn` library in a Python script:
+
+```python
+# myscript.py
+
+# Scrape Alaska
+from warn.scrapers import ak
+
+# Specify cache and final export dirs (these should be different)
+export_dir = '/tmp/warn/ak/exports' # final CSV written here
+cache_dir = '/tmp/warn/ak/cache'    # for any files used in processing
+
+ak.scrape(export_dir, cache_dir)
+```
+
 ### Configuration
 
 The `warn-scraper` command-line tool will write files, by default, to a hidden directory in the user's home directory.
@@ -46,6 +62,26 @@ Use the `--help` flag to view additional configuration and usage options:
 
 ```bash
 warn-scraper --help
+```
+
+## Platform uploads
+
+To upload data files to a project on the [Big Local News](https://biglocalnews.org/) platform,
+you must set the `BLN_API_KEY` and `WARN_PROJECT_ID` environment variables.
+
+Once the environment variables are configured, you can upload files using the `--upload` flag:
+
+```bash
+warn-scraper --upload -s AK
+```
+
+> NOTE: All files generated during a scrape are uploaded at the end of a scraper run.
+
+To avoid uploading files from previous runs, use the `--delete` flag to clear locally generated
+files after a scraper run is complete.
+
+```bash
+warn-scraper --delete --upload -s AK
 ```
 
 ## Developers
