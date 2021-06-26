@@ -11,6 +11,25 @@ logger = logging.getLogger(__name__)
 
 
 class Runner:
+    """High-level interface for scraping state data
+
+    Provides methods for:
+     - directory setup
+     - scraping a state
+     - uploading files
+     - deleting files from prior runs
+
+    The working_dir and output_dir arguments can specify any
+    location, but it's not a bad idea to have them as sibling directories:
+
+        /tmp/WARN/working # ETL fiiles
+        /tmp/WARN/exports # Final, polished data e.g CSVs for analysis
+
+    Args:
+        working_dir (str): Path to store intermediate files used in ETL.
+        output_dir (str): Path where final output files are saved.
+
+    """
 
     def __init__(self, working_dir, output_dir):
         self.working_dir = working_dir
