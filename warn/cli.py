@@ -38,8 +38,8 @@ def main(args=None):
         action='store',
         default=PROCESS_DIR
     )
-    parser.add_argument('--upload', '-u', help='Upload to BLN platform project', action='store_true')
-    parser.add_argument('--delete', '-d', help='Delete files after uploading to BLN platform project', action='store_true')
+    parser.add_argument('--upload', '-u', help='Upload generated files to BLN platform project', action='store_true')
+    parser.add_argument('--delete', '-d', help='Delete files from prior scrape at start of new scraper run', action='store_true')
     parser.add_argument('--states', '-s', required=True, help='One or more state postals', nargs='+', action='store')
     parser.add_argument('--log-level', '-l', default='INFO', help='Set the logging level',  choices=log_levels)
     # TODO: parser.add_argument('--all', '-a',action='store_true', help='Run all scrapers')
@@ -58,6 +58,9 @@ def main(args=None):
     runner.setup()
     succeeded = []
     failed = []
+    if args.delete:
+        logger.info("Deleting files generated from previous scraper run.")
+        runner.delete()
     for state in args.states:
         try:
             runner.scrape(state)
@@ -77,8 +80,6 @@ def main(args=None):
             msg = ("ERROR: No upload performed. You must set the BLN_API_KEY "
                    "and WARN_PROJECT_ID env vars to upload files.")
             logger.error(msg)
-    if args.delete:
-        runner.delete()
     _log_final_status(succeeded, failed, logger)
 
 def _log_final_msg(state_list, action, logger):

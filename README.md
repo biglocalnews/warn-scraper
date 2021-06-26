@@ -78,7 +78,7 @@ warn-scraper --upload -s AK
 > NOTE: All files generated during a scrape are uploaded at the end of a scraper run.
 
 To avoid uploading files from previous runs, use the `--delete` flag to clear locally generated
-files after a scraper run is complete.
+files *as the first step* in a new scraper run.
 
 ```bash
 warn-scraper --delete --upload -s AK
