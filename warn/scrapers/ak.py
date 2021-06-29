@@ -4,6 +4,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from warn.utils import write_rows_to_csv
 
 
 def scrape(output_dir, cache_dir=None):
@@ -28,7 +29,8 @@ def scrape(output_dir, cache_dir=None):
         if output_row == [''] or output_row[0] == '':
             continue
         output_rows.append(output_row)
-    with open(output_csv, 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerows(output_rows)
+    write_rows_to_csv(output_rows, output_csv)
+    #with open(output_csv, 'w') as csvfile:
+    #    writer = csv.writer(csvfile)
+    #    writer.writerows(output_rows)
     return output_csv
