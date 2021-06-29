@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 NOTES:
 - 2019 and 2020 page has duplicate data
 - 2017 date format is different
-- 2020 url is different from everything else
-- 2021 contains an extra industry column 
+- 2020 url is different from everything else -check 
+- 2021 contains an extra industry column -check
 """
 
 
@@ -43,6 +43,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 def writeBody(year, output_csv):
+    # 2020 has a different link structure
     url = 'https://jobs.mo.gov/warn{}'.format(year) if (year != 2020) else 'https://jobs.mo.gov/content/2020-missouri-warn-notices'
     page = requests.get(url)
     logger.debug(f"Page status is {page.status_code} for {url}")
@@ -54,9 +55,10 @@ def writeBody(year, output_csv):
         output_row = []
         for column in columns:
             output_row.append(column.text.strip())
-        #output_row = [x.strip() for x in output_row]
-        if len(output_row)<9: # to account for the extra column
+        if len(output_row)<9: # to account for the extra column in 2021
             output_row.insert(2,'')
+        if year == 2019 and "2020" in output_row[0]: # account for duplicated 2020 data 
+                continue
         output_rows.append(output_row)
     output_rows.pop(len(output_rows)-1) # pop "Total" row
     output_rows.pop(0) # pop header
