@@ -1,5 +1,6 @@
 import csv
 import logging
+import re
 import requests
 
 from bs4 import BeautifulSoup
@@ -29,8 +30,9 @@ def scrape(output_dir, cache_dir=None):
         columns = table_row.find_all('td')
         output_row = []
         for column in columns:
-            output_row.append(column.text)
-        output_row = [x.strip() for x in output_row]
+            txt = column.text.strip()
+            cleantext = re.sub(r'\s+',' ',txt)
+            output_row.append(cleantext)
         output_rows.append(output_row)
     # remove first empty row
     output_rows.pop(0)
