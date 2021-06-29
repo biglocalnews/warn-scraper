@@ -14,4 +14,4 @@ openpyxl = "*"
 bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
