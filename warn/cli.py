@@ -54,6 +54,7 @@ def main(args=None):
     states = args.states
     output_dir = args.output_dir
     cache_dir = args.cache_dir
+    _create_log_dir(WARN_LOG_PATH)
     runner = Runner(cache_dir, output_dir)
     runner.setup()
     succeeded = []
@@ -81,6 +82,9 @@ def main(args=None):
                    "and WARN_PROJECT_ID env vars to upload files.")
             logger.error(msg)
     _log_final_status(succeeded, failed, logger)
+
+def _create_log_dir(log_dir):
+    return Path(log_dir).mkdir(parents=True, exist_ok=True)
 
 def _log_final_msg(state_list, action, logger):
     msg_base = '{} scraper(s) {}: {}'
