@@ -57,8 +57,8 @@ def writeBody(year, output_csv):
             output_row.append(column.text.strip())
         if len(output_row)<9: # to account for the extra column in 2021
             output_row.insert(2,'')
-        if year == 2019 and "2020" in output_row[0]: # account for duplicated 2020 data 
-                continue
+        #if year == 2019 and "2020" in output_row[0]: # account for duplicated 2020 data 
+        #        continue
         output_rows.append(output_row)
     output_rows.pop(len(output_rows)-1) # pop "Total" row
     output_rows.pop(0) # pop header
