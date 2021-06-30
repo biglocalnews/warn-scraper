@@ -1,8 +1,11 @@
 import csv
 import logging
 import requests
+import urllib3
 
 from bs4 import BeautifulSoup
+
+from warn.utils import write_rows_to_csv
 
 logger  = logging.getLogger(__name__)
 
@@ -28,9 +31,7 @@ def scrape(output_dir, cache_dir=None):
     output_header = [x.strip() for x in output_header]
     output_header
     # save header
-    with open(output_csv, 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
+    write_rows_to_csv(output_rows, output_csv)
 
     # NB: still fails to capture all information
     # e.g. gets Macy's but not store address, 
@@ -69,6 +70,7 @@ def scrape_page(year, page):
     }
     url = f'https://reactwarn.floridajobs.org/WarnList/Records?year={year}&page={page}'
     # FL site requires realistic User-Agent. Also sidestep SSL error
+    urllib3.disable_warnings()
     response = requests.get(url, headers=headers, verify=False)
     logger.debug(f"Request status is {response.status_code} for {url}")
     return response.text
