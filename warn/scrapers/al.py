@@ -39,5 +39,5 @@ def scrape(output_dir, cache_dir=None):
 def extract_fields_from_row(row, element):
     row_data = []
     for field in row.find_all(element):
-        data.append(field.text.strip())
+        row_data.append(field.text.strip())
     return row_data
