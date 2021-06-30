@@ -36,14 +36,14 @@ def scrape(output_dir, cache_dir=None):
 
     # save body of 2021-2015
     for year in years:
-        writeBody(year,output_csv)
+        write_body(year,output_csv)
 
     return output_csv
 
 
-def writeBody(year, output_csv):
+def write_body(year, output_csv):
     # 2020 has a different link structure
-    url = 'https://jobs.mo.gov/warn{}'.format(year) if (year != 2020) else 'https://jobs.mo.gov/content/2020-missouri-warn-notices'
+    url = f'https://jobs.mo.gov/warn{year}' if (year != 2020) else 'https://jobs.mo.gov/content/2020-missouri-warn-notices'
     page = requests.get(url)
     logger.debug(f"Page status is {page.status_code} for {url}")
     soup = BeautifulSoup(page.text, 'html.parser')
