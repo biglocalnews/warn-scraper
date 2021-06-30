@@ -30,7 +30,4 @@ def scrape(output_dir, cache_dir=None):
             continue
         output_rows.append(output_row)
     write_rows_to_csv(output_rows, output_csv)
-    #with open(output_csv, 'w') as csvfile:
-    #    writer = csv.writer(csvfile)
-    #    writer.writerows(output_rows)
     return output_csv

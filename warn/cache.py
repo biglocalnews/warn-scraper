@@ -21,7 +21,7 @@ class Cache:
         cache.write('fl/2021_page_1.html', html)
 
         # To subsequently retrieve pages in cache (e.g. to read and parse)
-        cache.list_files('fl')
+        cache.files('fl')
 
     Args:
 

@@ -31,7 +31,7 @@ def scrape(output_dir, cache_dir=None):
         output_rows.append(layoff_data_row)
     # Perform initial write of data
     write_rows_to_csv(output_rows, output_csv)
-    cache = Cache(cache_dir)
+    cache = Cache(cache_dir) # ~/.warn-scraper/cache
     scrape_2010_to_2004(cache, output_csv)
     dedupe(output_csv)
     return output_csv
