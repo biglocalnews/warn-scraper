@@ -191,3 +191,30 @@ git branch -a
 # you can "prune" those local references
 git remote prune origin
 ```
+
+### File name conventions
+
+We should apply the following conventions to all state scrapers:
+
+- Always use the **lower-case state postal code** in the name of "export" files intended to be uploaded to the Big Local News platform for end users. For example: `exports/nj.csv`
+- States should generally have a single export file, unless there's a known edge case (e.g. CA).
+- "Intermediate" files used for data processing should not be published to the BLN platform. Such files should be written to the `cache/` directory.
+  - For simple cases, use the same name as the final export name (e.g. `cache/mo.csv` and `exports/mo.csv`).
+  - For more complex cases, use the state postal code plus a standard suffix (e.g. `cache/mo_raw_1.csv` , `cache_mo_raw_2.csv`).
+  - If many files need to be cached, create a subdirectory using the lower-case state postal code and apply a sensible naming scheme to the cached files (e.g. `cache/mo/page_1.html`).
+
+Here's an example directory demonstrating the above conventions:
+
+```bash
+├── cache
+│   ├── mo.csv
+│   ├── nj
+│   │   ├── Jan2010Warn.html
+│   │   └── Jan2011Warn.html
+│   ├── ny_raw_1.csv
+│   └── ny_raw_2.csv
+└── exports
+    ├── mo.csv
+    ├── nj.csv
+    └── ny.csv
+```
