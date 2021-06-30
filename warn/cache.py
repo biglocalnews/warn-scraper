@@ -34,6 +34,14 @@ class Cache:
         self.root_dir = self._path_from_env or self._path_default
         self.path = path or str(Path(self.root_dir, 'cache'))
 
+    def exists(self, name):
+        return Path(self.path, name).exists()
+
+    def read(self, name):
+        path = Path(self.path, name)
+        with open(path, 'r', newline='') as infile:
+            return infile.read()
+
     def write(self, name, content):
         """Save file contents to cache.
 

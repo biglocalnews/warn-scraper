@@ -10,7 +10,7 @@ def default_user_home():
     )
 
 
-def write_rows_to_csv(rows, output_path):
-    with open(output_path, 'w', newline='') as outfile:
+def write_rows_to_csv(rows, output_path, mode='w'):
+    with open(output_path, mode, newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(rows)

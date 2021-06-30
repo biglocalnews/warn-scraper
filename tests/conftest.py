@@ -31,9 +31,11 @@ def create_cache_dir(cache_dir):
 
 @pytest.fixture
 def copy_html_to_cache(cache_dir):
-    for fixture in ['2021_page_1.html', '2021_page_2.html']:
-        src = Path(__file__).parent.joinpath('fixtures').joinpath(fixture)
-        dest = Path(cache_dir).joinpath('fl/')
+    fl_dir = Path(cache_dir).joinpath('fl')
+    fl_dir.mkdir(parents=True, exist_ok=True)
+    for html_fixture in ['2021_page_1.html', '2021_page_2.html']:
+        src = Path(__file__).parent.joinpath('fixtures').joinpath(html_fixture)
+        dest = fl_dir.joinpath(html_fixture)
         shutil.copy(src, dest)
 
 
