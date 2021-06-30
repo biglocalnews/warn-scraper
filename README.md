@@ -163,7 +163,7 @@ git pull
 git checkout nj-100
 
 # Rebase your changes on top of main
-git main rebase
+git rebase main
 
 # Re-apply stashed changes, if any
 git stash apply
