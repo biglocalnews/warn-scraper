@@ -32,9 +32,6 @@ def scrape(output_dir, cache_dir=None):
     output_header
     # save header
     write_rows_to_csv(output_rows, output_csv)
-    #with open(output_csv, 'w') as csvfile:
-    #    writer = csv.writer(csvfile)
-    #    writer.writerow(output_header)
 
     # NB: still fails to capture all information
     # e.g. gets Macy's but not store address, 
