@@ -45,11 +45,7 @@ def extract_fields_from_table(table):
     row = table.find_all('tr')[0]
     data = []
     for field in row.find_all('td'):
-        try:
-            data.append(field.text.strip())
-        except TypeError:
-            import ipdb
-            ipdb.set_trace()
+        data.append(field.text.strip())
     return data
 
 def scrape_2010_to_2004(cache, output_csv):
