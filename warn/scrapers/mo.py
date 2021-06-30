@@ -4,19 +4,19 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from warn.utils import write_rows_to_csv
+
 logger = logging.getLogger(__name__)
 
 """
-NOTES:
+NOTES for data cleaning:
 - 2019 and 2020 page has duplicate data
 - 2017 date format is different
-- 2020 url is different from everything else -check 
-- 2021 contains an extra industry column -check
 """
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/missouri_warn_raw.csv'
+    output_csv = f'{cache_dir}/mo_raw.csv'
     years = range(2021,2014,-1)
     url = 'https://jobs.mo.gov/warn2021'
     page = requests.get(url)
@@ -28,8 +28,7 @@ def scrape(output_dir, cache_dir=None):
     headers = first_row.find_all('th')
     output_header = []
     for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
+        output_header.append(header.text.strip())
     # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
@@ -63,6 +62,4 @@ def writeBody(year, output_csv):
     output_rows.pop(len(output_rows)-1) # pop "Total" row
     output_rows.pop(0) # pop header
     if len(output_rows) > 0:
-        with open(output_csv, 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
+        write_rows_to_csv(output_rows,output_csv,mode='a')
