@@ -127,3 +127,63 @@ python -m warn.cli -s AK
 # For more detailed debugging output, use the -l flag
 python -m warn.cli -l DEBUG -s AK
 ```
+
+### GitHub cheatsheet
+
+Below are some reminders on commands that can be helpful for our branch-oriented Git/GitHub workflow.
+
+When starting a new branch:
+
+```bash
+# Checkout main and pull to make sure you have the latest code
+git checkout main
+git pull
+
+# Create a branch using <state>-<issue #> pattern
+git checkout -b nj-100
+```
+
+When pushing a branch for the first time:
+
+```bash
+git push -u origin nj-100
+```
+
+When you need to pull in the latest changes from `main`:
+
+```bash
+# Stash or commit the work on your active branch
+git stash
+# Checkout and pull updates on main
+git checkout main
+git pull
+
+# Checkout your branch
+git checkout nj-100
+
+# Rebase your changes on top of main
+git main rebase
+```
+
+After a rebase, delete and recreate your *remote* branch (if you previously pushed it):
+
+```bash
+# Delete the branch on the remote called origin
+git push origin :nj-100
+
+# Push the branch anew (after you've rebased)
+git push -u origin nj-100
+```
+
+To clean up your local list of remote branches that have been merged and deleted (during
+the Pull Request process):
+
+```bash
+# To view references to remote branches
+git branch -a
+
+# If there are remote branches that no longer exist
+# (i.e were deleted as part of a Pull Request merge),
+# you can "prune" those local references
+git remote prune origin
+```
