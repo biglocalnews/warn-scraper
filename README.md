@@ -154,6 +154,7 @@ When you need to pull in the latest changes from `main`:
 ```bash
 # Stash or commit the work on your active branch
 git stash
+
 # Checkout and pull updates on main
 git checkout main
 git pull
@@ -163,6 +164,9 @@ git checkout nj-100
 
 # Rebase your changes on top of main
 git main rebase
+
+# Re-apply stashed changes, if any
+git stash apply
 ```
 
 After a rebase, delete and recreate your *remote* branch (if you previously pushed it):
