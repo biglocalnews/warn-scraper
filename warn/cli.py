@@ -12,8 +12,8 @@ from warn import Runner
 USER_HOME=os.path.expanduser('~')
 DEFAULT_HOME=str(Path(USER_HOME,'.warn-scraper'))
 ETL_DIR=os.environ.get('WARN_ETL_DIR', DEFAULT_HOME)
-PROCESS_DIR=str(Path(ETL_DIR, 'process'))
-WARN_DATA_PATH=str(Path(ETL_DIR, 'warn'))
+PROCESS_DIR=str(Path(ETL_DIR, 'cache'))
+WARN_DATA_PATH=str(Path(ETL_DIR, 'exports'))
 WARN_LOG_PATH=str(Path(ETL_DIR, 'logs'))
 
 
