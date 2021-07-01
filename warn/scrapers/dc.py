@@ -3,25 +3,23 @@ import logging
 import requests
 
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+from warn.utils import write_rows_to_csv
+
+from requests.api import get
 
 logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/districtcolumbia_warn_raw.csv'.format(output_dir)
-    url_12 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202012'
-    url_13 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-updated%202013'
+    output_csv = f'{cache_dir}/dc.csv'
+    url = f'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{datetime.today().year}'
     url_14 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014'
-    url_15 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-2015-1'
-    url_16 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-2016'
-    url_17 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-2017'
-    url_18 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-0'
-    url_19 = 'https://does.dc.gov/node/445852'
-    url_20 = 'https://does.dc.gov/node/1468786'
-    url_list = [url_12, url_13, url_14, url_15, url_16, url_17, url_18, url_19, url_20]
+
     # get data for headers
-    page = requests.get(url_12)
-    logger.debug(f"Page status code is {page.status_code} for {url_12}")
+    page = requests.get(url)
+    logger.debug(f"Page status code is {page.status_code} for {url}")
     soup = BeautifulSoup(page.text, 'html.parser')
     table = soup.find_all('table') # output is list-type
     # find header
@@ -29,12 +27,17 @@ def scrape(output_dir, cache_dir=None):
     headers = first_row.find_all('th')
     output_header = []
     for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
+        output_header.append(header.text.strip())
     # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
+
+    # build a list from href on the current page
+    table_div = soup.find_all("div", {"class": "field-items"})
+    # making a set bc 2014 and 2018 links are the same 
+    url_list = list(set([url,url_14]+ [li.find('a')['href'] for li in table_div[1].select('li')])) 
+
     for url in url_list:
         page = requests.get(url)
         logger.debug(f"Page status code is {page.status_code} for {url}")
@@ -45,12 +48,11 @@ def scrape(output_dir, cache_dir=None):
             columns = table_row.find_all('td')
             output_row = []
             for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
+                output_row.append(column.text.strip())
+            # account for specific rows that we don't want
+            if not output_row  or output_row[0] == '' or output_row[0]=='Notice Date': 
+                continue
             output_rows.append(output_row)
-        # remove first empty row
-        output_rows.pop(0)
-        with open(output_csv, 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
+
+        write_rows_to_csv(output_rows,output_csv,mode='a')
     return output_csv
