@@ -11,7 +11,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/florida_warn_raw.csv'.format(output_dir)
+    output_csv = '{}/fl.csv'.format(output_dir)
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     years = ['2019', '2020', '2021']
@@ -27,11 +27,9 @@ def scrape(output_dir, cache_dir=None):
     headers = first_row.find_all('th')
     output_header = []
     for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
-    output_header
+        output_header.append(header.text.strip())
     # save header
-    write_rows_to_csv(output_rows, output_csv)
+    write_rows_to_csv([output_header], output_csv)
 
     # NB: still fails to capture all information
     # e.g. gets Macy's but not store address, 
@@ -58,10 +56,7 @@ def scrape(output_dir, cache_dir=None):
                 output_rows.append(output_row)
             output_rows.pop(0)
             output_rows.pop(0)
-
-            with open(output_csv, 'a') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
+            write_rows_to_csv(output_rows, output_csv, 'a')
     return output_csv
 
 def scrape_page(year, page):
