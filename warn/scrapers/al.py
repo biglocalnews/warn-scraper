@@ -8,7 +8,7 @@ from warn.utils import write_rows_to_csv
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/alabama_warn_raw.csv'.format(output_dir)
+    output_csv = '{}/al.csv'.format(output_dir)
     url = 'https://www.madeinalabama.com/warn-list/'
     page = requests.get(url)
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
@@ -35,7 +35,14 @@ def extract_fields_from_row(row, element):
     for i in range(len(fields)):
         field = fields[i].text.strip()
         #if first field not start with "la" or "cl", skip row
+<<<<<<< Updated upstream
         if i==0:
             if re.search(r"(?i)^la", field) == None and re.search(r"(?i)^cl", field) == None: return []
         row_data.append(field)
+=======
+        if(i==0)
+            if(re.search(r"(?i)^la", field) == None && re.search(r"(?i)^cl", field)v== None) 
+                return []
+        else row_data.append(field.text.strip())
+>>>>>>> Stashed changes
     return row_data
