@@ -13,7 +13,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{cache_dir}/dc.csv'
+    output_csv = f'{output_dir}/dc.csv'
     url = f'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{datetime.today().year}'
     url_14 = 'https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014'
 
