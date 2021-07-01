@@ -7,6 +7,12 @@
   - https://jobs.mo.gov/warn2019
 - [Contact for data inquiries](https://dhewd.mo.gov/contactus.php)
 
+### Jul 1st, 2021
+
+Response from MO Department of Higher Education and Workforce Devlopment about the data issues:
+![image](https://user-images.githubusercontent.com/56002814/124181019-fc64cc00-da82-11eb-87ed-d3c6cd2e3021.png)
+
+
 ### Jun 29th, 2021 
 
 The following are some specific issues with this data that needs further processing and phone calls:
