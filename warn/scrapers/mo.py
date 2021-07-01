@@ -2,6 +2,7 @@ import csv
 import logging
 import requests
 
+import pandas as pd
 from bs4 import BeautifulSoup
 
 from warn.utils import write_rows_to_csv
@@ -38,6 +39,7 @@ def scrape(output_dir, cache_dir=None):
     for year in years:
         write_body(year,output_csv)
 
+    dedupe(output_csv)
     return output_csv
 
 
@@ -63,3 +65,9 @@ def write_body(year, output_csv):
     output_rows.pop(0) # pop header
     if len(output_rows) > 0:
         write_rows_to_csv(output_rows,output_csv,mode='a')
+
+def dedupe(output_csv):
+    df = pd.read_csv(output_csv, keep_default_na = False)
+    df.drop_duplicates(inplace = True, keep = 'first')
+    df.to_csv(output_csv, index = False)
+    return output_csv
