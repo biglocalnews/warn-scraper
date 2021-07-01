@@ -23,16 +23,19 @@ def scrape(output_dir, cache_dir=None):
     # add header to the top of the output file
     output_header = extract_fields_from_row(first_row, 'th')
     output_rows.insert(0, output_header)
-    #remove the last 8 rows of dirty data
-    #TODO: replace with more robust regex strategy
-    output_rows = output_rows[0:-8]
     write_rows_to_csv(output_rows, output_csv)
     return output_csv
 
 #row is a beautifulsoup row object
-#element is the HTME element of the desired field
+#element is the HTML element of the desired field
 def extract_fields_from_row(row, element):
     row_data = []
-    for field in row.find_all(element):
-        row_data.append(field.text.strip())
+    fields = row.find_all(element)
+    for i in range(len(fields)):
+        field = fields[i].text.strip()
+        #if first field not start with "la" or "cl", skip row
+        if(i==0)
+            if(re.search(r"(?i)^la", field) == None && re.search(r"(?i)^cl", field)v== None) 
+                return []
+        else row_data.append(field.text.strip())
     return row_data
