@@ -1,4 +1,5 @@
 import csv
+import logging
 import re
 import requests
 
@@ -7,42 +8,43 @@ from bs4 import BeautifulSoup
 from warn.utils import write_rows_to_csv
 
 
+logger  = logging.getLogger(__name__)
+
+
 def scrape(output_dir, cache_dir=None):
     output_csv = '{}/al.csv'.format(output_dir)
     url = 'https://www.madeinalabama.com/warn-list/'
+    logger.debug(f'Scraping {url}')
     page = requests.get(url)
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
     soup = BeautifulSoup(page.text, 'html.parser')
     table = soup.find_all('table') # output is list-type
-    output_rows = []
-    for table_row in table[0].find_all('tr'):
-        output_rows.append(extract_fields_from_row(table_row, 'td'))
-    # remove first empty row
-    output_rows.pop(0)
-    # find header
-    first_row = table[0].find_all('tr')[0]
-    # add header to the top of the output file
-    output_header = extract_fields_from_row(first_row, 'th')
-    output_rows.insert(0, output_header)
+    table_rows = table[0].find_all('tr')
+    # Handle the header
+    raw_header = table_rows.pop(0)
+    header_row = extract_fields_from_row(raw_header, 'th')
+    output_rows = [header_row]
+    # Process remaining rows
+    discarded_rows = []
+    for table_row in table_rows:
+        # Discard bogus data lines (see last lines of source data)
+        # based on check of first field ("Closing or Layoff")
+        data = extract_fields_from_row(table_row, 'td')
+        layoff_type = data[0]
+        if re.match(r'(clos|lay)', layoff_type, re.I):
+            output_rows.append(data)
+        else:
+            discarded_rows.append(data)
+    if discarded_rows:
+        logger.warn(f"Warning: Discarded {len(discarded_rows)} dirty data row(s)")
     write_rows_to_csv(output_rows, output_csv)
     return output_csv
 
-#row is a beautifulsoup row object
-#element is the HTML element of the desired field
+
 def extract_fields_from_row(row, element):
     row_data = []
     fields = row.find_all(element)
-    for i in range(len(fields)):
-        field = fields[i].text.strip()
-        #if first field not start with "la" or "cl", skip row
-<<<<<<< Updated upstream
-        if i==0:
-            if re.search(r"(?i)^la", field) == None and re.search(r"(?i)^cl", field) == None: return []
+    for raw_field in fields:
+        field = raw_field.text.strip()
         row_data.append(field)
-=======
-        if(i==0)
-            if(re.search(r"(?i)^la", field) == None && re.search(r"(?i)^cl", field)v== None) 
-                return []
-        else row_data.append(field.text.strip())
->>>>>>> Stashed changes
     return row_data
