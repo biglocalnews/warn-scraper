@@ -1,4 +1,5 @@
 import csv
+import re
 import requests
 
 from bs4 import BeautifulSoup
@@ -34,8 +35,7 @@ def extract_fields_from_row(row, element):
     for i in range(len(fields)):
         field = fields[i].text.strip()
         #if first field not start with "la" or "cl", skip row
-        if(i==0)
-            if(re.search(r"(?i)^la", field) == None && re.search(r"(?i)^cl", field)v== None) 
-                return []
-        else row_data.append(field.text.strip())
+        if i==0:
+            if re.search(r"(?i)^la", field) == None and re.search(r"(?i)^cl", field) == None: return []
+        row_data.append(field)
     return row_data
