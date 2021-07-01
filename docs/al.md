@@ -11,5 +11,5 @@
 ### Jun 30th, 2021 
 
 The following are some specific issues with this data that needs further processing and phone calls:
-- 8 strange lines present at the end of this data, with strange letters and dates. What does this mean? Could it be...?
+- Q: I noticed in the last 8 lines of the data there are alternating rows of future dates and jan 1 1970, with some strange characters in the other fields. Do these lines mean anything, or can we discard them?
 - ![image](https://user-images.githubusercontent.com/20691507/124038481-0c62aa00-d9b6-11eb-9498-fdc623798797.png)
