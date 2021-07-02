@@ -1,10 +1,12 @@
 import csv
+import datetime
 import logging
 import requests
 import urllib3
 
 from bs4 import BeautifulSoup
 
+from warn.cache import Cache
 from warn.utils import write_rows_to_csv
 
 logger  = logging.getLogger(__name__)
@@ -12,13 +14,14 @@ logger  = logging.getLogger(__name__)
 
 def scrape(output_dir, cache_dir=None):
     output_csv = '{}/fl.csv'.format(output_dir)
+    cache = Cache(cache_dir) # ~/.warn-scraper/cache
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     years = ['2019', '2020', '2021']
     # Load for first time => get header
     year = 2020
     page = 1
-    html = scrape_page(year, page)
+    html = scrape_page(cache, year, page)
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.find_all('table') # output is list-type
     len(table)
@@ -43,7 +46,7 @@ def scrape(output_dir, cache_dir=None):
         elif year == '2019':
             pages = [1,2,3,4]
         for page in pages:
-            html = scrape_page(year, page)
+            html = scrape_page(cache, year, page)
             soup = BeautifulSoup(html, 'html5lib')
             table = soup.find_all('table')
             output_rows = []
@@ -59,13 +62,24 @@ def scrape(output_dir, cache_dir=None):
             write_rows_to_csv(output_rows, output_csv, 'a')
     return output_csv
 
-def scrape_page(year, page):
+def scrape_page(cache, year, page):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }
-    url = f'https://reactwarn.floridajobs.org/WarnList/Records?year={year}&page={page}'
     # FL site requires realistic User-Agent. Also sidestep SSL error
     urllib3.disable_warnings()
-    response = requests.get(url, headers=headers, verify=False)
-    logger.debug(f"Request status is {response.status_code} for {url}")
-    return response.text
+    current_year = datetime.date.today().year
+    if year != current_year:
+        # Add the state postal as cache key prefix
+        cache_key = f'fl/{year}{page}'
+        try:
+            page_text = cache.read(cache_key)
+            logger.debug(f'Page fetched from cache: {cache_key}')
+        except FileNotFoundError:
+            # If file not found in cache, scrape the page and save to cache
+            url = f'https://reactwarn.floridajobs.org/WarnList/Records?year={year}&page={page}'
+            page_text = requests.get(url, headers=headers, verify=False).text
+            cache.write(cache_key, page_text)
+            logger.debug(f"Request status is {response.status_code} for {url}")
+            logger.debug(f"Scraped and cached {url}")
+    return page_text
