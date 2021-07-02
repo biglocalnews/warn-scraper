@@ -7,6 +7,12 @@
   - https://jobs.mo.gov/warn2019
 - [Contact for data inquiries](https://dhewd.mo.gov/contactus.php)
 
+### Jul 2nd, 2021
+
+Notes about dedupe/data cleaning strategy currently applied to Missouri:
+- 2020 data scraped from [the 2019 page](https://jobs.mo.gov/warn2019) is not included in the output because the state agency has indicated the need of an audit of the overlapping data.
+- a pandas dedupe function is applied to the output data to get rid of any complete duplication, but highly similar entries (usually due to multiple locations of the same company and possibly include over-counting of the total number of employees affected) need further examination at a case by case level.
+
 ### Jul 1st, 2021
 
 Response from MO Department of Higher Education and Workforce Devlopment about the data issues:
