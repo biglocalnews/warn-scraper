@@ -47,7 +47,7 @@ def scrape(output_dir, cache_dir=None):
         write_body(year,raw_csv)
 
     dedupe(output_csv)
-    return output_csv,raw_csv
+    return output_csv
 
 
 def write_body(year, output_csv):
