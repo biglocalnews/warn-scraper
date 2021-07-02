@@ -14,7 +14,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/newjersey_warn_raw.csv'
+    output_csv = f'{output_dir}/nj.csv'
     url = 'http://lwd.state.nj.us/WorkForceDirectory/warn.jsp'
     logger.debug(f"Scraping {url}")
     html = scrape_page(url)

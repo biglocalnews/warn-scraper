@@ -12,7 +12,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/al.csv'.format(output_dir)
+    output_csv = f'{output_dir}/al.csv'
     url = 'https://www.madeinalabama.com/warn-list/'
     logger.debug(f'Scraping {url}')
     page = requests.get(url)

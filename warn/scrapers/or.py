@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def scrape(output_dir, cache_dir=None):
     # page range needs to be updated from 55 when there are enough notices for an additional page
     # as of 5/5/2020, this version of the scraper is fine
-    output_csv = f'{output_dir}/oregon_warn_raw.csv'
+    output_csv = f'{output_dir}/or.csv'
     # pages = range(1, 44, 1)
     pages = 1
     url = 'https://ccwd.hecc.oregon.gov/Layoff/WARN?page=1'

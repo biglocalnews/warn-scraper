@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/ohio_warn_raw.csv'
+    output_csv = f'{output_dir}/oh.csv'
     url = 'https://jfs.ohio.gov/warn/current.stm'
     page = requests.get(url, verify=False)
     logger.debug(f"Page status is {page.status_code} for {url}")

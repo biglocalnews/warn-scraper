@@ -8,7 +8,7 @@ from warn.utils import write_rows_to_csv
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/alaska_warn_raw.csv'
+    output_csv = f'{output_dir}/ak.csv'
     url = 'https://jobs.alaska.gov/RR/WARN_notices.htm'
     page = requests.get(url)
     # Force encoding to fix dashes, apostrophes, etc. on page.text from requests reponse

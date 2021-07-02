@@ -9,7 +9,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/virginia_warn_raw.csv'
+    output_csv = f'{output_dir}/va.csv'
     url = 'https://www.vec.virginia.gov/warn-notices'
     response = requests.get(url)
     logger.debug(f"Page status is {response.status_code} for {url}")

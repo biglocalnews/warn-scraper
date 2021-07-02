@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/wisconsin_warn_raw.csv'
+    output_csv = f'{output_dir}/wi.csv'
     years = [2016, 2017, 2018, 2019]
     url = 'https://sheets.googleapis.com/v4/spreadsheets/1cyZiHZcepBI7ShB3dMcRprUFRG24lbwEnEDRBMhAqsA/values/Originals?key=AIzaSyDP0OltIjcmRQ6-9TTmEVDZPIX6BSFcunw'
     response = requests.get(url)

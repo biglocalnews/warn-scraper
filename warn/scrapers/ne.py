@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{cache_dir}/nebraska_warn_raw1.csv'
+    output_csv = f'{cache_dir}/ne_raw1.csv'
     years = range(2019, 2009, -1)
     url = 'https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020'
     page = requests.get(url)
@@ -72,7 +72,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 def nebraska_two(cache_dir):
-    output_csv = f'{cache_dir}/nebraska_warn_raw2.csv'
+    output_csv = f'{cache_dir}/ne_raw2.csv'
     years = range(2019, 2009, -1)
     url = 'https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020'
     page = requests.get(url)
@@ -133,11 +133,11 @@ def nebraska_two(cache_dir):
 
 
 def combine(output_dir, cache_dir):
-    ne_one_path = f'{cache_dir}/nebraska_warn_raw1.csv'
-    ne_two_path = f'{cache_dir}/nebraska_warn_raw2.csv'
+    ne_one_path = f'{cache_dir}/ne_raw1.csv'
+    ne_two_path = f'{cache_dir}/ne_raw2.csv'
     ne_one = pd.read_csv(ne_one_path)
     ne_two = pd.read_csv(ne_two_path)
     ne_all_data = pd.concat([ne_one, ne_two])
-    output_csv = f'{output_dir}/nebraska_warn_raw.csv'
+    output_csv = f'{output_dir}/ne.csv'
     ne_all_data.to_csv(output_csv)
     return output_csv
