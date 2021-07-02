@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/connecticut_warn_raw.csv'.format(output_dir)
+    output_csv = f'{output_dir}/ct.csv'
     years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
     header_row = ['warn_date','affected_company','layoff_location','number_workers','layoff_date','closing','closing_date','union','union_address']
     output_rows = []

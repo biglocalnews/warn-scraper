@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/maryland_warn_raw.csv'.format(output_dir)
+    output_csv = f'{output_dir}/md.csv'
     # max_entries = 378 # manually inserted
     years = range(2019, 2009, -1)
     url = 'http://www.dllr.state.md.us/employment/warn.shtml'

@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/washington_warn_raw.csv'
+    output_csv = f'{output_dir}/wa.csv'
     # pages = range(2, 60, 1)
     page = 2
     url = 'https://fortress.wa.gov/esd/file/warn/Public/SearchWARN.aspx'

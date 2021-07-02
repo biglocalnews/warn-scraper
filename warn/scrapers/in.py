@@ -8,7 +8,7 @@ logger  = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/indiana_warn_raw.csv'.format(output_dir)
+    output_csv = f'{output_dir}/in.csv'
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     url1 = 'https://www.in.gov/dwd/2567.htm'

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/southdakota_warn_raw.csv'
+    output_csv = f'{output_dir}/sd.csv'
     url = 'https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx'
     page = requests.get(url)
     logger.debug(f"Page status is {page.status_code} for {url}")
