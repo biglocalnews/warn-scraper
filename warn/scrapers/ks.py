@@ -1,15 +1,51 @@
 import csv
 import logging
-import requests
-import pandas as pd
+from datetime import datetime as dt
+from pathlib import Path
 
+import pandas as pd
+import requests
 from bs4 import BeautifulSoup
+
+from warn.platforms import JobCenterSite
+from warn.utils import write_dict_rows_to_csv
 
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(output_dir, cache_dir=None, use_cache=True):
+    output_csv = f'{output_dir}/ks.csv'
+    search_url = 'https://www.kansasworks.com/search/warn_lookups'
+    ks_cache_dir = str(Path(cache_dir,'ks'))
+    site = JobCenterSite('KS', search_url, cache_dir=ks_cache_dir)
+    #TODO: get current year and prior year
+    current_year = dt.today().year
+    kwargs = {
+        'start_date': f'{current_year}-01-01',
+        'end_date': dt.today().strftime("%Y-%m-%d"),
+        'use_cache': False # always scrape fresh for current year
+    }
+    pages_dict, data = site.scrape(**kwargs)
+    # Returned data includes search result page columns and
+    # data from a nested dict, e.g. address and # of layoffs!
+    headers = [k for k in data[0].keys() if k != 'detail']
+    #TODO: extend headers with fields from nested 'detail' record dict
+    rows = [_prepare_row(row) for row in data]
+    write_dict_rows_to_csv(output_csv, headers, rows)
+    #TODO: Add prior year scrape (use_cache=False)
+    #TODO: Backfill with use_cache=True for all prior years
+    #  ? What's the strategy for determining farthest year back in time?
+    #  ? What happens if current year has no results?
+    return output_csv
+
+def _prepare_row(row):
+    row.pop('detail')
+    return row
+
+### LEGACY
+
+def scrape_old(output_dir, cache_dir=None):
     output_csv = f'{output_dir}/ks.csv'
     last_page_num = get_last_page_num()
     all_records = scrape_links(last_page_num)
