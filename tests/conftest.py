@@ -70,5 +70,10 @@ def read_fixture(file_name):
 
 
 def file_contents(pth):
-    with open(pth, 'r') as f:
+    with open(pth, 'r', newline='') as f:
         return f.read()
+
+def write_file(pth, contents):
+    Path(pth).parent.mkdir(parents=True, exist_ok=True)
+    with open(pth, 'w', newline='') as f:
+        f.write(contents)

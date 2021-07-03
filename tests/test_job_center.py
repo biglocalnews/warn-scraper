@@ -1,11 +1,14 @@
+import re
+from pathlib import Path
+
 import pytest
 
 from warn.platforms import JobCenterSite
 
-@pytest.fixture(scope='module')
-def site():
+@pytest.fixture
+def site(cache_dir):
     url = 'https://www.kansasworks.com/search/warn_lookups'
-    return JobCenterSite('KS', url)
+    return JobCenterSite('KS', url, cache_dir)
 
 
 @pytest.mark.vcr()
@@ -53,3 +56,48 @@ def test_paged_results(site):
     last = data[-1]
     assert first['employer'] == 'Spirit AeroSystems, Inc'
     assert last['employer'] == 'Waddell & Reed'
+
+
+@pytest.mark.vcr()
+def test_cached_search_results(tmp_path):
+    "should save to cache when configured"
+    url = 'https://www.kansasworks.com/search/warn_lookups'
+    cache_dir = str(tmp_path.joinpath('ks'))
+    site = JobCenterSite('KS', url, cache_dir=cache_dir)
+    # The dates below should span two pages (just barely).
+    # Skip detail pages to minimize fixture size.
+    results_pages, data = site.scrape(
+        start_date='2020-05-01',
+        end_date='2021-03-01',
+        detail_pages=False,
+    )
+    expected = [
+        '2020-05-01_2021-03-01_page1.html',
+        '2020-05-01_2021-03-01_page2.html'
+    ]
+    assert len(data) == 27
+    files = [f.name for f in Path(cache_dir).glob('**/*.html')]
+    assert len(files) == 2
+    assert files == expected
+
+@pytest.mark.vcr()
+def test_cached_detail_pages(tmp_path):
+    "should save to cache when configured"
+    url = 'https://www.kansasworks.com/search/warn_lookups'
+    cache_dir = str(tmp_path.joinpath('ks'))
+    site = JobCenterSite('KS', url, cache_dir=cache_dir)
+    # The dates below should span two pages (just barely).
+    # Skip detail pages to minimize fixture size.
+    results_pages, data = site.scrape(
+        start_date='2021-02-01',
+        end_date='2021-03-31',
+        detail_pages=True,
+    )
+    assert len(data) == 2
+    files = [f.name for f in Path(cache_dir).glob('**/*.html')]
+    assert len(files) == 3
+    # record files returned by glob resemble 1234.html (no records prefix)
+    record_files = [f for f in files if re.match(r'\d{1,4}.html', f)]
+    assert len(record_files) == 2
+    assert Path(cache_dir, 'records').exists()
+    assert Path(cache_dir, 'search_results').exists()

@@ -7,29 +7,34 @@ from datetime import date
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from .cache import Cache
+from .urls import urls
+
 
 logger = logging.getLogger(__name__)
 
 
-class JobCenterSite:
+class Site:
     """Scraper for America's Job Center sites.
 
-    Job Center sites support date-based searches using
-    a basic search form, such as for Kansas:
+    Job Center support date-based searches via a search URL.
+    Below is an example URL for Kansas:
 
-        https://www.kansasworks.com/search/warn_lookups/new
+        https://www.kansasworks.com/search/warn_lookups
 
     Args:
         state (str): State postal code
-        url (str): Base URL for the site
+        url (str): Search URL for the site (should end in '/warn_lookups')
+        cache_dir (str): Cache directory
     """
 
-    def __init__(self, state, url):
+    def __init__(self, state, url, cache_dir):
         self.state = state.upper()
         self.url = url
+        self.cache = Cache(cache_dir)
 
-    def scrape(self, start_date=None, end_date=None, detail_pages=True):
-        """Scrape between a particular start and end date.
+    def scrape(self, start_date=None, end_date=None, detail_pages=True, use_cache=True):
+        """Scrape between a start and end date.
 
         Defaults to scraping data for current year.
 
@@ -37,100 +42,116 @@ class JobCenterSite:
             start_date (str): YYYY-MM-DD
             end_date (str): YYYY-MM-DD
             detail_pages (boolean, default True): Whether or not to scrape detail pages.
+            use_cache (boolean, default True): Check cache before scraping.
 
         Returns:
 
             An array containing a dictionary of html search result pages
-            and a list of parsed data.
+            and a list of parsed data dictionaries
 
-            ( {1: <HTML str>}, [<data>] )
+            ( {1: <HTML str>}, [{data}, {more data}] )
         """
         # Final payload here
         html_store = {}
         data = []
-        # Begin scrape of initial page
+        # Begin scrape with initial page
         start = start_date or self._start
         end = end_date or self._end
-        params = self._search_kwargs(start_date=start, end_date=end)
+        kwargs = {
+            'params': self._search_kwargs(start_date=start, end_date=end),
+            'use_cache': use_cache,
+            'detail_pages': detail_pages
+        }
         logger.debug(f"Scraping initial page for date range: {start_date} -> {end_date}")
-        results = self._scrape_page(
-            self.url,
-            url_params=params,
-            detail_pages=detail_pages
-        )
+        results = self._scrape_search_results_page(self.url, **kwargs)
         # Update the html_store and data payloads
         self._update_payload(html_store, data, results)
         # Scrape downstream pages, if any
         next_page_link = self._next_page_link(results['html'])
         if next_page_link:
             logger.debug("Scraping paged results")
-            self._scrape_next_page(next_page_link, html_store, data, detail_pages)
+            self._scrape_next_page(next_page_link, html_store, data, detail_pages, use_cache)
         return (html_store, data)
 
-    def _scrape_next_page(self, next_page_link, html_store, data, detail_pages):
-        # Scrape the results of next page and update the payload
-        results = self._scrape_page(next_page_link, detail_pages=detail_pages)
-        self._update_payload(html_store, data, results)
-        # If there are any more pages, make a recursive call
-        next_page_link = self._next_page_link(results['html'])
-        if next_page_link:
-            self._scrape_next_page(next_page_link, html_store, data, detail_pages)
-        # Otherwise, we've reached the last page so return
+    @property
+    def _start(self):
+        return f'{date.today().year}-01-01'
+
+    @property
+    def _end(self):
+        month = str(date.today().month).zfill(2)
+        day = month = str(date.today().day).zfill(2)
+        return f'{today.year}-{month}-{day}'
+
+    def _get_page(self, url, params={}, use_cache=True):
+        """Fetch page from cache or scrape anew
+
+        Defaults to using cached page if it exists.
+        Always caches freshly scraped page.
+        """
+        cache_key = self.cache.key_from_url(url, params)
+        if use_cache and self.cache.exists(cache_key):
+            return self.cache.fetch(url, params)
         else:
-            return
+            response = requests.get(url, params=params)
+            html = response.text
+            self.cache.save(url, params, html)
+            return html
 
-    def _update_payload(self, html_store, data, results):
-        # In-place updates
-        page_num = results['page_num']
-        html_store[page_num] = results['html']
-        data.extend(results['data'])
-
-    def _scrape_page(self, url, url_params={}, detail_pages=True):
+    def _scrape_search_results_page(self, url, params={}, detail_pages=True, use_cache=True):
         """Scrape data from search results page and detail pages.
         """
+        kwargs = {
+            'params': params,
+            'use_cache': use_cache
+        }
         # Downstream page URLs will have the "page" query parameter
         if 'page' in url:
             final_url = self._build_page_url(url)
-            queries = urllib.parse.parse_qs(final_url)
-            page_num = int(queries['page'][0]) # it's a one-element array
-            html = self._get_page(final_url)
+            page_num = urls.page_num_from_url(final_url)
+            html = self._get_page(final_url, **kwargs)
         # Whereas the initial page request doesn't have the "page" parameter
         else:
             page_num = 1
-            html = self._get_page(url, params=url_params)
-            logger.debug(url)
+            html = self._get_page(url, **kwargs)
         data = self._parse_search_results(html)
         if detail_pages:
-            logger.debug("Scraping detail pages for page...")
+            logger.debug("Scraping detail pages found on search results page...")
             for row in data:
-                detail_page_data = self._scrape_detail_page(row['detail_page_url'])
-                try:
-                    row['detail'].update(detail_page_data)
-                except ValueError:
-                    breakpoint()
+                detail_page_data = self._scrape_detail_page(
+                    row['detail_page_url'],
+                    use_cache
+                )
+                row['detail'].update(detail_page_data)
         return {
             'page_num': page_num,
             'html': html,
             'data': data
         }
 
-    def _next_page_link(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
-        next_page = soup.find('a', class_="next_page")
-        try:
-            url_path = next_page['href']
-            next_page_url = self._build_page_url(url_path)
-        except TypeError:
-            next_page_url = None
-        return next_page_url
+    def _scrape_next_page(self, next_page_link, html_store, data, detail_pages, use_cache):
+        # Scrape the results of next page and update the payload
+        kwargs = {
+            'params': {},
+            'detail_pages': detail_pages,
+            'use_cache': use_cache,
+        }
+        results = self._scrape_search_results_page(next_page_link, **kwargs)
+        self._update_payload(html_store, data, results)
+        # If there are any more pages, make a recursive call
+        next_page_link = self._next_page_link(results['html'])
+        if next_page_link:
+            args = [next_page_link, html_store, data, detail_pages, use_cache]
+            self._scrape_next_page(*args)
+        # Otherwise, we've reached the last page so return
+        else:
+            return
 
-    def _get_page(self, url, params={}):
-        response = requests.get(url, params=params)
-        return response.text
+    def _scrape_detail_page(self, url, use_cache):
+        html = self._get_page(url, use_cache=use_cache)
+        return self._parse_detail_page(html)
 
-    def _scrape_detail_page(self, url):
-        logger.debug(url)
-        html = self._get_page(url)
+    def _parse_detail_page(self, html):
         soup = BeautifulSoup(html, 'html.parser')
         company, address, notice_date, num_str= [
             val.text.strip() for val in soup.find('dl').find_all('dd')
@@ -159,15 +180,11 @@ class JobCenterSite:
             data.append(row_data)
         return data
 
-    @property
-    def _start(self):
-        return f'{date.today().year}-01-01'
-
-    @property
-    def _end(self):
-        month = str(date.today().month).zfill(2)
-        day = month = str(date.today().day).zfill(2)
-        return f'{today.year}-{month}-{day}'
+    def _update_payload(self, html_store, data, results):
+        # In-place updates
+        page_num = results['page_num']
+        html_store[page_num] = results['html']
+        data.extend(results['data'])
 
     def _search_kwargs(self, start_date, end_date, extra={}):
         kwargs = {
@@ -200,6 +217,16 @@ class JobCenterSite:
                 'record_number': url_path.rsplit('/')[-1],
             }
         }
+
+    def _next_page_link(self, html):
+        soup = BeautifulSoup(html, 'html.parser')
+        next_page = soup.find('a', class_="next_page")
+        try:
+            url_path = next_page['href']
+            next_page_url = self._build_page_url(url_path)
+        except TypeError:
+            next_page_url = None
+        return next_page_url
 
     def _build_page_url(self, url_path):
         bits = urllib.parse.urlsplit(self.url)

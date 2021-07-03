@@ -1,3 +1,1 @@
-from .job_center_site import JobCenterSite
-
-
+from .job_center.site import Site as JobCenterSite

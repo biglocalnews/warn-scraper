@@ -38,6 +38,15 @@ class Cache:
         return Path(self.path, name).exists()
 
     def read(self, name):
+        """Read text file from cache.
+
+        Args:
+            name (str): Partial name, relative to cache dir (eg. 'fl/2021_page_1.html')
+
+        Returns:
+            File content as string or error if file doesn't
+
+        """
         path = Path(self.path, name)
         with open(path, 'r', newline='') as infile:
             return infile.read()
