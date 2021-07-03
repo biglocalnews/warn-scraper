@@ -14,6 +14,9 @@ from .urls import urls
 logger = logging.getLogger(__name__)
 
 
+class NoSearchResultsError(Exception): pass
+
+
 class Site:
     """Scraper for America's Job Center sites.
 
@@ -64,6 +67,9 @@ class Site:
         }
         logger.debug(f"Scraping initial page for date range: {start_date} -> {end_date}")
         results = self._scrape_search_results_page(self.url, **kwargs)
+        # Exit early if there were no results
+        if not results.get('data'):
+            return (html_store, data)
         # Update the html_store and data payloads
         self._update_payload(html_store, data, results)
         # Scrape downstream pages, if any
@@ -114,7 +120,10 @@ class Site:
         else:
             page_num = 1
             html = self._get_page(url, **kwargs)
-        data = self._parse_search_results(html)
+        try:
+            data = self._parse_search_results(html)
+        except NoSearchResultsError:
+            return {}
         if detail_pages:
             logger.debug("Scraping detail pages found on search results page...")
             for row in data:
@@ -137,6 +146,11 @@ class Site:
             'use_cache': use_cache,
         }
         results = self._scrape_search_results_page(next_page_link, **kwargs)
+        try:
+            results['data']
+        # Empty results dict signals no search results were returned
+        except KeyError:
+            return
         self._update_payload(html_store, data, results)
         # If there are any more pages, make a recursive call
         next_page_link = self._next_page_link(results['html'])
@@ -169,11 +183,18 @@ class Site:
         }
 
     def _parse_search_results(self, html):
+        data = []
         soup = BeautifulSoup(html, 'html.parser')
         table_rows = soup.find_all('tr')
         # Remove header
-        table_rows.pop(0)
-        data = []
+        try:
+            table_rows.pop(0)
+        except IndexError:
+            # IndexError signals no results were found on page
+            # Verify this page has no results and return data
+            msg = 'no matches for your search results'
+            if msg in soup.text:
+                raise NoSearchResultsError(msg)
         # Process result listings
         for row in table_rows:
             row_data = self._extract_search_results_row(row)
@@ -182,9 +203,10 @@ class Site:
 
     def _update_payload(self, html_store, data, results):
         # In-place updates
-        page_num = results['page_num']
-        html_store[page_num] = results['html']
-        data.extend(results['data'])
+        page_num = results.get('page_num')
+        if page_num:
+            html_store[page_num] = results['html']
+        data.extend(results.get('data', []))
 
     def _search_kwargs(self, start_date, end_date, extra={}):
         kwargs = {

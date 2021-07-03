@@ -40,6 +40,18 @@ def test_scrape_integration(site):
     assert details['number_of_employees_affected'] == 219
     assert 'html' in details.keys()
 
+@pytest.mark.vcr()
+def test_no_results(site):
+    "should handle searches with no results"
+    # The dates below should span two pages (just barely).
+    # Skip detail pages to minimize fixture size.
+    results_pages, data = site.scrape(
+        start_date='1997-01-01',
+        end_date='1997-12-31',
+        detail_pages=False,
+    )
+    assert data == []
+    assert results_pages == {}
 
 @pytest.mark.vcr()
 def test_paged_results(site):
