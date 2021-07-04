@@ -1,6 +1,6 @@
 # Kansas
 
-> This state uses the Job Center platform. See the [Job Center docs](docs/job_center.md)
+> This state uses the Job Center platform. See the [Job Center docs](job_center.md)
 > for details on the scraping strategy.
 
 - [Home page](https://www.kansasworks.com)

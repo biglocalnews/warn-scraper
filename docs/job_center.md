@@ -15,10 +15,10 @@ identical.
 
 We scrape the below states from Job Center sites:
 
-* [Arizona](/docs/az.md)
-* [Delaware](/docs/de.md)
-* [Kansas](/docs/ks.md)
-* [Oklahoma](/docs/ok.md)
+* [Arizona](az.md)
+* [Delaware](de.md)
+* [Kansas](ks.md)
+* [Oklahoma](ok.md)
 
 State-specific details such as links to state sites can be found in
 the pages linked above.
