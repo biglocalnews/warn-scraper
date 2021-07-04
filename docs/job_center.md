@@ -62,7 +62,7 @@ Automated data quality scripts should check for records missing the `Notice Date
 (i.e. historical data that has been added farther back in time than the year we previously researched and hard-coded).
 
 For missing `Notice Date` values, we should ask the data maintainers to fix these records
-at the source. If necessary, we should file public records requests for the layoff notice
+at the source. If necessary, we should file a public records request for the layoff notice
 and correct the data on our end.
 
 ## Alternative scraping strategy
