@@ -69,7 +69,7 @@ and correct the data on our end.
 
 A fully automated scraping strategy could entail scraping backwards in time until we no longer get any search results.
 This risks possibly missing "gap" years between the current and start year (and would require special handling
-early in a new year. We could address this issues by applying logic that aborts the scrape once multiple consecutive years
+early in a new year). We could address this issues by applying logic that aborts the scrape once multiple consecutive years
 with no search results are encountered.
 
 This could free us from having to perform manual research for the earliest year of data available for a state.
