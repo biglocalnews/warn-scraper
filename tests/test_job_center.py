@@ -53,6 +53,24 @@ def test_no_results(site):
     assert data == []
     assert results_pages == {}
 
+
+@pytest.mark.vcr()
+def test_missing_detail_page_values(site):
+    "should handle detail pages missing one or more field values"
+    results_pages, data = site.scrape(
+        start_date='2020-07-31',
+        end_date='2020-07-31',
+        detail_pages=True,
+    )
+    detail = data[0]['detail']
+    assert data[0]['employer'] == 'Spirit AeroSystems, Inc.'
+    assert detail['company_name'] == 'Spirit AeroSystems, Inc.'
+    # This record has a malformed date
+    assert detail['notice_date'] == 'Jul 31, 2020'
+    assert detail['number_of_employees_affected'] == 1100
+    # Record is missing the address field
+    assert detail['address'] == ''
+
 @pytest.mark.vcr()
 def test_paged_results(site):
     "should scrape all pages of results"

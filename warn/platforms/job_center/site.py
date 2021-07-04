@@ -166,21 +166,25 @@ class Site:
         return self._parse_detail_page(html)
 
     def _parse_detail_page(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
-        company, address, notice_date, num_str= [
-            val.text.strip() for val in soup.find('dl').find_all('dd')
-        ]
-        try:
-            num_affected = int(num_str)
-        except ValueError:
-            num_affected = num_str
-        return {
-            'company_name': company,
-            'address': address,
-            'notice_date': notice_date,
-            'number_of_employees_affected': num_affected,
-            'html': html
+        payload = {
+            'company_name': '',
+            'address': '',
+            'number_of_employees_affected':'',
+            'notice date':''
         }
+        soup = BeautifulSoup(html, 'html.parser')
+        headers = [self._snake_case(header.text) for header in soup.find_all('dt')]
+        values = [field.text.strip() for field in soup.find_all('dd')]
+        data = dict(zip(headers, values))
+        payload.update(data)
+        num_str = payload['number_of_employees_affected']
+        # Convert number to int if possible
+        try:
+           payload['number_of_employees_affected'] = int(num_str)
+        except ValueError:
+            pass
+        payload['html'] = html
+        return payload
 
     def _parse_search_results(self, html):
         data = []

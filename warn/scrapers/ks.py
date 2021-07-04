@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from warn.platforms import JobCenterSite
+from warn.platforms.job_center.utils import scrape_dates
 from warn.utils import write_dict_rows_to_csv
 
 
@@ -17,115 +18,43 @@ logger = logging.getLogger(__name__)
 def scrape(output_dir, cache_dir=None, use_cache=True):
     output_csv = f'{output_dir}/ks.csv'
     search_url = 'https://www.kansasworks.com/search/warn_lookups'
+    # Date chosen based on manual research
+    stop_year = 1998
+    yearly_dates = scrape_dates(stop_year)
+    # No caching should be used for current and prior years,so
+    # we have to separate those from remaining years.
+    no_cache_years = [yearly_dates.pop(0), yearly_dates.pop(0)]
+    # Set up scraper instance
     ks_cache_dir = str(Path(cache_dir,'ks'))
     site = JobCenterSite('KS', search_url, cache_dir=ks_cache_dir)
-    #TODO: get current year and prior year
-    current_year = dt.today().year
-    kwargs = {
-        'start_date': f'{current_year}-01-01',
-        'end_date': dt.today().strftime("%Y-%m-%d"),
-        'use_cache': False # always scrape fresh for current year
-    }
-    pages_dict, data = site.scrape(**kwargs)
-    # Returned data includes search result page columns and
-    # data from a nested dict, e.g. address and # of layoffs!
-    headers = [k for k in data[0].keys() if k != 'detail']
-    #TODO: extend headers with fields from nested 'detail' record dict
-    rows = [_prepare_row(row) for row in data]
-    write_dict_rows_to_csv(output_csv, headers, rows)
-    #TODO: Add prior year scrape (use_cache=False)
-    #TODO: Backfill with use_cache=True for all prior years
-    #  ? What's the strategy for determining farthest year back in time?
-    #  ? What happens if current year has no results?
+    # Execute the scraper in two batches
+    # - Scrape current and prior year
+    _scrape_years(site, output_csv, no_cache_years, use_cache=False)
+    # - Scrape remaining years back to stop_year
+    _scrape_years(site, output_csv, yearly_dates, use_cache=True)
     return output_csv
+
+def _scrape_years(site, output_csv, start_end_dates, use_cache=True):
+    current_year = dt.today().year
+    # NOTE: Scraping for Jan 1 - Dec 31 for current year works
+    # throughout the year. Additionally, it allows us to avoid
+    # generating cache files for all days of the year.
+    for start, end in start_end_dates:
+        kwargs = {
+            'start_date': start,
+            'end_date': end,
+            'use_cache': use_cache,
+        }
+        pages_dict, data = site.scrape(**kwargs)
+        # Returned data includes search result page columns and
+        # data from a nested dict, e.g. address and # of layoffs!
+        headers = [k for k in data[0].keys() if k != 'detail']
+        #TODO: extend headers with fields from nested 'detail' record dict
+        rows = [_prepare_row(row) for row in data]
+        # Use write mode on current year, append mode for all others
+        write_mode = 'w' if start.startswith(str(current_year)) else 'a'
+        write_dict_rows_to_csv(output_csv, headers, rows, mode=write_mode)
 
 def _prepare_row(row):
     row.pop('detail')
     return row
-
-### LEGACY
-
-def scrape_old(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/ks.csv'
-    last_page_num = get_last_page_num()
-    all_records = scrape_links(last_page_num)
-    with open(output_csv, 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerows(all_records)
-    return output_csv
-
-def get_last_page_num():
-    warn_link = 'https://www.kansasworks.com/search/warn_lookups?utf8=%E2%9C%93&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bzipcode_code_start%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bnotice_eq%5D=true&commit=Search'
-    page = requests.get(warn_link)
-    soup = BeautifulSoup(page.text, 'html.parser')
-    pag_div = soup.find_all("div", class_="pagination")
-    elem_a = pag_div[0].find_all('a')
-    last_page_num = elem_a[-2].get_text()
-    return last_page_num
-
-def scrape_links(last_page_num):
-    all_records = [['Company Name', 'Notice Date', 'Number of Employees Affected','City', 'ZIP', 'LWIB Area', 'WARN Type']]
-    for page in range(1, int(last_page_num) + 1):
-        link = 'https://www.kansasworks.com/search/warn_lookups?commit=Search&page={}&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=true&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93'.format(str(page))
-        output_rows, list_info = scrape_warn_table(link)
-        list_of_records = scrape_record_link(list_info)
-        full_records = combination(output_rows, list_of_records)
-        all_records.extend(full_records)
-    return all_records
-
-def scrape_warn_table(link):
-    page = requests.get(link)
-    logger.debug(f"Page status is {page.status_code} for {link}")
-    soup = BeautifulSoup(page.text, 'html.parser')
-    table = soup.table
-    output_rows = []
-    for table_row in table.find_all('tr'):
-        columns = table_row.find_all('td')
-        output_row = []
-        for column in columns:
-            output_row.append(column.text)
-        output_row = [x.strip() for x in output_row]
-        output_rows.append(output_row)
-    list_info = []
-    for a in table.find_all('a', href=True, text=True):
-        link_text = [a['href']]
-        if len(link_text[0]) <= 25:
-            company_name = [a.text]
-            company_name.extend(link_text)
-            list_info.append(company_name)
-    return output_rows, list_info
-
-def scrape_record_link(list_info):
-    base_url = 'https://www.kansasworks.com'
-    all_records = []
-    for record in list_info:
-        record_link = record[1]
-        full_link = base_url + record_link
-        single_record = scrape_again(full_link)
-        all_records.append(single_record)
-    return all_records
-
-def scrape_again(link):
-    page = requests.get(link)
-    soup = BeautifulSoup(page.text, 'html.parser')
-    data = soup.find("dl", class_="data")
-    do_not_add = ['Company Name', 'Notice Date', 'Number of Employees Affected', 'Address', '', None]
-    single_record = []
-    for i in data:
-        i = i.string
-        if i != None:
-            i = i.strip('\n')
-        if i in do_not_add:
-            continue
-        single_record.append(i)
-    return single_record
-
-def combination(output_rows, list_of_records):
-    output_rows = output_rows[1:]
-    indexes = [0, 4]
-    for row in output_rows:
-        for index in sorted(indexes, reverse=True):
-            del row[index]
-    for row, record in zip(output_rows, list_of_records):
-        record.extend(row)
-    return list_of_records
