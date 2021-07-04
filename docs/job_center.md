@@ -58,20 +58,20 @@ Some basic [data quality checks](#data-quality-checks) should allow us to addres
 
 ## Data quality checks
 
-Automated data quality scripts should check for records missing the Notified Date value as well as for new "stop" years
+Automated data quality scripts should check for records missing the `Notice Date` value as well as for new "stop years"
 (i.e. historical data that has been added farther back in time than the year we previously researched and hard-coded).
 
-In the case of missing Notified Dates, we should ask the data maintainers to fix these records
+For missing `Notice Date` values, we should ask the data maintainers to fix these records
 at the source. If necessary, we should file public records requests for the layoff notice
 and correct the data on our end.
 
 ## Alternative scraping strategy
 
-A fully automated scraping strategy would entail scraping backwards in time until we no longer get any search results.
-This risks possibly missing "gap" years in between the most recent year and start year, although we
-could mitigate this risk by applying logic that aborts the scrape once multiple consecutive years
+A fully automated scraping strategy could entail scraping backwards in time until we no longer get any search results.
+This risks possibly missing "gap" years between the current and start year (and would require special handling
+early in a new year. We could address this issues by applying logic that aborts the scrape once multiple consecutive years
 with no search results are encountered.
 
 This could free us from having to perform manual research for the earliest year of data available for a state.
 It could also make it easier for us to determine if a new year of historical data has been added, and to integrate
-data in automated fashion.
+the new data in automated fashion.
