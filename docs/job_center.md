@@ -24,8 +24,8 @@ State-specific details such as links to state sites can be found in
 the pages linked above.
 
 Below are details on the scraping strategy we apply in these states,
-as well as ideas for [data quality checks](#data-quality-checks) and
-[alternative scraping strategies](#alternative-scraping-strategies).
+as well as ideas for [data quality checks](#data-quality-checks) and an
+[alternative scraping strategy](#alternative-scraping-strategy).
 
 ## Scraping strategy
 
