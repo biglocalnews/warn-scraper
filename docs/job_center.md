@@ -32,31 +32,28 @@ strategies.
 We apply a date-based scraping strategy for all Job Center sites.
 
 On the initial scrape, we start with the current year and scrape all years back to the earliest year of data available.
-
 On subsequent runs, we always perform a fresh scrape of the current and prior year, to ensure we capture potential
 data updates to recently filed records.
-
 
 Data for years farther back in time are collected from cached pages rather than scraped anew.
 
 Our date-based approach uses a so-called "stop year" that is hard-coded in our scrapers and
 is based on a review of each state's data.
 
-If a state adds more historical data, our current approach would not capture it.
+If a state adds more historical data -- i.e. years earlier than our "stop year" -- our current approach would not capture it.
 
-Additionally, in their current form, the scrapers will *not* pick up records that are missing a Notified Date.
+Additionally, in their current form, the scrapers will *not* pick up records that are missing a `Notice Date`.
 In practice, this does not appear to be a widespread issue for the states mentioned above, but it does happen.
 
-For example, Kansas had a [single record](https://www.kansasworks.com/search/warn_lookups/64) without a Notified Date
-as of this writing. To pinpoint records missing Notification Dates, you can perform a
-search **without start and end dates** and sort by the date field to view all historical records.
+For example, Kansas had a [single record](https://www.kansasworks.com/search/warn_lookups/64) without a `Notice Date`
+(as of this writing). To pinpoint records missing a `Notice Date`, you can perform a
+search **without start and end dates** and sort by the `Notice Date` field to view all historical records.
 
 For example, here is the query for Kansas:
 
 > https://www.kansasworks.com/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=true&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bs%5D=notice_on+desc&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93
 
-See below for ideas on dealing with the missing Notified Date issues and an alternative scraping strategy that might
-enable us to capture newly added historical data.
+Some basic [data quality checks](#data-quality-checks) should allow us to address the `Notice Date` issue. We've also outlined an [alternative scraping strategy](#alternative-scraping-strategy) that might allow us to dynamically capture new historical data (i.e. address the "stop year" issue).
 
 ## Data quality checks
 
