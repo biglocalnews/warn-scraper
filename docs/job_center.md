@@ -24,8 +24,8 @@ State-specific details such as links to state sites can be found in
 the pages linked above.
 
 Below are details on the scraping strategy we apply in these states,
-as well as ideas for data quality checks and alternative scraping
-strategies.
+as well as ideas for [data quality checks](#data-quality-checks) and
+[alternative scraping strategies](#alternative-scraping-strategies).
 
 ## Scraping strategy
 
@@ -35,7 +35,8 @@ On the initial scrape, we start with the current year and scrape all years back 
 On subsequent runs, we always perform a fresh scrape of the current and prior year, to ensure we capture potential
 data updates to recently filed records.
 
-Data for years farther back in time are collected from cached pages rather than scraped anew.
+Data for years farther back in time are collected from cached pages rather than scraped anew,
+in order to optimize the speed of scrapers and be good Internet citizens. :smiley:
 
 Our date-based approach uses a so-called "stop year" that is hard-coded in our scrapers and
 is based on a review of each state's data.
