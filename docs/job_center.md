@@ -54,6 +54,9 @@ For example, here is the query for Kansas:
 
 > https://www.kansasworks.com/search/warn_lookups?commit=Search&page=1&q%5Bemployer_name_cont%5D=&q%5Bmain_contact_contact_info_addresses_full_location_city_matches%5D=&q%5Bnotice_eq%5D=true&q%5Bnotice_on_gteq%5D=&q%5Bnotice_on_lteq%5D=&q%5Bs%5D=notice_on+desc&q%5Bservice_delivery_area_id_eq%5D=&q%5Bzipcode_code_start%5D=&utf8=%E2%9C%93
 
+One final issue with date-based scraping is that certain records are listed on multiple pages of search results. We apply a deduplication
+step at the tail end of the scraping process to address the issue.
+
 Some basic [data quality checks](#data-quality-checks) should allow us to address the `Notice Date` issue. We've also outlined an [alternative scraping strategy](#alternative-scraping-strategy) that might allow us to dynamically capture new historical data (i.e. address the "stop year" issue).
 
 ## Data quality checks
