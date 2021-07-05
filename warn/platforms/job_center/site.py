@@ -215,13 +215,13 @@ class Site:
     def _search_kwargs(self, start_date, end_date, extra={}):
         kwargs = {
             'utf8': '✓',
-            'q[s]': 'notice_on desc', # sort chronologically
             'q[employer_name_cont]': '',
             'q[main_contact_contact_info_addresses_full_location_city_matches]': '',
             'q[zipcode_code_start]':'',
             'q[service_delivery_area_id_eq]':'',
             'q[notice_on_gteq]': start_date,
             'q[notice_on_lteq]': end_date,
+            "q[notice_eq]": "",
             'commit': 'Search'
         }
         kwargs.update(extra)
