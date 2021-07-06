@@ -3,8 +3,6 @@ import logging
 import requests
 
 from bs4 import BeautifulSoup
-import pandas as pd
-
 
 logger  = logging.getLogger(__name__)
 
@@ -18,7 +16,13 @@ def scrape(output_dir, cache_dir=None):
 
     data_url = soup.find("a", text="Download")['href']
     data_url = f'https://www.vec.virginia.gov{data_url}'
-    df = pd.read_csv(data_url)
-    #df.dropna(inplace=True, axis=1, how='all')
-    df.to_csv(output_csv, index=False)
+    data= requests.get(data_url)
+    decoded_content = data.content.decode('utf-8')
+    cr = csv.reader(decoded_content.splitlines(), delimiter=',', quotechar='"')
+
+    with open(output_csv,'w') as csvfile:
+        writer = csv.writer(csvfile)
+        for line in cr:
+            writer.writerow(line)
+
     return output_csv
