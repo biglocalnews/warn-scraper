@@ -4,6 +4,19 @@ from pathlib import Path
 import pytest
 
 
+# NOTE: To check if vcrpy/pytest-vcr
+# is using cassettes as opposed to making
+# live web requests, uncomment below
+# and pass pytest caplog fixture to
+# a test function. More details here:
+#    https://vcrpy.readthedocs.io/en/latest/debugging.html
+# import vcr
+# import logging
+# Initialize logging in order see output from vcrpy
+# logging.basicConfig()
+# vcr_log = logging.getLogger("vcr")
+# vcr_log.setLevel(logging.INFO)
+
 
 @pytest.fixture
 def warn_scraper_dir(tmp_path):
@@ -57,5 +70,10 @@ def read_fixture(file_name):
 
 
 def file_contents(pth):
-    with open(pth, 'r') as f:
+    with open(pth, 'r', newline='') as f:
         return f.read()
+
+def write_file(pth, contents):
+    Path(pth).parent.mkdir(parents=True, exist_ok=True)
+    with open(pth, 'w', newline='') as f:
+        f.write(contents)
