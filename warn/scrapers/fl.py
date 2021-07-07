@@ -57,8 +57,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 @tenacity.retry(wait=tenacity.wait_exponential(),
-                retry=tenacity.retry_if_exception_type(requests.HTTPError)
-                )
+                retry=tenacity.retry_if_exception_type(requests.HTTPError))
 def scrape_html(cache, url, headers, page=1):
     # sidestep SSL error
     urllib3.disable_warnings()
@@ -69,33 +68,24 @@ def scrape_html(cache, url, headers, page=1):
     last_year = str(current_year - 1)
     current_year = str(current_year)
     page_text = ""
-
-    # always re-scrape current year and prior year just to be safe
-    # note that this strategy, while safer, spends a long time scraping 2020.
-    if year == current_year or year == last_year:
-        response = requests.get(url, headers=headers, verify=False)
-        logger.debug(f"Request status is {response.status_code} for {url}")
-        response.raise_for_status()
-        logger.debug(f"Successfully scraped {url}")
-        page_text = response.text
-        cache.write(html_cache_key, page_text)  # might as well cache
-        logger.debug(f"Scraped page cached to: {html_cache_key}")
     # search in cache first before scraping
-    else:
-        try:
+    try:
+        # always re-scrape current year and prior year just to be safe
+        # note that this strategy, while safer, spends a long time scraping 2020.
+        if not (year == current_year) and not (year == last_year):
             logger.debug(f'Trying to read from cache: {html_cache_key}')
             cachefile = cache.read(html_cache_key)
             page_text = cachefile
             logger.debug(f'Page fetched from cache: {html_cache_key}')
-        except FileNotFoundError:
-            response = requests.get(url, headers=headers, verify=False)
-            logger.debug(f"Request status is {response.status_code} for {url}")
-            response.raise_for_status()
-            page_text = response.text
-            if(page_text == "" or page_text == " "):
-                raise Exception
-            cache.write(html_cache_key, page_text)
-            logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
+        else:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        response = requests.get(url, headers=headers, verify=False)
+        logger.debug(f"Request status is {response.status_code} for {url}")
+        response.raise_for_status()
+        page_text = response.text
+        cache.write(html_cache_key, page_text)
+        logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
     # search the page we just scraped for links to the next page
     soup = BeautifulSoup(page_text, 'html.parser')
     footer = soup.find('tfoot')
