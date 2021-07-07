@@ -1,23 +1,21 @@
-#import csv
 import datetime
 import logging
+import re
 import requests
 import urllib3
 
 from bs4 import BeautifulSoup
-import pdfplumber
-from retrying import retry
+# import pdfplumber
+import tenacity
 
 from warn.cache import Cache
 from warn.utils import write_rows_to_csv
 
 logger = logging.getLogger(__name__)
 
+# scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 
-# first: go to URL http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
-# next: gather all the links on the page (rather than hard-coding years)
-# TODO next: scrape each link
-# TODO gather each of the pages on that page (try to follow any link with only text '>' until u cant no more)
+
 def scrape(output_dir, cache_dir=None):
     output_csv = '{}/fl.csv'.format(output_dir)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
@@ -29,126 +27,136 @@ def scrape(output_dir, cache_dir=None):
     response = requests.get(url, headers=headers, verify=False)
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, 'html.parser')
-    # find & visit every year's WARN page
-    links = soup.findAll('a', href=re.compile(
-        '^http://reactwarn.floridajobs.org/WarnList/'))
-    for link in links:
-        link = link.get('href')  # get URL from link
-        # some years link to pdf files only
-        if 'pdf' in link.text:
-            pdf = scrape_pdf(cache, link.text, headers)
+    # find & visit each year's WARN page
+    links = soup.find_all('a', href=re.compile('^http://reactwarn.floridajobs.org/WarnList/'))
+    output_rows = []
+    header_written = False
+    # scraped most recent year first
+    for year_url in links:
+        year_url = year_url.get('href')  # get URL from link
+        logger.debug(f'{year_url}')
+        if 'PDF' in year_url:
+            rows_to_add = scrape_pdf(cache, year_url, headers)
+            logger.warning(f'PDF functionality not implemented for page {year_url}')
         else:
-            # TODO returns array of text to process
-            html_pages = scrape_page(cache, link.text, headers)
-
-    # OLD CODE BELOW
-    # Remove later
-    # V
-    # V
-    years = ['2019', '2020', '2021']
-    # Load for first time => get header
-    year = 2020
-    page = 1
-    html = find_page(cache, year, page)
-    soup = BeautifulSoup(html, 'html.parser')
-    soup.findAll('a', href=re.compile(
-        '^http://reactwarn.floridajobs.org/WarnList/'))
-    table = soup.find_all('table')  # output is list-type
-    len(table)
-    # find header
-    first_row = table[0].find_all('tr')[0]
-    headers = first_row.find_all('th')
-    output_header = []
-    for header in headers:
-        output_header.append(header.text.strip())
-    # save header
-    write_rows_to_csv([output_header], output_csv)
-
-    # NB: still fails to capture all information
-    # e.g. gets Macy's but not store address,
-    # layoff date skips "thru 03-30-20"
-    # in fact, that text isnt captured by any html
-    # am i reading it in poorly? is beautiful soup reading it in wrong?
-    # html5lib works. what's different between html5lib and html.parser
-    for year in years:
-        if year == '2020':
-            pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                     14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-        elif year == '2019':
-            pages = [1, 2, 3, 4]
-        for page in pages:
-            html = find_page(cache, year, page)
-            soup = BeautifulSoup(html, 'html5lib')
-            table = soup.find_all('table')
-            output_rows = []
-            for table_row in table[0].find_all('tr'):
-                columns = table_row.find_all('td')
-                output_row = []
-                for column in columns:
-                    output_row.append(column.text)
-                output_row = [x.strip() for x in output_row]
-                output_rows.append(output_row)
-            output_rows.pop(0)
-            output_rows.pop(0)
-            write_rows_to_csv(output_rows, output_csv, 'a')
+            html_pages = scrape_html(cache, year_url, headers)
+            logger.debug(f"html_pages for {year_url} has item lengths of {[len(i) for i in html_pages]} ")
+            # write the header only once
+            if not header_written:
+                output_rows.append(write_header(html_pages))
+                header_written = True
+            rows_to_add = html_to_rows(html_pages, output_csv)
+        [output_rows.append(row) for row in rows_to_add]  # moving from one list to the other
+    logger.debug(f"len output rows: {len(output_rows)}")
+    write_rows_to_csv(output_rows, output_csv)
     return output_csv
 
+# scrapes each html page for the current year
+# returns a list of the year's html pages
+# note: no max amount of retries due to recursive scraping
 
-@retry(
-    stop_max_attempt_number=7,
-    stop_max_delay=30000,
-    wait_exponential_multiplier=2000,
-    wait_exponential_max=10000
-)
-# TODO remember to traverse each page with '>'!
-# TODO remove page, only track current url
-def scrape_html(cache, year, url, headers):
+
+@tenacity.retry(wait=tenacity.wait_exponential(),
+                retry=tenacity.retry_if_exception_type(requests.HTTPError)
+                )
+def scrape_html(cache, url, headers, page=1):
     # sidestep SSL error
     urllib3.disable_warnings()
-    # Add the state postal as cache key prefix
-    html_cache_key = f'fl/{year}-{page}'
+    # extract year from URL
+    year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
+    html_cache_key = f'fl/{year}_page_{page}'
     current_year = datetime.date.today().year
-    last_year = current_year - 1
-    page_text = []
+    last_year = str(current_year - 1)
+    current_year = str(current_year)
+    page_text = ""
 
     # always re-scrape current year and prior year just to be safe
+    # note that this strategy, while safer, spends a long time scraping 2020.
     if year == current_year or year == last_year:
         response = requests.get(url, headers=headers, verify=False)
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         logger.debug(f"Successfully scraped {url}")
-        page_text.append(response.text)
-        # cache.write(html_cache_key, page_text)
+        page_text = response.text
+        cache.write(html_cache_key, page_text)  # might as well cache
         logger.debug(f"Scraped page cached to: {html_cache_key}")
+    # search in cache first before scraping
     else:
         try:
-            page_text.append(cache.read(html_cache_key))
+            logger.debug(f'Trying to read from cache: {html_cache_key}')
+            cachefile = cache.read(html_cache_key)
+            page_text = cachefile
             logger.debug(f'Page fetched from cache: {html_cache_key}')
         except FileNotFoundError:
             response = requests.get(url, headers=headers, verify=False)
             logger.debug(f"Request status is {response.status_code} for {url}")
             response.raise_for_status()
-            logger.debug(f"Successfully scraped {url}")
-            page_text.append(response.text)
+            page_text = response.text
+            if(page_text == "" or page_text == " "):
+                raise Exception
             cache.write(html_cache_key, page_text)
-            logger.debug(f"Scraped page cached to: {html_cache_key}")
-    # traverse to next page
-    soup = BeautifulSoup(response.text, 'html.parser')
-    nextPageLink = soup.findAll('a', string=re.compile(f'^>$'))
-    if(nextPageLink):
-        url = nextPageLink.get('href')
-        page_text.append(scrape_html(cache, year, url, headers))
+            logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
+    # search the page we just scraped for links to the next page
+    soup = BeautifulSoup(page_text, 'html.parser')
+    footer = soup.find('tfoot')
+    if footer:
+        next_page = page + 1
+        nextPageLink = footer.find('a', href=re.compile(f'page={next_page}'))  # find link to next page, if exists
+        # recursively scrape to the last page
+        if nextPageLink:
+            url = 'http://reactwarn.floridajobs.org' + nextPageLink.get('href')  # /WarnList/Records?year=XXXX&page=X
+            # recursively make list of all the next pages' html
+            pages_html = scrape_html(cache, url, headers, next_page)
+            # add the current page to the recursive list
+            pages_html.append(page_text)
+            return pages_html
+    # last page reached
+    return [page_text]
 
 
-def scrape_pdf(cache, year, page, headers):
-    # try: find pdf in cache. process in pandas(?), and return as output_csv
-    # except: download pdf, store in cache, process in pandas(?), and return as output_csv
-    url = f'http://reactwarn.floridajobs.org/WarnList/viewPreviousYearsPDF?year={year}'
-    response = requests.get(url, headers=headers, verify=False)
-    logger.debug(f"Request status is {response.status_code} for {url}")
-    response.raise_for_status()
-    with pdfplumber.open("path/to/file.pdf") as pdf:
-    first_page = pdf.pages[0]
-    print(first_page.chars[0])
-    logger.debug(f"Successfully scraped {url}")
-    return processed_pdf
+# takes list of html pages, outputs list of rows
+def html_to_rows(page_text, output_csv):
+    output_rows = []
+    for page in page_text:
+        soup = BeautifulSoup(page, 'html5lib')
+        table = soup.find('table')
+        # extract table data
+        tbody = table.find('tbody')
+        for table_row in tbody.find_all('tr'):
+            columns = table_row.find_all('td')
+            output_row = []
+            for column in columns:
+                output_row.append(column.text.strip())
+            output_rows.append(output_row)
+        output_rows.pop(0)  # remove blank lines
+        # output_rows.pop(0)
+    return output_rows
+
+
+# extract table headers, only once
+def write_header(pages):
+    page = pages[0]
+    soup = BeautifulSoup(page, 'html5lib')
+    table = soup.find('table')
+    thead = table.find('thead')
+    headers = thead.find_all('th')
+    output_rows = []
+    for header in headers:
+        output_rows.append(header.text.strip())
+    return output_rows
+
+
+# try: find pdf in cache.
+# except: download pdf, store in cache
+# then: process in pandas(?)
+# return as output_rows??
+def scrape_pdf(cache, url, headers):
+    # response = requests.get(url, headers=headers, verify=False)
+    # logger.debug(f"Request status is {response.status_code} for {url}")
+    # response.raise_for_status()
+    # with pdfplumber.open("path/to/file.pdf") as pdf:
+    #     pages = pdf.pages[0]
+    #     processed_pdf = pages  # TODO PDF Plumber code
+    # logger.debug(f"Successfully scraped PDF from {url}")
+    pdf_rows = []
+    return pdf_rows
