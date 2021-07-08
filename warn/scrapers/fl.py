@@ -1,11 +1,12 @@
 import datetime
 import logging
+from os.path import exists
 import re
 import requests
 import urllib3
 
 from bs4 import BeautifulSoup
-# import pdfplumber
+import pdfplumber
 import tenacity
 
 from warn.cache import Cache
@@ -34,20 +35,16 @@ def scrape(output_dir, cache_dir=None):
     # scraped most recent year first
     for year_url in links:
         year_url = year_url.get('href')  # get URL from link
-        logger.debug(f'{year_url}')
         if 'PDF' in year_url:
-            rows_to_add = scrape_pdf(cache, year_url, headers)
-            logger.warning(f'PDF functionality not implemented for page {year_url}')
+            rows_to_add = scrape_pdf(cache, cache_dir, year_url, headers)
         else:
             html_pages = scrape_html(cache, year_url, headers)
-            logger.debug(f"html_pages for {year_url} has item lengths of {[len(i) for i in html_pages]} ")
             # write the header only once
             if not header_written:
                 output_rows.append(write_header(html_pages))
                 header_written = True
             rows_to_add = html_to_rows(html_pages, output_csv)
         [output_rows.append(row) for row in rows_to_add]  # moving from one list to the other
-    logger.debug(f"len output rows: {len(output_rows)}")
     write_rows_to_csv(output_rows, output_csv)
     return output_csv
 
@@ -72,7 +69,7 @@ def scrape_html(cache, url, headers, page=1):
     try:
         # always re-scrape current year and prior year just to be safe
         # note that this strategy, while safer, spends a long time scraping 2020.
-        if not (year == current_year) and not (year == last_year):
+        if True:  # not (year == current_year) and not (year == last_year) # TODO DO NOT CACHE NEWEST for debugging only
             logger.debug(f'Trying to read from cache: {html_cache_key}')
             cachefile = cache.read(html_cache_key)
             page_text = cachefile
@@ -136,17 +133,35 @@ def write_header(pages):
     return output_rows
 
 
-# try: find pdf in cache.
-# except: download pdf, store in cache
-# then: process in pandas(?)
-# return as output_rows??
-def scrape_pdf(cache, url, headers):
-    # response = requests.get(url, headers=headers, verify=False)
-    # logger.debug(f"Request status is {response.status_code} for {url}")
-    # response.raise_for_status()
-    # with pdfplumber.open("path/to/file.pdf") as pdf:
-    #     pages = pdf.pages[0]
-    #     processed_pdf = pages  # TODO PDF Plumber code
-    # logger.debug(f"Successfully scraped PDF from {url}")
-    pdf_rows = []
-    return pdf_rows
+@tenacity.retry(wait=tenacity.wait_exponential(),
+                retry=tenacity.retry_if_exception_type(requests.HTTPError))
+def scrape_pdf(cache, cache_dir, url, headers):
+    # sidestep SSL error
+    urllib3.disable_warnings()
+    # extract year from URL
+    year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
+    pdf_cache_key = f'fl/{year}'
+    download = ""
+    # download pdf if not in the cache
+    if not exists(pdf_cache_key):
+        response = requests.get(url, headers=headers, verify=False)
+        logger.debug(f"Request status is {response.status_code} for {url}")
+        response.raise_for_status()
+        # download & cache pdf
+        download = response.content
+        with open(f"{cache_dir}/{pdf_cache_key}.pdf", 'wb') as f:
+            f.write(download)
+        logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
+    # scrape tables from PDF
+    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:  # TODO SILIENCE ALL THE TALKING
+        # TODO every new table, drop teh frist row!
+        # TODO if a row has only text in the first field and NO text in any of the other fields, throw it in the previous row
+        pages = pdf.pages
+        output_rows = []
+        for page in pages:
+            table = page.extract_table(table_settings={})
+            table.pop(0)  # remove the headers for each year (redundant)
+            for row in table:
+                output_rows.append(row)
+    logger.debug(f"Successfully scraped PDF from {url}")
+    return output_rows
