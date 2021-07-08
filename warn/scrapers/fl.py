@@ -6,6 +6,7 @@ import requests
 import urllib3
 
 from bs4 import BeautifulSoup
+import pandas as pd
 import pdfplumber
 import tenacity
 
@@ -13,10 +14,11 @@ from warn.cache import Cache
 from warn.utils import write_rows_to_csv
 
 logger = logging.getLogger(__name__)
+# AS OF RIGHT NOW, the only way to run this code w readable logs is without the DEBUG flag
 # disable logging for imported modules (namely pdfplumber!)
-for log_name, log_obj in logging.Logger.manager.loggerDict.items():
-    if log_name != __name__:
-        log_obj.disabled = True
+# for log_name, log_obj in logging.Logger.manager.loggerDict.items():
+#     if log_name != __name__:
+#         log_obj.disabled = True
 
 # scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 
@@ -60,8 +62,7 @@ def scrape(output_dir, cache_dir=None):
 @tenacity.retry(wait=tenacity.wait_exponential(),
                 retry=tenacity.retry_if_exception_type(requests.HTTPError))
 def scrape_html(cache, url, headers, page=1):
-    # sidestep SSL error
-    urllib3.disable_warnings()
+    urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
     year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
     html_cache_key = f'fl/{year}_page_{page}'
@@ -159,17 +160,34 @@ def scrape_pdf(cache, cache_dir, url, headers):
     # scrape tables from PDF
     # TODO ask serdar how to run this function QUIETLY
     with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:
-        # TODO investigate column-mismatch problem (eg "point drive" in 2016)
         pages = pdf.pages
         output_rows = []
         for page in pages:
             table = page.extract_table(table_settings={})
-            table.pop(0)  # remove the headers for each year (redundant)
-            for row in table:
-                # unify a row if it continues onto next page
-                if (row[1] == "" and row[3] == ""):
-                    for i in range(row):
-                        outputrows[-1][i] += f" {row[i]}"
-                output_rows.append(row)
+            table.pop(0)  # remove most headers
+            df = clean_table(table)
+            [output_rows.append(row) for row in df] # move between lists
     logger.debug(f"Successfully scraped PDF from {url}")
     return output_rows
+
+    # use pandas to remove redundant headers, fix column skews,
+    # correct rows splitting when continuing onto next page
+    def clean_table(table):
+        pd.DataFrame(table)
+        for row in table:
+            for col in row:
+                # remove any line breaks
+                col.replace("\n"," ")
+
+        # TODO remove erroneous header and fix column skew for 6 rows above it
+        for i in range(len(table)):
+            if(table[i][0] == "Company Name"):
+                droprow()
+            for j in range(i-6, i):
+                pd.DataFrame.loc('':'')
+                shift table[i][2] to the left, removing the blank col
+
+        # unify erroneously split rows
+        if (row[1] == "" and row[3] == ""):
+            for i in range(row):
+                outputrows[-1][i] += f" {row[i]}"
