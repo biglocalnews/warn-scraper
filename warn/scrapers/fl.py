@@ -13,6 +13,10 @@ from warn.cache import Cache
 from warn.utils import write_rows_to_csv
 
 logger = logging.getLogger(__name__)
+# disable logging for imported modules (namely pdfplumber!)
+for log_name, log_obj in logging.Logger.manager.loggerDict.items():
+    if log_name != __name__:
+        log_obj.disabled = True
 
 # scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 
@@ -153,15 +157,19 @@ def scrape_pdf(cache, cache_dir, url, headers):
             f.write(download)
         logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
     # scrape tables from PDF
-    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:  # TODO SILIENCE ALL THE TALKING
-        # TODO every new table, drop teh frist row!
-        # TODO if a row has only text in the first field and NO text in any of the other fields, throw it in the previous row
+    # TODO ask serdar how to run this function QUIETLY
+    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:
+        # TODO investigate column-mismatch problem (eg "point drive" in 2016)
         pages = pdf.pages
         output_rows = []
         for page in pages:
             table = page.extract_table(table_settings={})
             table.pop(0)  # remove the headers for each year (redundant)
             for row in table:
+                # unify a row if it continues onto next page
+                if (row[1] == "" and row[3] == ""):
+                    for i in range(row):
+                        outputrows[-1][i] += f" {row[i]}"
                 output_rows.append(row)
     logger.debug(f"Successfully scraped PDF from {url}")
     return output_rows
