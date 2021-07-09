@@ -164,30 +164,34 @@ def scrape_pdf(cache, cache_dir, url, headers):
         output_rows = []
         for page in pages:
             table = page.extract_table(table_settings={})
-            table.pop(0)  # remove most headers
-            df = clean_table(table)
-            [output_rows.append(row) for row in df] # move between lists
+            table.pop(0)  # remove each year's header
+            table = clean_table(table)
+            [output_rows.append(row) for row in table]  # move between lists
     logger.debug(f"Successfully scraped PDF from {url}")
     return output_rows
 
-    # use pandas to remove redundant headers, fix column skews,
-    # correct rows splitting when continuing onto next page
-    def clean_table(table):
-        pd.DataFrame(table)
-        for row in table:
-            for col in row:
-                # remove any line breaks
-                col.replace("\n"," ")
+# use pandas to remove redundant headers, fix column skews,
+# correct rows splitting when continuing onto next page
 
-        # TODO remove erroneous header and fix column skew for 6 rows above it
-        for i in range(len(table)):
-            if(table[i][0] == "Company Name"):
-                droprow()
-            for j in range(i-6, i):
-                pd.DataFrame.loc('':'')
-                shift table[i][2] to the left, removing the blank col
 
-        # unify erroneously split rows
-        if (row[1] == "" and row[3] == ""):
-            for i in range(row):
-                outputrows[-1][i] += f" {row[i]}"
+def clean_table(table):
+    for i in range(len(table)):
+        current_row = table[i]
+        # unify any split rows w previous row
+        if (current_row[1] == "" and current_row[3] == ""):
+            for j in range(current_row):
+                # TODO understand why this isn't working??
+                # it seems like rows like "point drive" no longer in csv??
+                table[i - 1][j] += f" {current_row[j]}"
+
+    df = pd.DataFrame(table)  # use pandas dataframe as an intermediate step
+    df.replace(to_replace=[r"\\t|\\n|\\r", "\t|\n|\r"], value=["", ""], regex=True, inplace=True)  # remove newlines
+    # TODO remove erroneous header and fix column skew for 6 rows above it
+
+    # NEWDF = df[~df['Oops1'].isna()]
+    # print(NEWDF)
+
+    # print(NEWDF.dropna(axis='columns', how='all'))
+
+    table = df.values.tolist()
+    return table
