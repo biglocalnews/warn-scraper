@@ -1,8 +1,11 @@
 import csv
 import logging
+import re
 import requests
 
 from bs4 import BeautifulSoup
+
+from warn.utils import write_rows_to_csv
 
 logger = logging.getLogger(__name__)
 
@@ -21,45 +24,35 @@ def scrape(output_dir, cache_dir=None):
     headers = first_row.find_all('td')
     output_header = []
     for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
+        clean_txt = re.sub(r'\n', ' ', header.text)
+        clean_txt = re.sub(r'\s+', ' ', clean_txt)
+        output_header.append(clean_txt.strip())
     # save header
     with open(output_csv, 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(output_header)
-    # save 2020
+
+    li_list = soup.find_all("a",{"class":"sub"})
+
+    for a in li_list:
+        url = a['href']
+        full_url = f'http://www.dllr.state.md.us/employment/{url}'
+        page = requests.get(full_url)
+        logger.debug(f"Page status is {page.status_code} for {full_url}")
+        soup = BeautifulSoup(page.text, 'html.parser')
+        table = soup.find_all('table') # output is list-type
+        write_body(table[0],output_csv)
+    return output_csv
+
+def write_body(table,output_csv):
     output_rows = []
-    for table_row in table[0].find_all('tr'):
+    for table_row in table.find_all('tr'):
         columns = table_row.find_all('td')
         output_row = []
         for column in columns:
-            output_row.append(column.text)
-        output_row = [x.strip() for x in output_row]
-        output_rows.append(output_row)
-    output_rows.pop(0)
-    if len(output_rows) > 0:
-        with open(output_csv, 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
-    # save 2019-2010
-    for year in years:
-        url = 'http://www.dllr.state.md.us/employment/warn{}.shtml'.format(year)
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
-        soup = BeautifulSoup(page.text, 'html.parser')
-        table = soup.find_all('table') # output is list-type
-        output_rows = []
-        for table_row in table[0].find_all('tr'):
-            columns = table_row.find_all('td')
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
+            clean_txt = re.sub(r'\n', ' ', column.text)
+            clean_txt = re.sub(r'\s+', ' ', clean_txt)
+            output_row.append(clean_txt.strip())
+        if output_row[0] != "Notice Date":
             output_rows.append(output_row)
-        output_rows.pop(0)
-        # print(output_rows[0])
-        if len(output_rows) > 0:
-            with open(output_csv, 'a') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-    return output_csv
+    write_rows_to_csv(output_rows,output_csv,mode='a')
