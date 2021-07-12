@@ -3,7 +3,14 @@
 - [Homepage](https://dol.ny.gov/warn-notices)
 - To request for full documentation of any notices prior to 2021, email WebHelp@labor.ny.gov
 - [Contacts](https://dol.ny.gov/worker-adjustment-and-retraining-notification-warn)
-![image](https://user-images.githubusercontent.com/56002814/124651061-7a044f80-de68-11eb-92e3-57913086a45c.png)
+  - NYS WARN Coordinator:	Janet Faraone	(phone: 518-457-1518, email: [Janet.Faraone@labor.ny.gov](Janet.Faraone@labor.ny.gov))	
+
+### Jul 12th, 2021
+reaching out to the NYS WARN coordinator was fruitful. the state agency prepared and sent over an excel containing records from 2016 to 2021 within a day upon email request. Here is a snippet of the data: 
+![image](https://user-images.githubusercontent.com/56002814/125342121-736f4f80-e322-11eb-8c22-b1f22346ded7.png)
+The full dataset is currently attached to issue #136, it should be hosted on some platform in the future.
+When requesting the data, the state agency asked for a timeframe from which data is needed (i responded with 2016-2021), but it might be possible to request data prior to 2016 as well. 
+Regarding updating data in the future, the NYS WARN website is undergoing updates, and it should allow scraping in the future. In the meantime, we should periodically request updated data from NYS.
 
 ### Jul 6th, 2021
 - 2021 data doesn't directly contain # employee affected in the html table on the website, needs to parse the corresponding pdf to obtain the # affected. 
