@@ -50,14 +50,14 @@ def write_body(html,output_csv):
     output_rows = []
     for table_row in table[0].find_all('tr'):
         columns = table_row.find_all('td')
-        #print(len(columns)) --> one row in 2012 has 176 'td' for some reason
+        #print(len(columns)) --> one row in 2012 has 176 'td' for some reason because it didn't have </tr>
         output_row = []
         for column in columns:
             clean_txt = re.sub(r'\n', ' ', column.text)
             clean_txt = re.sub(r'\s+', ' ', clean_txt)
             output_row.append(clean_txt.strip())
         if output_row[0] != "Notice Date":
-            output_rows.append(output_row[:8]) # hard-coding a cutoff length to deal with the buggy long row
+            output_rows.append(output_row[8:]) # hard-coding a cutoff length to deal with the buggy long row
     write_rows_to_csv(output_rows,output_csv,mode='a')
 
 def scrape_page(url):
