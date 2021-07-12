@@ -6,7 +6,6 @@ import requests
 import urllib3
 
 from bs4 import BeautifulSoup
-import pandas as pd
 import pdfplumber
 import tenacity
 
@@ -14,15 +13,8 @@ from warn.cache import Cache
 from warn.utils import write_rows_to_csv
 
 logger = logging.getLogger(__name__)
-# AS OF RIGHT NOW, the only way to run this code w readable logs is without the DEBUG flag
-# disable logging for imported modules (namely pdfplumber!)
-# for log_name, log_obj in logging.Logger.manager.loggerDict.items():
-#     if log_name != __name__:
-#         log_obj.disabled = True
 
 # scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
-
-
 def scrape(output_dir, cache_dir=None):
     output_csv = '{}/fl.csv'.format(output_dir)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
@@ -56,7 +48,7 @@ def scrape(output_dir, cache_dir=None):
 
 # scrapes each html page for the current year
 # returns a list of the year's html pages
-# note: no max amount of retries due to recursive scraping
+# note: no max amount of retries (recursive scraping)
 @tenacity.retry(wait=tenacity.wait_exponential(),
                 retry=tenacity.retry_if_exception_type(requests.HTTPError))
 def scrape_html(cache, url, headers, page=1):
@@ -80,19 +72,23 @@ def scrape_html(cache, url, headers, page=1):
         else:
             raise FileNotFoundError
     except FileNotFoundError:
+        # scrape & cache html
         response = requests.get(url, headers=headers, verify=False)
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         page_text = response.text
         cache.write(html_cache_key, page_text)
         logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
+
+    logger.debug(f"<br> has occurred? {'<br>' in page_text}")
+    page_text = page_text.replace("<br>", "\n")
     # search the page we just scraped for links to the next page
     soup = BeautifulSoup(page_text, 'html.parser')
     footer = soup.find('tfoot')
     if footer:
         next_page = page + 1
         nextPageLink = footer.find('a', href=re.compile(f'page={next_page}'))  # find link to next page, if exists
-        # recursively scrape to the last page
+        # recursively scrape until we have a list of all the pages' html
         if nextPageLink:
             url = 'http://reactwarn.floridajobs.org' + nextPageLink.get('href')  # /WarnList/Records?year=XXXX&page=X
             # recursively make list of all the next pages' html
@@ -118,12 +114,10 @@ def html_to_rows(page_text, output_csv):
             for column in columns:
                 output_row.append(column.text.strip())
             output_rows.append(output_row)
-        # output_rows.pop(0)  # remove blank lines
-        # output_rows.pop(0)
     return output_rows
 
 
-# extract table headers, only once
+# extract table headers from thead--only do so once
 def write_header(pages):
     page = pages[0]
     soup = BeautifulSoup(page, 'html5lib')
@@ -156,40 +150,55 @@ def scrape_pdf(cache, cache_dir, url, headers):
             f.write(download)
         logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
     # scrape tables from PDF
-    # TODO ask serdar how to run this function QUIETLY
     with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:
         pages = pdf.pages
         output_rows = []
-        for page in pages:
+        for page_num, page in enumerate(pages):
             table = page.extract_table(table_settings={})
-            table.pop(0)  # remove each year's header
-            table = clean_table(table)
-            [output_rows.append(row) for row in table]  # move between lists
+            # remove each year's header
+            if page_num == 0:
+                table.pop(0)
+            table = clean_table(table, output_rows)
+            output_rows.extend(table)  # merging lists
     logger.debug(f"Successfully scraped PDF from {url}")
     return output_rows
 
-# use pandas to remove redundant headers, fix column skews,
-# correct rows splitting when continuing onto next page
-def clean_table(table):
-    for i in range(len(table)):
-        current_row = table[i]
-        # unify any split rows w previous row
-        if (current_row[1] == "" and current_row[3] == ""):
-            for j in range(current_row):
-                # TODO understand why this isn't working??
-                # it seems like rows like "point drive" no longer in csv??
-                table[i - 1][j] += f" {current_row[j]}"
 
-    df = pd.DataFrame(table)  # use pandas dataframe as an intermediate step
-    df.replace(to_replace=[r"\\t|\\n|\\r", "\t|\n|\r"], value=["", ""], regex=True, inplace=True)  # remove newlines
-    # TODO remove erroneous header and fix column skew for 6 rows above it
-    # NOTE: trying to gather the problematic rows, fix them in-place in the table
-    # NOTE: how do i select the extra column to the right without a name to select the proper rows?
-    # NEWDF = df[~df['Oops1'].isna()]  # select all rows that have data in an extra row
+# adds split rows to output_rows by reference, returns list of page's rows to be added
+def clean_table(table, all_rows=[]):
+    table_rows = []
+    for row_idx, row in enumerate(table):
+        current_row = []
+        # fix row splitting b/n pages
+        if is_multiline_row(row_idx, row):
+            if len(row) > 5:  # fix where both row is split AND columns skewed right (like page 14 of 2016.pdf)
+                row = [row[0], row[1], row[2], row[3], row[6]]
+            for field_idx, field_to_add in enumerate(row):
+                if field_to_add:
+                    all_rows[-1][field_idx] += field_to_add  # MERGE fields with last row from all_rows (i.e. the last row from prior page)
+            continue
+        for field_idx, field in enumerate(row):
+            # ignore any redundant header rows
+            if is_header_row(field_idx, field):
+                break
+            # fix column skew by skipping blank columns
+            if field:
+                clean_field = field.strip()
+                if clean_field:
+                    current_row.append(clean_field)
+        if current_row:
+            table_rows.append(current_row)
+    return table_rows
 
-    # print(NEWDF.dropna(axis='columns', how='all')) # drop all
 
-    # and then: put it back in the table?
+def is_multiline_row(row_idx, row):
+    # this is a row that has been split between pages
+    # we want to remedy this split in the output data
+    return (row_idx == 0 and row[1] == "" and row[3] == "")
 
-    table = df.values.tolist()
-    return table
+def is_header_row(field_idx, field):
+    # we already have a header management strategy
+    # but there are still erroneous redundant headers strewn about
+    # and we need to remove them from the data
+    # because we only need 1 header row.
+    return (field_idx == 0 and field == "COMPANY NAME")
