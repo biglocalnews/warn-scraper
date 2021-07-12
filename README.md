@@ -44,8 +44,8 @@ To use the `warn` library in a Python script:
 from warn.scrapers import ak
 
 # Specify cache and final export dirs (these should be different)
-export_dir = '/tmp/warn/ak/exports' # final CSV written here
-cache_dir = '/tmp/warn/ak/cache'    # for any files used in processing
+export_dir = '/tmp/warn/exports' # final CSV written here
+cache_dir = '/tmp/warn/cache'    # files used in processing written here
 
 ak.scrape(export_dir, cache_dir)
 ```
@@ -165,6 +165,8 @@ git checkout nj-100
 # Rebase your changes on top of main
 git rebase main
 
+# Fix merge conflicts if any (ping for help if needed)
+
 # Re-apply stashed changes, if any
 git stash apply
 ```
@@ -199,7 +201,7 @@ We should apply the following conventions to all state scrapers:
 - Always use the **lower-case state postal code** in the name of "export" files intended to be uploaded to the Big Local News platform for end users. For example: `exports/nj.csv`
 - States should generally have a single export file, unless there's a known edge case (e.g. CA).
 - "Intermediate" files used for data processing should not be published to the BLN platform. Such files should be written to the `cache/` directory.
-  - For simple cases, use the same name as the final export name (e.g. `cache/mo.csv` and `exports/mo.csv`).
+  - For simple cases, use a cache name identical to the final export name (e.g. `cache/mo.csv` and `exports/mo.csv`).
   - For more complex cases, use the state postal code plus a standard suffix (e.g. `cache/mo_raw_1.csv` , `cache_mo_raw_2.csv`).
   - If many files need to be cached, create a subdirectory using the lower-case state postal code and apply a sensible naming scheme to the cached files (e.g. `cache/mo/page_1.html`).
 

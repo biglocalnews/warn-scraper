@@ -13,7 +13,10 @@ requirements = [
     'bln-etl @ git+https://github.com/biglocalnews/bln-etl.git',
 ]
 
-test_requirements = []
+test_requirements = [
+    'pytest',
+    'pytest-vcr',
+]
 
 setup(
     name='warn',
