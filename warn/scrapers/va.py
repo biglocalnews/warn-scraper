@@ -1,8 +1,10 @@
 import csv
 import logging
-import requests
 
+import requests
 from bs4 import BeautifulSoup
+
+from warn.utils import download_file
 
 logger  = logging.getLogger(__name__)
 
@@ -13,16 +15,7 @@ def scrape(output_dir, cache_dir=None):
     response = requests.get(url)
     logger.debug(f"Page status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, 'html.parser')
-
     data_url = soup.find("a", text="Download")['href']
     data_url = f'https://www.vec.virginia.gov{data_url}'
-    data= requests.get(data_url)
-    decoded_content = data.content.decode('utf-8')
-    cr = csv.reader(decoded_content.splitlines(), delimiter=',', quotechar='"')
-
-    with open(output_csv,'w') as csvfile:
-        writer = csv.writer(csvfile)
-        for line in cr:
-            writer.writerow(line)
-
+    download_file(data_url, output_csv)
     return output_csv
