@@ -57,7 +57,7 @@ def write_body(html,output_csv):
             clean_txt = re.sub(r'\s+', ' ', clean_txt)
             output_row.append(clean_txt.strip())
         if output_row[0] != "Notice Date":
-            output_rows.append(output_row[8:]) # hard-coding a cutoff length to deal with the buggy long row
+            output_rows.append(output_row[:8]) # hard-coding a cutoff length to deal with the buggy long row
     write_rows_to_csv(output_rows,output_csv,mode='a')
 
 def scrape_page(url):
