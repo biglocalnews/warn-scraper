@@ -45,11 +45,11 @@ def scrape(output_dir, cache_dir=None):
             rows_to_add = scrape_pdf(cache, cache_dir, year_url, headers)
         else:
             html_pages = scrape_html(cache, year_url, headers)
+            rows_to_add = html_to_rows(html_pages, output_csv)
             # write the header only once
             if not header_written:
                 output_rows.append(write_header(html_pages))
                 header_written = True
-            rows_to_add = html_to_rows(html_pages, output_csv)
         [output_rows.append(row) for row in rows_to_add]  # moving from one list to the other
     write_rows_to_csv(output_rows, output_csv)
     return output_csv
@@ -57,8 +57,6 @@ def scrape(output_dir, cache_dir=None):
 # scrapes each html page for the current year
 # returns a list of the year's html pages
 # note: no max amount of retries due to recursive scraping
-
-
 @tenacity.retry(wait=tenacity.wait_exponential(),
                 retry=tenacity.retry_if_exception_type(requests.HTTPError))
 def scrape_html(cache, url, headers, page=1):
@@ -106,7 +104,7 @@ def scrape_html(cache, url, headers, page=1):
     return [page_text]
 
 
-# takes list of html pages, outputs list of rows
+# takes list of html pages, outputs list of data rows
 def html_to_rows(page_text, output_csv):
     output_rows = []
     for page in page_text:
@@ -120,7 +118,7 @@ def html_to_rows(page_text, output_csv):
             for column in columns:
                 output_row.append(column.text.strip())
             output_rows.append(output_row)
-        output_rows.pop(0)  # remove blank lines
+        # output_rows.pop(0)  # remove blank lines
         # output_rows.pop(0)
     return output_rows
 
@@ -172,8 +170,6 @@ def scrape_pdf(cache, cache_dir, url, headers):
 
 # use pandas to remove redundant headers, fix column skews,
 # correct rows splitting when continuing onto next page
-
-
 def clean_table(table):
     for i in range(len(table)):
         current_row = table[i]
@@ -187,11 +183,13 @@ def clean_table(table):
     df = pd.DataFrame(table)  # use pandas dataframe as an intermediate step
     df.replace(to_replace=[r"\\t|\\n|\\r", "\t|\n|\r"], value=["", ""], regex=True, inplace=True)  # remove newlines
     # TODO remove erroneous header and fix column skew for 6 rows above it
+    # NOTE: trying to gather the problematic rows, fix them in-place in the table
+    # NOTE: how do i select the extra column to the right without a name to select the proper rows?
+    # NEWDF = df[~df['Oops1'].isna()]  # select all rows that have data in an extra row
 
-    # NEWDF = df[~df['Oops1'].isna()]
-    # print(NEWDF)
+    # print(NEWDF.dropna(axis='columns', how='all')) # drop all
 
-    # print(NEWDF.dropna(axis='columns', how='all'))
+    # and then: put it back in the table?
 
     table = df.values.tolist()
     return table
