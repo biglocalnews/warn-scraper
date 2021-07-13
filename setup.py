@@ -9,7 +9,6 @@ requirements = [
     'pandas',
     'pdfplumber',
     'requests',
-    'retrying'
     'openpyxl',
     'tenacity',
     # Install non-PyPI libraries

@@ -14,10 +14,8 @@ requests = "*"
 pandas = "*"
 openpyxl = "*"
 bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
-retrying = "*"
 pdfplumber = "*"
 tenacity = "*"
-camelot = "*"
 
 [requires]
 python_version = "3.7"
