@@ -8,6 +8,9 @@
   -Media Inquiries: 334.242.0400
   -Email: contact@madeinalabama.com 
 
+### July 13, 2021
+Email follow-up
+
 ### July 1, 2021
 Called the Media Inquiries number, left a voicemail with my callback number. Called the Toll Free number, left a voicemail with my callback number. Sent an email to the contact address with my questions.
 
