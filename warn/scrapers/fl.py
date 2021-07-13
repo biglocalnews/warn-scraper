@@ -62,9 +62,8 @@ def scrape_html(cache, url, headers, page=1):
     page_text = ""
     # search in cache first before scraping
     try:
-        # always re-scrape current year and prior year just to be safe
-        # note that this strategy, while safer, spends a long time scraping 2020.
-        if True:  # not (year == current_year) and not (year == last_year) # TODO DO NOT CACHE NEWEST for debugging only
+        # re-scrape current year by default
+        if not (year == current_year or year == last_year):
             logger.debug(f'Trying to read from cache: {html_cache_key}')
             cachefile = cache.read(html_cache_key)
             page_text = cachefile
@@ -79,9 +78,7 @@ def scrape_html(cache, url, headers, page=1):
         page_text = response.text
         cache.write(html_cache_key, page_text)
         logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
-
-    logger.debug(f"<br> has occurred? {'<br>' in page_text}")
-    page_text = page_text.replace("<br>", "\n")
+    page_text = page_text.replace("</br>", "\n")
     # search the page we just scraped for links to the next page
     soup = BeautifulSoup(page_text, 'html.parser')
     footer = soup.find('tfoot')
@@ -129,7 +126,7 @@ def write_header(pages):
         output_rows.append(header.text.strip())
     return output_rows
 
-
+# download and scrape pdf
 @tenacity.retry(wait=tenacity.wait_exponential(),
                 retry=tenacity.retry_if_exception_type(requests.HTTPError))
 def scrape_pdf(cache, cache_dir, url, headers):
@@ -169,7 +166,7 @@ def clean_table(table, all_rows=[]):
     table_rows = []
     for row_idx, row in enumerate(table):
         current_row = []
-        # fix row splitting b/n pages
+        # fix row splitting b/n pages sometimes
         if is_multiline_row(row_idx, row):
             if len(row) > 5:  # fix where both row is split AND columns skewed right (like page 14 of 2016.pdf)
                 row = [row[0], row[1], row[2], row[3], row[6]]
