@@ -9,18 +9,18 @@ from pathlib import Path
 from warn import Runner
 
 
-USER_HOME=os.path.expanduser('~')
-DEFAULT_HOME=str(Path(USER_HOME,'.warn-scraper'))
-ETL_DIR=os.environ.get('WARN_ETL_DIR', DEFAULT_HOME)
-PROCESS_DIR=str(Path(ETL_DIR, 'cache'))
-WARN_DATA_PATH=str(Path(ETL_DIR, 'exports'))
-WARN_LOG_PATH=str(Path(ETL_DIR, 'logs'))
+USER_HOME = os.path.expanduser('~')
+DEFAULT_HOME = str(Path(USER_HOME, '.warn-scraper'))
+ETL_DIR = os.environ.get('WARN_ETL_DIR', DEFAULT_HOME)
+PROCESS_DIR = str(Path(ETL_DIR, 'cache'))
+WARN_DATA_PATH = str(Path(ETL_DIR, 'exports'))
+WARN_LOG_PATH = str(Path(ETL_DIR, 'logs'))
 
 
 # Set higher log-level on third-party libs that use DEBUG logging,
 # In order to limit debug logging to our library
 logging.getLogger('urllib3').setLevel(logging.ERROR)
-
+logging.getLogger('pdfminer').setLevel(logging.WARNING)
 
 def main(args=None):
     log_levels = ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
@@ -41,7 +41,7 @@ def main(args=None):
     parser.add_argument('--upload', '-u', help='Upload generated files to BLN platform project', action='store_true')
     parser.add_argument('--delete', '-d', help='Delete files from prior scrape at start of new scraper run', action='store_true')
     parser.add_argument('--states', '-s', required=True, help='One or more state postals', nargs='+', action='store')
-    parser.add_argument('--log-level', '-l', default='INFO', help='Set the logging level',  choices=log_levels)
+    parser.add_argument('--log-level', '-l', default='INFO', help='Set the logging level', choices=log_levels)
     # TODO: parser.add_argument('--all', '-a',action='store_true', help='Run all scrapers')
 
     args = parser.parse_args()
@@ -103,6 +103,7 @@ def _log_traceback(logfile, traceback):
     "Write tracebacks to separate state-specific error logs"
     with open(logfile, 'w') as out:
         out.write(traceback)
+
 
 if __name__ == '__main__':
     main()

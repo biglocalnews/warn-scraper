@@ -7,8 +7,10 @@ requirements = [
     'bs4',
     'html5lib',
     'pandas',
+    'pdfplumber',
     'requests',
     'openpyxl',
+    'tenacity',
     # Install non-PyPI libraries
     'bln-etl @ git+https://github.com/biglocalnews/bln-etl.git',
 ]
