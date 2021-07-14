@@ -124,18 +124,6 @@ def html_to_rows(page_text):
     return output_rows
 
 
-# extract table headers from thead--only do so once
-def write_header(pages):
-    page = pages[0]
-    soup = BeautifulSoup(page, 'html5lib')
-    table = soup.find('table')
-    thead = table.find('thead')
-    headers = thead.find_all('th')
-    output_rows = []
-    for header in headers:
-        output_rows.append(header.text.strip())
-    return output_rows
-
 # download and scrape pdf
 @tenacity.retry(wait=tenacity.wait_exponential(),
                 retry=tenacity.retry_if_exception_type(requests.HTTPError))
