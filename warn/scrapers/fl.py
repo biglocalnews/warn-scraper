@@ -10,9 +10,21 @@ import pdfplumber
 import tenacity
 
 from warn.cache import Cache
-from warn.utils import write_rows_to_csv
+from warn.utils import write_dict_rows_to_csv
 
 logger = logging.getLogger(__name__)
+
+
+FIELDS = [
+    'Company Name',
+    'State Notification Date',
+    'Layoff Date',
+    'Employees Affected',
+    'Industry',
+    'Attachment'
+]
+CSV_HEADERS = FIELDS[:-1] # Clip the Attachment header
+
 
 # scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 def scrape(output_dir, cache_dir=None):
@@ -29,7 +41,6 @@ def scrape(output_dir, cache_dir=None):
     # find & visit each year's WARN page
     links = soup.find_all('a', href=re.compile('^http://reactwarn.floridajobs.org/WarnList/'))
     output_rows = []
-    header_written = False
     # scraped most recent year first
     for year_url in links:
         year_url = year_url.get('href')  # get URL from link
@@ -37,14 +48,13 @@ def scrape(output_dir, cache_dir=None):
             rows_to_add = scrape_pdf(cache, cache_dir, year_url, headers)
         else:
             html_pages = scrape_html(cache, year_url, headers)
-            rows_to_add = html_to_rows(html_pages, output_csv)
-            # write the header only once
-            if not header_written:
-                output_rows.append(write_header(html_pages))
-                header_written = True
-        [output_rows.append(row) for row in rows_to_add]  # moving from one list to the other
-    write_rows_to_csv(output_rows, output_csv)
+            rows_to_add = html_to_rows(html_pages)
+        # Convert rows to dicts
+        rows_as_dicts = [dict(zip(FIELDS, row)) for row in rows_to_add]
+        output_rows.extend(rows_as_dicts)
+    write_dict_rows_to_csv(output_csv, CSV_HEADERS, output_rows, extrasaction='ignore')
     return output_csv
+
 
 # scrapes each html page for the current year
 # returns a list of the year's html pages
@@ -55,7 +65,7 @@ def scrape_html(cache, url, headers, page=1):
     urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
     year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
-    html_cache_key = f'fl/{year}_page_{page}'
+    html_cache_key = f'fl/{year}_page_{page}.html'
     current_year = datetime.date.today().year
     last_year = str(current_year - 1)
     current_year = str(current_year)
@@ -97,8 +107,8 @@ def scrape_html(cache, url, headers, page=1):
     return [page_text]
 
 
-# takes list of html pages, outputs list of data rows
-def html_to_rows(page_text, output_csv):
+def html_to_rows(page_text):
+    """Extracts data rows from list of html pages"""
     output_rows = []
     for page in page_text:
         soup = BeautifulSoup(page, 'html5lib')
@@ -134,7 +144,7 @@ def scrape_pdf(cache, cache_dir, url, headers):
     urllib3.disable_warnings()
     # extract year from URL
     year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
-    pdf_cache_key = f'fl/{year}'
+    pdf_cache_key = f'fl/{year}.pdf'
     download = ""
     # download pdf if not in the cache
     if not exists(pdf_cache_key):
@@ -143,11 +153,11 @@ def scrape_pdf(cache, cache_dir, url, headers):
         response.raise_for_status()
         # download & cache pdf
         download = response.content
-        with open(f"{cache_dir}/{pdf_cache_key}.pdf", 'wb') as f:
+        with open(f"{cache_dir}/{pdf_cache_key}", 'wb') as f:
             f.write(download)
         logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
     # scrape tables from PDF
-    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}.pdf") as pdf:
+    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}") as pdf:
         pages = pdf.pages
         output_rows = []
         for page_num, page in enumerate(pages):
