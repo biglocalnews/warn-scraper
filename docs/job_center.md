@@ -18,7 +18,9 @@ We scrape the below states from Job Center sites:
 * [Arizona](az.md)
 * [Delaware](de.md)
 * [Kansas](ks.md)
+* [Maine](me.md)
 * [Oklahoma](ok.md)
+* [Vermont](vt.md)
 
 State-specific details such as links to state sites can be found in
 the pages linked above.
