@@ -7,6 +7,8 @@
   -Toll Free: 800.248.0033
   -Media Inquiries: 334.242.0400
   -Email: contact@madeinalabama.com 
+### July 20, 2021
+Second email follow-up (losing hope in that email address); Media Inquiries # rang a couple times and then I left another voicemail.  This is Alabama's 4:30Pm, so maybe it's worth calling them earlier in the morning and seeing if anyone picks up.
 
 ### July 13, 2021
 Email follow-up
