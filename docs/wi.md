@@ -11,8 +11,16 @@ WIOATitleI@dwd.wisconsin.gov
 Madison, WI 53707
 (608) 405-4070
 
-###July 23, 2021
+### July 23, 2021
 Sent an email asking about the 'Y' column. Hopefully we get a response! Seems like it's valid data, just unmarked.
+
+RESPONSE: 
+Hi Cody –
+The unlabeled column you cite in your inquiry denotes whether an update to the notice was received at some point in time after receiving the initial notice.
+Thanks!
+Tyler
+
+So it's a column we can drop in our analysis.
 
 ### July 20, 2021
 Unexpected "Y" values were showing up in some rows, as if part of a column that had no column header, throwing a wrench in the data standardization program.
