@@ -18,10 +18,13 @@ def scrape(output_dir, cache_dir=None):
     data = response.json()
     # find header
     headers = data['values'][0]
-    output_header = headers[3:len(headers)-1]
+    output_header = headers[3:len(headers) - 1]
     output_rows = []
     for row in data['values'][1:len(data['values'])]:
         output_row = row[3:len(row)]
+        if output_row and output_row[-1].strip() is 'Y':
+            # remove erroneous 'Y' fields
+            output_row = output_row[:-1]
         output_rows.append(output_row)
     # save header
     with open(output_csv, 'w') as csvfile:
@@ -33,7 +36,7 @@ def scrape(output_dir, cache_dir=None):
         page = requests.get(url)
         logger.debug(f"Page status is {page.status_code} for {url}")
         soup = BeautifulSoup(page.text, 'html.parser')
-        tables = soup.find_all('table') # output is list-type
+        tables = soup.find_all('table')  # output is list-type
         for table in tables:
             output_rows = []
             for table_row in table.find_all('tr'):
@@ -47,9 +50,15 @@ def scrape(output_dir, cache_dir=None):
                     output_row.append(entry)
                 output_row = [x.strip() for x in output_row]
                 # filter "Updates to Previously Filed Notices"
-                output_rows.append(output_row)
+                if output_row and len(output_row) > 2:
+                    output_rows.append(output_row)
             if len(output_rows) > 0:
-                with open(output_csv, 'a') as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerows(output_rows)
+                try:
+                    with open(output_csv, 'a', newline='') as csvfile:
+                        writer = csv.writer(csvfile)
+                        writer.writerows(output_rows)
+                except UnicodeEncodeError:
+                    with open(output_csv, 'a', newline='', encoding='utf-8') as csvfile:
+                        writer = csv.writer(csvfile)
+                        writer.writerows(output_rows)
     return output_csv
