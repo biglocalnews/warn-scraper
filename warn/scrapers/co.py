@@ -61,7 +61,8 @@ def scrape(output_dir, cache_dir=None):
                     # (this is the case with row 7 of 2017 data)
                     if row[0] == 'Company':
                         continue
-                    if row:
+                    # ignore blank rows
+                    if row and row.count('') != len(row):
                         rows_to_add.append(row)
         # Convert rows to dicts, using each year's hard-coded FIELDS
         rows_as_dicts = [dict(zip(FIELDS[num], row)) for row in rows_to_add]
