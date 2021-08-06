@@ -3,15 +3,12 @@ import logging
 
 from pathlib import Path
 from warn.cache import Cache
-# TODO implement cacheing
 from warn.utils import download_file
 from warn.utils import write_dict_rows_to_csv
 
 
 logger = logging.getLogger(__name__)
 
-# TODO probably merge 2021 layoff fields into total layoffs
-# TODO 2017 will require a special approach because as you can see... the headers are not at the top of the document.
 # one set of fields per year, in order as listed on the year's document
 FIELDS = [['', '', '', 'company', 'industry', '', '', '', '', 'address', '', "warn date", '', 'layoffs', "temporary_layoffs", "furloughs", "", "", 'layoff date'],
           ['company', 'industry', 'layoffs', 'local area', 'warn date', 'layoff date', 'layoff reason', 'attachment', 'occupations', '', '', ''],
@@ -20,8 +17,6 @@ FIELDS = [['', '', '', 'company', 'industry', '', '', '', '', 'address', '', "wa
           ['company', 'layoffs', 'local area', 'warn date', 'layoff reason'],
           ['company', 'layoffs', 'local area', 'warn date', 'layoff reason'],
           ['company', 'layoffs', 'local area', 'warn date', 'layoff reason']]
-# for i in range(72):
-#     FIELDS.append('')
 OUTPUT_HEADERS = ['company', 'industry', 'address', 'local area', 'warn date', 'layoffs', 'layoff date', 'layoff reason', 'attachment']
 
 def scrape(output_dir, cache_dir=None):
@@ -42,8 +37,10 @@ def scrape(output_dir, cache_dir=None):
     cache_state.mkdir(parents=True, exist_ok=True)
     output_rows = []
     # scrape from most recent to oldest (2015)
+    # TODO probably merge 2021 layoff fields into total layoffs
     for num, url in enumerate(urls):
         intermediate_csv_path = f'{cache_state}/{num}.csv'
+        # TODO try to read from cache first
         file_path = download_file(url, intermediate_csv_path)
         with open(file_path, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -71,9 +68,5 @@ def scrape(output_dir, cache_dir=None):
         output_rows.extend(rows_as_dicts)
         logger.info(f"Successfully scraped url {url}")
     write_dict_rows_to_csv(output_csv, OUTPUT_HEADERS, output_rows, extrasaction='ignore')
-    # write_rows_to_csv(output_rows, output_csv)
 
-    # TODO write dict to rows, use our own standard header
-    # TODO try to read from cache first
-    # TODO drop most of those excessive crazy columns
     return output_csv
