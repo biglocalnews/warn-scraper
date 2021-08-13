@@ -11,6 +11,7 @@ requirements = [
     'requests',
     'openpyxl',
     'tenacity',
+    'xlrd',
     # Install non-PyPI libraries
     'bln-etl @ git+https://github.com/biglocalnews/bln-etl.git',
 ]
