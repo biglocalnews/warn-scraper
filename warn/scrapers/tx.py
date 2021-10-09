@@ -4,7 +4,12 @@ import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
+from pathlib import Path
+from xlrd import XLRDError
 from zipfile import BadZipFile
+
+from warn.cache import Cache
+from warn.utils import download_file
 
 logger = logging.getLogger(__name__)
 
@@ -20,19 +25,57 @@ def scrape(output_dir, cache_dir=None):
     # create empty pandas dataframe
     output_df = pd.DataFrame()
     for link in links:
-        # get each url from the HTML links we found
-        data_url = f'https://www.twc.texas.gov{link.get("href")}'
-        logger.info(f'goign to try file {data_url}')
-        # xlsx and older xls files require different engines for this pandas func
-        # TODO implement cacheing check for these files
+        link_url = link.get("href")
+        filename_regex = re.match(r'.*-(.{4})(\..*)$', link_url, re.I)
+        year = int(filename_regex.group(1)[-4:])  # extract year as integer
+        # only scrape after year 2019 since our historical document covers 2018 and before
+        # (the historical doc includes 2019 too but the year seems to be missing some entries)
+        if year >= 2019:
+            file_extension = filename_regex.group(2)  # extract extension string (eg .xls, .xlsx)
+            cache_path = Path(cache_dir, 'tx')
+            cache_path.mkdir(parents=True, exist_ok=True)
+            cache_key_year = f'{cache_path}\\{year}{file_extension}'
+            # get each url from the HTML links we found
+            data_url = f'https://www.twc.texas.gov{link.get("href")}'
+        # try to read file from cache, or download the excel file
+        # (.xlsx and the older .xls files require different engines for pd.read_excel())
         try:
-            year_df = pd.read_excel(data_url, engine='openpyxl')
-        except BadZipFile:
-            year_df = pd.read_excel(data_url, engine='xlrd')
+            logger.debug(f'Trying to read file {cache_key_year} from cache...')
+            try:
+                year_df = pd.read_excel(cache_key_year, engine='openpyxl')
+            except BadZipFile:
+                year_df = pd.read_excel(cache_key_year, engine='xlrd')
+        except (FileNotFoundError, XLRDError) as e:
+            logger.debug(f'Failed to read file {cache_key_year} from cache. Downloading to cache from {data_url}...')
+            file_path = download_file(data_url, cache_key_year)
+            try:
+                year_df = pd.read_excel(file_path, engine='openpyxl')
+            except BadZipFile:
+                year_df = pd.read_excel(file_path, engine='xlrd')
+        logger.debug(f'Successfully read file {cache_key_year}')
         output_df = output_df.append(year_df)
-    logger.debug(output_df)
+    historical_df = scrape_historical(cache_dir)
+    # flip the order of the rows to match the yearly docs
+    historical_df = historical_df.iloc[::-1]
+    output_df = output_df.append(historical_df)
     # drop empty columns
-    # TODO: why arent empty cols droppin???
     output_df.dropna(inplace=True, axis=1, how='all')
+    output_df.dropna(inplace=True, axis=0, how='all')
     output_df.to_csv(output_csv, index=False)
     return output_csv
+
+
+def scrape_historical(cache_dir):
+    data_url = 'https://storage.googleapis.com/bln-data-public/warn-layoffs/tx_historical.xlsx'
+    cache_key_historical = Path(cache_dir, 'tx')
+    cache_key_historical.mkdir(parents=True, exist_ok=True)
+    cache_key_historical = f'{cache_key_historical}/historical.xlsx'
+    historical_df = pd.DataFrame()
+    try:
+        logger.debug(f'Trying to read file {cache_key_historical} from cache...')
+        historical_df = pd.read_excel(cache_key_historical, engine='openpyxl')
+    except FileNotFoundError:
+        logger.debug(f'Reading historical file from cache failed. Downloading to cache from {data_url}...')
+        file_path = download_file(data_url, cache_key_historical)
+        historical_df = pd.read_excel(file_path, engine='openpyxl')
+    return historical_df
