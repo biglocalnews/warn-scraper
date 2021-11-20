@@ -46,6 +46,7 @@ def scrape(output_dir, cache_dir=None):
         'layoff_or_closure',
         'county',
         'address',
+        'source_file',
     ]
     if files_have_changed:
         logger.info(f"One or more source data files have changed")
@@ -166,7 +167,8 @@ def extract_excel_data(wb_path):
             'company': row[5].value.strip(),
             'layoff_or_closure': row[8].value.strip(),
             'num_employees': row[10].value,
-            'address': row[12].value.strip()
+            'address': row[12].value.strip(),
+            'source_file': wb_path.split('/')[-1],
         }
         payload.append(data)
     return payload
@@ -184,6 +186,7 @@ def extract_pdf_data(pdf_path):
         'county',
         'num_employees',
         'layoff_or_closure',
+        'source_file'
     ]
     data = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -214,6 +217,7 @@ def extract_pdf_data(pdf_path):
                 data_row.update({
                     'effective_date': data_row['effective_date'].replace(' ',''),
                     'received_date': data_row['received_date'].replace(' ',''),
+                    'source_file': pdf_path.split('/')[-1]
                 })
                 data.append(data_row)
     return data
