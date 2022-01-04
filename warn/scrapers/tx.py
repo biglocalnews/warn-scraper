@@ -52,7 +52,6 @@ def scrape(output_dir, cache_dir=None):
                 year_df = pd.read_excel(file_path, engine='openpyxl')
             except BadZipFile:
                 year_df = pd.read_excel(file_path, engine='xlrd')
-        logger.debug(f'Successfully read file {cache_key_year}')
         output_df = output_df.append(year_df)
     historical_df = scrape_historical(cache_dir)
     # flip the order of the rows to match the yearly docs
@@ -75,7 +74,7 @@ def scrape_historical(cache_dir):
         logger.debug(f'Trying to read file {cache_key_historical} from cache...')
         historical_df = pd.read_excel(cache_key_historical, engine='openpyxl')
     except FileNotFoundError:
-        logger.debug(f'Reading historical file from cache failed. Downloading to cache from {data_url}...')
+        logger.debug(f'Historical file not found in cache. Downloading to cache from {data_url}...')
         file_path = download_file(data_url, cache_key_historical)
         historical_df = pd.read_excel(file_path, engine='openpyxl')
     return historical_df
