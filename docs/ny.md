@@ -6,7 +6,7 @@
   - NYS WARN Coordinator:	Janet Faraone	(phone: 518-457-1518, email: [Janet.Faraone@labor.ny.gov](Janet.Faraone@labor.ny.gov))	
 
 ### Jan 5, 2022
-We've implemented historical document scraping for NY (issue #136) and removed the old website scraping system while we wait for their website to be upgraded. As mentioned in July, we should implement a system of periodically requesting a historical document from NY.
+We've implemented historical document scraping for NY (issue #136) and removed the old website scraping system while we wait for their website to be upgraded. As mentioned in July, we should implement a system of periodically requesting a historical document from NY. We are hosting this historical document at https://storage.googleapis.com/bln-data-public/warn-layoffs/ny_historical.xlsx .
 
 ### Jul 12th, 2021
 reaching out to the NYS WARN coordinator was fruitful. the state agency prepared and sent over an excel containing records from 2016 to 2021 within a day upon email request. Here is a snippet of the data: 
