@@ -15,6 +15,7 @@ def scrape(output_dir, cache_dir=None):
     output_csv = output_df.to_csv(output_csv, index=False)
     return output_csv
 
+# download the historical data from the cloud
 def scrape_historical(cache_dir):
     data_url = 'https://storage.googleapis.com/bln-data-public/warn-layoffs/ny_historical.xlsx'
     cache_key_historical = Path(cache_dir, 'ny')

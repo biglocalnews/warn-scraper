@@ -8,7 +8,6 @@ from pathlib import Path
 from xlrd import XLRDError
 from zipfile import BadZipFile
 
-from warn.cache import Cache
 from warn.utils import download_file
 
 logger = logging.getLogger(__name__)
@@ -63,7 +62,7 @@ def scrape(output_dir, cache_dir=None):
     output_df.to_csv(output_csv, index=False)
     return output_csv
 
-
+# download the historical data from the cloud
 def scrape_historical(cache_dir):
     data_url = 'https://storage.googleapis.com/bln-data-public/warn-layoffs/tx_historical.xlsx'
     cache_key_historical = Path(cache_dir, 'tx')
