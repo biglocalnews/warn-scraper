@@ -41,7 +41,7 @@ class Runner:
             Path(d).mkdir(parents=True, exist_ok=True)
 
     def scrape(self, state):
-        state_mod = import_module('warn.scrapers.{}'.format(state.strip().lower()))
+        state_mod = import_module("warn.scrapers.{}".format(state.strip().lower()))
         logger.info(f"Scraping {state}")
         output_csv = state_mod.scrape(self.output_dir, self.working_dir)
         logger.info(f"Generated {output_csv}")
@@ -59,4 +59,4 @@ class Runner:
 
     @property
     def _output_dir_files(self):
-        return [str(f) for f in Path(self.output_dir).glob('*')]
+        return [str(f) for f in Path(self.output_dir).glob("*")]

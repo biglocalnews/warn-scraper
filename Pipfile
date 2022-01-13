@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-vcr = "*"
+black = "*"
 
 [packages]
 bs4 = "*"
@@ -20,3 +21,6 @@ xlrd = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

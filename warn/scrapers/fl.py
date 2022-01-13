@@ -16,35 +16,37 @@ logger = logging.getLogger(__name__)
 
 
 FIELDS = [
-    'Company Name',
-    'State Notification Date',
-    'Layoff Date',
-    'Employees Affected',
-    'Industry',
-    'Attachment'
+    "Company Name",
+    "State Notification Date",
+    "Layoff Date",
+    "Employees Affected",
+    "Industry",
+    "Attachment",
 ]
-CSV_HEADERS = FIELDS[:-1] # Clip the Attachment header
+CSV_HEADERS = FIELDS[:-1]  # Clip the Attachment header
 
 
 # scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 def scrape(output_dir, cache_dir=None):
-    output_csv = '{}/fl.csv'.format(output_dir)
+    output_csv = "{}/fl.csv".format(output_dir)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     # FL site requires realistic User-Agent.
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
     }
-    url = 'http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices'
+    url = "http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
     response = requests.get(url, headers=headers, verify=False)
     logger.debug(f"Request status is {response.status_code} for {url}")
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, "html.parser")
     # find & visit each year's WARN page
-    links = soup.find_all('a', href=re.compile('^http://reactwarn.floridajobs.org/WarnList/'))
+    links = soup.find_all(
+        "a", href=re.compile("^http://reactwarn.floridajobs.org/WarnList/")
+    )
     output_rows = []
     # scraped most recent year first
     for year_url in links:
-        year_url = year_url.get('href')  # get URL from link
-        if 'PDF' in year_url:
+        year_url = year_url.get("href")  # get URL from link
+        if "PDF" in year_url:
             rows_to_add = scrape_pdf(cache, cache_dir, year_url, headers)
         else:
             html_pages = scrape_html(cache, year_url, headers)
@@ -52,20 +54,22 @@ def scrape(output_dir, cache_dir=None):
         # Convert rows to dicts
         rows_as_dicts = [dict(zip(FIELDS, row)) for row in rows_to_add]
         output_rows.extend(rows_as_dicts)
-    write_dict_rows_to_csv(output_csv, CSV_HEADERS, output_rows, extrasaction='ignore')
+    write_dict_rows_to_csv(output_csv, CSV_HEADERS, output_rows, extrasaction="ignore")
     return output_csv
 
 
 # scrapes each html page for the current year
 # returns a list of the year's html pages
 # note: no max amount of retries (recursive scraping)
-@tenacity.retry(wait=tenacity.wait_exponential(),
-                retry=tenacity.retry_if_exception_type(requests.HTTPError))
+@tenacity.retry(
+    wait=tenacity.wait_exponential(),
+    retry=tenacity.retry_if_exception_type(requests.HTTPError),
+)
 def scrape_html(cache, url, headers, page=1):
     urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
-    year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
-    html_cache_key = f'fl/{year}_page_{page}.html'
+    year = re.search(r"year=([0-9]{4})", url, re.I).group(1)
+    html_cache_key = f"fl/{year}_page_{page}.html"
     current_year = datetime.date.today().year
     last_year = str(current_year - 1)
     current_year = str(current_year)
@@ -74,10 +78,10 @@ def scrape_html(cache, url, headers, page=1):
     try:
         # re-scrape current year by default
         if not (year == current_year or year == last_year):
-            logger.debug(f'Trying to read from cache: {html_cache_key}')
+            logger.debug(f"Trying to read from cache: {html_cache_key}")
             cachefile = cache.read(html_cache_key)
             page_text = cachefile
-            logger.debug(f'Page fetched from cache: {html_cache_key}')
+            logger.debug(f"Page fetched from cache: {html_cache_key}")
         else:
             raise FileNotFoundError
     except FileNotFoundError:
@@ -90,14 +94,18 @@ def scrape_html(cache, url, headers, page=1):
         logger.debug(f"Successfully scraped page {url} to cache: {html_cache_key}")
     page_text = page_text.replace("</br>", "\n")
     # search the page we just scraped for links to the next page
-    soup = BeautifulSoup(page_text, 'html.parser')
-    footer = soup.find('tfoot')
+    soup = BeautifulSoup(page_text, "html.parser")
+    footer = soup.find("tfoot")
     if footer:
         next_page = page + 1
-        nextPageLink = footer.find('a', href=re.compile(f'page={next_page}'))  # find link to next page, if exists
+        nextPageLink = footer.find(
+            "a", href=re.compile(f"page={next_page}")
+        )  # find link to next page, if exists
         # recursively scrape until we have a list of all the pages' html
         if nextPageLink:
-            url = 'http://reactwarn.floridajobs.org' + nextPageLink.get('href')  # /WarnList/Records?year=XXXX&page=X
+            url = "http://reactwarn.floridajobs.org" + nextPageLink.get(
+                "href"
+            )  # /WarnList/Records?year=XXXX&page=X
             # recursively make list of all the next pages' html
             pages_html = scrape_html(cache, url, headers, next_page)
             # add the current page to the recursive list
@@ -111,12 +119,12 @@ def html_to_rows(page_text):
     """Extracts data rows from list of html pages"""
     output_rows = []
     for page in page_text:
-        soup = BeautifulSoup(page, 'html5lib')
-        table = soup.find('table')
+        soup = BeautifulSoup(page, "html5lib")
+        table = soup.find("table")
         # extract table data
-        tbody = table.find('tbody')
-        for table_row in tbody.find_all('tr'):
-            columns = table_row.find_all('td')
+        tbody = table.find("tbody")
+        for table_row in tbody.find_all("tr"):
+            columns = table_row.find_all("td")
             output_row = []
             for column in columns:
                 output_row.append(column.text.strip())
@@ -125,14 +133,16 @@ def html_to_rows(page_text):
 
 
 # download and scrape pdf
-@tenacity.retry(wait=tenacity.wait_exponential(),
-                retry=tenacity.retry_if_exception_type(requests.HTTPError))
+@tenacity.retry(
+    wait=tenacity.wait_exponential(),
+    retry=tenacity.retry_if_exception_type(requests.HTTPError),
+)
 def scrape_pdf(cache, cache_dir, url, headers):
     # sidestep SSL error
     urllib3.disable_warnings()
     # extract year from URL
-    year = re.search(r'year=([0-9]{4})', url, re.I).group(1)
-    pdf_cache_key = f'fl/{year}.pdf'
+    year = re.search(r"year=([0-9]{4})", url, re.I).group(1)
+    pdf_cache_key = f"fl/{year}.pdf"
     download = ""
     # download pdf if not in the cache
     if not exists(pdf_cache_key):
@@ -141,7 +151,7 @@ def scrape_pdf(cache, cache_dir, url, headers):
         response.raise_for_status()
         # download & cache pdf
         download = response.content
-        with open(f"{cache_dir}/{pdf_cache_key}", 'wb') as f:
+        with open(f"{cache_dir}/{pdf_cache_key}", "wb") as f:
             f.write(download)
         logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
     # scrape tables from PDF
@@ -166,11 +176,15 @@ def clean_table(table, all_rows=[]):
         current_row = []
         # fix row splitting b/n pages sometimes
         if is_multiline_row(row_idx, row):
-            if len(row) > 5:  # fix where both row is split AND columns skewed right (like page 14 of 2016.pdf)
+            if (
+                len(row) > 5
+            ):  # fix where both row is split AND columns skewed right (like page 14 of 2016.pdf)
                 row = [row[0], row[1], row[2], row[3], row[6]]
             for field_idx, field_to_add in enumerate(row):
                 if field_to_add:
-                    all_rows[-1][field_idx] += field_to_add  # MERGE fields with last row from all_rows (i.e. the last row from prior page)
+                    all_rows[-1][
+                        field_idx
+                    ] += field_to_add  # MERGE fields with last row from all_rows (i.e. the last row from prior page)
             continue
         for field_idx, field in enumerate(row):
             # ignore any redundant header rows
@@ -189,11 +203,12 @@ def clean_table(table, all_rows=[]):
 def is_multiline_row(row_idx, row):
     # this is a row that has been split between pages
     # we want to remedy this split in the output data
-    return (row_idx == 0 and row[1] == "" and row[3] == "")
+    return row_idx == 0 and row[1] == "" and row[3] == ""
+
 
 def is_header_row(field_idx, field):
     # we already have a header management strategy
     # but there are still erroneous redundant headers strewn about
     # and we need to remove them from the data
     # because we only need 1 header row.
-    return (field_idx == 0 and field == "COMPANY NAME")
+    return field_idx == 0 and field == "COMPANY NAME"
