@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0bfe984cfbb9df006bbba92ae4548b488dbab7723f5b4a6f04dfcdb5368c76fd"
+            "sha256": "cea65250f3b8b0383345ea5e749091b284338720c9c601cceb44239d22e02fe7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -500,6 +500,14 @@
             ],
             "version": "==2.6.3"
         },
+        "markdown-it-py": {
+            "hashes": [
+                "sha256:15cc69c5b7c493ba8603722b710e39ce3fab2961994179fb4fa1c99b070d2059",
+                "sha256:c138a596f6c9988e0b5fa3299bc38ffa76c75076bc178e8dfac40a84343c7022"
+            ],
+            "markers": "python_version ~= '3.6'",
+            "version": "==2.0.0"
+        },
         "markupsafe": {
             "hashes": [
                 "sha256:01a9b8ea66f1658938f65b93a85ebe8bc016e6769611be228d797c9d998dd298",
@@ -574,6 +582,22 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==2.0.1"
+        },
+        "mdit-py-plugins": {
+            "hashes": [
+                "sha256:b1279701cee2dbf50e188d3da5f51fee8d78d038cdf99be57c6b9d1aa93b4073",
+                "sha256:ecc24f51eeec6ab7eecc2f9724e8272c2fb191c2e93cf98109120c2cace69750"
+            ],
+            "markers": "python_version ~= '3.6'",
+            "version": "==0.3.0"
+        },
+        "mdurl": {
+            "hashes": [
+                "sha256:40654d6dcb8d21501ed13c21cc0bd6fc42ff07ceb8be30029e5ae63ebc2ecfda",
+                "sha256:94873a969008ee48880fb21bad7de0349fef529f3be178969af5817239e9b990"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==0.1.0"
         },
         "multidict": {
             "hashes": [
@@ -659,6 +683,14 @@
                 "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"
             ],
             "version": "==0.4.3"
+        },
+        "myst-parser": {
+            "hashes": [
+                "sha256:617a90ceda2162ebf81cd13ad17d879bd4f49e7fb5c4f177bb905272555a2268",
+                "sha256:a6473b9735c8c74959b49b36550725464f4aecc4481340c9a5f9153829191f83"
+            ],
+            "index": "pypi",
+            "version": "==0.16.1"
         },
         "packaging": {
             "hashes": [

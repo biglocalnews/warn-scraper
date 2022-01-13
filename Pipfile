@@ -9,6 +9,7 @@ pytest-vcr = "*"
 black = "*"
 Sphinx = "*"
 sphinx-autobuild = "*"
+myst-parser = "*"
 
 [packages]
 bs4 = "*"

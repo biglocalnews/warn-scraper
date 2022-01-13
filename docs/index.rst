@@ -1,17 +1,14 @@
-.. warn-scraper documentation master file, created by
-   sphinx-quickstart on Thu Jan 13 11:30:28 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to warn-scraper's documentation!
-========================================
-
+Welcome to documentation!
+=====================================
+    
 .. toctree::
-   :maxdepth: 2
+   :glob:
+   :maxdepth: 4
    :caption: Contents:
 
+   states/*
 
-
+   
 Indices and tables
 ==================
 
