@@ -32,7 +32,7 @@ class Cache:
 
     def __init__(self, path=None):
         self.root_dir = self._path_from_env or self._path_default
-        self.path = path or str(Path(self.root_dir, 'cache'))
+        self.path = path or str(Path(self.root_dir, "cache"))
 
     def exists(self, name):
         return Path(self.path, name).exists()
@@ -48,7 +48,7 @@ class Cache:
 
         """
         path = Path(self.path, name)
-        with open(path, 'r', newline='') as infile:
+        with open(path, "r", newline="") as infile:
             return infile.read()
 
     def write(self, name, content):
@@ -63,7 +63,7 @@ class Cache:
 
             Provide file contents and the partial name for (relative to cache directory)
             where file should written. The partial file path can include additional
-            directories (e.g. 'fl/2021_page_1.html'), which will be created if they 
+            directories (e.g. 'fl/2021_page_1.html'), which will be created if they
             don't exist.
 
         Args:
@@ -72,11 +72,11 @@ class Cache:
         """
         out = Path(self.path, name)
         out.parent.mkdir(parents=True, exist_ok=True)
-        with open(out, 'w', newline='') as fh:
+        with open(out, "w", newline="") as fh:
             fh.write(content)
         return str(out)
 
-    def files(self, subdir='.', glob_pattern='*'):
+    def files(self, subdir=".", glob_pattern="*"):
         """Retrieve all files and folders in a subdir relative to cache dir
 
         Usage:
@@ -103,7 +103,7 @@ class Cache:
 
     @property
     def _path_from_env(self):
-        return os.environ.get('WARN_ETL_DIR')
+        return os.environ.get("WARN_ETL_DIR")
 
     @property
     def _path_default(self):

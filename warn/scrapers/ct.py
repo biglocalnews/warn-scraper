@@ -9,26 +9,36 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    output_csv = f'{output_dir}/ct.csv'
+    output_csv = f"{output_dir}/ct.csv"
     years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
-    header_row = ['warn_date','affected_company','layoff_location','number_workers','layoff_date','closing','closing_date','union','union_address']
+    header_row = [
+        "warn_date",
+        "affected_company",
+        "layoff_location",
+        "number_workers",
+        "layoff_date",
+        "closing",
+        "closing_date",
+        "union",
+        "union_address",
+    ]
     output_rows = []
-    for year in years: 
-        url = f'https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{year}.htm'
+    for year in years:
+        url = f"https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{year}.htm"
         response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, "html.parser")
         if year == 2016:
-            table = soup.find_all('table', 'style15')
+            table = soup.find_all("table", "style15")
         else:
-            table = soup.find_all('table', 'MsoNormalTable')
-        table_rows = table[0].find_all('tr')
+            table = soup.find_all("table", "MsoNormalTable")
+        table_rows = table[0].find_all("tr")
         # loop over table to process each row
         for table_row in table_rows:
             # skip 1st row because it is the header
             if table_rows.index(table_row) == 0:
                 continue
-            table_cells = table_row.find_all('td')
-            # if a row has more than 9 cells it is handled separately 
+            table_cells = table_row.find_all("td")
+            # if a row has more than 9 cells it is handled separately
             # the 2016 table has some cells with nested tags
             if len(table_cells) > 9:
                 output_row = problem_cells(table_cells)
@@ -41,33 +51,36 @@ def scrape(output_dir, cache_dir=None):
                 output_row = []
                 for table_cell in table_cells:
                     cell = table_cell.text.strip()
-                    cell = ' '.join(cell.split())
+                    cell = " ".join(cell.split())
                     output_row.append(cell)
                 # test to see if the row is blank
                 if not output_row:
                     continue
                 output_rows.append(output_row)
-        logger.debug(f'Scraping {len(output_rows)} total rows back through year {year}.')
+        logger.debug(
+            f"Scraping {len(output_rows)} total rows back through year {year}."
+        )
 
     # save to csv
-    with open(output_csv, 'w') as out:
+    with open(output_csv, "w") as out:
         writer = csv.writer(out)
         writer.writerow(header_row)
         writer.writerows(output_rows)
     return output_csv
+
 
 # function to deal with problem rows in the 2016 table
 def problem_cells(table_cells):
     output_row = []
     for table_cell in table_cells:
         current_cell = table_cell.text.strip()
-        current_cell = ' '.join(current_cell.split())
+        current_cell = " ".join(current_cell.split())
         if table_cells.index(table_cell) == 0:
             output_row.append(current_cell)
         else:
             previous_index = table_cells.index(table_cell) - 1
             previous_cell = table_cells[previous_index].text.strip()
-            previous_cell = ' '.join(previous_cell.split())
+            previous_cell = " ".join(previous_cell.split())
             if current_cell == previous_cell:
                 continue
             else:

@@ -8,7 +8,7 @@ from warn.cache import Cache
 
 
 def test_default_cache_dir():
-    to_patch = 'warn.utils.expanduser'
+    to_patch = "warn.utils.expanduser"
     with patch(to_patch) as mock_func:
         mock_func.return_value = "/Users/you"
         cache = Cache()
@@ -17,12 +17,14 @@ def test_default_cache_dir():
 
 def test_custom_cache_path(tmpdir):
     from warn.cache import Cache
+
     cache = Cache(tmpdir)
     assert tmpdir == cache.path
 
 
 def test_write(tmpdir):
     from warn.cache import Cache
+
     cache = Cache(tmpdir)
     content = "<h1>some content</h1>"
     file_path = "fl/2021_page_1.html"
@@ -34,36 +36,30 @@ def test_write(tmpdir):
     assert actual_contents == content
 
 
-@pytest.mark.usefixtures(
-    'create_cache_dir',
-    'copy_html_to_cache'
-)
+@pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_files(cache_dir):
     from warn.cache import Cache
+
     cache = Cache(path=cache_dir)
     # Base cache dir only contains fl/ dir
-    assert cache.files()[0].endswith('/fl')
+    assert cache.files()[0].endswith("/fl")
     # HTML files are stored in fl/ directory
-    actual = [str(p) for p in Path(cache_dir, 'fl').glob('*.html')]
-    assert cache.files(subdir='fl/') == actual
+    actual = [str(p) for p in Path(cache_dir, "fl").glob("*.html")]
+    assert cache.files(subdir="fl/") == actual
 
 
-@pytest.mark.usefixtures(
-    'create_cache_dir',
-    'copy_html_to_cache'
-)
+@pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_exists(cache_dir):
     from warn.cache import Cache
+
     cache = Cache(path=cache_dir)
-    assert cache.exists('fl/2021_page_1.html')
+    assert cache.exists("fl/2021_page_1.html")
 
 
-@pytest.mark.usefixtures(
-    'create_cache_dir',
-    'copy_html_to_cache'
-)
+@pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_read(cache_dir):
     from warn.cache import Cache
+
     cache = Cache(path=cache_dir)
-    html = cache.read('fl/2021_page_1.html').strip()
-    assert html == '<html><h1>2021 page 1</h1></html>'
+    html = cache.read("fl/2021_page_1.html").strip()
+    assert html == "<html><h1>2021 page 1</h1></html>"
