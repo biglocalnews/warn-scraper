@@ -7,6 +7,8 @@ verify_ssl = true
 pytest = "*"
 pytest-vcr = "*"
 black = "*"
+Sphinx = "*"
+sphinx-autobuild = "*"
 
 [packages]
 bs4 = "*"
