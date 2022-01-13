@@ -4,7 +4,6 @@ extensions = ['myst_parser']
 templates_path = ["_templates"]
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.txt': 'markdown',
     '.md': 'markdown',
 }
 master_doc = "index"
