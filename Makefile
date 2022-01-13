@@ -48,7 +48,7 @@ define banner
     @echo "$(BLUE) |$(RED)BIG  LOCAL$(RESET_COLOR)$(BLUE)|$(RESET_COLOR)"
     @echo "$(BLUE) |&&& ======|$(RESET_COLOR)"
     @echo "$(BLUE) |=== ======|$(RESET_COLOR)"
-    @echo "$(BLUE) |=== == %%$|$(RESET_COLOR)"
+    @echo "$(BLUE) |=== == %%%|$(RESET_COLOR)"
     @echo "$(BLUE) |[_] ======|$(RESET_COLOR)"
     @echo "$(BLUE) |=== ===!##|$(RESET_COLOR)"
     @echo "$(BLUE) |__________|$(RESET_COLOR)"
