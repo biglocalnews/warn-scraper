@@ -10,6 +10,7 @@ def read(file_name):
     with open(file_path) as f:
         return f.read()
 
+
 requirements = [
     "bs4",
     "html5lib",
@@ -32,8 +33,8 @@ setup(
     name="warn-scraper",
     version="0.1.0",
     description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
-    long_description=read('README.md'),
-	long_description_content_type='text/markdown',
+    long_description=read("README.md"),
+    long_description_content_type="text/markdown",
     author="Big Local News",
     url="https://github.com/biglocalnews/WARN",
     packages=find_packages(),
@@ -58,11 +59,11 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     test_suite="tests",
-    setup_requires=['pytest-runner'],
+    setup_requires=["pytest-runner"],
     tests_require=test_requirements,
     project_urls={
-        'Maintainer': 'https://github.com/biglocalnews',
-        'Source': 'https://github.com/biglocalnews/WARN',
-        'Tracker': 'https://github.com/biglocalnews/WARN/issues'
-    }
+        "Maintainer": "https://github.com/biglocalnews",
+        "Source": "https://github.com/biglocalnews/WARN",
+        "Tracker": "https://github.com/biglocalnews/WARN/issues",
+    },
 )
