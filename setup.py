@@ -22,7 +22,7 @@ test_requirements = [
 ]
 
 setup(
-    name="warn",
+    name="warn-scraper",
     version="0.1.0",
     description="WARN Layoff notice scrapers.",
     long_description="Web scrapers to gather WARN layoff data from state sites and upload to BLN platform.",
