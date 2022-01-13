@@ -23,4 +23,4 @@ jobs:
 
       - id: run
         name: Run
-        run: pipenv run pytest
+        run: pipenv run python setup.py test

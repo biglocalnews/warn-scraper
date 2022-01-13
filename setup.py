@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 from setuptools import setup, find_packages
 
+
+def read(file_name):
+    this_dir = os.path.dirname(__file__)
+    file_path = os.path.join(this_dir, file_name)
+    with open(file_path) as f:
+        return f.read()
 
 requirements = [
     "bs4",
@@ -24,10 +31,10 @@ test_requirements = [
 setup(
     name="warn",
     version="0.1.0",
-    description="WARN Layoff notice scrapers.",
-    long_description="Web scrapers to gather WARN layoff data from state sites and upload to BLN platform.",
-    author="Dilcia Mercedes",
-    author_email="dilcia19@stanford.edu",
+    description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
+    long_description=read('README.md'),
+	long_description_content_type='text/markdown',
+    author="Big Local News",
     url="https://github.com/biglocalnews/WARN",
     packages=find_packages(),
     include_package_data=True,
@@ -44,9 +51,18 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     test_suite="tests",
+    setup_requires=['pytest-runner'],
     tests_require=test_requirements,
+    project_urls={
+        'Maintainer': 'https://github.com/biglocalnews',
+        'Source': 'https://github.com/biglocalnews/WARN',
+        'Tracker': 'https://github.com/biglocalnews/WARN/issues'
+    }
 )
