@@ -104,6 +104,14 @@ cd WARN/
 pipenv install
 ```
 
+### Tests
+
+Testing is implemented via pytest. Run the tests with the following:
+
+```bash
+pipenv run pytest
+```
+
 ### Dev CLI usage
 
 The WARN command-line tool provides a handy way to "manually" test code changes for a given state.
