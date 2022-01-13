@@ -58,7 +58,7 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     test_suite="tests",
-    setup_requires=['pytest-runner'],
+    setup_requires=['pytest-runner',],
     tests_require=test_requirements,
     project_urls={
         'Maintainer': 'https://github.com/biglocalnews',
