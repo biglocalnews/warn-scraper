@@ -29,7 +29,7 @@ test_requirements = [
 ]
 
 setup(
-    name="warn",
+    name="warn-scraper",
     version="0.1.0",
     description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
     long_description=read('README.md'),
