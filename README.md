@@ -1,11 +1,4 @@
-## Overview
-
-This project provides a library and command-line tool for scraping WARN (layoff) Notices from several state sites.
-
-- [Install](#install)
-- [Usage](#usage)
-- [Platform uploads](#platform-uploads)
-- [Developers](#developers)
+Command-line interface for downloading [WARN Act](https://www.dol.gov/agencies/eta/layoffs/warn) notices of qualified plant closings and mass layoffs from state government websites
 
 ## Install
 
@@ -14,18 +7,14 @@ This project provides a library and command-line tool for scraping WARN (layoff)
 Use `pip` or `pipenv` to install the WARN Python library and CLI tool for normal day-to-day use:
 
 ```bash
-pip install git+ssh://git@github.com/biglocalnews/WARN.git#egg=WARN
-# or
-pipenv install git+ssh://git@github.com/biglocalnews/WARN.git#egg=WARN
+pipenv install warn
 ```
 
 ## Usage
 
 After [installation](#install),  you can use the command-line tool to scrape available states *by supplying one or more two-letter state postal codes*.
 
-> See the [`warn/scrapers/`][] directory for available state modules.
-
-[`warn/scrapers/`]: https://github.com/biglocalnews/WARN/tree/main/warn/scrapers
+> See the [`warn/scrapers/`](https://github.com/biglocalnews/WARN/tree/main/warn/scrapers) directory for available state modules.
 
 ```bash
 # Scrape a single state
@@ -104,9 +93,9 @@ cd WARN/
 pipenv install
 ```
 
-### Dev CLI usage
+### CLI experimentation
 
-The WARN command-line tool provides a handy way to "manually" test code changes for a given state.
+The WARN command-line interface provides a handy way to "manually" test code changes for a given state.
 
 However, using the CLI command **in a development context** is a bit trickier compared to normal usage, due to the nature of how we've ["packaged"](https://packaging.python.org/tutorials/packaging-projects/) this project as an installable library and command-line tool.
 
@@ -126,72 +115,6 @@ python -m warn.cli -s AK
 
 # For more detailed debugging output, use the -l flag
 python -m warn.cli -l DEBUG -s AK
-```
-
-### GitHub cheatsheet
-
-Below are some reminders on commands that can be helpful for our branch-oriented Git/GitHub workflow.
-
-When starting a new branch:
-
-```bash
-# Checkout main and pull to make sure you have the latest code
-git checkout main
-git pull
-
-# Create a branch using <state>-<issue #> pattern
-git checkout -b nj-100
-```
-
-When pushing a branch for the first time:
-
-```bash
-git push -u origin nj-100
-```
-
-When you need to pull in the latest changes from `main`:
-
-```bash
-# Stash or commit the work on your active branch
-git stash
-
-# Checkout and pull updates on main
-git checkout main
-git pull
-
-# Checkout your branch
-git checkout nj-100
-
-# Rebase your changes on top of main
-git rebase main
-
-# Fix merge conflicts if any (ping for help if needed)
-
-# Re-apply stashed changes, if any
-git stash apply
-```
-
-After a rebase, delete and recreate your *remote* branch (if you previously pushed it):
-
-```bash
-# Delete the branch on the remote called origin
-git push origin :nj-100
-
-# Push the branch anew (after you've rebased)
-git push -u origin nj-100
-```
-
-To clean up your local list of remote branches that have been merged and deleted (during
-the Pull Request process):
-
-```bash
-# To view references to remote branches
-git branch -a
-
-# If there are remote branches that no longer exist
-# (i.e were deleted as part of a Pull Request merge),
-# you can "prune" those local references
-git remote prune origin
 ```
 
 ### File name conventions
