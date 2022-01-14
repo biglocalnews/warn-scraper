@@ -8,6 +8,10 @@ pytest = "*"
 pytest-vcr = "*"
 black = "*"
 twine = "*"
+Sphinx = "*"
+sphinx-autobuild = "*"
+myst-parser = "*"
+flake8 = "*"
 
 [packages]
 bs4 = "*"
