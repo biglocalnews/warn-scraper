@@ -71,9 +71,30 @@ define python
 endef
 
 #
-# Tests
+# Cleaning
 #
 
+## remove all build, test, coverage and Python artifacts
+clean: clean-build \
+       clean-pyc
+
+clean-build: ## remove build artifacts
+	@rm -fr build/
+	@rm -fr dist/
+	@rm -fr .eggs/
+	@find . -name '*.egg-info' -exec rm -fr {} +
+	@find . -name '*.egg' -exec rm -f {} +
+
+
+clean-pyc: ## remove Python file artifacts
+	@find . -name '*.pyc' -exec rm -f {} +
+	@find . -name '*.pyo' -exec rm -f {} +
+	@find . -name '*~' -exec rm -f {} +
+	@find . -name '__pycache__' -exec rm -fr {} +
+
+#
+# Tests
+#
 
 test: ## run all tests
 	$(call banner,Running tests)
@@ -117,6 +138,9 @@ help: ## Show this help. Example: make help
 # Mark all the commands that don't have a target
 .PHONY: help \
         check-release \
+        clean \
+        clean-test \
+        clean-pyc \
         dist \
         format \
         release \
