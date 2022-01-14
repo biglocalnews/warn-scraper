@@ -7,6 +7,9 @@ verify_ssl = true
 pytest = "*"
 pytest-vcr = "*"
 black = "*"
+Sphinx = "*"
+sphinx-autobuild = "*"
+myst-parser = "*"
 flake8 = "*"
 
 [packages]
