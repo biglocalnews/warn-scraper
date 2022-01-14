@@ -1,10 +1,5 @@
 ## Overview
-
-This project provides a library and command-line tool for scraping WARN (layoff) Notices from several state sites.
-
-- [Install](#install)
-- [Usage](#usage)
-- [Platform uploads](#platform-uploads)
+Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites
 
 ## Install
 
