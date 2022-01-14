@@ -101,9 +101,9 @@ test: ## run all tests
 	@$(PYTHON) setup.py test
 
 
-format: ## automatically format Python code with black
-	@$(PIPENV) black .
-
+coverage: ## check code coverage quickly with the default Python
+	@$(PIPENV) coverage run --source warn -m pytest
+	@$(PIPENV) coverage report -m
 
 #
 # Releases
@@ -130,6 +130,9 @@ dist: clean ## builds source and wheel package
 #
 # Extras
 #
+
+format: ## automatically format Python code with black
+	@$(PIPENV) black .
 
 help: ## Show this help. Example: make help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
