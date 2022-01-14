@@ -109,7 +109,7 @@ pipenv install
 Testing is implemented via pytest. Run the tests with the following:
 
 ```bash
-pipenv run pytest
+make test
 ```
 
 ### Dev CLI usage
