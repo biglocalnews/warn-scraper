@@ -99,6 +99,6 @@ def scrape_website(output_dir, cache_dir=None):
                     writer = csv.writer(csvfile)
                     writer.writerows(output_rows)
             pages += 1
-        except:
+        except Exception:
             break
     return output_csv

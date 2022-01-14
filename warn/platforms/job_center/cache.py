@@ -1,7 +1,5 @@
 import logging
 import re
-import urllib.parse
-from pathlib import Path
 
 from warn.cache import Cache as BaseCache
 from .urls import urls

@@ -7,8 +7,6 @@ from datetime import datetime
 
 from warn.utils import write_rows_to_csv
 
-from requests.api import get
-
 logger = logging.getLogger(__name__)
 
 

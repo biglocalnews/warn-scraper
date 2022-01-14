@@ -1,4 +1,3 @@
-import os
 import logging
 import re
 import shutil
@@ -49,15 +48,15 @@ def scrape(output_dir, cache_dir=None):
         "source_file",
     ]
     if files_have_changed:
-        logger.info(f"One or more source data files have changed")
-        logger.info(f"Extracting Excel data for current fiscal year")
+        logger.info("One or more source data files have changed")
+        logger.info("Extracting Excel data for current fiscal year")
         wb_path = cache.files(subdir="ca", glob_pattern="*.xlsx")[0]
         excel_data = extract_excel_data(wb_path)
         # Write mode when processing Excel
         write_dict_rows_to_csv(
             temp_csv, output_headers, excel_data, mode="w", extrasaction="ignore"
         )
-        logger.info(f"Extracting PDF data for prior years")
+        logger.info("Extracting PDF data for prior years")
         for pdf in cache.files(subdir="ca", glob_pattern="*.pdf"):
             logger.info(f"Extracting data from {pdf}")
             data = extract_pdf_data(pdf)
@@ -107,7 +106,6 @@ def update_files(cache):
             f"Deleting local file no longer present on source site: {obsolete_file}"
         )
         Path(cache.path, f"ca/{obsolete_file}").unlink()
-    output_data = []
     return files_have_changed
 
 

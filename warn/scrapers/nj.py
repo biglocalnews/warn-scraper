@@ -1,8 +1,6 @@
-import csv
 import itertools
 import logging
 import requests
-import time
 
 import pandas as pd
 from bs4 import BeautifulSoup

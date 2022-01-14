@@ -3,7 +3,7 @@ import pytest
 
 from warn.platforms.job_center.cache import Cache
 
-from .conftest import file_contents, write_file
+from .conftest import write_file
 
 
 @pytest.fixture

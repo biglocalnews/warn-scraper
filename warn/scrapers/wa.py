@@ -41,7 +41,7 @@ def scrape(output_dir, cache_dir=None):
                 output_row.append(column.text)
             output_row = [x.strip() for x in output_row]
             output_rows.append(output_row)
-        output_rows = output_rows[3 : len(output_rows) - 2]
+        output_rows = output_rows[3:len(output_rows) - 2]
         with open(output_csv, "a") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(output_rows)
@@ -70,12 +70,12 @@ def scrape(output_dir, cache_dir=None):
                         output_row.append(column.text)
                     output_row = [x.strip() for x in output_row]
                     output_rows.append(output_row)
-                output_rows = output_rows[3 : len(output_rows) - 2]
+                output_rows = output_rows[3:len(output_rows) - 2]
                 # first row of page
                 with open(output_csv, "a") as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerows(output_rows)
                 page += 1
-            except:
+            except Exception:
                 break
     return output_csv

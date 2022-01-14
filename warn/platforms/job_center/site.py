@@ -4,7 +4,6 @@ import requests
 import urllib.parse
 from datetime import date
 
-import pandas as pd
 from bs4 import BeautifulSoup
 
 from .cache import Cache
@@ -90,8 +89,9 @@ class Site:
 
     @property
     def _end(self):
-        month = str(date.today().month).zfill(2)
-        day = month = str(date.today().day).zfill(2)
+        today = date.today()
+        month = str(today.month).zfill(2)
+        day = str(today.day).zfill(2)
         return f"{today.year}-{month}-{day}"
 
     def _get_page(self, url, params={}, use_cache=True):

@@ -2,7 +2,6 @@ import csv
 import logging
 
 from pathlib import Path
-from warn.cache import Cache
 from warn.utils import download_file
 from warn.utils import write_dict_rows_to_csv
 
@@ -75,7 +74,6 @@ OUTPUT_HEADERS = [
 
 def scrape(output_dir, cache_dir=None):
     output_csv = f"{output_dir}/co.csv"
-    cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     # urls from 2021 to 2015
     urls = [
         "https://docs.google.com/spreadsheets/d/1HO8Fnm_4xey3Ctt6mYIig61Zx5iNq6_j_dlIaJvBS6o/edit#gid=1509741939",

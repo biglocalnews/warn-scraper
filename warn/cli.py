@@ -3,7 +3,6 @@ import logging
 import os
 import traceback
 
-from importlib import import_module
 from pathlib import Path
 
 from warn import Runner
@@ -74,7 +73,6 @@ def main(args=None):
         level=args.log_level, format="%(asctime)s - %(name)s - %(message)s"
     )
     logger = logging.getLogger(__name__)
-    states = args.states
     output_dir = args.output_dir
     cache_dir = args.cache_dir
     _create_log_dir(WARN_LOG_PATH)
@@ -89,7 +87,7 @@ def main(args=None):
         try:
             runner.scrape(state)
             succeeded.append(state)
-        except Exception as e:
+        except Exception:
             traceback_str = traceback.format_exc()
             state_logfile = Path(WARN_LOG_PATH, f"{state.lower()}_err.log")
             _log_traceback(state_logfile, traceback_str)

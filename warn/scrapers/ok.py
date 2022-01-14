@@ -1,5 +1,3 @@
-import csv
-import logging
 from warn.platforms.job_center.utils import scrape_state
 
 

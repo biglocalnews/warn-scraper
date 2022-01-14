@@ -46,7 +46,7 @@ def scrape(output_dir, cache_dir=None):
                 year_df = pd.read_excel(cache_key_year, engine="openpyxl")
             except BadZipFile:
                 year_df = pd.read_excel(cache_key_year, engine="xlrd")
-        except (FileNotFoundError, XLRDError) as e:
+        except (FileNotFoundError, XLRDError):
             logger.debug(
                 f"Failed to read file {cache_key_year} from cache. Downloading to cache from {data_url}..."
             )

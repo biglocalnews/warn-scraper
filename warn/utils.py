@@ -1,6 +1,5 @@
 import csv
 from os.path import join, expanduser
-from pathlib import Path
 
 import requests
 

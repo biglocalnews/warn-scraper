@@ -5,19 +5,19 @@ from pathlib import Path
 
 from warn.utils import download_file
 
-
 logger = logging.getLogger(__name__)
 
-# currently just scrapes a historical file rather than the NY website
+
 def scrape(output_dir, cache_dir=None):
+    # currently just scrapes a historical file rather than the NY website
     output_csv = f"{output_dir}/ny.csv"
     output_df = scrape_historical(cache_dir)
     output_csv = output_df.to_csv(output_csv, index=False)
     return output_csv
 
 
-# download the historical data from the cloud
 def scrape_historical(cache_dir):
+    # download the historical data from the cloud
     data_url = (
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/ny_historical.xlsx"
     )
