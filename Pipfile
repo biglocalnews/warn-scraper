@@ -12,6 +12,7 @@ Sphinx = "*"
 sphinx-autobuild = "*"
 myst-parser = "*"
 flake8 = "*"
+coverage = "*"
 
 [packages]
 bs4 = "*"
