@@ -15,12 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-    - id: install
-      name: Install Python, pipenv and Pipfile packages
-      uses: palewire/install-python-pipenv-pipfile@v2
-      with:
-        python-version: ${{ matrix.python }}
+      - id: install
+        name: Install Python, pipenv and Pipfile packages
+        uses: palewire/install-python-pipenv-pipfile@v2
+        with:
+          python-version: ${{ matrix.python }}
 
-      - id: run
-        name: Run
-        run: pipenv run pytest
+      - id: lint
+        name: Lint
+        run: pipenv run flake8 ./
+
+      - id: test
+        name: Test
+        run: pipenv run python setup.py test
