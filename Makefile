@@ -130,13 +130,17 @@ dist: clean ## builds source and wheel package
 	@$(PYTHON) setup.py bdist_wheel
 	@ls -l dist
 
-
 #
 # Extras
 #
 
+docs: ## start the documentation test server
+	cd docs && $(PIPENV) make livehtml;
+
+
 format: ## automatically format Python code with black
 	@$(PIPENV) black .
+
 
 help: ## Show this help. Example: make help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -148,6 +152,7 @@ help: ## Show this help. Example: make help
         clean \
         clean-test \
         clean-pyc \
+        docs \
         dist \
         format \
         release \
