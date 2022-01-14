@@ -96,6 +96,10 @@ clean-pyc: ## remove Python file artifacts
 # Tests
 #
 
+lint: ## run the linter
+	@$(PIPENV) flake8 ./
+
+
 test: ## run all tests
 	$(call banner,Running tests)
 	@$(PYTHON) setup.py test
