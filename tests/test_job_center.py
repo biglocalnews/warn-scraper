@@ -113,7 +113,7 @@ def test_cached_search_results(tmp_path):
     expected = ["2020-01-01_2020-04-15_page1.html", "2020-01-01_2020-04-15_page2.html"]
     files = [f.name for f in Path(cache_dir).glob("**/*.html")]
     assert len(files) == 2
-    assert files == expected
+    assert sorted(files) == sorted(expected)
 
 
 @pytest.mark.vcr()
