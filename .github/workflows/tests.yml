@@ -21,11 +21,10 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-<<<<<<< HEAD
       - id: run
         name: Run
         run: make test
-=======
+
       - id: lint
         name: Lint
         run: pipenv run flake8 ./
