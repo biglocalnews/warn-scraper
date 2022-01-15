@@ -8,7 +8,7 @@ from warn.cache import Cache
 
 
 def test_default_cache_dir():
-    to_patch = "warn.utils.expanduser"
+    to_patch = "warn.cache.expanduser"
     with patch(to_patch) as mock_func:
         mock_func.return_value = "/Users/you"
         cache = Cache()
