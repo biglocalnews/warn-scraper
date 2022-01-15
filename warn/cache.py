@@ -4,7 +4,8 @@ from os.path import join, expanduser
 
 
 class Cache:
-    """Basic interface to save files to and fetch from cache.
+    """
+    Basic interface to save files to and fetch from cache.
 
     By default this will be: ~/.warn-scraper/cache
 
@@ -13,7 +14,6 @@ class Cache:
     folder using the state's two-letter postal code.
 
     Usage:
-
         # Say we scraped the first of many pages for 2021 for Florida
         html = '<html><h1>Blob of HTML</h1></hmtl>'
         cache = Cache()
@@ -23,10 +23,8 @@ class Cache:
         cache.files('fl')
 
     Args:
-
         path (str): Full path to cache directory. Defaults to WARN_ETL_DIR
             or, if env var not specified, $HOME/.warn-scraper/cache
-
     """
     def __init__(self, path=None):
         """Initialize a new instance."""
@@ -108,5 +106,5 @@ class Cache:
 
     @property
     def _path_default(self):
-        """The default filesystem location of the cache."""
+        """Get the default filesystem location of the cache."""
         return join(expanduser("~"), ".warn-scraper")
