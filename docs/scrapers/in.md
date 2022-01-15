@@ -1,4 +1,4 @@
-# IN
+# Indiana
 
 ## Media Contact:
 Scott Olson

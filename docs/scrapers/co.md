@@ -1,4 +1,5 @@
-# CO
+# Colorado
+
 WARN site: https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list
 
 'WARN' email: RRTeam@state.co.us (note: could just be for receiving WARN data)

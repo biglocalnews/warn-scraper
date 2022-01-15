@@ -1,4 +1,5 @@
-# Welcome to South Carolina!
+# South Carolina
+
 ## Site: 
 https://scworks.org/employer/employer-programs/at-risk-of-closing/layoff-notification-reports
 
