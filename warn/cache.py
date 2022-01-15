@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from os.path import join, expanduser
 
 from warn.utils import default_user_home
 
@@ -107,4 +108,5 @@ class Cache:
 
     @property
     def _path_default(self):
-        return default_user_home()
+        """The default filesystem location of the cache."""
+        return join(expanduser("~"), ".warn-scraper")
