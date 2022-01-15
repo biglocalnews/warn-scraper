@@ -29,10 +29,10 @@ def scrape(output_dir, cache_dir=None):
     data = response.json()
     # find header
     headers = data["values"][0]
-    output_header = headers[3:len(headers) - 1]
+    output_header = headers[3 : len(headers) - 1]
     output_rows = []
-    for row in data["values"][1:len(data["values"])]:
-        output_row = row[3:len(row)]
+    for row in data["values"][1 : len(data["values"])]:
+        output_row = row[3 : len(row)]
         if output_row and output_row[-1].strip() == "Y":
             # remove erroneous 'Y' fields
             output_row = output_row[:-1]
