@@ -53,7 +53,7 @@ def test_cache_key_from_url(test_input, cache_dir):
     ],
 )
 def test_cache_save(test_input, cache_dir):
-    """"Test saving data to the cache."""
+    """Test saving data to the cache."""
     url, params, expected_name = test_input
     cache = Cache(cache_dir)
     cache.save(url, params, "<html><h1>Hello world</h1><html>")
