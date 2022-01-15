@@ -149,6 +149,7 @@ help: ## Show this help. Example: make help
         clean \
         clean-test \
         clean-pyc \
+        coverage \
         docs \
         dist \
         format \
