@@ -13,6 +13,7 @@ sphinx-autobuild = "*"
 myst-parser = "*"
 flake8 = "*"
 coverage = "*"
+flake8-docstrings = "*"
 
 [packages]
 bs4 = "*"
