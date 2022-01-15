@@ -8,19 +8,22 @@ from warn.platforms import JobCenterSite
 
 @pytest.fixture
 def ks_site(cache_dir):
+    """Create a fixture from the Kansas site."""
     url = "https://www.kansasworks.com/search/warn_lookups"
     return JobCenterSite("KS", url, cache_dir)
 
 
 @pytest.fixture
 def ok_site(cache_dir):
+    """Create a fixture from the Oklahoma site."""
     url = "https://okjobmatch.com/search/warn_lookups"
     return JobCenterSite("OK", url, cache_dir)
 
 
 @pytest.mark.vcr()
 def test_scrape_integration(ok_site):
-    "should scrape by start and end dates"
+    """"Test a scraper."""
+    # should scrape by start and end dates
     results_pages, data = ok_site.scrape(
         start_date="2021-01-01",
         end_date="2021-02-03",
@@ -50,7 +53,7 @@ def test_scrape_integration(ok_site):
 
 @pytest.mark.vcr()
 def test_no_results(ks_site):
-    "should handle searches with no results"
+    """Test an instance where there are no results."""
     # The dates below should span two pages (just barely).
     # Skip detail pages to minimize fixture size.
     results_pages, data = ks_site.scrape(
@@ -64,7 +67,7 @@ def test_no_results(ks_site):
 
 @pytest.mark.vcr()
 def test_missing_detail_page_values(ks_site):
-    "should handle detail pages missing one or more field values"
+    """Test a case where detail pages are missing one or more field values"""
     results_pages, data = ks_site.scrape(
         start_date="2020-07-31",
         end_date="2020-07-31",
@@ -82,7 +85,7 @@ def test_missing_detail_page_values(ks_site):
 
 @pytest.mark.vcr()
 def test_paged_results(ok_site):
-    "should scrape all pages of results"
+    """Test a case with paginated results"""
     # The dates below should span two pages (just barely).
     # Skip detail pages to minimize fixture size.
     results_pages, data = ok_site.scrape(
@@ -99,7 +102,7 @@ def test_paged_results(ok_site):
 
 @pytest.mark.vcr()
 def test_cached_search_results(tmp_path):
-    "should save to cache when configured"
+    """Test a case when the cache should be used for search results."""
     url = "https://okjobmatch.com/search/warn_lookups"
     cache_dir = str(tmp_path.joinpath("ok"))
     site = JobCenterSite("OK", url, cache_dir=cache_dir)
@@ -118,7 +121,7 @@ def test_cached_search_results(tmp_path):
 
 @pytest.mark.vcr()
 def test_cached_detail_pages(tmp_path):
-    "should save to cache when configured"
+    """Test a case when the cache should be used for detail pages."""
     url = "https://okjobmatch.com/search/warn_lookups"
     cache_dir = str(tmp_path.joinpath("ok"))
     site = JobCenterSite("OK", url, cache_dir=cache_dir)
