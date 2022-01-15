@@ -14,6 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Texas.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{output_dir}/tx.csv"
     url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
     page = requests.get(url)

@@ -11,6 +11,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Alabama.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{output_dir}/al.csv"
     url = "https://www.madeinalabama.com/warn-list/"
     logger.debug(f"Scraping {url}")
@@ -41,6 +52,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 def extract_fields_from_row(row, element):
+    """Pluck data from the provided row and element."""
     row_data = []
     fields = row.find_all(element)
     for raw_field in fields:

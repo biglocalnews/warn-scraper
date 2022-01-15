@@ -11,6 +11,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Washington D.C.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{output_dir}/dc.csv"
     url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{datetime.today().year}"
     url_14 = "https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"

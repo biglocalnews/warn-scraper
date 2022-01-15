@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Configure the package for distribution."""
 import os
 from setuptools import setup, find_packages
 
 
 def read(file_name):
+    """Read the provided file."""
     this_dir = os.path.dirname(__file__)
     file_path = os.path.join(this_dir, file_name)
     with open(file_path) as f:

@@ -26,8 +26,18 @@ FIELDS = [
 CSV_HEADERS = FIELDS[:-1]  # Clip the Attachment header
 
 
-# scrape all links from WARN page http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Florida.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = "{}/fl.csv".format(output_dir)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     # FL site requires realistic User-Agent.
