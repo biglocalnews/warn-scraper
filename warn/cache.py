@@ -28,12 +28,13 @@ class Cache:
             or, if env var not specified, $HOME/.warn-scraper/cache
 
     """
-
     def __init__(self, path=None):
+        """Initialize a new instance."""
         self.root_dir = self._path_from_env or self._path_default
         self.path = path or str(Path(self.root_dir, "cache"))
 
     def exists(self, name):
+        """Test whether the provided file path exists."""
         return Path(self.path, name).exists()
 
     def read(self, name):
@@ -102,6 +103,7 @@ class Cache:
 
     @property
     def _path_from_env(self):
+        """Get the path where files will be saved"""
         return os.environ.get("WARN_ETL_DIR")
 
     @property
