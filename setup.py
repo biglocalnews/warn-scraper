@@ -62,6 +62,7 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=test_requirements,
     project_urls={
+        "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",
         "Source": "https://github.com/biglocalnews/WARN",
         "Tracker": "https://github.com/biglocalnews/WARN/issues",
