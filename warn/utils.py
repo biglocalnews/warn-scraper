@@ -35,11 +35,7 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
     """
     with open(output_path, mode, newline="") as f:
         # Create the writer object
-        writer = csv.DictWriter(
-            f,
-            fieldnames=headers,
-            extrasaction=extrasaction
-        )
+        writer = csv.DictWriter(f, fieldnames=headers, extrasaction=extrasaction)
         # If we are writing a new row ...
         if mode == "w":
             # ... drop in the headers
