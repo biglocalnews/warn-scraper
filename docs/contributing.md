@@ -1,3 +1,5 @@
+# Contributing
+
 If you're contributing code to this project, the general workflow is to:
 
 * Create a GitHub issue related to your feature or bugfix

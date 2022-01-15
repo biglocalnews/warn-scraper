@@ -1,17 +1,14 @@
-Welcome to documentation!
-=====================================
-    
+############
+warn-scraper
+############
+
+Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites
+
 .. toctree::
    :glob:
-   :maxdepth: 4
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: Table of Contents:
 
-   states/*
-
-   
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   getting-started
+   contributing
+   states
