@@ -15,5 +15,5 @@ Command-line interface for downloading WARN Act notices of qualified plant closi
 
 ## Links
 
-* Documentation: `warn-scraper.readthedocs.io`<https://warn-scraper.readthedocs.io/>_
-* Repository: `github.com/biglocalnews/warn-scraper`<https://github.com/biglocalnews/warn-scraper>_
+* Documentation: `warn-scraper.readthedocs.io <https://warn-scraper.readthedocs.io/>`_
+* Repository: `github.com/biglocalnews/warn-scraper <https://github.com/biglocalnews/warn-scraper>`_
