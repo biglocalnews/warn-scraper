@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def scrape_state(
     state_postal, search_url, output_csv, stop_year, cache_dir, use_cache=True
 ):
-    """Date-based scraper for Job Center states
+    """Date-based scraper for Job Center states.
 
     This is the primary interface that should be used by downstream scrapers.
     It applies a date-based scraping strategy that:

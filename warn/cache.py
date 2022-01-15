@@ -75,10 +75,10 @@ class Cache:
         return str(out)
 
     def files(self, subdir=".", glob_pattern="*"):
-        """Retrieve all files and folders in a subdir relative to cache dir
+        """
+        Retrieve all files and folders in a subdir relative to cache dir
 
         Usage:
-
             Given a cache dir such as $HOME/.warn-scraper/cache,
             you can:
 
@@ -94,7 +94,6 @@ class Cache:
         Args:
             subdir (str): Subdir inside cache to glob
             glob_pattern (str): Glob pattern. Defaults to all files in specified subdir ('*')
-
         """
         _dir = Path(self.path).joinpath(subdir)
         return [str(p) for p in _dir.glob(glob_pattern)]

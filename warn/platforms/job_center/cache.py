@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Cache(BaseCache):
     """A custom cache for Job Center sites."""
+
     def save(self, url, params, html):
         """Save file to the cache."""
         cache_key = self.key_from_url(url, params)
