@@ -99,7 +99,7 @@ lint: ## run the linter
 
 test: ## run all tests
 	$(call banner,       🤖 Running tests 🤖)
-	@$(PYTHON) setup.py test
+	@$(PYTHON) setup.py -q test
 
 
 coverage: ## check code coverage quickly with the default Python
