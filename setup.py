@@ -27,8 +27,6 @@ requirements = [
 test_requirements = [
     "pytest",
     "pytest-vcr",
-    "Sphinx",
-    "myst-parser",
 ]
 
 setup(
