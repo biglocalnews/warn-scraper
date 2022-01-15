@@ -2,6 +2,8 @@ import urllib.parse
 
 
 class urls:
+    """Create a URL object."""
+
     @classmethod
     def parse_url_query(cls, url):
         """Parse the querystring from a URL."""

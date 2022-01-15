@@ -26,6 +26,7 @@ class Cache:
         path (str): Full path to cache directory. Defaults to WARN_ETL_DIR
             or, if env var not specified, $HOME/.warn-scraper/cache
     """
+
     def __init__(self, path=None):
         """Initialize a new instance."""
         self.root_dir = self._path_from_env or self._path_default
@@ -76,7 +77,7 @@ class Cache:
 
     def files(self, subdir=".", glob_pattern="*"):
         """
-        Retrieve all files and folders in a subdir relative to cache dir
+        Retrieve all files and folders in a subdir relative to cache dir.
 
         Usage:
             Given a cache dir such as $HOME/.warn-scraper/cache,
@@ -100,7 +101,7 @@ class Cache:
 
     @property
     def _path_from_env(self):
-        """Get the path where files will be saved"""
+        """Get the path where files will be saved."""
         return os.environ.get("WARN_ETL_DIR")
 
     @property

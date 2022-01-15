@@ -23,6 +23,7 @@ logging.getLogger("pdfminer").setLevel(logging.WARNING)
 
 
 def main(args=None):
+    """Run the command-line interface."""
     log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -108,10 +109,12 @@ def main(args=None):
 
 
 def _create_log_dir(log_dir):
+    """Create the log directory."""
     return Path(log_dir).mkdir(parents=True, exist_ok=True)
 
 
 def _log_final_msg(state_list, action, logger):
+    """Log the final message."""
     msg_base = "{} scraper(s) {}: {}"
     cnt = len(state_list)
     states = ", ".join(state_list)
@@ -120,6 +123,7 @@ def _log_final_msg(state_list, action, logger):
 
 
 def _log_final_status(succeeded, failed, logger):
+    """Log the final status."""
     if succeeded:
         _log_final_msg(succeeded, "ran successfully", logger)
     if failed:
@@ -127,7 +131,7 @@ def _log_final_status(succeeded, failed, logger):
 
 
 def _log_traceback(logfile, traceback):
-    "Write tracebacks to separate state-specific error logs"
+    """Write tracebacks to separate state-specific error logs."""
     with open(logfile, "w") as out:
         out.write(traceback)
 

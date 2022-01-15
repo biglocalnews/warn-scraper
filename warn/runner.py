@@ -30,15 +30,18 @@ class Runner:
     """
 
     def __init__(self, working_dir, output_dir):
+        """Initialize a new instance."""
         self.working_dir = working_dir
         self.output_dir = output_dir
 
     def setup(self):
+        """Create the necessary directories."""
         logger.info("Creating necessary dirs")
         for d in [self.working_dir, self.output_dir]:
             Path(d).mkdir(parents=True, exist_ok=True)
 
     def scrape(self, state):
+        """Run the scraper for the provided state."""
         state_mod = import_module("warn.scrapers.{}".format(state.strip().lower()))
         logger.info(f"Scraping {state}")
         output_csv = state_mod.scrape(self.output_dir, self.working_dir)
@@ -46,15 +49,18 @@ class Runner:
         return output_csv
 
     def upload(self, project_id, api_token=None, files=None):
+        """Upload files to the provided project on Big Local News."""
         logger.info(f"Uploading files in {self.output_dir}")
         project = Project.get(project_id, api_token=api_token)
         project.upload_files(files or self._output_dir_files)
 
     def delete(self):
+        """Delete the files in the output directory."""
         logger.info(f"Deleting files in {self.output_dir}")
         for f in self._output_dir_files:
             Path(f).unlink()
 
     @property
     def _output_dir_files(self):
+        """Get a list of output files."""
         return [str(f) for f in Path(self.output_dir).glob("*")]

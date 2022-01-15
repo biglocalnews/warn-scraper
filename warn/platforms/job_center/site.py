@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class NoSearchResultsError(Exception):
+    """Thrown when there are no results."""
+
     pass
 
 
@@ -30,6 +32,7 @@ class Site:
         url (str): Search URL for the site (should end in '/warn_lookups')
         cache_dir (str): Cache directory
     """
+
     def __init__(self, state, url, cache_dir):
         """Initialize a new instance."""
         self.state = state.upper()
@@ -37,7 +40,8 @@ class Site:
         self.cache = Cache(cache_dir)
 
     def scrape(self, start_date=None, end_date=None, detail_pages=True, use_cache=True):
-        """Scrape between a start and end date.
+        """
+        Scrape between a start and end date.
 
         Defaults to scraping data for current year.
 
@@ -48,10 +52,8 @@ class Site:
             use_cache (boolean, default True): Check cache before scraping.
 
         Returns:
-
             An array containing a dictionary of html search result pages
             and a list of parsed data dictionaries
-
             ( {1: <HTML str>}, [{data}, {more data}] )
         """
         # Final payload here
@@ -97,10 +99,10 @@ class Site:
         return f"{today.year}-{month}-{day}"
 
     def _get_page(self, url, params={}, use_cache=True):
-        """Fetch page from cache or scrape anew
+        """
+        Fetch page from cache or scrape anew.
 
-        Defaults to using cached page if it exists.
-        Always caches freshly scraped page.
+        Defaults to using cached page if it exists. Always caches freshly scraped page.
         """
         cache_key = self.cache.key_from_url(url, params)
         if use_cache and self.cache.exists(cache_key):

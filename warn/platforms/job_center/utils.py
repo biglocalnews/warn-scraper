@@ -24,7 +24,6 @@ def scrape_state(
       - Deduplicates search results
 
     Args:
-
         state_postal (str): Two-letter all-caps state postal (e.g. KS)
         search_url (str): Base search url (e.g. https://www.kansasworks.com/search/warn_lookups)
         output_csv (str): Full path to CSV where data should be saved (e.g. ~/.warn-scraper/exports/ks.csv)
@@ -33,9 +32,7 @@ def scrape_state(
         use_cache (boolean, default True): Whether to use cached files for older years
 
     Returns:
-
         Full path to exported csv (e.g. ~/.warn-scraper/exports/ks.csv)
-
     """
     raw_csv = f"{cache_dir}/{state_postal.lower()}_raw.csv"
     yearly_dates = _date_ranges_to_scrape(stop_year)
