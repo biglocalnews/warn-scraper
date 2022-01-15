@@ -8,6 +8,7 @@ from warn.cache import Cache
 
 
 def test_default_cache_dir():
+    """Override the output of the expanduser method."""
     to_patch = "warn.cache.expanduser"
     with patch(to_patch) as mock_func:
         mock_func.return_value = "/Users/you"
@@ -16,6 +17,7 @@ def test_default_cache_dir():
 
 
 def test_custom_cache_path(tmpdir):
+    """Test if the provided path matches the cache's path."""
     from warn.cache import Cache
 
     cache = Cache(tmpdir)
@@ -23,6 +25,7 @@ def test_custom_cache_path(tmpdir):
 
 
 def test_write(tmpdir):
+    """Test writing to the cache."""
     from warn.cache import Cache
 
     cache = Cache(tmpdir)
@@ -38,6 +41,7 @@ def test_write(tmpdir):
 
 @pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_files(cache_dir):
+    """Test the file fetching function of the cache."""
     from warn.cache import Cache
 
     cache = Cache(path=cache_dir)
@@ -50,6 +54,7 @@ def test_files(cache_dir):
 
 @pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_exists(cache_dir):
+    """Test the exists method of the cache."""
     from warn.cache import Cache
 
     cache = Cache(path=cache_dir)
@@ -58,6 +63,7 @@ def test_exists(cache_dir):
 
 @pytest.mark.usefixtures("create_cache_dir", "copy_html_to_cache")
 def test_read(cache_dir):
+    """Test reading from the cache."""
     from warn.cache import Cache
 
     cache = Cache(path=cache_dir)
