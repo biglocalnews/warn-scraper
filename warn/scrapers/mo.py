@@ -54,14 +54,14 @@ def scrape(output_dir, cache_dir=None):
 
     # save body of 2021-2015
     for year in years:
-        write_body(year, output_csv)
-        write_body(year, raw_csv)
+        _write_body(year, output_csv)
+        _write_body(year, raw_csv)
 
-    dedupe(output_csv)
+    _dedupe(output_csv)
     return output_csv
 
 
-def write_body(year, output_csv):
+def _write_body(year, output_csv):
     # 2020 has a different link structure
     url = (
         f"https://jobs.mo.gov/warn{year}"
@@ -92,7 +92,7 @@ def write_body(year, output_csv):
         write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
-def dedupe(output_csv):
+def _dedupe(output_csv):
     df = pd.read_csv(output_csv, keep_default_na=False)
     df.drop_duplicates(inplace=True, keep="first")
     df.to_csv(output_csv, index=False)

@@ -25,7 +25,7 @@ def scrape(output_dir, cache_dir=None):
     """
     output_csv = f"{output_dir}/md.csv"
     url = "http://www.dllr.state.md.us/employment/warn.shtml"
-    html = scrape_page(url)
+    html = _scrape_page(url)
 
     # find header
     soup = BeautifulSoup(html, "html.parser")
@@ -47,16 +47,16 @@ def scrape(output_dir, cache_dir=None):
 
     url = li_list[0]["href"]
     url = f"http://www.dllr.state.md.us/employment/{url}"
-    html = scrape_page(url)
-    write_body(html, output_csv)
+    html = _scrape_page(url)
+    _write_body(html, output_csv)
 
     # cache the old pages
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
-    scrape_old(li_list[1:], cache, output_csv)
+    _scrape_old(li_list[1:], cache, output_csv)
     return output_csv
 
 
-def write_body(html, output_csv):
+def _write_body(html, output_csv):
     soup = BeautifulSoup(html, "html.parser")
     table = soup.find_all("table")  # output is list-type
     output_rows = []
@@ -75,14 +75,14 @@ def write_body(html, output_csv):
     write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
-def scrape_page(url):
+def _scrape_page(url):
     response = requests.get(url)
     logger.debug(f"Page status is {response.status_code} for {url}")
     response.encoding = "utf-8"
     return response.text
 
 
-def scrape_old(url_list, cache, output_csv):
+def _scrape_old(url_list, cache, output_csv):
     for a in url_list:
         url = a["href"]
         # Add the state postal as cache key prefix
@@ -93,7 +93,7 @@ def scrape_old(url_list, cache, output_csv):
         except FileNotFoundError:
             # If file not found in cache, scrape the page and save to cache
             url = f"http://www.dllr.state.md.us/employment/{url}"
-            html = scrape_page(url)
+            html = _scrape_page(url)
             cache.write(cache_key, html)
             logger.debug(f"Scraped and cached {url}")
-        write_body(html, output_csv)
+        _write_body(html, output_csv)

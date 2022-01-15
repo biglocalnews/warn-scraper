@@ -52,7 +52,7 @@ def scrape(output_dir, cache_dir=None):
             # if a row has more than 9 cells it is handled separately
             # the 2016 table has some cells with nested tags
             if len(table_cells) > 9:
-                output_row = problem_cells(table_cells)
+                output_row = _problem_cells(table_cells)
                 output_rows.append(output_row)
             # if a row has less than 9 it is skipped because it is incomplete
             elif len(table_cells) < 9:
@@ -81,7 +81,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 # function to deal with problem rows in the 2016 table
-def problem_cells(table_cells):
+def _problem_cells(table_cells):
     output_row = []
     for table_cell in table_cells:
         current_cell = table_cell.text.strip()

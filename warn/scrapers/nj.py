@@ -26,33 +26,33 @@ def scrape(output_dir, cache_dir=None):
     output_csv = f"{output_dir}/nj.csv"
     url = "http://lwd.state.nj.us/WorkForceDirectory/warn.jsp"
     logger.debug(f"Scraping {url}")
-    html = scrape_page(url)
+    html = _scrape_page(url)
     soup = BeautifulSoup(html, "html.parser")
     tables = soup.find_all("table")  # output is list-type
     # The header and each line of company data lives in its own table.
     # Old school.
     header_table = tables.pop(0)
-    headers = extract_fields_from_table(header_table)
+    headers = _extract_fields_from_table(header_table)
     output_rows = [headers]
     # Process company "rows"
     for table in tables:
-        layoff_data_row = extract_fields_from_table(table)
+        layoff_data_row = _extract_fields_from_table(table)
         output_rows.append(layoff_data_row)
     # Perform initial write of data
     write_rows_to_csv(output_rows, output_csv)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
-    scrape_2010_to_2004(cache, output_csv)
-    dedupe(output_csv)
+    _scrape_2010_to_2004(cache, output_csv)
+    _dedupe(output_csv)
     return output_csv
 
 
-def scrape_page(url):
+def _scrape_page(url):
     response = requests.get(url)
     response.encoding = "utf-8"
     return response.text
 
 
-def extract_fields_from_table(table):
+def _extract_fields_from_table(table):
     row = table.find_all("tr")[0]
     data = []
     for field in row.find_all("td"):
@@ -60,7 +60,7 @@ def extract_fields_from_table(table):
     return data
 
 
-def scrape_2010_to_2004(cache, output_csv):
+def _scrape_2010_to_2004(cache, output_csv):
     years = [2010, 2009, 2008, 2007, 2006, 2005, 2004]
     months = [
         "Jan",
@@ -87,7 +87,7 @@ def scrape_2010_to_2004(cache, output_csv):
         except FileNotFoundError:
             # If file not found in cache, scrape the page and save to cache
             url = f"https://www.nj.gov/labor/lwdhome/warn/{year}/{html_page_name}"
-            html = scrape_page(url)
+            html = _scrape_page(url)
             cache.write(cache_key, html)
             logger.debug(f"Scraped and cached {url}")
         soup = BeautifulSoup(html, "html.parser")
@@ -102,7 +102,7 @@ def scrape_2010_to_2004(cache, output_csv):
             write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
-def dedupe(output_csv):
+def _dedupe(output_csv):
     df = pd.read_csv(output_csv, keep_default_na=False)
     df.drop_duplicates(inplace=True, keep="first")
     df.to_csv(output_csv, index=False)

@@ -43,7 +43,7 @@ def scrape(output_dir, cache_dir=None):
     # Create Cache instance for downstream operations
     cache = Cache(cache_dir)
     # Update pdfs and Excel files
-    files_have_changed = update_files(cache)
+    files_have_changed = _update_files(cache)
     output_headers = [
         "notice_date",
         "effective_date",
@@ -60,7 +60,7 @@ def scrape(output_dir, cache_dir=None):
         logger.info("One or more source data files have changed")
         logger.info("Extracting Excel data for current fiscal year")
         wb_path = cache.files(subdir="ca", glob_pattern="*.xlsx")[0]
-        excel_data = extract_excel_data(wb_path)
+        excel_data = _extract_excel_data(wb_path)
         # Write mode when processing Excel
         write_dict_rows_to_csv(
             temp_csv, output_headers, excel_data, mode="w", extrasaction="ignore"
@@ -68,7 +68,7 @@ def scrape(output_dir, cache_dir=None):
         logger.info("Extracting PDF data for prior years")
         for pdf in cache.files(subdir="ca", glob_pattern="*.pdf"):
             logger.info(f"Extracting data from {pdf}")
-            data = extract_pdf_data(pdf)
+            data = _extract_pdf_data(pdf)
             # Append mode when processing PDFs
             write_dict_rows_to_csv(
                 temp_csv, output_headers, data, mode="a", extrasaction="ignore"
@@ -78,7 +78,7 @@ def scrape(output_dir, cache_dir=None):
     return output_csv
 
 
-def update_files(cache):
+def _update_files(cache):
     files_have_changed = False
     # Create lookup of pre-existing PDF files and their size
     files = {}
@@ -88,7 +88,7 @@ def update_files(cache):
         if extension in ["pdf", "xlsx"]:
             files[fname] = Path(local_file).stat().st_size
     # Download file if it has changed or not present.
-    links = get_file_links()
+    links = _get_file_links()
     for link in links:
         file_name = link["url"].split("/")[-1]
         target_path = Path(cache.path, f"ca/{file_name}")
@@ -109,7 +109,7 @@ def update_files(cache):
     # Delete local files whose names don't match
     # data files on remote site, in order to guard against
     # duplicates if the source agency renames files
-    for obsolete_file in obsolete_local_files(files, links):
+    for obsolete_file in _obsolete_local_files(files, links):
         files_have_changed = True
         logger.info(
             f"Deleting local file no longer present on source site: {obsolete_file}"
@@ -118,8 +118,8 @@ def update_files(cache):
     return files_have_changed
 
 
-def get_file_links():
-    """Get links to historical PDFs and the Excel file"""
+def _get_file_links():
+    """Get links to historical PDFs and the Excel file."""
     logger.info("Getting metadata for data files")
     base_url = "https://edd.ca.gov/Jobs_and_Training"
     home_page = f"{base_url}/Layoff_Services_WARN.htm"
@@ -128,22 +128,22 @@ def get_file_links():
     links = []
     for link in soup.find_all("a"):
         relative_file_url = link.attrs.get("href", "")
-        if is_warn_report_link(relative_file_url):
+        if _is_warn_report_link(relative_file_url):
             file_url = f"{base_url}/{relative_file_url}"
-            meta = get_file_metadata(file_url)
+            meta = _get_file_metadata(file_url)
             links.append(meta)
     return links
 
 
-def is_warn_report_link(url):
+def _is_warn_report_link(url):
     return True if re.search(r"warn[-_]?report", url, re.I) else False
 
 
-def get_file_metadata(url):
+def _get_file_metadata(url):
     return {"url": url, "size": int(requests.head(url).headers["Content-Length"])}
 
 
-def extract_excel_data(wb_path):
+def _extract_excel_data(wb_path):
     wb = load_workbook(filename=wb_path)
     # Get the only worksheet
     ws = wb.worksheets[0]
@@ -164,9 +164,9 @@ def extract_excel_data(wb_path):
         # positions below are not sequential
         data = {
             "county": row[0].value.strip(),
-            "notice_date": convert_date(row[1].value),
-            "received_date": convert_date(row[2].value),
-            "effective_date": convert_date(row[4].value),
+            "notice_date": _convert_date(row[1].value),
+            "received_date": _convert_date(row[2].value),
+            "effective_date": _convert_date(row[4].value),
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
             "num_employees": row[10].value,
@@ -177,11 +177,11 @@ def extract_excel_data(wb_path):
     return payload
 
 
-def convert_date(dt):
+def _convert_date(dt):
     return dt.strftime("%m/%d/%Y")
 
 
-def extract_pdf_data(pdf_path):
+def _extract_pdf_data(pdf_path):
     headers = [
         "notice_date",
         "effective_date",
@@ -228,7 +228,7 @@ def extract_pdf_data(pdf_path):
     return data
 
 
-def obsolete_local_files(pdfs, links):
+def _obsolete_local_files(pdfs, links):
     pdfs_uniq = set(pdfs.keys())
     remote_files = {link["url"].split("/")[-1] for link in links}
     return pdfs_uniq - remote_files

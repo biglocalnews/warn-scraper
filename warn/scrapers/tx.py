@@ -67,7 +67,7 @@ def scrape(output_dir, cache_dir=None):
             except BadZipFile:
                 year_df = pd.read_excel(file_path, engine="xlrd")
         output_df = output_df.append(year_df)
-    historical_df = scrape_historical(cache_dir)
+    historical_df = _scrape_historical(cache_dir)
     # flip the order of the rows to match the yearly docs
     historical_df = historical_df.iloc[::-1]
     output_df = output_df.append(historical_df)
@@ -79,7 +79,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 # download the historical data from the cloud
-def scrape_historical(cache_dir):
+def _scrape_historical(cache_dir):
     data_url = (
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/tx_historical.xlsx"
     )

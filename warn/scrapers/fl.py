@@ -57,10 +57,10 @@ def scrape(output_dir, cache_dir=None):
     for year_url in links:
         year_url = year_url.get("href")  # get URL from link
         if "PDF" in year_url:
-            rows_to_add = scrape_pdf(cache, cache_dir, year_url, headers)
+            rows_to_add = _scrape_pdf(cache, cache_dir, year_url, headers)
         else:
-            html_pages = scrape_html(cache, year_url, headers)
-            rows_to_add = html_to_rows(html_pages)
+            html_pages = _scrape_html(cache, year_url, headers)
+            rows_to_add = _html_to_rows(html_pages)
         # Convert rows to dicts
         rows_as_dicts = [dict(zip(FIELDS, row)) for row in rows_to_add]
         output_rows.extend(rows_as_dicts)
@@ -75,7 +75,7 @@ def scrape(output_dir, cache_dir=None):
     wait=tenacity.wait_exponential(),
     retry=tenacity.retry_if_exception_type(requests.HTTPError),
 )
-def scrape_html(cache, url, headers, page=1):
+def _scrape_html(cache, url, headers, page=1):
     urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
     year = re.search(r"year=([0-9]{4})", url, re.I).group(1)
@@ -117,7 +117,7 @@ def scrape_html(cache, url, headers, page=1):
                 "href"
             )  # /WarnList/Records?year=XXXX&page=X
             # recursively make list of all the next pages' html
-            pages_html = scrape_html(cache, url, headers, next_page)
+            pages_html = _scrape_html(cache, url, headers, next_page)
             # add the current page to the recursive list
             pages_html.append(page_text)
             return pages_html
@@ -125,8 +125,8 @@ def scrape_html(cache, url, headers, page=1):
     return [page_text]
 
 
-def html_to_rows(page_text):
-    """Extracts data rows from list of html pages"""
+def _html_to_rows(page_text):
+    """Extract data rows from list of html pages."""
     output_rows = []
     for page in page_text:
         soup = BeautifulSoup(page, "html5lib")
@@ -147,7 +147,7 @@ def html_to_rows(page_text):
     wait=tenacity.wait_exponential(),
     retry=tenacity.retry_if_exception_type(requests.HTTPError),
 )
-def scrape_pdf(cache, cache_dir, url, headers):
+def _scrape_pdf(cache, cache_dir, url, headers):
     # sidestep SSL error
     urllib3.disable_warnings()
     # extract year from URL
@@ -173,19 +173,19 @@ def scrape_pdf(cache, cache_dir, url, headers):
             # remove each year's header
             if page_num == 0:
                 table.pop(0)
-            table = clean_table(table, output_rows)
+            table = _clean_table(table, output_rows)
             output_rows.extend(table)  # merging lists
     logger.debug(f"Successfully scraped PDF from {url}")
     return output_rows
 
 
 # adds split rows to output_rows by reference, returns list of page's rows to be added
-def clean_table(table, all_rows=[]):
+def _clean_table(table, all_rows=[]):
     table_rows = []
     for row_idx, row in enumerate(table):
         current_row = []
         # fix row splitting b/n pages sometimes
-        if is_multiline_row(row_idx, row):
+        if _is_multiline_row(row_idx, row):
             if (
                 len(row) > 5
             ):  # fix where both row is split AND columns skewed right (like page 14 of 2016.pdf)
@@ -198,7 +198,7 @@ def clean_table(table, all_rows=[]):
             continue
         for field_idx, field in enumerate(row):
             # ignore any redundant header rows
-            if is_header_row(field_idx, field):
+            if _is_header_row(field_idx, field):
                 break
             # fix column skew by skipping blank columns
             if field:
@@ -210,13 +210,13 @@ def clean_table(table, all_rows=[]):
     return table_rows
 
 
-def is_multiline_row(row_idx, row):
+def _is_multiline_row(row_idx, row):
     # this is a row that has been split between pages
     # we want to remedy this split in the output data
     return row_idx == 0 and row[1] == "" and row[3] == ""
 
 
-def is_header_row(field_idx, field):
+def _is_header_row(field_idx, field):
     # we already have a header management strategy
     # but there are still erroneous redundant headers strewn about
     # and we need to remove them from the data

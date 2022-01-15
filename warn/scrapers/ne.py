@@ -79,12 +79,12 @@ def scrape(output_dir, cache_dir=None):
             with open(output_csv, "a") as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
-    nebraska_two(cache_dir)
-    final_csv = combine(output_dir, cache_dir)
+    _nebraska_two(cache_dir)
+    final_csv = _combine(output_dir, cache_dir)
     return final_csv
 
 
-def nebraska_two(cache_dir):
+def _nebraska_two(cache_dir):
     output_csv = f"{cache_dir}/ne_raw2.csv"
     years = range(2019, 2009, -1)
     url = (
@@ -149,7 +149,7 @@ def nebraska_two(cache_dir):
     return output_csv
 
 
-def combine(output_dir, cache_dir):
+def _combine(output_dir, cache_dir):
     ne_one_path = f"{cache_dir}/ne_raw1.csv"
     ne_two_path = f"{cache_dir}/ne_raw2.csv"
     ne_one = pd.read_csv(ne_one_path)
