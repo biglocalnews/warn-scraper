@@ -47,13 +47,11 @@ define banner
     @echo "  $(BLUE)__________$(RESET_COLOR)"
     @echo "$(BLUE) |$(RED)BIG  LOCAL$(RESET_COLOR)$(BLUE)|$(RESET_COLOR)"
     @echo "$(BLUE) |&&& ======|$(RESET_COLOR)"
-    @echo "$(BLUE) |=== ======|$(RESET_COLOR)"
+    @echo "$(BLUE) |=== ======|$(RESET_COLOR)  $(DWHITE)This is a $(RESET_COLOR)$(BG_RED)$(WHITE)Big Local News$(RESET_COLOR)$(DWHITE) automation$(RESET_COLOR)"
     @echo "$(BLUE) |=== == %%%|$(RESET_COLOR)"
-    @echo "$(BLUE) |[_] ======|$(RESET_COLOR)"
+    @echo "$(BLUE) |[_] ======|$(RESET_COLOR)  $(1)"
     @echo "$(BLUE) |=== ===!##|$(RESET_COLOR)"
     @echo "$(BLUE) |__________|$(RESET_COLOR)"
-    @echo ""
-    @echo " $(RED)$(1)$(RESET_COLOR)"
     @echo ""
     @echo ""
 endef
@@ -101,7 +99,7 @@ lint: ## run the linter
 
 
 test: ## run all tests
-	$(call banner,Running tests)
+	$(call banner,        🤖 Running tests 🤖)
 	@$(PYTHON) setup.py test
 
 
