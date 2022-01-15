@@ -9,6 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Ohio.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{output_dir}/oh.csv"
     url = "https://jfs.ohio.gov/warn/current.stm"
     page = requests.get(url, verify=False)

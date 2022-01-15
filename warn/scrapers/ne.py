@@ -10,6 +10,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Nebraska.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{cache_dir}/ne_raw1.csv"
     years = range(2019, 2009, -1)
     url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020"

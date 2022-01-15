@@ -12,6 +12,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Oregon.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     # commenting out the old strategy because the historical document
     # has (different!) higher-quality data
     # output_csv = scrape_website(output_dir, cache_dir)

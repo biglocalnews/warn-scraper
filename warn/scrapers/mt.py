@@ -4,6 +4,17 @@ from bs4 import BeautifulSoup
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Montana.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     url = "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
     response = requests.get(url)
     data_file_name = extract_file_name(response.text)

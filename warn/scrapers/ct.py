@@ -9,6 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
+    """
+    Scrape data from Connecticut.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
+    """
     output_csv = f"{output_dir}/ct.csv"
     years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
     header_row = [

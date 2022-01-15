@@ -17,11 +17,20 @@ logger = logging.getLogger(__name__)
 
 
 def scrape(output_dir, cache_dir=None):
-    """Compiles a single CSV for CA using historical
-    PDFs and an Excel file for the current fiscal year.
+    """
+    Scrape data from California.
 
-    Only regenerates the CSV if a PDF or the Excel
-    file have changed.
+    Compiles a single CSV for CA using historical PDFs and an Excel file for the current fiscal year.
+
+    Only regenerates the CSV if a PDF or the Excel file have changed.
+
+    Arguments:
+    output_dir -- the Path were the result will be saved
+
+    Keyword arguments:
+    cache_dir -- the Path where results can be cached (default None)
+
+    Returns: the Path where the file is written
     """
     output_csv = "{}/ca.csv".format(output_dir)
     # Set up cache dir for state
