@@ -2,8 +2,6 @@ import os
 from pathlib import Path
 from os.path import join, expanduser
 
-from warn.utils import default_user_home
-
 
 class Cache:
     """Basic interface to save files to and fetch from cache.

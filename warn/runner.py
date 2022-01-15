@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class Runner:
-    """High-level interface for scraping state data
+    """High-level interface for scraping state data.
 
     Provides methods for:
      - directory setup
