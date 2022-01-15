@@ -76,6 +76,7 @@ def scrape_state(
 
 
 def _scrape_years(site, output_csv, headers, start_end_dates, use_cache=True):
+    """Loop through years of data and write out to CSV."""
     # NOTE: Scraping for Jan 1 - Dec 31 for current year works
     # throughout the year. Additionally, it allows us to avoid
     # generating cache files for all days of the year.
@@ -92,7 +93,7 @@ def _scrape_years(site, output_csv, headers, start_end_dates, use_cache=True):
 
 
 def _prepare_row(row):
-    "Flatten the nested dict for downstream export to CSV"
+    """Flatten the nested dict for downstream export to CSV."""
     # Returned data includes fields from search result page and
     # data from detail page record for each layoff notice
     # the latter contains two key fields (address and number affected)
@@ -104,9 +105,7 @@ def _prepare_row(row):
 
 
 def _date_ranges_to_scrape(stop_year):
-    """Generates a list of start/end pairs from
-    current year to some year in the past
-    """
+    """Generate a list of start/end pairs from current year to some year in the past."""
     start = "{}-01-01"
     end = "{}-12-31"
     current_year = dt.today().year
@@ -118,7 +117,7 @@ def _date_ranges_to_scrape(stop_year):
 
 
 def _dedupe(raw_csv, output_csv):
-    # Create an ordered dict to discard dupes while preserving row order
+    """Create an ordered dict to discard dupes while preserving row order."""
     data = OrderedDict()
     raw_count = 0
     with open(raw_csv, "r", newline="") as src:

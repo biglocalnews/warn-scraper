@@ -9,18 +9,22 @@ logger = logging.getLogger(__name__)
 
 
 class Cache(BaseCache):
+    """A custom cache for Job Center sites."""
     def save(self, url, params, html):
+        """Save file to the cache."""
         cache_key = self.key_from_url(url, params)
         self.write(cache_key, html)
         logger.debug(f"Saved to cache: {cache_key}")
 
     def fetch(self, url, params):
+        """Fetch file from the cache."""
         cache_key = self.key_from_url(url, params)
         content = self.read(cache_key)
         logger.debug(f"Fetched from cache: {cache_key}")
         return content
 
     def key_from_url(self, url, params={}):
+        """Convert a URL to a cache key."""
         page_type = (
             "records" if re.search(r"warn_lookups/\d+$", url) else "search_results"
         )

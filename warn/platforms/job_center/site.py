@@ -30,8 +30,8 @@ class Site:
         url (str): Search URL for the site (should end in '/warn_lookups')
         cache_dir (str): Cache directory
     """
-
     def __init__(self, state, url, cache_dir):
+        """Initialize a new instance."""
         self.state = state.upper()
         self.url = url
         self.cache = Cache(cache_dir)
@@ -85,10 +85,12 @@ class Site:
 
     @property
     def _start(self):
+        """Get the start date."""
         return f"{date.today().year}-01-01"
 
     @property
     def _end(self):
+        """Get the end date."""
         today = date.today()
         month = str(today.month).zfill(2)
         day = str(today.day).zfill(2)
@@ -139,7 +141,7 @@ class Site:
     def _scrape_next_page(
         self, next_page_link, html_store, data, detail_pages, use_cache
     ):
-        # Scrape the results of next page and update the payload
+        """Scrape the results of next page and update the payload."""
         kwargs = {
             "params": {},
             "detail_pages": detail_pages,
@@ -162,10 +164,12 @@ class Site:
             return
 
     def _scrape_detail_page(self, url, use_cache):
+        """Scrape the provided detail page."""
         html = self._get_page(url, use_cache=use_cache)
         return self._parse_detail_page(html)
 
     def _parse_detail_page(self, html):
+        """Parse data out of a detail page."""
         payload = {
             "company_name": "",
             "address": "",
@@ -187,6 +191,7 @@ class Site:
         return payload
 
     def _parse_search_results(self, html):
+        """Parse data out of the search results."""
         data = []
         soup = BeautifulSoup(html, "html.parser")
         table_rows = soup.find_all("tr")
@@ -206,6 +211,7 @@ class Site:
         return data
 
     def _update_payload(self, html_store, data, results):
+        """Update a payload."""
         # In-place updates
         page_num = results.get("page_num")
         if page_num:
@@ -213,6 +219,7 @@ class Site:
         data.extend(results.get("data", []))
 
     def _search_kwargs(self, start_date, end_date, extra={}):
+        """Set keyword arguments for a search."""
         kwargs = {
             "utf8": "✓",
             "q[employer_name_cont]": "",
@@ -228,6 +235,7 @@ class Site:
         return kwargs
 
     def _extract_search_results_row(self, row):
+        """Parse out results from a row of search results."""
         cells = row.find_all("td")
         url_path = cells[0].a["href"].strip()
         return {
@@ -244,6 +252,7 @@ class Site:
         }
 
     def _next_page_link(self, html):
+        """Get the link for the next page, if it exists."""
         soup = BeautifulSoup(html, "html.parser")
         next_page = soup.find("a", class_="next_page")
         try:
@@ -254,12 +263,15 @@ class Site:
         return next_page_url
 
     def _build_page_url(self, url_path):
+        """Create the URL for the page."""
         bits = urllib.parse.urlsplit(self.url)
         base_url = f"{bits.scheme}://{bits.netloc}"
         return urllib.parse.urljoin(base_url, url_path.strip())
 
     def _snake_case(self, text):
+        """Convert text to SnakeCase."""
         return text.strip().lower().replace(" ", "_")
 
     def _clean_field(self, text):
+        """Strip and tidy a line of text."""
         return html_mod.unescape(text.strip())
