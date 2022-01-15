@@ -8,13 +8,8 @@ from .conftest import write_file
 
 @pytest.fixture
 def cache_dir(tmp_path):
+    """Create a path for a cache test."""
     return str(tmp_path.joinpath("ks"))
-
-
-# @pytest.fixture
-# def create_files(cache_dir):
-#    write_file(
-#
 
 
 @pytest.mark.parametrize(
@@ -37,6 +32,7 @@ def cache_dir(tmp_path):
     ],
 )
 def test_cache_key_from_url(test_input, cache_dir):
+    """Test if the cache key is what's expected."""
     url, params, expected_key = test_input
     cache = Cache(cache_dir)
     cache_key = cache.key_from_url(url, params=params)
@@ -57,6 +53,7 @@ def test_cache_key_from_url(test_input, cache_dir):
     ],
 )
 def test_cache_save(test_input, cache_dir):
+    """"Test saving data to the cache."""
     url, params, expected_name = test_input
     cache = Cache(cache_dir)
     cache.save(url, params, "<html><h1>Hello world</h1><html>")
@@ -79,6 +76,7 @@ def test_cache_save(test_input, cache_dir):
     ],
 )
 def test_cache_fetch(test_input, cache_dir):
+    """Test retrieving data from the cache."""
     url, params, name = test_input
     expected_content = "<html><h1>Hello world</h1><html>"
     dest = Path(cache_dir, name)
