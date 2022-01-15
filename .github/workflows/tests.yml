@@ -20,7 +20,7 @@ jobs:
 
       - id: lint
         name: Lint
-        run: make lint-python
+        run: make lint
 
   test-python:
     strategy:
