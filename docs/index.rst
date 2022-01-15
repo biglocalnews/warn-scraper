@@ -7,7 +7,7 @@ Command-line interface for downloading WARN Act notices of qualified plant closi
 .. toctree::
    :glob:
    :maxdepth: 1
-   :caption: Table of Contents:
+   :caption: Table of Contents
 
    getting-started
    contributing
