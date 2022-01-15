@@ -10,6 +10,7 @@ Command-line interface for downloading WARN Act notices of qualified plant closi
    :caption: Table of Contents
 
    getting-started
+   commands
    contributing
    states
 
