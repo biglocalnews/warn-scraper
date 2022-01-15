@@ -53,7 +53,6 @@ define banner
     @echo "$(BLUE) |=== ===!##|$(RESET_COLOR)"
     @echo "$(BLUE) |__________|$(RESET_COLOR)"
     @echo ""
-    @echo ""
 endef
 
 #
