@@ -152,6 +152,7 @@ help: ## Show this help. Example: make help
         docs \
         dist \
         format \
+        lint \
         release \
         test \
         test-release
