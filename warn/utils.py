@@ -1,8 +1,11 @@
 import os
 import csv
+import logging
 from pathlib import Path
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 # The default home directory, if nothing is provided by the user
@@ -32,6 +35,7 @@ def write_rows_to_csv(rows, output_path, mode="w"):
     Keyword arguments:
     mode -- the mode to be used when opening the file (default 'w')
     """
+    logger.debug(f"Writing {len(rows)} rows to {output_path}")
     with open(output_path, mode, newline="") as f:
         writer = csv.writer(f)
         writer.writerows(rows)
@@ -50,6 +54,7 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
     mode -- the mode to be used when opening the file (default 'w')
     extrasaction -- what to do if the if a field isn't in the headers (default 'raise')
     """
+    logger.debug(f"Writing {len(rows)} rows to {output_path}")
     with open(output_path, mode, newline="") as f:
         # Create the writer object
         writer = csv.DictWriter(f, fieldnames=headers, extrasaction=extrasaction)
