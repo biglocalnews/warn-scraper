@@ -142,3 +142,37 @@ Here's an example directory demonstrating the above conventions:
     ├── nj.csv
     └── ny.csv
 ```
+
+
+```python
+import typing
+from pathlib import Path
+
+from .. import utils
+
+
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
+    """
+    Scrape data from Iowa.
+
+    Keyword arguments:
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
+
+    Returns: the Path where the file is written
+    """
+    # Set the path to the final CSV
+    output_csv = data_dir / "xx.csv"
+
+    ## Do your stuf here
+
+    # Return the path to the final CSV
+    return output_csv
+
+
+if __name__ == "__main__":
+    scrape()
+```

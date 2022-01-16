@@ -1,6 +1,24 @@
+import os
 import csv
+from pathlib import Path
 
 import requests
+
+
+# The default home directory, if nothing is provided by the user
+WARN_USER_DIR = Path(os.path.expanduser("~"))
+WARN_DEFAULT_OUTPUT_DIR = WARN_USER_DIR / ".warn-scraper"
+
+# Set the home directory
+if os.environ.get("WARN_OUTPUT_DIR"):
+    WARN_OUTPUT_DIR = Path(os.environ.get("WARN_OUTPUT_DIR"))
+else:
+    WARN_OUTPUT_DIR = WARN_DEFAULT_OUTPUT_DIR
+
+# Set the subdirectories for other bits
+WARN_CACHE_DIR = WARN_OUTPUT_DIR / "cache"
+WARN_DATA_DIR = WARN_OUTPUT_DIR / "exports"
+WARN_LOG_DIR = WARN_OUTPUT_DIR / "logs"
 
 
 def write_rows_to_csv(rows, output_path, mode="w"):
@@ -66,3 +84,12 @@ def download_file(url, local_path):
                 f.write(chunk)
     # Return the path
     return local_path
+
+
+def get_all_states():
+    """Return a list of all the states that have scrapers."""
+    this_dir = Path(__file__).parent
+    scrapers_dir = this_dir / "scrapers"
+    return sorted(
+        [p.stem for p in scrapers_dir.glob("*.py") if "__init__.py" not in str(p)]
+    )

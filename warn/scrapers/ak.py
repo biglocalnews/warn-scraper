@@ -1,30 +1,38 @@
 import re
-import requests
+import typing
+from pathlib import Path
 
+import requests
 from bs4 import BeautifulSoup
 
-from warn.utils import write_rows_to_csv
+from .. import utils
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Alaska.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/ak.csv"
+    # Get URL
     url = "https://jobs.alaska.gov/RR/WARN_notices.htm"
     page = requests.get(url)
+
     # Force encoding to fix dashes, apostrophes, etc. on page.text from requests reponse
     page.encoding = "utf-8"
+
+    # Parse out data table
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
+
+    # Loop through the table and grab the data
     output_rows = []
     for table_row in table[0].find_all("tr"):
         columns = table_row.find_all("td")
@@ -39,5 +47,14 @@ def scrape(output_dir, cache_dir=None):
         if output_row == [""] or output_row[0] == "":
             continue
         output_rows.append(output_row)
-    write_rows_to_csv(output_rows, output_csv)
-    return output_csv
+
+    # Write out the data to a CSV
+    data_path = data_dir / "ak.csv"
+    utils.write_rows_to_csv(output_rows, data_path)
+
+    # Return the Path to the CSV
+    return data_path
+
+
+if __name__ == "__main__":
+    scrape()

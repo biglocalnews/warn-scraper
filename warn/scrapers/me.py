@@ -1,20 +1,27 @@
+import typing
+from pathlib import Path
+
 from warn.platforms.job_center.utils import scrape_state
 
+from .. import utils
 
-def scrape(output_dir, cache_dir=None, use_cache=False):
+
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    use_cache: bool = True,
+) -> Path:
     """
     Scrape data from Maine.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
     use_cache -- a Boolean indicating whether the cache should be used (default True)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/me.csv"
+    output_csv = data_dir / "me.csv"
     search_url = "https://joblink.maine.gov/search/warn_lookups"
     # Date chosen based on manual research
     stop_year = 2012
@@ -23,3 +30,7 @@ def scrape(output_dir, cache_dir=None, use_cache=False):
         "ME", search_url, output_csv, stop_year, cache_dir, use_cache=use_cache
     )
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

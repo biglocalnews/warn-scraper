@@ -1,9 +1,9 @@
 import csv
+import typing
 import logging
-
 from pathlib import Path
-from warn.utils import download_file
-from warn.utils import write_dict_rows_to_csv
+
+from .. import utils
 
 
 logger = logging.getLogger(__name__)
@@ -72,19 +72,20 @@ OUTPUT_HEADERS = [
 ]
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Colorado.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/co.csv"
+    output_csv = data_dir / "co.csv"
     # urls from 2021 to 2015
     urls = [
         "https://docs.google.com/spreadsheets/d/1HO8Fnm_4xey3Ctt6mYIig61Zx5iNq6_j_dlIaJvBS6o/edit#gid=1509741939",
@@ -105,7 +106,7 @@ def scrape(output_dir, cache_dir=None):
     for num, url in enumerate(urls):
         intermediate_csv_path = f"{cache_state}/{num}.csv"
         # TODO try to read from cache first
-        file_path = download_file(url, intermediate_csv_path)
+        file_path = utils.download_file(url, intermediate_csv_path)
         with open(file_path, "r", newline="") as csvfile:
             reader = csv.reader(csvfile)
             rows_to_add = []
@@ -132,8 +133,12 @@ def scrape(output_dir, cache_dir=None):
         rows_as_dicts = [dict(zip(FIELDS[num], row)) for row in rows_to_add]
         output_rows.extend(rows_as_dicts)
         logger.info(f"Successfully scraped url {url}")
-    write_dict_rows_to_csv(
+    utils.write_dict_rows_to_csv(
         output_csv, OUTPUT_HEADERS, output_rows, extrasaction="ignore"
     )
 
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

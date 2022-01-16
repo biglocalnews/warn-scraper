@@ -1,34 +1,35 @@
 import csv
+import typing
 import logging
-import requests
+from pathlib import Path
 
+import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from warn.utils import write_rows_to_csv
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
-"""
-NOTES for data cleaning:
-- 2019 and 2020 page has duplicate data
-- 2017 date format is different
-"""
 
-
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Missouri.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
+    NOTES for data cleaning:
+    - 2019 and 2020 page has duplicate data
+    - 2017 date format is different
 
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/mo.csv"
+    output_csv = data_dir / "mo.csv"
     raw_csv = f"{cache_dir}/mo_raw.csv"
     years = range(2021, 2014, -1)
     url = "https://jobs.mo.gov/warn2021"
@@ -80,7 +81,7 @@ def _write_body(year, output_csv):
             output_row.append(column.text.strip())
         if len(output_row) < 9:  # to account for the extra column in 2021
             output_row.insert(2, "")
-        if "raw" not in output_csv:
+        if "raw" not in str(output_csv):
             if (
                 year == 2019 and "2020" in output_row[0]
             ):  # account for duplicated 2020 data
@@ -89,7 +90,7 @@ def _write_body(year, output_csv):
     output_rows.pop(len(output_rows) - 1)  # pop "Total" row
     output_rows.pop(0)  # pop header
     if len(output_rows) > 0:
-        write_rows_to_csv(output_rows, output_csv, mode="a")
+        utils.write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
 def _dedupe(output_csv):
@@ -97,3 +98,7 @@ def _dedupe(output_csv):
     df.drop_duplicates(inplace=True, keep="first")
     df.to_csv(output_csv, index=False)
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

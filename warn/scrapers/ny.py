@@ -1,27 +1,29 @@
+import typing
 import logging
-
-import pandas as pd
 from pathlib import Path
 
-from warn.utils import download_file
+import pandas as pd
+
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from New York.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
     # currently just scrapes a historical file rather than the NY website
-    output_csv = f"{output_dir}/ny.csv"
+    output_csv = data_dir / "ny.csv"
     output_df = _scrape_historical(cache_dir)
     output_csv = output_df.to_csv(output_csv, index=False)
     return output_csv
@@ -43,6 +45,10 @@ def _scrape_historical(cache_dir):
         logger.debug(
             f"Historical file not found in cache. Downloading to cache from {data_url}..."
         )
-        file_path = download_file(data_url, cache_key_historical)
+        file_path = utils.download_file(data_url, cache_key_historical)
         historical_df = pd.read_excel(file_path, engine="openpyxl")
     return historical_df
+
+
+if __name__ == "__main__":
+    scrape()

@@ -1,22 +1,25 @@
-import logging
 import re
 import shutil
+import typing
+import logging
 from pathlib import Path
 
-import pdfplumber
 import requests
+import pdfplumber
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
-from warn.cache import Cache
-from warn.utils import download_file
-from warn.utils import write_dict_rows_to_csv
+from .. import utils
+from ..cache import Cache
 
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from California.
 
@@ -24,15 +27,13 @@ def scrape(output_dir, cache_dir=None):
 
     Only regenerates the CSV if a PDF or the Excel file have changed.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = "{}/ca.csv".format(output_dir)
+    output_csv = data_dir / "ca.csv"
     # Set up cache dir for state
     cache_state = Path(cache_dir, "ca")
     cache_state.mkdir(parents=True, exist_ok=True)
@@ -62,7 +63,7 @@ def scrape(output_dir, cache_dir=None):
         wb_path = cache.files(subdir="ca", glob_pattern="*.xlsx")[0]
         excel_data = _extract_excel_data(wb_path)
         # Write mode when processing Excel
-        write_dict_rows_to_csv(
+        utils.write_dict_rows_to_csv(
             temp_csv, output_headers, excel_data, mode="w", extrasaction="ignore"
         )
         logger.info("Extracting PDF data for prior years")
@@ -70,7 +71,7 @@ def scrape(output_dir, cache_dir=None):
             logger.info(f"Extracting data from {pdf}")
             data = _extract_pdf_data(pdf)
             # Append mode when processing PDFs
-            write_dict_rows_to_csv(
+            utils.write_dict_rows_to_csv(
                 temp_csv, output_headers, data, mode="a", extrasaction="ignore"
             )
         # If all went well, copy temp csv over pre-existing output csv
@@ -105,7 +106,7 @@ def _update_files(cache):
         if download_status is True:
             files_have_changed = True
             logger.info(f"Downloading {file_name} to {target_path}")
-            download_file(link["url"], target_path)
+            utils.download_file(link["url"], target_path)
     # Delete local files whose names don't match
     # data files on remote site, in order to guard against
     # duplicates if the source agency renames files
@@ -232,3 +233,7 @@ def _obsolete_local_files(pdfs, links):
     pdfs_uniq = set(pdfs.keys())
     remote_files = {link["url"].split("/")[-1] for link in links}
     return pdfs_uniq - remote_files
+
+
+if __name__ == "__main__":
+    scrape()

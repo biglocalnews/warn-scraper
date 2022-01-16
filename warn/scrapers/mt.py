@@ -1,17 +1,23 @@
-import pandas as pd
+import typing
+from pathlib import Path
+
 import requests
+import pandas as pd
 from bs4 import BeautifulSoup
 
+from .. import utils
 
-def scrape(output_dir, cache_dir=None):
+
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Montana.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
@@ -20,7 +26,7 @@ def scrape(output_dir, cache_dir=None):
     data_file_name = _extract_file_name(response.text)
     data_url = f"https://wsd.dli.mt.gov/_docs/wioa/{data_file_name}"
     df = pd.read_excel(data_url, engine="openpyxl")
-    output_file = f"{output_dir}/mt.csv"
+    output_file = data_dir / "mt.csv"
     df.to_csv(output_file, index=False)
     return output_file
 
@@ -34,3 +40,7 @@ def _extract_file_name(html):
         for link in links
         if link.attrs.get("href", "").endswith("xlsx")
     ][0].split("/")[-1]
+
+
+if __name__ == "__main__":
+    scrape()

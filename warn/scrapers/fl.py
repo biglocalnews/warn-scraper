@@ -1,16 +1,18 @@
-import datetime
-import logging
-from os.path import exists
 import re
-import requests
+import typing
+import logging
 import urllib3
+import datetime
+from pathlib import Path
+from os.path import exists
 
-from bs4 import BeautifulSoup
-import pdfplumber
+import requests
 import tenacity
+import pdfplumber
+from bs4 import BeautifulSoup
 
-from warn.cache import Cache
-from warn.utils import write_dict_rows_to_csv
+from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
@@ -26,19 +28,20 @@ FIELDS = [
 CSV_HEADERS = FIELDS[:-1]  # Clip the Attachment header
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Florida.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = "{}/fl.csv".format(output_dir)
+    output_csv = data_dir / "fl.csv"
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     # FL site requires realistic User-Agent.
     headers = {
@@ -64,7 +67,9 @@ def scrape(output_dir, cache_dir=None):
         # Convert rows to dicts
         rows_as_dicts = [dict(zip(FIELDS, row)) for row in rows_to_add]
         output_rows.extend(rows_as_dicts)
-    write_dict_rows_to_csv(output_csv, CSV_HEADERS, output_rows, extrasaction="ignore")
+    utils.write_dict_rows_to_csv(
+        output_csv, CSV_HEADERS, output_rows, extrasaction="ignore"
+    )
     return output_csv
 
 
@@ -222,3 +227,7 @@ def _is_header_row(field_idx, field):
     # and we need to remove them from the data
     # because we only need 1 header row.
     return field_idx == 0 and field == "COMPANY NAME"
+
+
+if __name__ == "__main__":
+    scrape()
