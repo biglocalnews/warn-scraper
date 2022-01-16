@@ -87,8 +87,6 @@ def download_file(url, local_path):
             # Write out the file in little chunks
             for chunk in r.iter_content(chunk_size=8192):
                 f.write(chunk)
-    # Return the path
-    return local_path
 
 
 def get_all_states():

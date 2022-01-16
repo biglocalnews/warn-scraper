@@ -106,8 +106,8 @@ def scrape(
     for num, url in enumerate(urls):
         intermediate_csv_path = f"{cache_state}/{num}.csv"
         # TODO try to read from cache first
-        file_path = utils.download_file(url, intermediate_csv_path)
-        with open(file_path, "r", newline="") as csvfile:
+        utils.download_file(url, intermediate_csv_path)
+        with open(intermediate_csv_path, "r", newline="") as csvfile:
             reader = csv.reader(csvfile)
             rows_to_add = []
             for row_idx, row in enumerate(reader):
