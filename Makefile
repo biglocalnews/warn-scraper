@@ -68,6 +68,13 @@ define python
 endef
 
 #
+# Commands
+#
+
+run:
+	$(PIPENV) python -m warn.cli -s $(state) -l DEBUG
+
+#
 # Cleaning
 #
 
