@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -28,8 +27,7 @@ def scrape(
     output_csv = cache_dir / "ne_raw1.csv"
     years = range(2019, 2009, -1)
     url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     # find header
@@ -64,8 +62,7 @@ def scrape(
         url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year={}".format(
             year
         )
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []
@@ -94,8 +91,7 @@ def _nebraska_two(cache_dir):
     url = (
         "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020"
     )
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     # find header
@@ -130,8 +126,7 @@ def _nebraska_two(cache_dir):
         url = "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year={}".format(
             year
         )
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []

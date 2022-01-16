@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -40,7 +39,7 @@ def scrape(
     output_rows = []
     for year in years:
         url = f"https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{year}.htm"
-        response = requests.get(url)
+        response = utils.get_url(url)
         soup = BeautifulSoup(response.text, "html.parser")
         if year == 2016:
             table = soup.find_all("table", "style15")

@@ -72,7 +72,7 @@ endef
 #
 
 run:
-	$(PIPENV) python -m warn $(states) -l DEBUG
+	$(PIPENV) python -m warn $(state) -l DEBUG
 
 #
 # Cleaning

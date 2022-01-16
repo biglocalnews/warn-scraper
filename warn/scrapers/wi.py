@@ -4,7 +4,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -28,8 +27,7 @@ def scrape(
     output_csv = data_dir / "wi.csv"
     years = [2016, 2017, 2018, 2019]
     url = "https://sheets.googleapis.com/v4/spreadsheets/1cyZiHZcepBI7ShB3dMcRprUFRG24lbwEnEDRBMhAqsA/values/Originals?key=AIzaSyDP0OltIjcmRQ6-9TTmEVDZPIX6BSFcunw"
-    response = requests.get(url)
-    logger.debug(f"Page status is {response.status_code} for {url}")
+    response = utils.get_url(url)
     data = response.json()
     # find header
     headers = data["values"][0]
@@ -50,8 +48,7 @@ def scrape(
         url = "https://dwd.wisconsin.gov/dislocatedworker/warn/{}/default.htm".format(
             year
         )
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         tables = soup.find_all("table")  # output is list-type
         for table in tables:

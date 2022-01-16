@@ -4,7 +4,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -79,8 +78,7 @@ def _write_body(html, output_csv):
 
 
 def _scrape_page(url):
-    response = requests.get(url)
-    logger.debug(f"Page status is {response.status_code} for {url}")
+    response = utils.get_url(url)
     response.encoding = "utf-8"
     return response.text
 

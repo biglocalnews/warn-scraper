@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 import pandas as pd
 from xlrd import XLRDError
 from bs4 import BeautifulSoup
@@ -29,8 +28,7 @@ def scrape(
     """
     output_csv = data_dir / "tx.csv"
     url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     # download each year's excel file
     links = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))

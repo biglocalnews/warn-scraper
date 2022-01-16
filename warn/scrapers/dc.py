@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -30,7 +29,7 @@ def scrape(
     url_14 = "https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
 
     # get data for headers
-    page = requests.get(url)
+    page = utils.get_url(url)
     logger.debug(f"Page status code is {page.status_code} for {url}")
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
@@ -53,8 +52,7 @@ def scrape(
     )
 
     for url in url_list:
-        page = requests.get(url)
-        logger.debug(f"Page status code is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []

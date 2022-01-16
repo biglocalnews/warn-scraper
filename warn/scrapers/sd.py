@@ -4,7 +4,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -27,8 +26,7 @@ def scrape(
     """
     output_csv = data_dir / "sd.csv"
     url = "https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     # find header

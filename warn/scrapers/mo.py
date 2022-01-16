@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -34,8 +33,7 @@ def scrape(
     years = range(2021, 2014, -1)
     url = "https://jobs.mo.gov/warn2021"
 
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
 
@@ -69,8 +67,7 @@ def _write_body(year, output_csv):
         if (year != 2020)
         else "https://jobs.mo.gov/content/2020-missouri-warn-notices"
     )
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     output_rows = []

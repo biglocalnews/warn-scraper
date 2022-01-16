@@ -124,7 +124,7 @@ def _get_file_links():
     logger.info("Getting metadata for data files")
     base_url = "https://edd.ca.gov/Jobs_and_Training"
     home_page = f"{base_url}/Layoff_Services_WARN.htm"
-    html = requests.get(home_page).text
+    html = utils.get_url(home_page).text
     soup = BeautifulSoup(html, "html.parser")
     links = []
     for link in soup.find_all("a"):

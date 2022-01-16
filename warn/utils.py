@@ -96,3 +96,11 @@ def get_all_states():
     return sorted(
         [p.stem for p in scrapers_dir.glob("*.py") if "__init__.py" not in str(p)]
     )
+
+
+def get_url(url):
+    """Request the provided URL and return a response object."""
+    logger.debug(f"Requesting {url}")
+    response = requests.get(url)
+    logger.debug(f"Response code: {response.status_code}")
+    return response

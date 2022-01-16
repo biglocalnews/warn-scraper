@@ -2,7 +2,6 @@ import re
 import typing
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -22,8 +21,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Get URL
-    url = "https://jobs.alaska.gov/RR/WARN_notices.htm"
-    page = requests.get(url)
+    page = utils.get_url("https://jobs.alaska.gov/RR/WARN_notices.htm")
 
     # Force encoding to fix dashes, apostrophes, etc. on page.text from requests reponse
     page.encoding = "utf-8"

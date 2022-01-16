@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -26,8 +25,7 @@ def scrape(
     """
     output_csv = data_dir / "ri.csv"
     url = "https://dlt.ri.gov/wds/warn/"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
     first_row = tables[0].find_all("tr")[0]

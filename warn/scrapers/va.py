@@ -2,7 +2,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -25,8 +24,7 @@ def scrape(
     """
     output_csv = data_dir / "va.csv"
     url = "https://www.vec.virginia.gov/warn-notices"
-    response = requests.get(url)
-    logger.debug(f"Page status is {response.status_code} for {url}")
+    response = utils.get_url(url)
     soup = BeautifulSoup(response.text, "html.parser")
     data_url = soup.find("a", text="Download")["href"]
     data_url = f"https://www.vec.virginia.gov{data_url}"

@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -25,9 +24,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     output_csv = data_dir / "al.csv"
-    url = "https://www.madeinalabama.com/warn-list/"
-    logger.debug(f"Scraping {url}")
-    page = requests.get(url)
+    page = utils.get_url("https://www.madeinalabama.com/warn-list/")
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type

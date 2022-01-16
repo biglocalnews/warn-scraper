@@ -2,7 +2,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -26,8 +25,7 @@ def scrape(
     """
     output_csv = data_dir / "ia.csv"
     url = "https://www.iowaworkforcedevelopment.gov/worker-adjustment-and-retraining-notification-act"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     data_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
     df = pd.read_excel(data_url)

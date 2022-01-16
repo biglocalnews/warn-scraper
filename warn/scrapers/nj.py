@@ -3,7 +3,6 @@ import logging
 import itertools
 from pathlib import Path
 
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -50,7 +49,7 @@ def scrape(
 
 
 def _scrape_page(url):
-    response = requests.get(url)
+    response = utils.get_url(url)
     response.encoding = "utf-8"
     return response.text
 

@@ -3,7 +3,6 @@ import typing
 import logging
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -28,7 +27,7 @@ def scrape(
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     url1 = "https://www.in.gov/dwd/2567.htm"
-    page = requests.get(url1)
+    page = utils.get_url(url1)
     logger.debug(f"Page status is {page.status_code} for {url1}")
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
@@ -60,7 +59,7 @@ def scrape(
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     url2 = "https://www.in.gov/dwd/3125.htm"
-    page = requests.get(url2)
+    page = utils.get_url(url2)
     logger.debug(f"Page status is {page.status_code} for {url2}")
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
