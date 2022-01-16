@@ -20,7 +20,9 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    response = utils.get_url("https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page")
+    response = utils.get_url(
+        "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
+    )
     data_file_name = _extract_file_name(response.text)
     data_url = f"https://wsd.dli.mt.gov/_docs/wioa/{data_file_name}"
     df = pd.read_excel(data_url, engine="openpyxl")

@@ -48,7 +48,9 @@ def _scrape_historical(cache_dir):
             f"Historical file not found in cache. Downloading to cache from {data_url}..."
         )
         utils.download_file(data_url, cache_key_historical)
-        historical_df = pd.read_excel(cache_key_historical, skiprows=2, engine="openpyxl")
+        historical_df = pd.read_excel(
+            cache_key_historical, skiprows=2, engine="openpyxl"
+        )
     return historical_df
 
 
