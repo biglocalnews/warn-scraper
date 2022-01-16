@@ -102,7 +102,7 @@ clean-pyc: ## remove Python file artifacts
 
 lint: ## run the linter
 	$(call banner,        💅 Linting code 💅)
-	@$(PIPENV) flake8 ./
+	@$(PIPENV) flake8 -v ./
 
 
 test: ## run all tests
