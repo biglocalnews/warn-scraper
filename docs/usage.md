@@ -1,16 +1,6 @@
-# Getting started
+# Usage
 
-## Install
-
-Use `pip` or `pipenv` to install the Python library and command-line interface:
-
-```bash
-pipenv install git+ssh://git@github.com/biglocalnews/WARN.git#egg=WARN
-```
-
-## Usage
-
-After you can use the command-line tool to scrape available states *by supplying one or more two-letter state postal codes*. The `warn-scraper` command-line tool will write files, by default, to a hidden directory in the user's home directory. On Apple and Linux systems, this will be `~/.warn-scraper`.
+You can use the `warn-scraper` command-line tool to scrape available states by supplying one or more two-letter state postal codes. It will write files, by default, to a hidden directory in the user's home directory. On Apple and Linux systems, this will be `~/.warn-scraper`.
 
 ```bash
 # Scrape a single state
@@ -20,7 +10,7 @@ warn-scraper AK
 warn-scraper AK CT
 ```
 
-To use the `warn` library in Python:
+To use the `warn` library in Python, import a state's scraper and run it directly.
 
 ```python
 >>> # Scrape Alaska to the default download directory
@@ -28,7 +18,7 @@ To use the `warn` library in Python:
 >>> ak.scrape()
 ```
 
-### Configuration
+## Configuration
 
 You can set the `WARN_OUTPUT_DIR` environment variable to specify a different download location.
 
@@ -56,7 +46,7 @@ Options:
   --help                          Show this message and exit.
 ```
 
-## Platform uploads
+## Uploading to Big Local News
 
 To upload data files to a project on the [Big Local News](https://biglocalnews.org/) platform,
 you must set the `BLN_API_KEY` and `WARN_PROJECT_ID` environment variables.
