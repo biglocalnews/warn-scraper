@@ -13,6 +13,23 @@ def read(file_name):
         return f.read()
 
 
+def branch_scheme(version):
+    """
+    Local version scheme for setuptools_scm that adds the branch name for better reproducibility.
+
+    This appears to be necessary to due to the documented at https://github.com/pypa/setuptools_scm/issues/342
+
+    If that issue is resolved, this method can be removed.
+    """
+    if version.exact or version.node is None:
+        return version.format_choice("", "+d{time:{time_format}}", time_format="%Y%m%d")
+    else:
+        if version.branch == "main":
+            return version.format_choice("+{node}", "+{node}.dirty")
+        else:
+            return version.format_choice("+{node}.{branch}", "+{node}.{branch}.dirty")
+
+
 setup(
     name="warn-scraper",
     description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
@@ -59,7 +76,7 @@ setup(
         "pytest-vcr",
     ],
     setup_requires=["pytest-runner", "setuptools_scm"],
-    use_scm_version=True,
+    use_scm_version={"local_scheme": branch_scheme},
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",
