@@ -21,7 +21,7 @@ def local_version(version):
 
     If that issue is resolved, this method can be removed.
     """
-    return ""
+    return version.replace("+", ".")
 
 
 setup(
