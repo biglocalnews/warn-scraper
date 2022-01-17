@@ -68,6 +68,6 @@ jobs:
         name: Save artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Test release ${{ github.run_number }}
+          name: test-release-${{ github.run_number }}
           path: ./dist
           if-no-files-found: error
