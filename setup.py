@@ -21,7 +21,9 @@ def local_version(version):
 
     If that issue is resolved, this method can be removed.
     """
-    return version.replace("+", ".")
+    from setuptools_scm.version import get_local_node_and_date
+    _super_value = get_local_node_and_date(version)
+    return _super_value.replace("+", ".")
 
 
 setup(
