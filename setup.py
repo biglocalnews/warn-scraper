@@ -13,24 +13,6 @@ def read(file_name):
         return f.read()
 
 
-requirements = [
-    "bs4",
-    "html5lib",
-    "pandas",
-    "pdfplumber",
-    "requests",
-    "openpyxl",
-    "tenacity",
-    "xlrd",
-    # Install non-PyPI libraries
-    "bln-etl @ git+https://github.com/biglocalnews/bln-etl.git",
-]
-
-test_requirements = [
-    "pytest",
-    "pytest-vcr",
-]
-
 setup(
     name="warn-scraper",
     version="0.1.0",
@@ -45,7 +27,18 @@ setup(
         [console_scripts]
         warn-scraper=warn.cli:main
     """,
-    install_requires=requirements,
+    install_requires=[
+        "bs4",
+        "html5lib",
+        "pandas",
+        "pdfplumber",
+        "requests",
+        "openpyxl",
+        "tenacity",
+        "xlrd",
+        # Install non-PyPI libraries
+        "bln-etl @ git+ssh://git@github.com/biglocalnews/bln-etl.git",
+    ],
     license="Apache 2.0 license",
     zip_safe=False,
     classifiers=[
@@ -62,7 +55,10 @@ setup(
     ],
     test_suite="tests",
     setup_requires=["pytest-runner"],
-    tests_require=test_requirements,
+    tests_require=[
+        "pytest",
+        "pytest-vcr",
+    ],
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",
