@@ -15,7 +15,6 @@ def read(file_name):
 
 setup(
     name="warn-scraper",
-    version="0.1.0",
     description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
@@ -55,11 +54,12 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     test_suite="tests",
-    setup_requires=["pytest-runner"],
     tests_require=[
         "pytest",
         "pytest-vcr",
     ],
+    setup_requires=["pytest-runner", "setuptools_scm"],
+    use_scm_version=True,
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",

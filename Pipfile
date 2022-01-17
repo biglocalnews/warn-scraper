@@ -14,6 +14,7 @@ myst-parser = "*"
 flake8 = "*"
 coverage = "*"
 flake8-docstrings = "*"
+setuptools-scm = "*"
 
 [packages]
 bs4 = "*"
