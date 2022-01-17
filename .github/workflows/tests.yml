@@ -86,9 +86,9 @@ jobs:
         with:
           python-version: 3.7
 
-    - id: fetch
-      name: Fetch artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: test-release-${{ github.run_number }}
-        path: ./dist
+      - id: fetch
+        name: Fetch artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: test-release-${{ github.run_number }}
+          path: ./dist
