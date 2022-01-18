@@ -54,7 +54,7 @@ setup(
     include_package_data=True,
     entry_points="""
         [console_scripts]
-        warn-scraper=warn.__main__:main
+        warn-scraper=warn.main:main
     """,
     install_requires=[
         "bs4",
