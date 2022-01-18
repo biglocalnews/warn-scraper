@@ -37,29 +37,8 @@ Usage: python -m warn [OPTIONS] [STATES]...
 Options:
   --data-dir PATH                 The Path were the results will be saved
   --cache-dir PATH                The Path where results can be cached
-  --upload / --no-upload          Upload generated files to BLN platform
-                                  project
-  --delete / --no-delete          Upload generated files to BLN platform
-                                  project
+  --delete / --no-delete          Delete generated files from the cache
   -l, --log-level [DEBUG|INFO|WARNING|ERROR|CRITICAL]
                                   Set the logging level
   --help                          Show this message and exit.
-```
-
-## Uploading to Big Local News
-
-To upload data files to a project on the [Big Local News](https://biglocalnews.org/) platform,
-you must set the `BLN_API_KEY` and `WARN_PROJECT_ID` environment variables.
-
-Once the environment variables are configured, you can upload files using the `--upload` flag:
-
-```bash
-warn-scraper --upload AK
-```
-
-To avoid uploading files from previous runs, use the `--delete` flag to clear locally generated
-cache as the first step in a new scraper run.
-
-```bash
-warn-scraper --delete --upload AK
 ```

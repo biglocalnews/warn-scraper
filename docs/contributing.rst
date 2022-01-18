@@ -154,10 +154,7 @@ After a scraper has been created, the command-line tool provides a method to tes
     Options:
       --data-dir PATH                 The Path were the results will be saved
       --cache-dir PATH                The Path where results can be cached
-      --upload / --no-upload          Upload generated files to BLN platform
-                                      project
-      --delete / --no-delete          Upload generated files to BLN platform
-                                      project
+      --delete / --no-delete          Delete generated files from the cache
       -l, --log-level [DEBUG|INFO|WARNING|ERROR|CRITICAL]
                                       Set the logging level
       --help                          Show this message and exit.
