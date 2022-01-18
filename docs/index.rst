@@ -23,8 +23,8 @@ Documentation
    :maxdepth: 1
 
    usage
-   commands
    contributing
+   releasing
    states
 
 
