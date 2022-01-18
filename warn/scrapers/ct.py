@@ -1,26 +1,29 @@
 import csv
+import typing
 import logging
-import requests
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Connecticut.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/ct.csv"
+    output_csv = data_dir / "ct.csv"
     years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
     header_row = [
         "warn_date",
@@ -36,7 +39,7 @@ def scrape(output_dir, cache_dir=None):
     output_rows = []
     for year in years:
         url = f"https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{year}.htm"
-        response = requests.get(url)
+        response = utils.get_url(url)
         soup = BeautifulSoup(response.text, "html.parser")
         if year == 2016:
             table = soup.find_all("table", "style15")
@@ -97,3 +100,7 @@ def _problem_cells(table_cells):
             else:
                 output_row.append(current_cell)
     return output_row
+
+
+if __name__ == "__main__":
+    scrape()

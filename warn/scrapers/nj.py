@@ -1,29 +1,31 @@
-import itertools
+import typing
 import logging
-import requests
+import itertools
+from pathlib import Path
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from warn.cache import Cache
-from warn.utils import write_rows_to_csv
+from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from New Jersey.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/nj.csv"
+    output_csv = data_dir / "nj.csv"
     url = "http://lwd.state.nj.us/WorkForceDirectory/warn.jsp"
     logger.debug(f"Scraping {url}")
     html = _scrape_page(url)
@@ -39,7 +41,7 @@ def scrape(output_dir, cache_dir=None):
         layoff_data_row = _extract_fields_from_table(table)
         output_rows.append(layoff_data_row)
     # Perform initial write of data
-    write_rows_to_csv(output_rows, output_csv)
+    utils.write_rows_to_csv(output_rows, output_csv)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     _scrape_2010_to_2004(cache, output_csv)
     _dedupe(output_csv)
@@ -47,7 +49,7 @@ def scrape(output_dir, cache_dir=None):
 
 
 def _scrape_page(url):
-    response = requests.get(url)
+    response = utils.get_url(url)
     response.encoding = "utf-8"
     return response.text
 
@@ -99,7 +101,7 @@ def _scrape_2010_to_2004(cache, output_csv):
         # Remove header row
         output_rows.pop(0)
         if len(output_rows) > 0:
-            write_rows_to_csv(output_rows, output_csv, mode="a")
+            utils.write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
 def _dedupe(output_csv):
@@ -107,3 +109,7 @@ def _dedupe(output_csv):
     df.drop_duplicates(inplace=True, keep="first")
     df.to_csv(output_csv, index=False)
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

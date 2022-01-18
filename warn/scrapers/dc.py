@@ -1,33 +1,35 @@
 import csv
+import typing
 import logging
-import requests
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-from warn.utils import write_rows_to_csv
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Washington D.C.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/dc.csv"
+    output_csv = data_dir / "dc.csv"
     url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{datetime.today().year}"
     url_14 = "https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
 
     # get data for headers
-    page = requests.get(url)
+    page = utils.get_url(url)
     logger.debug(f"Page status code is {page.status_code} for {url}")
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
@@ -50,8 +52,7 @@ def scrape(output_dir, cache_dir=None):
     )
 
     for url in url_list:
-        page = requests.get(url)
-        logger.debug(f"Page status code is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []
@@ -65,5 +66,9 @@ def scrape(output_dir, cache_dir=None):
                 continue
             output_rows.append(output_row)
 
-        write_rows_to_csv(output_rows, output_csv, mode="a")
+        utils.write_rows_to_csv(output_rows, output_csv, mode="a")
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

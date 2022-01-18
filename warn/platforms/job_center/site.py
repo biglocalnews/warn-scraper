@@ -104,11 +104,15 @@ class Site:
 
         Defaults to using cached page if it exists. Always caches freshly scraped page.
         """
+        logger.debug(f"Requesting {url}")
         cache_key = self.cache.key_from_url(url, params)
         if use_cache and self.cache.exists(cache_key):
+            logger.debug("Fetching from cache")
             return self.cache.fetch(url, params)
         else:
+            logger.debug("Pulling from the web")
             response = requests.get(url, params=params)
+            logger.debug(f"Response code: {response.status_code}")
             html = response.text
             self.cache.save(url, params, html)
             return html

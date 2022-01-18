@@ -17,36 +17,40 @@ class Runner:
      - uploading files
      - deleting files from prior runs
 
-    The working_dir and output_dir arguments can specify any
+    The cache_dir and output_dir arguments can specify any
     location, but it's not a bad idea to have them as sibling directories:
 
         /tmp/WARN/working # ETL fiiles
         /tmp/WARN/exports # Final, polished data e.g CSVs for analysis
 
     Args:
-        working_dir (str): Path to store intermediate files used in ETL.
-        output_dir (str): Path where final output files are saved.
-
+        cache_dir (str): Path to store intermediate files used in ETL.
+        data_dir (str): Path where final output files are saved.
     """
 
-    def __init__(self, working_dir, output_dir):
+    def __init__(self, data_dir: Path, cache_dir: Path):
         """Initialize a new instance."""
-        self.working_dir = working_dir
-        self.output_dir = output_dir
+        self.data_dir = data_dir
+        self.cache_dir = cache_dir
 
     def setup(self):
         """Create the necessary directories."""
-        logger.info("Creating necessary dirs")
-        for d in [self.working_dir, self.output_dir]:
+        for d in [self.cache_dir, self.data_dir]:
             Path(d).mkdir(parents=True, exist_ok=True)
 
     def scrape(self, state):
         """Run the scraper for the provided state."""
-        state_mod = import_module("warn.scrapers.{}".format(state.strip().lower()))
+        # Get the module
+        state = state.strip().lower()
+        state_mod = import_module(f"warn.scrapers.{state}")
+
+        # Run the scrape method
         logger.info(f"Scraping {state}")
-        output_csv = state_mod.scrape(self.output_dir, self.working_dir)
-        logger.info(f"Generated {output_csv}")
-        return output_csv
+        data_path = state_mod.scrape(self.data_dir, self.cache_dir)
+
+        # Run the path to the data file
+        logger.info(f"Generated {data_path}")
+        return data_path
 
     def upload(self, project_id, api_token=None, files=None):
         """Upload files to the provided project on Big Local News."""

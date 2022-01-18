@@ -4,15 +4,29 @@ warn-scraper
 
 Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites
 
+
+Installation
+############
+
+Use `pip` or `pipenv` to install the Python library and command-line interface.
+
+.. code-block:: bash
+
+    pipenv install warn-scraper
+
+
+Documentation
+#############
+
 .. toctree::
    :glob:
    :maxdepth: 1
-   :caption: Table of Contents
 
-   getting-started
+   usage
    commands
    contributing
    states
+
 
 Links
 #####
