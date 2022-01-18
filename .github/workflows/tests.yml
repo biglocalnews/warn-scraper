@@ -22,6 +22,23 @@ jobs:
         name: Lint
         run: make lint
 
+  test-docs:
+    name: Test Sphinx build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - id: install
+        name: Install Python, pipenv and Pipfile packages
+        uses: palewire/install-python-pipenv-pipfile@v2
+        with:
+          python-version: 3.7
+
+      - id: build
+        name: Build
+        run: make test-docs
+
   test-python:
     strategy:
       matrix:

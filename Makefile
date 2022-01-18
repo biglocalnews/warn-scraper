@@ -143,6 +143,10 @@ docs: ## start the documentation test server
 	cd docs && $(PIPENV) make livehtml;
 
 
+test-docs: ## build the docs as html
+	cd docs && $(PIPENV) make html;
+
+
 format: ## automatically format Python code with black
 	@$(PIPENV) black .
 
@@ -164,4 +168,5 @@ help: ## Show this help. Example: make help
         lint \
         release \
         test \
+        test-docs \
         test-release
