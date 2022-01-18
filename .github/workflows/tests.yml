@@ -3,6 +3,8 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   lint-python:
@@ -73,7 +75,7 @@ jobs:
           if-no-files-found: error
 
   test-release:
-    name: Release Python package
+    name: Test PyPI release
     runs-on: ubuntu-latest
     needs: [test-build]
     steps:
@@ -96,5 +98,32 @@ jobs:
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
+          verbose: true
+          verify_metadata: false
+
+  tag-release:
+    name: Tagged PyPI release
+    runs-on: ubuntu-latest
+    needs: [test-release]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    steps:
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - id: fetch
+        name: Fetch artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: test-release-${{ github.run_number }}
+          path: ./dist
+
+      - id: publish
+        name: Publish release
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
           verbose: true
           verify_metadata: false
