@@ -1,4 +1,3 @@
-import os
 import logging
 import traceback
 from pathlib import Path
