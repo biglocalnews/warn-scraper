@@ -26,6 +26,7 @@ pdfplumber = "*"
 tenacity = "*"
 xlrd = "*"
 click = "*"
+bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
 
 [requires]
 python_version = "3.7"
