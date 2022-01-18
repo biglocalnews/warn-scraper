@@ -142,9 +142,9 @@ After a scraper has been created, the command-line tool provides a method to tes
 
 .. code-block:: bash
 
-    pipenv run python -m warn --help
+    pipenv run python -m warn.cli --help
 
-    Usage: python -m warn [OPTIONS] [STATES]...
+    Usage: python -m warn.cli [OPTIONS] [STATES]...
 
       Command-line interface for downloading WARN Act notices.
 
@@ -163,13 +163,13 @@ Running a state is as simple as passing arguments to that same command. If you w
 
 .. code-block:: bash
 
-    pipenv run python -m warn IA
+    pipenv run python -m warn.cli IA
 
 For more verbose logging, you can ask the system to showing debugging information.
 
 .. code-block:: bash
 
-    pipenv run python -m warn IA -l DEBUG
+    pipenv run python -m warn.cli IA -l DEBUG
 
 You could continue to iterate with code edits and CLI runs until you've completed your goal.
 
