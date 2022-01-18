@@ -13,27 +13,38 @@ def read(file_name):
         return f.read()
 
 
-requirements = [
-    "bs4",
-    "html5lib",
-    "pandas",
-    "pdfplumber",
-    "requests",
-    "openpyxl",
-    "tenacity",
-    "xlrd",
-    # Install non-PyPI libraries
-    "bln-etl @ git+https://github.com/biglocalnews/bln-etl.git",
-]
+def version_scheme(version):
+    """
+    Version scheme hack for setuptools_scm.
 
-test_requirements = [
-    "pytest",
-    "pytest-vcr",
-]
+    Appears to be necessary to due to the bug documented here: https://github.com/pypa/setuptools_scm/issues/342
+
+    If that issue is resolved, this method can be removed.
+    """
+    import time
+    from setuptools_scm.version import guess_next_version
+
+    if version.exact:
+        return version.format_with("{tag}")
+    else:
+        _super_value = version.format_next_version(guess_next_version)
+        now = int(time.time())
+        return _super_value + str(now)
+
+
+def local_version(version):
+    """
+    Local version scheme hack for setuptools_scm.
+
+    Appears to be necessary to due to the bug documented here: https://github.com/pypa/setuptools_scm/issues/342
+
+    If that issue is resolved, this method can be removed.
+    """
+    return ""
+
 
 setup(
     name="warn-scraper",
-    version="0.1.0",
     description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
@@ -45,7 +56,18 @@ setup(
         [console_scripts]
         warn-scraper=warn.__main__:main
     """,
-    install_requires=requirements,
+    install_requires=[
+        "bs4",
+        "html5lib",
+        "pandas",
+        "pdfplumber",
+        "requests",
+        "openpyxl",
+        "tenacity",
+        "xlrd",
+        # TODO: Release this package on PyPI so we can require it like everything else.
+        # "bln-etl @ git+ssh://git@github.com/biglocalnews/bln-etl.git",
+    ],
     license="Apache 2.0 license",
     zip_safe=False,
     classifiers=[
@@ -59,10 +81,15 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     test_suite="tests",
-    setup_requires=["pytest-runner"],
-    tests_require=test_requirements,
+    tests_require=[
+        "pytest",
+        "pytest-vcr",
+    ],
+    setup_requires=["pytest-runner", "setuptools_scm"],
+    use_scm_version={"version_scheme": version_scheme, "local_scheme": local_version},
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",

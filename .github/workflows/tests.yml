@@ -6,7 +6,7 @@ on:
 
 jobs:
   lint-python:
-    name: Lint Python
+    name: Lint Python code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         python: ["3.7", "3.8", "3.9", "3.10"]
-    name: Test Python
+    name: Test Python code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,3 +41,60 @@ jobs:
       - id: run
         name: Run
         run: make test
+
+  test-build:
+    name: Build Python package
+    runs-on: ubuntu-latest
+    needs: [test-python]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - id: install
+        name: Install Python, pipenv and Pipfile packages
+        uses: palewire/install-python-pipenv-pipfile@v2
+        with:
+          python-version: 3.7
+
+      - id: build
+        name: Build release
+        run: make build-release
+
+      - id: check
+        name: Check release
+        run: make check-release
+
+      - id: save
+        name: Save artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-release-${{ github.run_number }}
+          path: ./dist
+          if-no-files-found: error
+
+  test-release:
+    name: Release Python package
+    runs-on: ubuntu-latest
+    needs: [test-build]
+    steps:
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - id: fetch
+        name: Fetch artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: test-release-${{ github.run_number }}
+          path: ./dist
+
+      - id: publish
+        name: Publish release
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          verbose: true
+          verify_metadata: false

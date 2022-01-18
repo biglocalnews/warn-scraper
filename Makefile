@@ -130,7 +130,7 @@ release: clean dist ## package and upload a release
 	@$(PIPENV) twine upload -r pypi dist/*
 
 
-dist: clean ## builds source and wheel package
+build-release: clean ## builds source and wheel package
 	@$(PYTHON) setup.py sdist
 	@$(PYTHON) setup.py bdist_wheel
 	@ls -l dist

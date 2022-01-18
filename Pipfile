@@ -8,12 +8,13 @@ pytest = "*"
 pytest-vcr = "*"
 black = "*"
 twine = "*"
-Sphinx = "*"
+Sphinx = "==4.3.1"
 sphinx-autobuild = "*"
 myst-parser = "*"
 flake8 = "*"
 coverage = "*"
 flake8-docstrings = "*"
+setuptools-scm = "*"
 
 [packages]
 bs4 = "*"
@@ -21,11 +22,11 @@ html5lib = "*"
 requests = "*"
 pandas = "*"
 openpyxl = "*"
-bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
 pdfplumber = "*"
 tenacity = "*"
 xlrd = "*"
 click = "*"
+bln-etl = {git = "https://github.com/biglocalnews/bln-etl"}
 
 [requires]
 python_version = "3.7"
