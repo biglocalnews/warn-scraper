@@ -1,29 +1,31 @@
 import csv
+import typing
 import logging
-import requests
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Rhode Island.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/ri.csv"
+    output_csv = data_dir / "ri.csv"
     url = "https://dlt.ri.gov/wds/warn/"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
     first_row = tables[0].find_all("tr")[0]
@@ -50,3 +52,7 @@ def scrape(output_dir, cache_dir=None):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

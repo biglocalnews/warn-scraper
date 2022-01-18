@@ -1,34 +1,34 @@
-import logging
 import re
-import requests
-
-from bs4 import BeautifulSoup
-import pandas as pd
+import typing
+import logging
 from pathlib import Path
+
+import pandas as pd
 from xlrd import XLRDError
+from bs4 import BeautifulSoup
 from zipfile import BadZipFile
 
-from warn.utils import download_file
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Texas.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/tx.csv"
+    output_csv = data_dir / "tx.csv"
     url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     # download each year's excel file
     links = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))
@@ -61,11 +61,11 @@ def scrape(output_dir, cache_dir=None):
             logger.debug(
                 f"Failed to read file {cache_key_year} from cache. Downloading to cache from {data_url}..."
             )
-            file_path = download_file(data_url, cache_key_year)
+            utils.download_file(data_url, cache_key_year)
             try:
-                year_df = pd.read_excel(file_path, engine="openpyxl")
+                year_df = pd.read_excel(cache_key_year, engine="openpyxl")
             except BadZipFile:
-                year_df = pd.read_excel(file_path, engine="xlrd")
+                year_df = pd.read_excel(cache_key_year, engine="xlrd")
         output_df = output_df.append(year_df)
     historical_df = _scrape_historical(cache_dir)
     # flip the order of the rows to match the yearly docs
@@ -94,6 +94,10 @@ def _scrape_historical(cache_dir):
         logger.debug(
             f"Historical file not found in cache. Downloading to cache from {data_url}..."
         )
-        file_path = download_file(data_url, cache_key_historical)
-        historical_df = pd.read_excel(file_path, engine="openpyxl")
+        utils.download_file(data_url, cache_key_historical)
+        historical_df = pd.read_excel(cache_key_historical, engine="openpyxl")
     return historical_df
+
+
+if __name__ == "__main__":
+    scrape()

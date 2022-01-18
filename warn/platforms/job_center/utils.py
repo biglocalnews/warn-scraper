@@ -2,7 +2,6 @@ import logging
 import re
 from collections import OrderedDict
 from datetime import datetime as dt
-from pathlib import Path
 
 from .site import Site as JobCenterSite
 from warn.utils import write_dict_rows_to_csv, write_rows_to_csv
@@ -40,7 +39,7 @@ def scrape_state(
     # we have to separate those from remaining years.
     no_cache_years = [yearly_dates.pop(0), yearly_dates.pop(0)]
     # Set up scraper instance
-    state_cache_dir = str(Path(cache_dir, state_postal.lower()))
+    state_cache_dir = cache_dir / state_postal.lower()
     site = JobCenterSite(state_postal.upper(), search_url, cache_dir=state_cache_dir)
     # Date-based searches produce search result pages that appear to have certain
     # records duplicated over paged results. We'll initially write all data to a raw

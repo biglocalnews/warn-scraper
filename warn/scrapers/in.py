@@ -1,33 +1,36 @@
 import csv
+import typing
 import logging
-import requests
+from pathlib import Path
 
 from bs4 import BeautifulSoup
+
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Indiana.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/in.csv"
+    output_csv = data_dir / "in.csv"
     # max_entries = 378 # manually inserted
     # start_row_list = range(1, max_entries, 50)
     url1 = "https://www.in.gov/dwd/2567.htm"
-    page = requests.get(url1)
+    page = utils.get_url(url1)
     logger.debug(f"Page status is {page.status_code} for {url1}")
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
-    len(tables)
     # find header
     first_row = tables[0].find_all("tr")[0]
     headers = first_row.find_all("th")
@@ -56,7 +59,7 @@ def scrape(output_dir, cache_dir=None):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     url2 = "https://www.in.gov/dwd/3125.htm"
-    page = requests.get(url2)
+    page = utils.get_url(url2)
     logger.debug(f"Page status is {page.status_code} for {url2}")
     soup = BeautifulSoup(page.text, "html.parser")
     tables = soup.find_all("table")  # output is list-type
@@ -77,3 +80,7 @@ def scrape(output_dir, cache_dir=None):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

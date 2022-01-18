@@ -48,12 +48,12 @@ setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     author="Big Local News",
-    url="https://github.com/biglocalnews/WARN",
+    url="https://github.com/biglocalnews/warn-scraper",
     packages=find_packages(),
     include_package_data=True,
     entry_points="""
         [console_scripts]
-        warn-scraper=warn.cli:main
+        warn-scraper=warn.__main__:main
     """,
     install_requires=[
         "bs4",
@@ -95,7 +95,7 @@ setup(
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",
-        "Source": "https://github.com/biglocalnews/WARN",
-        "Tracker": "https://github.com/biglocalnews/WARN/issues",
+        "Source": "https://github.com/biglocalnews/warn-scraper",
+        "Tracker": "https://github.com/biglocalnews/warn-scraper/issues",
     },
 )

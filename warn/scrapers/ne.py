@@ -1,31 +1,33 @@
 import csv
+import typing
 import logging
-import requests
-import pandas as pd
+from pathlib import Path
 
+import pandas as pd
 from bs4 import BeautifulSoup
 
+from .. import utils
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Nebraska.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{cache_dir}/ne_raw1.csv"
+    output_csv = cache_dir / "ne_raw1.csv"
     years = range(2019, 2009, -1)
     url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020"
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     # find header
@@ -60,8 +62,7 @@ def scrape(output_dir, cache_dir=None):
         url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year={}".format(
             year
         )
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []
@@ -80,18 +81,17 @@ def scrape(output_dir, cache_dir=None):
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     _nebraska_two(cache_dir)
-    final_csv = _combine(output_dir, cache_dir)
+    final_csv = _combine(data_dir, cache_dir)
     return final_csv
 
 
 def _nebraska_two(cache_dir):
-    output_csv = f"{cache_dir}/ne_raw2.csv"
+    output_csv = cache_dir / "ne_raw2.csv"
     years = range(2019, 2009, -1)
     url = (
         "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020"
     )
-    page = requests.get(url)
-    logger.debug(f"Page status is {page.status_code} for {url}")
+    page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     # find header
@@ -126,8 +126,7 @@ def _nebraska_two(cache_dir):
         url = "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year={}".format(
             year
         )
-        page = requests.get(url)
-        logger.debug(f"Page status is {page.status_code} for {url}")
+        page = utils.get_url(url)
         soup = BeautifulSoup(page.text, "html.parser")
         table = soup.find_all("table")  # output is list-type
         output_rows = []
@@ -149,12 +148,16 @@ def _nebraska_two(cache_dir):
     return output_csv
 
 
-def _combine(output_dir, cache_dir):
-    ne_one_path = f"{cache_dir}/ne_raw1.csv"
-    ne_two_path = f"{cache_dir}/ne_raw2.csv"
+def _combine(data_dir, cache_dir):
+    ne_one_path = cache_dir / "ne_raw1.csv"
+    ne_two_path = cache_dir / "ne_raw2.csv"
     ne_one = pd.read_csv(ne_one_path)
     ne_two = pd.read_csv(ne_two_path)
     ne_all_data = pd.concat([ne_one, ne_two])
-    output_csv = f"{output_dir}/ne.csv"
+    output_csv = data_dir / "ne.csv"
     ne_all_data.to_csv(output_csv)
     return output_csv
+
+
+if __name__ == "__main__":
+    scrape()

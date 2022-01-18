@@ -1,29 +1,31 @@
-import csv
-import logging
 import re
-import requests
+import csv
+import typing
+import logging
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from warn.cache import Cache
-from warn.utils import write_rows_to_csv
+from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
 
-def scrape(output_dir, cache_dir=None):
+def scrape(
+    data_dir: Path = utils.WARN_DATA_DIR,
+    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+) -> Path:
     """
     Scrape data from Maryland.
 
-    Arguments:
-    output_dir -- the Path were the result will be saved
-
     Keyword arguments:
-    cache_dir -- the Path where results can be cached (default None)
+    data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
+    cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-    output_csv = f"{output_dir}/md.csv"
+    output_csv = data_dir / "md.csv"
     url = "http://www.dllr.state.md.us/employment/warn.shtml"
     html = _scrape_page(url)
 
@@ -72,12 +74,11 @@ def _write_body(html, output_csv):
             output_rows.append(
                 output_row[:8]
             )  # hard-coding a cutoff length to deal with the buggy long row
-    write_rows_to_csv(output_rows, output_csv, mode="a")
+    utils.write_rows_to_csv(output_rows, output_csv, mode="a")
 
 
 def _scrape_page(url):
-    response = requests.get(url)
-    logger.debug(f"Page status is {response.status_code} for {url}")
+    response = utils.get_url(url)
     response.encoding = "utf-8"
     return response.text
 
@@ -97,3 +98,7 @@ def _scrape_old(url_list, cache, output_csv):
             cache.write(cache_key, html)
             logger.debug(f"Scraped and cached {url}")
         _write_body(html, output_csv)
+
+
+if __name__ == "__main__":
+    scrape()
