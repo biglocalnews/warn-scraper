@@ -18,7 +18,7 @@ The first step is to visit [our repository's homepage](https://github.com/bigloc
 
 ## 2. Click 'Draft a new release'
 
-Note the number of the latest release. Click the "Draft a new release" button in the upper-right corner.
+Note the number of the latest release. Click the "Draft a new release" button in the upper-right corner. If you don't see this button, you do not have permission to make a release. Only the maintainers of the repository are able to release new code.
 
 ![Draft button](_static/releasing-draft-button.png)
 
