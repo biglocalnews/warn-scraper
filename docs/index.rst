@@ -23,7 +23,6 @@ Documentation
    :maxdepth: 1
 
    usage
-   commands
    contributing
    states
 
