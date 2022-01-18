@@ -23,6 +23,7 @@ def version_scheme(version):
     """
     import time
     from setuptools_scm.version import guess_next_version
+
     if version.exact:
         return version.format_with("{tag}")
     else:
@@ -88,10 +89,7 @@ setup(
         "pytest-vcr",
     ],
     setup_requires=["pytest-runner", "setuptools_scm"],
-    use_scm_version={
-        "version_scheme": version_scheme,
-        "local_scheme": local_version
-    },
+    use_scm_version={"version_scheme": version_scheme, "local_scheme": local_version},
     project_urls={
         "Documentation": "https://warn-scraper.readthedocs.io",
         "Maintainer": "https://github.com/biglocalnews",
