@@ -24,6 +24,7 @@ Documentation
 
    usage
    contributing
+   releasing
    states
 
 
