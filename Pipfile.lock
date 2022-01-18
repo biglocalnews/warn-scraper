@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d798f18148e4c781aad1474be128512288d19d02f042b84549135af36cc153a9"
+            "sha256": "858ae985963d40c210acdff1d423a877c07782b23d6e388a697eccf12d488e76"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,18 +23,6 @@
             ],
             "markers": "python_version >= '3.1'",
             "version": "==4.10.0"
-        },
-        "bln": {
-            "hashes": [
-                "sha256:317501434c2d5283ce983270b9c2616d3a1116d90a091e7d83e9460c43e34669",
-                "sha256:6af0f58cbd21a8cc8fc8fc357bfb2d11671081318317b089ebf463e1b3e331ba"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==0.4.0"
-        },
-        "bln-etl": {
-            "git": "https://github.com/biglocalnews/bln-etl",
-            "ref": "cae6cdf42a303a56f98587f21e504f87111cfc16"
         },
         "bs4": {
             "hashes": [

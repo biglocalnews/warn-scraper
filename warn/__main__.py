@@ -24,14 +24,9 @@ from . import utils
     help="The Path where results can be cached",
 )
 @click.option(
-    "--upload/--no-upload",
-    default=False,
-    help="Upload generated files to BLN platform project",
-)
-@click.option(
     "--delete/--no-delete",
     default=False,
-    help="Upload generated files to BLN platform project",
+    help="Delete generated files from the cache",
 )
 @click.option(
     "--log-level",
@@ -46,7 +41,6 @@ def main(
     states: list,
     data_dir: Path,
     cache_dir: Path,
-    upload: bool,
     delete: bool,
     log_level: str,
 ):
@@ -102,18 +96,6 @@ def main(
 
             # Then add the state to our tally of failures
             failed.append(state)
-
-    # If asked, upload the files to Big Local News
-    if upload:
-        try:
-            project_id = os.environ["WARN_PROJECT_ID"]
-            runner.upload(project_id)
-        except KeyError:
-            msg = (
-                "ERROR: No upload performed. You must set the BLN_API_KEY "
-                "and WARN_PROJECT_ID env vars to upload files."
-            )
-            logger.error(msg)
 
     # Log out our final status
     if succeeded:

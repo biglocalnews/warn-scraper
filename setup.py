@@ -65,8 +65,6 @@ setup(
         "openpyxl",
         "tenacity",
         "xlrd",
-        # TODO: Release this package on PyPI so we can require it like everything else.
-        # "bln-etl @ git+ssh://git@github.com/biglocalnews/bln-etl.git",
     ],
     license="Apache 2.0 license",
     zip_safe=False,

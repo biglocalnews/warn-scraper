@@ -3,8 +3,6 @@ import logging
 from importlib import import_module
 from pathlib import Path
 
-from bln_etl.api import Project
-
 logger = logging.getLogger(__name__)
 
 
@@ -14,7 +12,6 @@ class Runner:
     Provides methods for:
      - directory setup
      - scraping a state
-     - uploading files
      - deleting files from prior runs
 
     The cache_dir and output_dir arguments can specify any
@@ -51,12 +48,6 @@ class Runner:
         # Run the path to the data file
         logger.info(f"Generated {data_path}")
         return data_path
-
-    def upload(self, project_id, api_token=None, files=None):
-        """Upload files to the provided project on Big Local News."""
-        logger.info(f"Uploading files in {self.output_dir}")
-        project = Project.get(project_id, api_token=api_token)
-        project.upload_files(files or self._output_dir_files)
 
     def delete(self):
         """Delete the files in the output directory."""
