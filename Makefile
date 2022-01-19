@@ -139,8 +139,14 @@ build-release: clean ## builds source and wheel package
 # Extras
 #
 
-docs: ## start the documentation test server
+docs: tally-sources ## start the documentation test server
+	$(call banner,        📃 Building docs 📃)
 	cd docs && $(PIPENV) make livehtml;
+
+
+tally-sources: ## update sources dashboard in the docs
+	$(call banner,      🧮 Tallying sources 🧮)
+	$(PYTHON) docs/tally_sources.py
 
 
 test-docs: ## build the docs as html
@@ -148,6 +154,7 @@ test-docs: ## build the docs as html
 
 
 format: ## automatically format Python code with black
+	$(call banner,       🪥 Cleaning code 🪥)
 	@$(PIPENV) black .
 
 

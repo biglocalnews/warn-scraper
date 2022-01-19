@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "858ae985963d40c210acdff1d423a877c07782b23d6e388a697eccf12d488e76"
+            "sha256": "ad306702ab6e0d33bd923322380b638015e9a9bb3ea05ae669862afc6d3119d3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -672,12 +672,18 @@
             "markers": "sys_platform == 'linux'",
             "version": "==0.7.1"
         },
+        "jellyfish": {
+            "hashes": [
+                "sha256:5104e45a2b804b48a46a92a5e6d6e86830fe60ae83b1da32c867402c8f4c2094"
+            ],
+            "version": "==0.6.1"
+        },
         "jinja2": {
             "hashes": [
                 "sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8",
                 "sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7"
             ],
-            "markers": "python_version >= '3.6'",
+            "index": "pypi",
             "version": "==3.0.3"
         },
         "keyring": {
@@ -1089,11 +1095,11 @@
         },
         "setuptools-scm": {
             "hashes": [
-                "sha256:93bbcc1d3e92f20eaef42df31e4b5e5a348f8cb0e48eaff3e060184a57e94b07",
-                "sha256:9bd9ff7fd5fa1cf469fe28a632336b9cfd351476c6d09379ff676d3945f669b9"
+                "sha256:6833ac65c6ed9711a4d5d2266f8024cfa07c533a0e55f4c12f6eff280a5a9e30",
+                "sha256:acea13255093849de7ccb11af9e1fb8bde7067783450cee9ef7a93139bddf6d4"
             ],
             "index": "pypi",
-            "version": "==6.4.1"
+            "version": "==6.4.2"
         },
         "six": {
             "hashes": [
@@ -1293,6 +1299,13 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.8"
+        },
+        "us": {
+            "hashes": [
+                "sha256:cb11ad0d43deff3a1c3690c74f0c731cff5b862c73339df2edd91133e1496fbc"
+            ],
+            "index": "pypi",
+            "version": "==2.0.2"
         },
         "vcrpy": {
             "hashes": [

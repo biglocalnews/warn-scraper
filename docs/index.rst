@@ -25,7 +25,7 @@ Documentation
    usage
    contributing
    releasing
-   states
+   sources
 
 
 Links
