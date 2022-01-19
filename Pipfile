@@ -17,6 +17,7 @@ flake8-docstrings = "*"
 setuptools-scm = "*"
 us = "*"
 jinja2 = "*"
+flake8-bugbear = "*"
 
 [packages]
 bs4 = "*"
