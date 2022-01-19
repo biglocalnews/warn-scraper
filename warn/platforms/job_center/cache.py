@@ -24,7 +24,7 @@ class Cache(BaseCache):
         logger.debug(f"Fetched from cache: {cache_key}")
         return content
 
-    def key_from_url(self, url, params={}):
+    def key_from_url(self, url, params=None):
         """Convert a URL to a cache key."""
         page_type = (
             "records" if re.search(r"warn_lookups/\d+$", url) else "search_results"
@@ -44,6 +44,8 @@ class Cache(BaseCache):
                 end = parsed_params[end_key][0]
             # For initiial search page, get metadata from params
             else:
+                if not params:
+                    params = {}
                 start = params[start_key]
                 end = params[end_key]
                 page_num = 1
