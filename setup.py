@@ -75,7 +75,7 @@ class TallyCommand(distutils.cmd.Command):
         scraper_list = warn.utils.get_all_states()
         print(f"{len(scraper_list)} scrapers found")
 
-        docs_dir = this_dir / "scrapers"
+        docs_dir = this_dir / "docs" / "scrapers"
         has_docs = [f.stem for f in docs_dir.glob("*.md") if f.stem in scraper_list]
         print(f"{len(has_docs)} scrapers have docs")
 
