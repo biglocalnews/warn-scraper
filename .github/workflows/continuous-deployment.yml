@@ -35,6 +35,10 @@ jobs:
         with:
           python-version: 3.7
 
+      - id: tally
+        name: Tally sources
+        run: make tally-sources
+
       - id: build
         name: Build
         run: make test-docs

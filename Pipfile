@@ -15,6 +15,8 @@ flake8 = "*"
 coverage = "*"
 flake8-docstrings = "*"
 setuptools-scm = "*"
+us = "*"
+jinja2 = "*"
 
 [packages]
 bs4 = "*"
