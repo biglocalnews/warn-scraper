@@ -146,7 +146,7 @@ docs: tally-sources ## start the documentation test server
 
 tally-sources: ## update sources dashboard in the docs
 	$(call banner,      🧮 Tallying sources 🧮)
-	$(PYTHON) docs/tally_sources.py
+	$(PYTHON) tally_sources.py
 
 
 test-docs: ## build the docs as html

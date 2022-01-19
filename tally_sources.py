@@ -4,7 +4,7 @@ import jinja2
 from pathlib import Path
 
 this_dir = Path(__file__).parent
-loader = jinja2.FileSystemLoader(searchpath=this_dir / "_templates/")
+loader = jinja2.FileSystemLoader(searchpath=this_dir / "docs" / "_templates/")
 env = jinja2.Environment(loader=loader)
 
 
@@ -41,7 +41,7 @@ def main():
     template = env.get_template("sources.md")
     md = template.render(**context)
 
-    with open(this_dir / "sources.md", "w") as fh:
+    with open(this_dir / "docs" / "sources.md", "w") as fh:
         fh.write(md)
 
 
