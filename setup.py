@@ -50,6 +50,7 @@ def local_version(version):
 
 class TallyCommand(distutils.cmd.Command):
     """Tally scrapers and update sources dashboard in the docs."""
+
     description = 'Tally scrapers and update sources dashboard in the docs'
     user_options = []
 
