@@ -1,6 +1,6 @@
 import os
+from os.path import expanduser, join
 from pathlib import Path
-from os.path import join, expanduser
 
 
 class Cache:
@@ -47,7 +47,7 @@ class Cache:
 
         """
         path = Path(self.path, name)
-        with open(path, "r", newline="") as infile:
+        with open(path, newline="") as infile:
             return infile.read()
 
     def write(self, name, content):

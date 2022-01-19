@@ -1,17 +1,16 @@
+import logging
 import re
 import shutil
 import typing
-import logging
 from pathlib import Path
 
-import requests
 import pdfplumber
+import requests
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
 from .. import utils
 from ..cache import Cache
-
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ def scrape(
     # Initially write to a temp file in cache_dir before
     # over-writing prior output_csv, so we can use append
     # mode while avoiding data corruption if script errors out
-    temp_csv = "{}/ca_temp.csv".format(cache_state)
+    temp_csv = f"{cache_state}/ca_temp.csv"
     # Create Cache instance for downstream operations
     cache = Cache(cache_dir)
     # Update pdfs and Excel files

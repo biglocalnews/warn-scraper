@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-
 # NOTE: To check if vcrpy/pytest-vcr
 # is using cassettes as opposed to making
 # live web requests, uncomment below
@@ -67,7 +66,7 @@ def read_fixture(file_name):
 
 def file_contents(pth):
     """Read provided file path."""
-    with open(pth, "r", newline="") as f:
+    with open(pth, newline="") as f:
         return f.read()
 
 

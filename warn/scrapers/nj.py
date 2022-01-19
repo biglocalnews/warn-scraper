@@ -1,6 +1,6 @@
-import typing
-import logging
 import itertools
+import logging
+import typing
 from pathlib import Path
 
 import pandas as pd

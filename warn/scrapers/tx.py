@@ -1,12 +1,12 @@
+import logging
 import re
 import typing
-import logging
 from pathlib import Path
+from zipfile import BadZipFile
 
 import pandas as pd
-from xlrd import XLRDError
 from bs4 import BeautifulSoup
-from zipfile import BadZipFile
+from xlrd import XLRDError
 
 from .. import utils
 

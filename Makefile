@@ -1,6 +1,6 @@
 #
 # Colors
-# 
+#
 
 # Define ANSI color codes
 RESET_COLOR   = \033[m

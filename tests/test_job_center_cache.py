@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 
 from warn.platforms.job_center.cache import Cache
