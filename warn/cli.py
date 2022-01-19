@@ -4,8 +4,7 @@ from pathlib import Path
 
 import click
 
-from . import Runner
-from . import utils
+from . import Runner, utils
 
 
 @click.command()

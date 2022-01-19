@@ -1,10 +1,11 @@
-from unittest.mock import patch
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from .conftest import file_contents
 from warn.cache import Cache
+
+from .conftest import file_contents
 
 
 def test_default_cache_dir():

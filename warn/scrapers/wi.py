@@ -1,7 +1,7 @@
-import re
 import csv
-import typing
 import logging
+import re
+import typing
 from pathlib import Path
 
 from bs4 import BeautifulSoup

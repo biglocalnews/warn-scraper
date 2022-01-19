@@ -1,6 +1,6 @@
 # South Carolina
 
-## Site: 
+## Site:
 https://scworks.org/employer/employer-programs/at-risk-of-closing/layoff-notification-reports
 
 ### 10/8/2021

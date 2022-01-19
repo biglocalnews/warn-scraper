@@ -1,14 +1,13 @@
 import html as html_mod
 import logging
-import requests
 import urllib.parse
 from datetime import date
 
+import requests
 from bs4 import BeautifulSoup
 
 from .cache import Cache
 from .urls import urls
-
 
 logger = logging.getLogger(__name__)
 

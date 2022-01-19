@@ -13,9 +13,9 @@ warn-scraper AK CT
 To use the `warn` library in Python, import a state's scraper and run it directly.
 
 ```python
->>> # Scrape Alaska to the default download directory
->>> from warn.scrapers import ak
->>> ak.scrape()
+from warn.scrapers import ak
+
+ak.scrape()
 ```
 
 ## Configuration

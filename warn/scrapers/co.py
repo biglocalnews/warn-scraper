@@ -1,10 +1,9 @@
 import csv
-import typing
 import logging
+import typing
 from pathlib import Path
 
 from .. import utils
-
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +106,7 @@ def scrape(
         intermediate_csv_path = f"{cache_state}/{num}.csv"
         # TODO try to read from cache first
         utils.download_file(url, intermediate_csv_path)
-        with open(intermediate_csv_path, "r", newline="") as csvfile:
+        with open(intermediate_csv_path, newline="") as csvfile:
             reader = csv.reader(csvfile)
             rows_to_add = []
             for row_idx, row in enumerate(reader):

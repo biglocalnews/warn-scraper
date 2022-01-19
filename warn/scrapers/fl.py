@@ -1,14 +1,14 @@
+import datetime
+import logging
 import re
 import typing
-import logging
-import urllib3
-import datetime
-from pathlib import Path
 from os.path import exists
+from pathlib import Path
 
+import pdfplumber
 import requests
 import tenacity
-import pdfplumber
+import urllib3
 from bs4 import BeautifulSoup
 
 from .. import utils
