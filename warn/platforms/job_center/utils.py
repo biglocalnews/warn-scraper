@@ -3,8 +3,9 @@ import re
 from collections import OrderedDict
 from datetime import datetime as dt
 
-from .site import Site as JobCenterSite
 from warn.utils import write_dict_rows_to_csv, write_rows_to_csv
+
+from .site import Site as JobCenterSite
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +117,7 @@ def _dedupe(raw_csv, output_csv):
     """Create an ordered dict to discard dupes while preserving row order."""
     data = OrderedDict()
     raw_count = 0
-    with open(raw_csv, "r", newline="") as src:
+    with open(raw_csv, newline="") as src:
         for row in src:
             raw_count += 1
             data[row] = row

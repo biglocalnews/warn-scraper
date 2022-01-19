@@ -1,10 +1,10 @@
 import csv
-import typing
 import logging
+import typing
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 from .. import utils
 

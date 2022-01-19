@@ -15,7 +15,7 @@ Madison, WI 53707
 ### July 23, 2021
 Sent an email asking about the 'Y' column. Hopefully we get a response! Seems like it's valid data, just unmarked.
 
-RESPONSE: 
+RESPONSE:
 Hi Cody –
 The unlabeled column you cite in your inquiry denotes whether an update to the notice was received at some point in time after receiving the initial notice.
 Thanks!

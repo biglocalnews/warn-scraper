@@ -1,6 +1,6 @@
 import csv
-import typing
 import logging
+import typing
 from pathlib import Path
 
 import requests
@@ -64,7 +64,7 @@ def scrape(
             try:
                 formdata = {
                     "__EVENTTARGET": "ucPSW$gvMain",
-                    "__EVENTARGUMENT": "Page${}".format(page),
+                    "__EVENTARGUMENT": f"Page${page}",
                     "__VIEWSTATE": soup_content.find(
                         "input", attrs={"name": "__VIEWSTATE"}
                     )["value"],

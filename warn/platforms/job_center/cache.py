@@ -2,8 +2,8 @@ import logging
 import re
 
 from warn.cache import Cache as BaseCache
-from .urls import urls
 
+from .urls import urls
 
 logger = logging.getLogger(__name__)
 

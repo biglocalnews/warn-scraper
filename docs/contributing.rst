@@ -41,6 +41,12 @@ The `pipenv` package manager can install all of the Python tools necessary to ru
 
     pipenv install --dev
 
+Now install `pre-commit` to run a battery of automatic quick fixes against your work.
+
+.. code-block:: bash
+
+    pipenv run pre-commit install
+
 Create an issue
 ###############
 
@@ -221,8 +227,3 @@ Send a pull request
 ###################
 
 The final step is to submit a `pull request <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests>`_ to the main respository, asking the maintainers to consider integrating your patch. GitHub has `a short guide <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request>`_ that can walk you through the process. You should tag your issue number in the request so that they linked in GitHub’s system.
-
-
-
-
-

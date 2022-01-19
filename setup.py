@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Configure the package for distribution."""
-import os
-import us
-import warn
-import jinja2
 import distutils.cmd
+import os
 from pathlib import Path
-from setuptools import setup, find_packages
+
+import jinja2
+import us
+from setuptools import find_packages, setup
+
+import warn
 
 
 def read(file_name):
@@ -27,6 +28,7 @@ def version_scheme(version):
     If that issue is resolved, this method can be removed.
     """
     import time
+
     from setuptools_scm.version import guess_next_version
 
     if version.exact:
@@ -73,7 +75,7 @@ class TallyCommand(distutils.cmd.Command):
         scraper_list = warn.utils.get_all_states()
         print(f"{len(scraper_list)} scrapers found")
 
-        docs_dir = this_dir / "scrapers"
+        docs_dir = this_dir / "docs" / "scrapers"
         has_docs = [f.stem for f in docs_dir.glob("*.md") if f.stem in scraper_list]
         print(f"{len(has_docs)} scrapers have docs")
 

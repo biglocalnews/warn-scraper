@@ -18,6 +18,7 @@ setuptools-scm = "*"
 us = "*"
 jinja2 = "*"
 flake8-bugbear = "*"
+pre-commit = "*"
 
 [packages]
 bs4 = "*"

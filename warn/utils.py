@@ -1,6 +1,6 @@
-import os
 import csv
 import logging
+import os
 from pathlib import Path
 
 import requests
@@ -22,6 +22,10 @@ else:
 WARN_CACHE_DIR = WARN_OUTPUT_DIR / "cache"
 WARN_DATA_DIR = WARN_OUTPUT_DIR / "exports"
 WARN_LOG_DIR = WARN_OUTPUT_DIR / "logs"
+
+# Ensure needed directories exist
+for localdir in [WARN_CACHE_DIR, WARN_DATA_DIR, WARN_LOG_DIR]:
+    os.makedirs(localdir, exist_ok=True)
 
 
 def write_rows_to_csv(rows, output_path, mode="w"):
