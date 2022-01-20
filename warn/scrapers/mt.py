@@ -1,15 +1,15 @@
-import typing
 from pathlib import Path
 
-import pandas as pd
 from bs4 import BeautifulSoup
+from openpyxl import load_workbook
 
 from .. import utils
+from ..cache import Cache
 
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Montana.
@@ -20,26 +20,50 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    response = utils.get_url(
-        "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
-    )
-    data_file_name = _extract_file_name(response.text)
-    data_url = f"https://wsd.dli.mt.gov/_docs/wioa/{data_file_name}"
-    df = pd.read_excel(data_url, engine="openpyxl")
-    output_file = data_dir / "mt.csv"
-    df.to_csv(output_file, index=False)
-    return output_file
+    # Get the URL
+    url = "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
+    r = utils.get_url(url)
+    html = r.text
 
+    # Save it to the cache
+    cache = Cache(cache_dir)
+    cache.write("mt/source.html", html)
 
-def _extract_file_name(html):
+    # Parse out the Excel link
     soup = BeautifulSoup(html, "html.parser")
     links = soup.find(id="boardPage").find_all("a")
-    # Below URL will look like: ="../../_docs/wioa/warn-9-1-21.xlsx"
-    return [
+    excel_name = [
         link.attrs["href"]
         for link in links
-        if link.attrs.get("href", "").endswith("xlsx")
+        if link.attrs.get("href", "").endswith(
+            "xlsx"
+        )  # URL will look like: ="../../_docs/wioa/warn-9-1-21.xlsx"
     ][0].split("/")[-1]
+    excel_url = f"https://wsd.dli.mt.gov/_docs/wioa/{excel_name}"
+
+    # Download the Excel file
+    excel_path = cache.download("mt/source.xlsx", excel_url)
+
+    # Open it up
+    workbook = load_workbook(filename=excel_path)
+
+    # Get the first sheet
+    worksheet = workbook.worksheets[0]
+
+    # Convert the sheet to a list of lists
+    row_list = []
+    for r in worksheet.rows:
+        column = [cell.value for cell in r]
+        row_list.append(column)
+
+    # Set the export path
+    data_path = data_dir / "mt.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(row_list, data_path)
+
+    # Return the path to the file
+    return data_path
 
 
 if __name__ == "__main__":
