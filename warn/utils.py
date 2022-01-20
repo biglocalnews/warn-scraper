@@ -23,12 +23,29 @@ WARN_CACHE_DIR = WARN_OUTPUT_DIR / "cache"
 WARN_DATA_DIR = WARN_OUTPUT_DIR / "exports"
 WARN_LOG_DIR = WARN_OUTPUT_DIR / "logs"
 
-# Ensure needed directories exist
-for localdir in [WARN_CACHE_DIR, WARN_DATA_DIR, WARN_LOG_DIR]:
-    os.makedirs(localdir, exist_ok=True)
+
+def create_directory(*args: Path):
+    """Create the filesystem directories for the provided Path objects."""
+    # Ensure needed directories exist
+    for path in args:
+        # Get the directory path
+        if path.is_file():
+            # If it's a file, take the parent
+            directory = path.parent
+        else:
+            # Other, assume it's a directory and we're good
+            directory = path
+
+        # If the path already exists, we're good
+        if directory.exists():
+            return
+
+        # If not, lets make it
+        logger.debug(f"Creating directory at {directory}")
+        directory.mkdir(parents=True)
 
 
-def write_rows_to_csv(rows, output_path, mode="w"):
+def write_rows_to_csv(rows: list, output_path: Path, mode="w"):
     """
     Write the provided list to the provided path as comma-separated values.
 
@@ -39,6 +56,7 @@ def write_rows_to_csv(rows, output_path, mode="w"):
     Keyword arguments:
     mode -- the mode to be used when opening the file (default 'w')
     """
+    create_directory(output_path)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
     with open(output_path, mode, newline="") as f:
         writer = csv.writer(f)
@@ -58,6 +76,7 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
     mode -- the mode to be used when opening the file (default 'w')
     extrasaction -- what to do if the if a field isn't in the headers (default 'raise')
     """
+    create_directory(output_path)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
     with open(output_path, mode, newline="") as f:
         # Create the writer object

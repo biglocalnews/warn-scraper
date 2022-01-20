@@ -2,6 +2,8 @@ import logging
 from importlib import import_module
 from pathlib import Path
 
+from . import utils
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,8 +33,7 @@ class Runner:
 
     def setup(self):
         """Create the necessary directories."""
-        for d in [self.cache_dir, self.data_dir]:
-            Path(d).mkdir(parents=True, exist_ok=True)
+        utils.create_directory(self.data_dir, self.cache_dir)
 
     def scrape(self, state):
         """Run the scraper for the provided state."""
