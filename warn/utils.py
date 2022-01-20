@@ -38,7 +38,7 @@ def create_directory(*args: Path):
 
         # If the path already exists, we're good
         if directory.exists():
-            return
+            continue
 
         # If not, lets make it
         logger.debug(f"Creating directory at {directory}")
