@@ -39,7 +39,7 @@ def scrape(
     # Initially write to a temp file in cache_dir before
     # over-writing prior output_csv, so we can use append
     # mode while avoiding data corruption if script errors out
-    temp_csv = f"{cache_state}/ca_temp.csv"
+    temp_csv = cache_state / "ca_temp.csv"
     # Create Cache instance for downstream operations
     cache = Cache(cache_dir)
     # Update pdfs and Excel files

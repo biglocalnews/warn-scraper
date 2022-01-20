@@ -12,13 +12,13 @@ from . import Runner, utils
 @click.option(
     "--data-dir",
     default=utils.WARN_DATA_DIR,
-    type=click.Path(exists=True),
+    type=click.Path(),
     help="The Path were the results will be saved",
 )
 @click.option(
     "--cache-dir",
     default=utils.WARN_CACHE_DIR,
-    type=click.Path(exists=True),
+    type=click.Path(),
     help="The Path where results can be cached",
 )
 @click.option(

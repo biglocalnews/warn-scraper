@@ -29,7 +29,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     output_csv = data_dir / "mo.csv"
-    raw_csv = f"{cache_dir}/mo_raw.csv"
+    raw_csv = cache_dir / "mo_raw.csv"
     years = range(2021, 2014, -1)
     url = "https://jobs.mo.gov/warn2021"
 

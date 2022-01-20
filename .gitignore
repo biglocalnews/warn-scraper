@@ -1,3 +1,6 @@
+# Our download dir
+.warn-scraper
+
 # Data folders
 logs/
 old_data/
