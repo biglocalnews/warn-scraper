@@ -91,6 +91,7 @@ When adding a new state, you should create a new Python file in the `warn/scrape
     from pathlib import Path
 
     from .. import utils
+    from ..cache import Cache
 
 
     def scrape(
@@ -106,15 +107,25 @@ When adding a new state, you should create a new Python file in the `warn/scrape
 
         Returns: the Path where the file is written
         """
+        # Grab the page
+        page = utils.get_url("https://xxx.yyy.com/zzz.html")
+        html = page.text
+
+        # Write the raw file to the cache
+        cache = Cache(cache_dir)
+        cache.write("xx/zzz.html", html)
+
+        # Parse the source file and convert to a list of rows, with a header in the first row.
+        ## It's up to you to fill in the blank here based on the structure of the source file.
+        ## You could do that here with BeautifulSoup or whatever other technique.
+        pass
+
         # Set the path to the final CSV
         # We should always use the lower-case state postal code, like nj.csv
         output_csv = data_dir / "xx.csv"
 
-        ## Do your stuff in this next section.
-        ## Here are some utilities you can use to read and write.
-        ## You'll need to do all of the dirty work yourself, of course.
-        # page = utils.get_url("https://xxx.yyy.com/zzz.html")
-        # utils.write_rows_to_csv(my_scraped_data, output_csv)
+        # Write out the rows to the export directory
+        utils.write_rows_to_csv(cleaned_data, output_csv)
 
         # Return the path to the final CSV
         return output_csv
@@ -123,7 +134,17 @@ When adding a new state, you should create a new Python file in the `warn/scrape
     if __name__ == "__main__":
         scrape()
 
-When creating a scraper, there are a few rules of thumb. States should generally have a single export file, unless there's a known edge case. Any intermediate files gathered during data processing should not be stored in the data folder or published to the BLN platform. Such files should be written to the cache directory. For simple cases, use a cache name identical to the final export name (e.g. `cache/mo.csv` and `exports/mo.csv`). If many files need to be cached, create a subdirectory using the lower-case state postal code and apply a sensible naming scheme to the cached files (e.g. `cache/mo/page_1.html`).
+When creating a scraper, there are a few rules of thumb.
+
+1. The raw data being scraped — whether it be HTML, CSV or PDF — should be saved to the cache unedited. We aim to store pristine versions of our source data.
+
+2. The data extracted from source files should be exported as a single file.  Any intermediate files generated during data processing should not be written to the data folder. Such files should be written to the cache directory.
+
+3. The final export should be the state's postal code, in lower case. For example, Iowa's final file should be saved as `ia.csv`.
+
+4. For simple cases, use a cache name identical to the final export name.
+
+5. If many files need to be cached, create a subdirectory using the lower-case state postal code and apply a sensible naming scheme to the cached files (e.g. `mo/page_1.html`).
 
 Here's an example directory demonstrating the above conventions:
 
