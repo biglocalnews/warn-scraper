@@ -97,7 +97,7 @@ class Site:
         day = str(today.day).zfill(2)
         return f"{today.year}-{month}-{day}"
 
-    def _get_page(self, url, params={}, use_cache=True):
+    def _get_page(self, url, params=None, use_cache=True):
         """
         Fetch page from cache or scrape anew.
 
@@ -117,7 +117,7 @@ class Site:
             return html
 
     def _scrape_search_results_page(
-        self, url, params={}, detail_pages=True, use_cache=True
+        self, url, params=None, detail_pages=True, use_cache=True
     ):
         """Scrape data from search results page and detail pages."""
         kwargs = {"params": params, "use_cache": use_cache}
@@ -223,7 +223,7 @@ class Site:
             html_store[page_num] = results["html"]
         data.extend(results.get("data", []))
 
-    def _search_kwargs(self, start_date, end_date, extra={}):
+    def _search_kwargs(self, start_date, end_date, extra=None):
         """Set keyword arguments for a search."""
         kwargs = {
             "utf8": "✓",
@@ -236,7 +236,8 @@ class Site:
             "q[notice_eq]": "",
             "commit": "Search",
         }
-        kwargs.update(extra)
+        if extra:
+            kwargs.update(extra)
         return kwargs
 
     def _extract_search_results_row(self, row):

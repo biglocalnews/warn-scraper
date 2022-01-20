@@ -185,7 +185,7 @@ def _scrape_pdf(cache, cache_dir, url, headers):
 
 
 # adds split rows to output_rows by reference, returns list of page's rows to be added
-def _clean_table(table, all_rows=[]):
+def _clean_table(table, all_rows):
     table_rows = []
     for row_idx, row in enumerate(table):
         current_row = []
