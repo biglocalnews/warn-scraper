@@ -1,3 +1,4 @@
+import csv
 import logging
 import os
 from os.path import expanduser, join
@@ -54,6 +55,19 @@ class Cache:
         path = Path(self.path, name)
         with open(path, newline="") as infile:
             return infile.read()
+
+    def read_csv(self, name):
+        """Read csv file from cache.
+
+        Args:
+            name (str): Partial name, relative to cache dir (eg. 'fl/2021_page_1.html')
+
+        Returns:
+            list of rows
+        """
+        path = Path(self.path, name)
+        with open(path) as fh:
+            return list(csv.reader(fh))
 
     def download(self, name: str, url: str) -> Path:
         """
