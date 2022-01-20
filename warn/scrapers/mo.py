@@ -3,7 +3,6 @@ import logging
 import typing
 from pathlib import Path
 
-import pandas as pd
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -56,7 +55,6 @@ def scrape(
         _write_body(year, output_csv)
         _write_body(year, raw_csv)
 
-    _dedupe(output_csv)
     return output_csv
 
 
@@ -88,13 +86,6 @@ def _write_body(year, output_csv):
     output_rows.pop(0)  # pop header
     if len(output_rows) > 0:
         utils.write_rows_to_csv(output_rows, output_csv, mode="a")
-
-
-def _dedupe(output_csv):
-    df = pd.read_csv(output_csv, keep_default_na=False)
-    df.drop_duplicates(inplace=True, keep="first")
-    df.to_csv(output_csv, index=False)
-    return output_csv
 
 
 if __name__ == "__main__":
