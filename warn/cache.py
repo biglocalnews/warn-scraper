@@ -50,7 +50,6 @@ class Cache:
 
         Returns:
             File content as string or error if file doesn't
-
         """
         path = Path(self.path, name)
         with open(path, newline="") as infile:
@@ -60,9 +59,9 @@ class Cache:
         """
         Download the provided URL and save it in the cache.
 
-        Arguments:
-        name -- The path where the file will be saved. Can be a simple string like "ia/data.xlsx"
-        url -- The URL to download
+        Args:
+            name (str): The path where the file will be saved. Can be a simple string like "ia/data.xlsx"
+            url (str): The URL to download
 
         Returns: The Path where the file was saved
         """
@@ -91,16 +90,20 @@ class Cache:
         """Save file contents to cache.
 
         Typically, this should be a state-specific directory
-        inside the cache/ folder. For example:
+        inside the cache folder.
+
+        For example: ::
 
             $HOME/.warn-scraper/cache
 
-        Usage:
+        Provide file contents and the partial name for (relative to cache directory)
+        where file should written. The partial file path can include additional
+        directories (e.g. 'fl/2021_page_1.html'), which will be created if they
+        don't exist.
 
-            Provide file contents and the partial name for (relative to cache directory)
-            where file should written. The partial file path can include additional
-            directories (e.g. 'fl/2021_page_1.html'), which will be created if they
-            don't exist.
+        Example: ::
+
+            cache.write("fl/page.html", html)
 
         Args:
             name (str): Partial name, relative to cache dir, where content should be saved.
@@ -116,9 +119,9 @@ class Cache:
         """
         Retrieve all files and folders in a subdir relative to cache dir.
 
-        Usage:
+        Examples:
             Given a cache dir such as $HOME/.warn-scraper/cache,
-            you can:
+            you can: ::
 
                 # Get all files and dirs in cache dir
                 Cache().files()

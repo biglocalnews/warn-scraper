@@ -13,7 +13,7 @@ There are currently scrapers for 30 of America's 56 states and territories.
 |Delaware|[de.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/de.py)|[📃](scrapers/de.md)|
 |Florida|[fl.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/fl.py)||
 |Indiana|[in.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/in.py)|[📃](scrapers/in.md)|
-|Iowa|[ia.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ia.py)||
+|Iowa|[ia.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ia.py)|[📃](scrapers/ia.md)|
 |Kansas|[ks.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ks.py)|[📃](scrapers/ks.md)|
 |Maine|[me.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/me.py)|[📃](scrapers/me.md)|
 |Maryland|[md.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/md.py)|[📃](scrapers/md.md)|
