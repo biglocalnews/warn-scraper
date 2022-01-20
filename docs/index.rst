@@ -34,4 +34,4 @@ Links
 
 * Documentation: `warn-scraper.readthedocs.io <https://warn-scraper.readthedocs.io/>`_
 * Repository: `github.com/biglocalnews/warn-scraper <https://github.com/biglocalnews/warn-scraper>`_
-* Packaging: `pypi.org/project/warn-scraper/ <https://pypi.org/project/warn-scraper/>`_
+* Packaging: `pypi.org/project/warn-scraper <https://pypi.org/project/warn-scraper/>`_
