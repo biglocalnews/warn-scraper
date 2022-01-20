@@ -26,6 +26,7 @@ Documentation
    contributing
    releasing
    sources
+   reference
 
 
 Links

@@ -9,8 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class Cache:
-    """
-    Basic interface to save files to and fetch from cache.
+    """Basic interface to save files to and fetch from cache.
 
     By default this will be: ~/.warn-scraper/cache
 
@@ -18,14 +17,16 @@ class Cache:
     file contents. State-specific files should generally be stored in a
     folder using the state's two-letter postal code.
 
-    Usage:
-        # Say we scraped the first of many pages for 2021 for Florida
-        html = '<html><h1>Blob of HTML</h1></hmtl>'
-        cache = Cache()
-        cache.write('fl/2021_page_1.html', html)
+    Example:
+        Saving HTML to the cache::
 
-        # To subsequently retrieve pages in cache (e.g. to read and parse)
-        cache.files('fl')
+            html = '<html><h1>Blob of HTML</h1></hmtl>'
+            cache = Cache()
+            cache.write('fl/2021_page_1.html', html)
+
+        Retrieving pages from the cache::
+
+            cache.files('fl')
 
     Args:
         path (str): Full path to cache directory. Defaults to WARN_ETL_DIR
