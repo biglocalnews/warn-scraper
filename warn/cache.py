@@ -1,6 +1,11 @@
+import logging
 import os
 from os.path import expanduser, join
 from pathlib import Path
+
+import requests
+
+logger = logging.getLogger(__name__)
 
 
 class Cache:
@@ -49,6 +54,37 @@ class Cache:
         path = Path(self.path, name)
         with open(path, newline="") as infile:
             return infile.read()
+
+    def download(self, name: str, url: str) -> Path:
+        """
+        Download the provided URL and save it in the cache.
+
+        Arguments:
+        name -- The path where the file will be saved. Can be a simple string like "ia/data.xlsx"
+        url -- The URL to download
+
+        Returns: The Path where the file was saved
+        """
+        # Request the URL
+        logger.debug(f"Requesting {url}")
+        with requests.get(url, stream=True) as r:
+
+            # If there's no encoding, set it
+            if r.encoding is None:
+                r.encoding = "utf-8"
+
+            # Open the local Path
+            out_path = Path(self.path, name)
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            logger.debug(f"Writing to {out_path}")
+
+            # Write out the file in little chunks
+            with open(out_path, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+
+        # Return the path
+        return out_path
 
     def write(self, name, content):
         """Save file contents to cache.
