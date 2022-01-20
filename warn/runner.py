@@ -33,7 +33,8 @@ class Runner:
 
     def setup(self):
         """Create the necessary directories."""
-        utils.create_directory(self.data_dir, self.cache_dir)
+        utils.create_directory(self.data_dir)
+        utils.create_directory(self.cache_dir)
 
     def scrape(self, state):
         """Run the scraper for the provided state."""
