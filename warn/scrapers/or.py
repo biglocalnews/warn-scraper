@@ -1,17 +1,17 @@
 import logging
-import typing
 from pathlib import Path
 
-import pandas as pd
+from openpyxl import load_workbook
 
 from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Oregon.
@@ -22,36 +22,35 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "or.csv"
-    output_df = _scrape_historical(cache_dir)
-    output_df.to_csv(output_csv, index=False)
-    return output_csv
-
-
-# download the historical data from the cloud
-def _scrape_historical(cache_dir):
-    data_url = (
+    # Request the page and save it to the cache
+    url = (
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/or_historical.xlsx"
     )
-    cache_key_historical = Path(cache_dir, "or")
-    cache_key_historical.mkdir(parents=True, exist_ok=True)
-    cache_key_historical = f"{cache_key_historical}/historical.xlsx"
-    historical_df = pd.DataFrame()
-    # we skip the first 2 rows of the OR historical excel
-    try:
-        logger.debug(f"Trying to read file {cache_key_historical} from cache...")
-        historical_df = pd.read_excel(
-            cache_key_historical, skiprows=2, engine="openpyxl"
-        )
-    except FileNotFoundError:
-        logger.debug(
-            f"Historical file not found in cache. Downloading to cache from {data_url}..."
-        )
-        utils.download_file(data_url, cache_key_historical)
-        historical_df = pd.read_excel(
-            cache_key_historical, skiprows=2, engine="openpyxl"
-        )
-    return historical_df
+    cache = Cache(cache_dir)
+    excel_path = cache.download("or/source.xlsx", url)
+
+    # Open it up
+    workbook = load_workbook(filename=excel_path)
+
+    # Get the first sheet
+    worksheet = workbook.worksheets[0]
+
+    # Convert the sheet to a list of lists
+    row_list = []
+    for r in list(worksheet.rows)[
+        2:
+    ]:  # Skip the first two rows, which contain a crufty header
+        column = [cell.value for cell in r]
+        row_list.append(column)
+
+    # Set the export path
+    data_path = data_dir / "or.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(row_list, data_path)
+
+    # Return the path to the file
+    return data_path
 
 
 if __name__ == "__main__":
