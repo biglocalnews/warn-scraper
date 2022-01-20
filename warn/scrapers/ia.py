@@ -1,18 +1,21 @@
 import logging
-import typing
 from pathlib import Path
 
-import pandas as pd
 from bs4 import BeautifulSoup
+from openpyxl import load_workbook
 
 from .. import utils
+from ..cache import Cache
+
+__authors__ = "Charlotte Li,Dilcia Mercedes,Ben Welsh"
+__tags__ = "html,excel"
 
 logger = logging.getLogger(__name__)
 
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Iowa.
@@ -23,15 +26,42 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "ia.csv"
+    # Go to the page
     url = "https://www.iowaworkforcedevelopment.gov/worker-adjustment-and-retraining-notification-act"
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    data_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
-    df = pd.read_excel(data_url)
-    df.dropna(inplace=True, axis=1, how="all")
-    df.to_csv(output_csv, index=False)
-    return output_csv
+    r = utils.get_url(url)
+    html = r.text
+
+    # Save it to the cache
+    cache = Cache(cache_dir)
+    cache.write("ia/source.html", html)
+
+    # Parse out the Excel link
+    soup = BeautifulSoup(html, "html.parser")
+    excel_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
+
+    # Download the Excel file
+    excel_path = cache.download("ia/source.xlsx", excel_url)
+
+    # Open it up
+    workbook = load_workbook(filename=excel_path)
+
+    # Get the first sheet
+    worksheet = workbook.worksheets[0]
+
+    # Convert the sheet to a list of lists
+    row_list = []
+    for r in worksheet.rows:
+        column = [cell.value for cell in r]
+        row_list.append(column)
+
+    # Set the export path
+    data_path = data_dir / "ia.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(row_list, data_path)
+
+    # Return the path to the file
+    return data_path
 
 
 if __name__ == "__main__":

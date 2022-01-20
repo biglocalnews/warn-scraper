@@ -81,12 +81,14 @@ def download_file(url, local_path):
 
     Returns: the Path where the file was saved
     """
+    logger.debug(f"Requesting {url}")
     # Get the URL
     with requests.get(url, stream=True) as r:
         # If there's no encoding, set it
         if r.encoding is None:
             r.encoding = "utf-8"
         # Open the local Path
+        logger.debug(f"Writing to {local_path}")
         with open(local_path, "wb") as f:
             # Write out the file in little chunks
             for chunk in r.iter_content(chunk_size=8192):
