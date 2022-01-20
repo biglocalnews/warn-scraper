@@ -72,7 +72,7 @@ class TallyCommand(distutils.cmd.Command):
         loader = jinja2.FileSystemLoader(searchpath=this_dir / "docs" / "_templates/")
         env = jinja2.Environment(loader=loader)
 
-        scraper_list = warn.utils.get_all_states()
+        scraper_list = warn.utils.get_all_scrapers()
         print(f"{len(scraper_list)} scrapers found")
 
         docs_dir = this_dir / "docs" / "scrapers"

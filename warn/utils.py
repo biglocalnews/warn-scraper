@@ -112,8 +112,8 @@ def download_file(url, local_path):
                 f.write(chunk)
 
 
-def get_all_states():
-    """Return a list of all the states that have scrapers."""
+def get_all_scrapers():
+    """Return a list of all the states and territories that have scrapers."""
     this_dir = Path(__file__).parent
     scrapers_dir = this_dir / "scrapers"
     return sorted(

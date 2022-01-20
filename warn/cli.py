@@ -8,7 +8,7 @@ from . import Runner, utils
 
 
 @click.command()
-@click.argument("states", nargs=-1)
+@click.argument("scrapers", nargs=-1)
 @click.option(
     "--data-dir",
     default=utils.WARN_DATA_DIR,
@@ -36,7 +36,7 @@ from . import Runner, utils
     help="Set the logging level",
 )
 def main(
-    states: list,
+    scrapers: list,
     data_dir: Path,
     cache_dir: Path,
     delete: bool,
@@ -45,7 +45,7 @@ def main(
     """
     Command-line interface for downloading WARN Act notices.
 
-    STATES -- a list of one or more state postal codes to scrape. Pass `all` to scrape all supported states.
+    SCRAPERS -- a list of one or more postal codes to scrape. Pass `all` to scrape all supported states and territories.
     """
     # Set higher log-level on third-party libs that use DEBUG logging,
     # In order to limit debug logging to our library
@@ -71,29 +71,29 @@ def main(
     failed = []
 
     # If the user has asked for all states, give it to 'em
-    if "all" in states:
-        states = utils.get_all_states()
+    if "all" in scrapers:
+        scrapers = utils.get_all_scrapers()
 
     # Loop through the states
-    for state in states:
+    for scrape in scrapers:
         try:
             # Try running the scraper
-            runner.scrape(state)
+            runner.scrape(scrape)
 
             # Tally if it succeeds
-            succeeded.append(state)
+            succeeded.append(scrape)
         except Exception:
             # If it fails, log out the traceback
-            log_path = utils.WARN_LOG_DIR / f"{state.lower()}_err.log"
+            log_path = utils.WARN_LOG_DIR / f"{scrape.lower()}_err.log"
             with open(log_path, "w") as f:
                 f.write(traceback.format_exc())
 
             # And spit an error to the terminal
-            msg = f"ERROR: {state} scraper. See traceback in {log_path}"
+            msg = f"ERROR: {scrape} scraper. See traceback in {log_path}"
             logger.error(msg)
 
             # Then add the state to our tally of failures
-            failed.append(state)
+            failed.append(scrape)
 
     # Log out our final status
     if succeeded:

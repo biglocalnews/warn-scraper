@@ -171,12 +171,12 @@ After a scraper has been created, the command-line tool provides a method to tes
 
     pipenv run python -m warn.cli --help
 
-    Usage: python -m warn.cli [OPTIONS] [STATES]...
+    Usage: python -m warn.cli [OPTIONS] [SCRAPERS]...
 
       Command-line interface for downloading WARN Act notices.
 
-      STATES -- a list of one or more state postal codes to scrape. Pass `all` to
-      scrape all supported states.
+      SCRAPERS -- a list of one or more postal codes to scrape. Pass `all` to
+      scrape all supported states and territories.
 
     Options:
       --data-dir PATH                 The Path were the results will be saved
