@@ -29,12 +29,12 @@ def create_directory(*args: Path):
     # Ensure needed directories exist
     for path in args:
         # Get the directory path
-        if path.is_file():
-            # If it's a file, take the parent
-            directory = path.parent
-        else:
-            # Other, assume it's a directory and we're good
+        if path.is_dir():
+            # If it's a directory, just use the path
             directory = path
+        else:
+            # Other, assume it's a file and take the parent
+            directory = path.parent
 
         # If the path already exists, we're good
         if directory.exists():
