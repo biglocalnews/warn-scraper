@@ -93,7 +93,6 @@ def _update_files(cache):
     links = _get_file_links()
     for link in links:
         file_name = link["url"].split("/")[-1]
-        target_path = Path(cache.path, f"ca/{file_name}")
         download_status = False
         # If file doesn't exist, update download status
         try:
@@ -106,8 +105,7 @@ def _update_files(cache):
             download_status = True
         if download_status is True:
             files_have_changed = True
-            logger.info(f"Downloading {file_name} to {target_path}")
-            utils.download_file(link["url"], target_path)
+            cache.download(f"ca/{file_name}", link["url"])
     # Delete local files whose names don't match
     # data files on remote site, in order to guard against
     # duplicates if the source agency renames files
