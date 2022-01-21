@@ -8,6 +8,42 @@ from .. import utils
 from ..cache import Cache
 
 
+def parse_table(html, id, include_headers=False):
+    # Parse out data table
+    soup = BeautifulSoup(html, "html.parser")
+    table_list = soup.find_all(id=id)  # output is list-type
+
+    # We expect the first table to be there with our data
+    assert len(table_list) > 0
+    table = table_list[0]
+
+    output_rows = []
+    column_tags = ["td"]
+
+    if include_headers:
+        column_tags.append("th")
+
+    # Loop through the table and grab the data
+    for table_row in table.find_all("tr"):
+        columns = table_row.find_all(column_tags)
+        output_row = []
+
+        for column in columns:
+            # Collapse newlines
+            partial = re.sub(r"\n", " ", column.text)
+            # Standardize whitespace
+            clean_text = re.sub(r"\s+", " ", partial).strip()
+            output_row.append(clean_text)
+
+        # Skip any empty rows
+        if len(output_row) == 0 or output_row == [""]:
+            continue
+
+        output_rows.append(output_row)
+
+    return output_rows
+
+
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
@@ -21,6 +57,8 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
+
     cache = Cache(cache_dir)
 
     area = 9  # statewide
@@ -31,13 +69,12 @@ def scrape(
     years = list(range(first_year, current_year + 1))
     years.reverse()
 
-    # include column headers in first row
-    column_tags = ["td", "th"]
+    include_headers = True
 
     output_rows = []
 
     for year in years:
-        url = f"https://www.dol.state.ga.us/public/es/warn/searchwarns/list?geoArea={area}&year={year}&step=search"
+        url = f"{base_url}?geoArea={area}&year={year}&step=search"
 
         cache_key = f"ga/{year}.html"
 
@@ -49,33 +86,11 @@ def scrape(
             html = page.text
             cache.write(cache_key, html)
 
-        # Parse out data table
-        soup = BeautifulSoup(html, "html.parser")
-        table_list = soup.find_all(id="emplrList")  # output is list-type
-        
-        # We expect the first table to be there with our data
-        assert len(table_list) > 0
-        table = table_list[0]
+        new_rows = parse_table(html, "emplrList", include_headers=include_headers)
 
-        # Loop through the table and grab the data
-        for table_row in table.find_all("tr"):
-            columns = table_row.find_all(column_tags)
-            output_row = []
+        output_rows = output_rows + new_rows
 
-            for column in columns:
-                # Collapse newlines
-                partial = re.sub(r"\n", " ", column.text)
-                # Standardize whitespace
-                clean_text = re.sub(r"\s+", " ", partial).strip()
-                output_row.append(clean_text)
-            # Skip any empty rows
-            if len(output_row) == 0 or output_row == [""]:
-                continue
-
-            output_rows.append(output_row)
-
-        # exclude column headers on subsequent years
-        column_tags = ["td"]
+        include_headers = False
 
     # Write out the data to a CSV
     data_path = f"{data_dir}/ga.csv"
