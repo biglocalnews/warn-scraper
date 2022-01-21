@@ -6,6 +6,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 
 def scrape(
@@ -39,12 +40,13 @@ def scrape(
 
         # Get URL
         page = utils.get_url(url)
+        html = page.text
 
-        # Force encoding to fix dashes, apostrophes, etc. on page.text from requests reponse
-        page.encoding = "utf-8"
+        cache = Cache(cache_dir)
+        cache.write(f"ga/{year}.html", html)
 
         # Parse out data table
-        soup = BeautifulSoup(page.text, "html.parser")
+        soup = BeautifulSoup(html, "html.parser")
         table = soup.find_all(id="emplrList")  # output is list-type
 
         # Loop through the table and grab the data
@@ -70,7 +72,7 @@ def scrape(
         column_tags = ["td"]
 
     # Write out the data to a CSV
-    data_path = data_dir / "ga.csv"
+    data_path = f"{data_dir}/ga.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
     # Return the Path to the CSV
