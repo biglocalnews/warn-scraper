@@ -3,7 +3,6 @@ import logging
 import typing
 from pathlib import Path
 
-import pandas as pd
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -44,7 +43,6 @@ def scrape(
     utils.write_rows_to_csv(output_rows, output_csv)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     _scrape_2010_to_2004(cache, output_csv)
-    _dedupe(output_csv)
     return output_csv
 
 
@@ -102,13 +100,6 @@ def _scrape_2010_to_2004(cache, output_csv):
         output_rows.pop(0)
         if len(output_rows) > 0:
             utils.write_rows_to_csv(output_rows, output_csv, mode="a")
-
-
-def _dedupe(output_csv):
-    df = pd.read_csv(output_csv, keep_default_na=False)
-    df.drop_duplicates(inplace=True, keep="first")
-    df.to_csv(output_csv, index=False)
-    return output_csv
 
 
 if __name__ == "__main__":
