@@ -7,12 +7,12 @@ from bs4 import BeautifulSoup
 
 from .. import utils
 
-logger = logging.getLogger(__name__)
-
 __authors__ = [
     "zstumgoren",
     "Dilcia19",
 ]
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(

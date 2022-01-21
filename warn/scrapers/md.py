@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+
 logger = logging.getLogger(__name__)
 
 

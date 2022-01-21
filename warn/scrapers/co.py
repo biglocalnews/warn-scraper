@@ -5,9 +5,9 @@ from pathlib import Path
 
 from .. import utils
 
-logger = logging.getLogger(__name__)
-
 __authors__ = ["ydoc5212"]
+
+logger = logging.getLogger(__name__)
 
 # one set of fields per year, in order as listed on the year's document
 FIELDS = [

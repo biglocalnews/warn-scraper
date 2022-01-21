@@ -12,9 +12,9 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
-logger = logging.getLogger(__name__)
-
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(

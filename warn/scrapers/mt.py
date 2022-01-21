@@ -6,6 +6,8 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
+__authors__ = ["zstumgoren", "ydoc5212"]
+
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,

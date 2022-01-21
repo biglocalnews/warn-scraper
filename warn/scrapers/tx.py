@@ -9,6 +9,8 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
+__authors__ = ["Dilcia19", "ydoc5212"]
+
 logger = logging.getLogger(__name__)
 
 

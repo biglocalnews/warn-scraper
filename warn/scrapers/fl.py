@@ -14,9 +14,9 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-logger = logging.getLogger(__name__)
-
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+
+logger = logging.getLogger(__name__)
 
 
 FIELDS = [
