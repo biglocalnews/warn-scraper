@@ -114,7 +114,7 @@ build-release: ## builds source and wheel package
 #
 
 serve-docs: tally-sources ## start the documentation test server
-	$(call banner,        📃 Building docs 📃)
+	$(call banner,         📃 Serving docs 📃)
 	cd docs && $(PIPENV) make livehtml;
 
 
