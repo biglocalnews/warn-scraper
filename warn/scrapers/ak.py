@@ -1,5 +1,4 @@
 import re
-import typing
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -9,7 +8,7 @@ from .. import utils
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Alaska.

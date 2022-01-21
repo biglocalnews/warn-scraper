@@ -1,4 +1,3 @@
-import typing
 from pathlib import Path
 
 from warn.platforms.job_center.utils import scrape_state
@@ -8,7 +7,7 @@ from .. import utils
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
     use_cache: bool = True,
 ) -> Path:
     """
