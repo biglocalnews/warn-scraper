@@ -27,7 +27,7 @@ def scrape(
     current_year = datetime.now().year
     first_year = 2002  # first available year
 
-    years = list(range(first_year, current_year))
+    years = list(range(first_year, current_year + 1))
     years.reverse()
 
     # include column headers in first row
