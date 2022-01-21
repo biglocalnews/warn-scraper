@@ -25,7 +25,6 @@ def scrape(
 
     state_code = "ga"
     base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
-    data_path = f"{data_dir}/{state_code}.csv"
 
     area = 9  # statewide
 
@@ -57,6 +56,7 @@ def scrape(
 
         include_headers = False
 
+    data_path = data_dir / f"{state_code}.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
     # Return the path to the CSV
