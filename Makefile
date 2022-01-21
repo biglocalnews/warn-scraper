@@ -72,6 +72,7 @@ endef
 #
 
 run:
+	$(call banner,        🔪 Scraping data 🔪)
 	$(PIPENV) python -m warn.cli $(scraper) -l DEBUG
 
 #
@@ -150,6 +151,7 @@ tally-sources: ## update sources dashboard in the docs
 
 
 test-docs: ## build the docs as html
+	$(call banner,        📃 Building docs 📃)
 	cd docs && $(PIPENV) make html;
 
 
