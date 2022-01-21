@@ -121,12 +121,10 @@ setup(
     install_requires=[
         "bs4",
         "html5lib",
-        "pandas",
         "pdfplumber",
         "requests",
         "openpyxl",
         "tenacity",
-        "xlrd",
     ],
     license="Apache 2.0 license",
     zip_safe=False,
