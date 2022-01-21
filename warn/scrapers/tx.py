@@ -2,13 +2,12 @@ import logging
 import re
 import typing
 from pathlib import Path
-from zipfile import BadZipFile
 
-import pandas as pd
 from bs4 import BeautifulSoup
-from xlrd import XLRDError
+from openpyxl import load_workbook
 
 from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
@@ -26,14 +25,16 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "tx.csv"
+    cache = Cache(cache_dir)
+
     url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
     page = utils.get_url(url)
     soup = BeautifulSoup(page.text, "html.parser")
+
     # download each year's excel file
     links = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))
-    # create empty pandas dataframe
-    output_df = pd.DataFrame()
+
+    row_list = []
     for link in links:
         link_url = link.get("href")
         filename_regex = re.match(r".*-(.{4})(\..*)$", link_url, re.I)
@@ -44,59 +45,52 @@ def scrape(
             file_extension = filename_regex.group(
                 2
             )  # extract extension string (eg .xls, .xlsx)
-            cache_path = Path(cache_dir, "tx")
-            cache_path.mkdir(parents=True, exist_ok=True)
-            cache_key_year = f"{cache_path}\\{year}{file_extension}"
+
             # get each url from the HTML links we found
             data_url = f'https://www.twc.texas.gov{link.get("href")}'
-        # try to read file from cache, or download the excel file
-        # (.xlsx and the older .xls files require different engines for pd.read_excel())
-        try:
-            logger.debug(f"Trying to read file {cache_key_year} from cache...")
-            try:
-                year_df = pd.read_excel(cache_key_year, engine="openpyxl")
-            except BadZipFile:
-                year_df = pd.read_excel(cache_key_year, engine="xlrd")
-        except (FileNotFoundError, XLRDError):
-            logger.debug(
-                f"Failed to read file {cache_key_year} from cache. Downloading to cache from {data_url}..."
-            )
-            utils.download_file(data_url, cache_key_year)
-            try:
-                year_df = pd.read_excel(cache_key_year, engine="openpyxl")
-            except BadZipFile:
-                year_df = pd.read_excel(cache_key_year, engine="xlrd")
-        output_df = output_df.append(year_df)
-    historical_df = _scrape_historical(cache_dir)
-    # flip the order of the rows to match the yearly docs
-    historical_df = historical_df.iloc[::-1]
-    output_df = output_df.append(historical_df)
-    # drop empty columns
-    output_df.dropna(inplace=True, axis=1, how="all")
-    output_df.dropna(inplace=True, axis=0, how="all")
-    output_df.to_csv(output_csv, index=False)
-    return output_csv
 
+            # download the excel file
+            excel_path = cache.download(f"tx/{year}{file_extension}", data_url)
 
-# download the historical data from the cloud
-def _scrape_historical(cache_dir):
-    data_url = (
+            # Open it up
+            workbook = load_workbook(filename=excel_path)
+
+            # Get the first sheet
+            worksheet = workbook.worksheets[0]
+
+            # Convert the sheet to a list of lists
+            for r in worksheet.rows:
+                column = [cell.value for cell in r]
+                # Skip empty rows
+                if column[0] is None:
+                    continue
+                row_list.append(column)
+
+    # Get historical URL
+    historical_url = (
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/tx_historical.xlsx"
     )
-    cache_key_historical = Path(cache_dir, "tx")
-    cache_key_historical.mkdir(parents=True, exist_ok=True)
-    cache_key_historical = f"{cache_key_historical}/historical.xlsx"
-    historical_df = pd.DataFrame()
-    try:
-        logger.debug(f"Trying to read file {cache_key_historical} from cache...")
-        historical_df = pd.read_excel(cache_key_historical, engine="openpyxl")
-    except FileNotFoundError:
-        logger.debug(
-            f"Historical file not found in cache. Downloading to cache from {data_url}..."
-        )
-        utils.download_file(data_url, cache_key_historical)
-        historical_df = pd.read_excel(cache_key_historical, engine="openpyxl")
-    return historical_df
+    excel_path = cache.download("tx/historical.xlsx", historical_url)
+
+    # Open it up
+    workbook = load_workbook(filename=excel_path)
+
+    # Get the first sheet
+    worksheet = workbook.worksheets[0]
+
+    # Convert the sheet to a list of lists
+    for r in worksheet.rows:
+        column = [cell.value for cell in r]
+        row_list.append(column)
+
+    # Set the export path
+    data_path = data_dir / "tx.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(row_list, data_path)
+
+    # Return the path to the file
+    return data_path
 
 
 if __name__ == "__main__":
