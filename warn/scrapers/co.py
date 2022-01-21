@@ -1,8 +1,8 @@
-import csv
 import logging
 from pathlib import Path
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["ydoc5212"]
 __tags__ = ["google-sheets"]
@@ -86,7 +86,8 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "co.csv"
+    cache = Cache(cache_dir)
+
     # urls from 2021 to 2015
     urls = [
         "https://docs.google.com/spreadsheets/d/1HO8Fnm_4xey3Ctt6mYIig61Zx5iNq6_j_dlIaJvBS6o/edit#gid=1509741939",
@@ -99,41 +100,40 @@ def scrape(
     ]
     # convert google sheet into direct link to csv for downloading
     urls = [url.replace("/edit#gid=", "/export?format=csv&gid=") for url in urls]
-    cache_state = Path(cache_dir, "co")
-    cache_state.mkdir(parents=True, exist_ok=True)
+
     output_rows = []
     # scrape from most recent to oldest (2015)
     # TODO probably merge 2021 layoff fields into total layoffs
     for num, url in enumerate(urls):
-        intermediate_csv_path = f"{cache_state}/{num}.csv"
         # TODO try to read from cache first
-        utils.download_file(url, intermediate_csv_path)
-        with open(intermediate_csv_path, newline="") as csvfile:
-            reader = csv.reader(csvfile)
-            rows_to_add = []
-            for row_idx, row in enumerate(reader):
-                if row_idx == 0:
-                    # we are actually hard-coding headers for each year,
-                    # so this part is commented out.
+        csv_path = f"co/{num}.csv"
+        cache.download(csv_path, url)
+        rows_to_add = []
+        for row_idx, row in enumerate(cache.read_csv(csv_path)):
+            if row_idx == 0:
+                # we are actually hard-coding headers for each year,
+                # so this part is commented out.
 
-                    # only download headers once
-                    # if not HEADERS:
-                    #     HEADERS = row
-                    # else:
-                    #     pass
-                    pass
-                else:
-                    # if a header is erroneously placed in the middle of the file
-                    # (this is the case with row 7 of 2017 data)
-                    if row[0] == "Company":
-                        continue
-                    # ignore blank rows
-                    if row and row.count("") != len(row):
-                        rows_to_add.append(row)
+                # only download headers once
+                # if not HEADERS:
+                #     HEADERS = row
+                # else:
+                #     pass
+                pass
+            else:
+                # if a header is erroneously placed in the middle of the file
+                # (this is the case with row 7 of 2017 data)
+                if row[0] == "Company":
+                    continue
+                # ignore blank rows
+                if row and row.count("") != len(row):
+                    rows_to_add.append(row)
         # Convert rows to dicts, using each year's hard-coded FIELDS
         rows_as_dicts = [dict(zip(FIELDS[num], row)) for row in rows_to_add]
         output_rows.extend(rows_as_dicts)
         logger.info(f"Successfully scraped url {url}")
+
+    output_csv = data_dir / "co.csv"
     utils.write_dict_rows_to_csv(
         output_csv, OUTPUT_HEADERS, output_rows, extrasaction="ignore"
     )
