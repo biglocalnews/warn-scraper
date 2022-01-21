@@ -1,5 +1,4 @@
 import re
-import typing
 from datetime import datetime
 from pathlib import Path
 
@@ -11,7 +10,7 @@ from ..cache import Cache
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Georgia.
@@ -52,10 +51,14 @@ def scrape(
 
         # Parse out data table
         soup = BeautifulSoup(html, "html.parser")
-        table = soup.find_all(id="emplrList")  # output is list-type
+        table_list = soup.find_all(id="emplrList")  # output is list-type
+        
+        # We expect the first table to be there with our data
+        assert len(table_list) > 0
+        table = table_list[0]
 
         # Loop through the table and grab the data
-        for table_row in table[0].find_all("tr"):
+        for table_row in table.find_all("tr"):
             columns = table_row.find_all(column_tags)
             output_row = []
 
@@ -63,11 +66,9 @@ def scrape(
                 # Collapse newlines
                 partial = re.sub(r"\n", " ", column.text)
                 # Standardize whitespace
-                clean_text = re.sub(r"\s+", " ", partial)
+                clean_text = re.sub(r"\s+", " ", partial).strip()
                 output_row.append(clean_text)
-
-            output_row = [x.strip() for x in output_row]
-
+            # Skip any empty rows
             if len(output_row) == 0 or output_row == [""]:
                 continue
 
