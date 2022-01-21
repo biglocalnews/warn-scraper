@@ -4,6 +4,8 @@ from warn.platforms.job_center.utils import scrape_state
 
 from .. import utils
 
+__authors__ = ["zstumgoren", "Dilcia19"]
+
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,

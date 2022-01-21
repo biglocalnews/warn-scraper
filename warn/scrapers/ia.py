@@ -7,8 +7,8 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
-__authors__ = "Charlotte Li,Dilcia Mercedes,Ben Welsh"
-__tags__ = "html,excel"
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire"]
+__tags__ = ["html", "excel"]
 
 logger = logging.getLogger(__name__)
 

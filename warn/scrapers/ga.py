@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
+__authors__ = [
+    "chriszs",
+]
+
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
