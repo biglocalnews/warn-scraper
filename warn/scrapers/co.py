@@ -1,6 +1,5 @@
 import csv
 import logging
-import typing
 from pathlib import Path
 
 from .. import utils
@@ -75,7 +74,7 @@ OUTPUT_HEADERS = [
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Colorado.

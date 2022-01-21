@@ -1,7 +1,6 @@
 import logging
 import re
 import shutil
-import typing
 from pathlib import Path
 
 import pdfplumber
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from California.

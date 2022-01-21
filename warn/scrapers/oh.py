@@ -1,6 +1,5 @@
 import csv
 import logging
-import typing
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Ohio.

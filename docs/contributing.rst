@@ -2,6 +2,8 @@
 Contributing
 ############
 
+Our project welcomes new contributors who want to help us fix bugs and improve our scrapers. We want your help. We need your help. Here's how to get started.
+
 Adding features and fixing bugs is managed using the GitHub’s `pull request <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests>`_ system.
 
 The tutorial that follows assumes you have the `Python <https://www.python.org/>`_ programming language, the `pipenv <https://pipenv.pypa.io/>`_ package manager and the `git <https://git-scm.com/>`_ version control system already installed. If you don't, you'll want to address that first.
@@ -87,7 +89,6 @@ When adding a new state, you should create a new Python file in the `warn/scrape
 
 .. code-block:: python
 
-    import typing
     from pathlib import Path
 
     from .. import utils
@@ -96,7 +97,7 @@ When adding a new state, you should create a new Python file in the `warn/scrape
 
     def scrape(
         data_dir: Path = utils.WARN_DATA_DIR,
-        cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+        cache_dir: Path = utils.WARN_CACHE_DIR,
     ) -> Path:
         """
         Scrape data from Iowa.
@@ -161,6 +162,8 @@ Here's an example directory demonstrating the above conventions:
         ├── mo.csv
         ├── nj.csv
         └── ny.csv
+
+A fully featured example to learn from is `Chris Zubak-Skees’ scraper for Georgia <https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ga.py>`_.
 
 Running the CLI
 ---------------

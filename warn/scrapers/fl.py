@@ -1,7 +1,6 @@
 import datetime
 import logging
 import re
-import typing
 from os.path import exists
 from pathlib import Path
 
@@ -32,7 +31,7 @@ CSV_HEADERS = FIELDS[:-1]  # Clip the Attachment header
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
-    cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+    cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
     Scrape data from Florida.
