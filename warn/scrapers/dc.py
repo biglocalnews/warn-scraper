@@ -10,6 +10,8 @@ from .. import utils
 
 logger = logging.getLogger(__name__)
 
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,

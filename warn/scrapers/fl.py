@@ -16,6 +16,8 @@ from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+
 
 FIELDS = [
     "Company Name",

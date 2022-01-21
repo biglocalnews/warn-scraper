@@ -14,6 +14,8 @@ from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
