@@ -108,12 +108,12 @@ When adding a new state, you should create a new Python file in the `warn/scrape
         Returns: the Path where the file is written
         """
         # Grab the page
-        page = utils.get_url("https://xxx.yyy.com/zzz.html")
+        page = utils.get_url("https://xx.gov/yy.html")
         html = page.text
 
         # Write the raw file to the cache
         cache = Cache(cache_dir)
-        cache.write("xx/zzz.html", html)
+        cache.write("xx/yy.html", html)
 
         # Parse the source file and convert to a list of rows, with a header in the first row.
         ## It's up to you to fill in the blank here based on the structure of the source file.
