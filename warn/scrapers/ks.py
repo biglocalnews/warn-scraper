@@ -5,6 +5,7 @@ from warn.platforms.job_center.utils import scrape_state
 from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19"]
+__tags__ = ["jobcenter"]
 
 
 def scrape(
