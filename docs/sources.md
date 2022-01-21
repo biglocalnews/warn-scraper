@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 30 of America's 56 states and territories.
+There are currently scrapers for 31 of America's 56 states and territories.
 
 | State | Scraper | Docs |
 |:--- |:--- |:---:|
@@ -12,6 +12,7 @@ There are currently scrapers for 30 of America's 56 states and territories.
 |Connecticut|[ct.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ct.py)||
 |Delaware|[de.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/de.py)|[📃](scrapers/de.md)|
 |Florida|[fl.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/fl.py)||
+|Georgia|[ga.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ga.py)||
 |Indiana|[in.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/in.py)|[📃](scrapers/in.md)|
 |Iowa|[ia.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ia.py)|[📃](scrapers/ia.md)|
 |Kansas|[ks.py](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ks.py)|[📃](scrapers/ks.md)|
@@ -38,10 +39,9 @@ There are currently scrapers for 30 of America's 56 states and territories.
 
 ## To do
 
-These 26 areas need a scraper:
+These 25 areas need a scraper:
 
 * Arkansas
-* Georgia
 * Hawaii
 * Idaho
 * Illinois
