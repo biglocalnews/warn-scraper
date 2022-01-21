@@ -3,10 +3,10 @@ import logging
 import typing
 from pathlib import Path
 
-import pandas as pd
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,8 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = cache_dir / "ne_raw1.csv"
+    output_csv = cache_dir / "ne" / "raw1.csv"
+    utils.create_directory(output_csv, is_file=True)
     years = range(2019, 2009, -1)
     url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020"
     page = utils.get_url(url)
@@ -81,12 +82,32 @@ def scrape(
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
     _nebraska_two(cache_dir)
-    final_csv = _combine(data_dir, cache_dir)
-    return final_csv
+
+    # Read in the two CSVs
+    cache = Cache(cache_dir)
+    row_list = []
+    for i, f in enumerate(["ne/raw1.csv", "ne/raw2.csv"]):
+        # Read in the file
+        data = cache.read_csv(f)
+
+        # Cut the header from everything after the first file
+        if i > 0:
+            data = data[1:]
+
+        # Add it to the combined list
+        row_list.extend(data)
+
+    # Write them out
+    output_csv = data_dir / "ne.csv"
+    utils.write_rows_to_csv(row_list, output_csv)
+
+    # Return the path
+    return output_csv
 
 
 def _nebraska_two(cache_dir):
-    output_csv = cache_dir / "ne_raw2.csv"
+    output_csv = cache_dir / "ne" / "raw2.csv"
+    utils.create_directory(output_csv, is_file=True)
     years = range(2019, 2009, -1)
     url = (
         "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020"
@@ -145,17 +166,6 @@ def _nebraska_two(cache_dir):
             with open(output_csv, "a") as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(output_rows)
-    return output_csv
-
-
-def _combine(data_dir, cache_dir):
-    ne_one_path = cache_dir / "ne_raw1.csv"
-    ne_two_path = cache_dir / "ne_raw2.csv"
-    ne_one = pd.read_csv(ne_one_path)
-    ne_two = pd.read_csv(ne_two_path)
-    ne_all_data = pd.concat([ne_one, ne_two])
-    output_csv = data_dir / "ne.csv"
-    ne_all_data.to_csv(output_csv)
     return output_csv
 
 
