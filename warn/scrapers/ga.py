@@ -8,7 +8,18 @@ from .. import utils
 from ..cache import Cache
 
 
-def parse_table(html, id, include_headers=False):
+def parse_table(html, id, include_headers=True):
+    """
+    Parse HTML table with given ID.
+
+    Keyword arguments:
+    html -- the HTML to parse
+    id -- the ID of the table to parse
+    include_headers -- whether to include the headers in the output (default True)
+
+    Returns: a list of rows
+    """
+
     # Parse out data table
     soup = BeautifulSoup(html, "html.parser")
     table_list = soup.find_all(id=id)  # output is list-type
@@ -57,6 +68,7 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+
     base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
 
     cache = Cache(cache_dir)
