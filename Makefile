@@ -71,30 +71,10 @@ endef
 # Commands
 #
 
-run:
+run: ## run a scraper. example: `make run scraper=IA`
+	$(call banner,        🔪 Scraping data 🔪)
 	$(PIPENV) python -m warn.cli $(scraper) -l DEBUG
 
-#
-# Cleaning
-#
-
-## remove all build, test, coverage and Python artifacts
-clean: clean-build \
-       clean-pyc
-
-clean-build: ## remove build artifacts
-	@rm -fr build/
-	@rm -fr dist/
-	@rm -fr .eggs/
-	@find . -name '*.egg-info' -exec rm -fr {} +
-	@find . -name '*.egg' -exec rm -f {} +
-
-
-clean-pyc: ## remove Python file artifacts
-	@find . -name '*.pyc' -exec rm -f {} +
-	@find . -name '*.pyo' -exec rm -f {} +
-	@find . -name '*~' -exec rm -f {} +
-	@find . -name '__pycache__' -exec rm -fr {} +
 
 #
 # Tests
@@ -110,7 +90,7 @@ test: ## run all tests
 	@$(PYTHON) setup.py -q test
 
 
-coverage: ## check code coverage quickly with the default Python
+coverage: ## check code coverage
 	@$(PIPENV) coverage run --source warn -m pytest
 	@$(PIPENV) coverage report -m
 
@@ -119,28 +99,22 @@ coverage: ## check code coverage quickly with the default Python
 #
 
 check-release: ## check release for potential errors
+	$(call banner,      🔎 Checking release 🔎)
 	@$(PIPENV) twine check dist/*
 
 
-test-release: clean dist ## release distros to test.pypi.org
-	@$(PIPENV) twine upload -r testpypi dist/*
-
-
-release: clean dist ## package and upload a release
-	@$(PIPENV) twine upload -r pypi dist/*
-
-
-build-release: clean ## builds source and wheel package
+build-release: ## builds source and wheel package
+	$(call banner,      📦 Building release 📦)
 	@$(PYTHON) setup.py sdist
 	@$(PYTHON) setup.py bdist_wheel
 	@ls -l dist
 
 #
-# Extras
+# Docs
 #
 
-docs: tally-sources ## start the documentation test server
-	$(call banner,        📃 Building docs 📃)
+serve-docs: tally-sources ## start the documentation test server
+	$(call banner,         📃 Serving docs 📃)
 	cd docs && $(PIPENV) make livehtml;
 
 
@@ -150,8 +124,12 @@ tally-sources: ## update sources dashboard in the docs
 
 
 test-docs: ## build the docs as html
+	$(call banner,        📃 Building docs 📃)
 	cd docs && $(PIPENV) make html;
 
+#
+# Extras
+#
 
 format: ## automatically format Python code with black
 	$(call banner,       🪥 Cleaning code 🪥)
@@ -164,16 +142,15 @@ help: ## Show this help. Example: make help
 
 # Mark all the commands that don't have a target
 .PHONY: help \
+        build-release \
         check-release \
-        clean \
-        clean-test \
-        clean-pyc \
         coverage \
-        docs \
         dist \
         format \
         lint \
         release \
+        run \
+        serve-docs \
         test \
         test-docs \
         test-release
