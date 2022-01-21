@@ -121,9 +121,12 @@ def get_all_scrapers():
     )
 
 
-def get_url(url):
+def get_url(url, user_agent="Big Local News (https://biglocalnews.org/)"):
     """Request the provided URL and return a response object."""
     logger.debug(f"Requesting {url}")
-    response = requests.get(url)
+    headers = {
+        "User-Agent": user_agent,
+    }
+    response = requests.get(url, headers=headers)
     logger.debug(f"Response code: {response.status_code}")
     return response
