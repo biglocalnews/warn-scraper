@@ -87,7 +87,6 @@ When adding a new state, you should create a new Python file in the `warn/scrape
 
 .. code-block:: python
 
-    import typing
     from pathlib import Path
 
     from .. import utils
@@ -96,7 +95,7 @@ When adding a new state, you should create a new Python file in the `warn/scrape
 
     def scrape(
         data_dir: Path = utils.WARN_DATA_DIR,
-        cache_dir: typing.Optional[Path] = utils.WARN_CACHE_DIR,
+        cache_dir: Path = utils.WARN_CACHE_DIR,
     ) -> Path:
         """
         Scrape data from Iowa.
