@@ -5,6 +5,7 @@ from pathlib import Path
 from .. import utils
 
 __authors__ = ["ydoc5212"]
+__tags__ = ["google-sheets"]
 
 logger = logging.getLogger(__name__)
 

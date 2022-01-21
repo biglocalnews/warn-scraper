@@ -9,6 +9,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["Dilcia19", "ydoc5212"]
+__tags__ = ["html", "excel"]
 
 logger = logging.getLogger(__name__)
 

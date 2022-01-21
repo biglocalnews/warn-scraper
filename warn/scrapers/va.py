@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+__tags__ = ["html", "csv"]
 
 logger = logging.getLogger(__name__)
 

@@ -7,9 +7,8 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = [
-    "chriszs",
-]
+__authors__ = ["chriszs"]
+__tags__ = ["html"]
 
 
 def scrape(

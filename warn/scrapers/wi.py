@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+__tags__ = ["html"]
 
 logger = logging.getLogger(__name__)
 

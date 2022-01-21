@@ -7,6 +7,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["zstumgoren", "ydoc5212"]
+__tags__ = ["html", "excel"]
 
 
 def scrape(

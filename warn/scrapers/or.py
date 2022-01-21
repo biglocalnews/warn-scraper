@@ -7,6 +7,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+__tags__ = ["html", "excel"]
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +40,8 @@ def scrape(
 
     # Convert the sheet to a list of lists
     row_list = []
-    for r in list(worksheet.rows)[
-        2:
-    ]:  # Skip the first two rows, which contain a crufty header
+    # Skip the first two rows, which contain a crufty header
+    for r in list(worksheet.rows)[2:]:
         column = [cell.value for cell in r]
         row_list.append(column)
 
