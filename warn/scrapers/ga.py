@@ -69,10 +69,11 @@ def scrape(
     Returns: the Path where the file is written
     """
 
+    cache = Cache(cache_dir)
+
     state_code = "ga"
     base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
-
-    cache = Cache(cache_dir)
+    data_path = f"{data_dir}/{state_code}.csv"
 
     area = 9  # statewide
 
@@ -103,11 +104,9 @@ def scrape(
 
         include_headers = False
 
-    # Write out the data to a CSV
-    data_path = f"{data_dir}/{state_code}.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
-    # Return the Path to the CSV
+    # Return the path to the CSV
     return data_path
 
 
