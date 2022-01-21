@@ -75,13 +75,11 @@ def scrape(
 
     for year in years:
         url = f"{base_url}?geoArea={area}&year={year}&step=search"
-
         cache_key = f"ga/{year}.html"
 
         if cache.exists(cache_key) and year < current_year:
             html = cache.read(cache_key)
         else:
-            # Get URL
             page = utils.get_url(url)
             html = page.text
             cache.write(cache_key, html)
