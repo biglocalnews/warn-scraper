@@ -71,7 +71,7 @@ endef
 # Commands
 #
 
-run:
+run: ## run a scraper. example: `make run scraper=IA`
 	$(call banner,        🔪 Scraping data 🔪)
 	$(PIPENV) python -m warn.cli $(scraper) -l DEBUG
 
@@ -90,7 +90,7 @@ test: ## run all tests
 	@$(PYTHON) setup.py -q test
 
 
-coverage: ## check code coverage quickly with the default Python
+coverage: ## check code coverage
 	@$(PIPENV) coverage run --source warn -m pytest
 	@$(PIPENV) coverage report -m
 
@@ -113,7 +113,7 @@ build-release: ## builds source and wheel package
 # Docs
 #
 
-docs: tally-sources ## start the documentation test server
+serve-docs: tally-sources ## start the documentation test server
 	$(call banner,        📃 Building docs 📃)
 	cd docs && $(PIPENV) make livehtml;
 
@@ -142,13 +142,15 @@ help: ## Show this help. Example: make help
 
 # Mark all the commands that don't have a target
 .PHONY: help \
+        build-release \
         check-release \
         coverage \
-        docs \
         dist \
         format \
         lint \
         release \
+        run \
+        serve-docs \
         test \
         test-docs \
         test-release
