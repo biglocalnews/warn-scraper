@@ -69,6 +69,7 @@ def scrape(
     Returns: the Path where the file is written
     """
 
+    state_code = "ga"
     base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
 
     cache = Cache(cache_dir)
@@ -87,7 +88,7 @@ def scrape(
 
     for year in years:
         url = f"{base_url}?geoArea={area}&year={year}&step=search"
-        cache_key = f"ga/{year}.html"
+        cache_key = f"{state_code}/{year}.html"
 
         if cache.exists(cache_key) and year < current_year:
             html = cache.read(cache_key)
@@ -103,7 +104,7 @@ def scrape(
         include_headers = False
 
     # Write out the data to a CSV
-    data_path = f"{data_dir}/ga.csv"
+    data_path = f"{data_dir}/{state_code}.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
     # Return the Path to the CSV
