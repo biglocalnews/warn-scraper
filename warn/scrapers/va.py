@@ -4,6 +4,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html", "csv"]
@@ -24,14 +25,34 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "va.csv"
+    # Get the WARN page
     url = "https://www.vec.virginia.gov/warn-notices"
-    response = utils.get_url(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    data_url = soup.find("a", text="Download")["href"]
-    data_url = f"https://www.vec.virginia.gov{data_url}"
-    utils.download_file(data_url, output_csv)
-    return output_csv
+    r = utils.get_url(url)
+    html = r.text
+
+    # Save it to the cache
+    cache = Cache(cache_dir)
+    cache.write("va/source.html", html)
+
+    # Parse out the CSV download link
+    soup = BeautifulSoup(html, "html.parser")
+    csv_href = soup.find("a", text="Download")["href"]
+    csv_url = f"https://www.vec.virginia.gov{csv_href}"
+
+    # Download it to the cache
+    cache.download("va/source.csv", csv_url)
+
+    # Open it up as a list of rows
+    csv_rows = cache.read_csv("va/source.csv")
+
+    # Set the export path
+    data_path = data_dir / "va.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(csv_rows, data_path)
+
+    # Return the export path
+    return data_path
 
 
 if __name__ == "__main__":

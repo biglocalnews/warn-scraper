@@ -87,29 +87,6 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
             writer.writerow(row)
 
 
-def download_file(url, local_path):
-    """Download the provided URL.
-
-    Args:
-        url (str): the hyperlink to download
-        local_path (Path): the Path to save the file on disk
-
-    Returns: the Path where the file was saved
-    """
-    logger.debug(f"Requesting {url}")
-    # Get the URL
-    with requests.get(url, stream=True) as r:
-        # If there's no encoding, set it
-        if r.encoding is None:
-            r.encoding = "utf-8"
-        # Open the local Path
-        logger.debug(f"Writing to {local_path}")
-        with open(local_path, "wb") as f:
-            # Write out the file in little chunks
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
-
-
 def get_all_scrapers():
     """Get all the states and territories that have scrapers.
 
