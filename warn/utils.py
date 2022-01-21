@@ -25,7 +25,12 @@ WARN_LOG_DIR = WARN_OUTPUT_DIR / "logs"
 
 
 def create_directory(path: Path, is_file: bool = False):
-    """Create the filesystem directories for the provided Path objects."""
+    """Create the filesystem directories for the provided Path objects.
+
+    Args:
+        path (Path): The file path to create directories for.
+        is_file (bool): Whether or not the path leads to a file (default: False)
+    """
     # Get the directory path
     if is_file:
         # If it's a file, take the parent
@@ -44,15 +49,12 @@ def create_directory(path: Path, is_file: bool = False):
 
 
 def write_rows_to_csv(rows: list, output_path: Path, mode="w"):
-    """
-    Write the provided list to the provided path as comma-separated values.
+    """Write the provided list to the provided path as comma-separated values.
 
-    Arguments:
-    rows -- the list to be saved
-    output_dir -- the Path were the result will be saved
-
-    Keyword arguments:
-    mode -- the mode to be used when opening the file (default 'w')
+    Args:
+        rows (list): the list to be saved
+        output_path (Path): the Path were the result will be saved
+        mode (str): the mode to be used when opening the file (default 'w')
     """
     create_directory(output_path, is_file=True)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
@@ -62,17 +64,14 @@ def write_rows_to_csv(rows: list, output_path: Path, mode="w"):
 
 
 def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="raise"):
-    """
-    Write the provided dictionary to the provided path as comma-separated values.
+    """Write the provided dictionary to the provided path as comma-separated values.
 
-    Arguments:
-    output_path -- the Path were the result will be saved
-    headers -- a list of the headers for the output file
-    rows -- the dict to be saved
-
-    Keyword arguments:
-    mode -- the mode to be used when opening the file (default 'w')
-    extrasaction -- what to do if the if a field isn't in the headers (default 'raise')
+    Args:
+        output_path (Path): the Path were the result will be saved
+        headers (list): a list of the headers for the output file
+        rows (list): the dict to be saved
+        mode (str): the mode to be used when opening the file (default 'w')
+        extrasaction (str): what to do if the if a field isn't in the headers (default 'raise')
     """
     create_directory(output_path, is_file=True)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
@@ -89,12 +88,11 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
 
 
 def download_file(url, local_path):
-    """
-    Download the provided URL.
+    """Download the provided URL.
 
-    Arguments:
-    url -- the hyperlink to download
-    local_path -- the Path to save the file on disk
+    Args:
+        url (str): the hyperlink to download
+        local_path (Path): the Path to save the file on disk
 
     Returns: the Path where the file was saved
     """
@@ -113,7 +111,10 @@ def download_file(url, local_path):
 
 
 def get_all_scrapers():
-    """Return a list of all the states and territories that have scrapers."""
+    """Get all the states and territories that have scrapers.
+
+    Returns: List of lower-case post abbreviations.
+    """
     this_dir = Path(__file__).parent
     scrapers_dir = this_dir / "scrapers"
     return sorted(
@@ -121,8 +122,13 @@ def get_all_scrapers():
     )
 
 
-def get_url(url, user_agent="Big Local News (https://biglocalnews.org/)"):
-    """Request the provided URL and return a response object."""
+def get_url(url, user_agent="Big Local News (biglocalnews.org)"):
+    """Request the provided URL and return a response object.
+
+    Args:
+        url (str): the url to be requested
+        user_agent (str): the user-agent header passed with the request (default: biglocalnews.org)
+    """
     logger.debug(f"Requesting {url}")
     headers = {
         "User-Agent": user_agent,
