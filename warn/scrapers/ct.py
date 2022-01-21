@@ -2,6 +2,7 @@ import csv
 import logging
 import typing
 from pathlib import Path
+import datetime
 
 from bs4 import BeautifulSoup
 
@@ -24,7 +25,10 @@ def scrape(
     Returns: the Path where the file is written
     """
     output_csv = data_dir / "ct.csv"
-    years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
+    
+    # Hardcoded start year of 2015
+    years = list(reveresed(range(2015, datetime.datetime.now().year + 1)))
+    
     header_row = [
         "warn_date",
         "affected_company",
