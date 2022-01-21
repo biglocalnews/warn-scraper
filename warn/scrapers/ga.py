@@ -22,6 +22,8 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    cache = Cache(cache_dir)
+
     area = 9  # statewide
 
     current_year = datetime.now().year
@@ -38,12 +40,15 @@ def scrape(
     for year in years:
         url = f"https://www.dol.state.ga.us/public/es/warn/searchwarns/list?geoArea={area}&year={year}&step=search"
 
-        # Get URL
-        page = utils.get_url(url)
-        html = page.text
+        cache_key = f"ga/{year}.html"
 
-        cache = Cache(cache_dir)
-        cache.write(f"ga/{year}.html", html)
+        if cache.exists(cache_key) and year < current_year:
+            html = cache.read(cache_key)
+        else:
+            # Get URL
+            page = utils.get_url(url)
+            html = page.text
+            cache.write(cache_key, html)
 
         # Parse out data table
         soup = BeautifulSoup(html, "html.parser")
