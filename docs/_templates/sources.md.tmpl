@@ -1,0 +1,17 @@
+# Sources
+
+There are currently scrapers for {{ haves|length }} of America's {{ targets|length }} states and territories.
+
+| State | Docs | Authors | Tags |
+| :---- | :--: | :------ | :--- |
+{% for obj in haves -%}
+|[{{ obj.name }}](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/{{ obj.abbr|lower }}.py)|{% if obj.has_docs %}[📃](scrapers/{{ obj.abbr|lower }}.md){% endif %}|{% if obj.authors %}{% for a in obj.authors %}[{{ a }}](https://github.com/{{ a }}){% if not loop.last %}, {% endif %}{% endfor %}{% endif %}|{% if obj.tags %}{% for t in obj.tags %}{{ t }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}|
+{% endfor %}
+
+## To do
+
+These {{ have_nots|length }} areas need a scraper:
+
+{% for obj in have_nots -%}
+- {{ obj.name }}
+{% endfor %}

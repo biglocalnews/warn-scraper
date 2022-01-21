@@ -2,6 +2,7 @@
 """Configure the package for distribution."""
 import distutils.cmd
 import os
+from importlib import import_module
 from pathlib import Path
 
 import jinja2
@@ -86,9 +87,14 @@ class TallyCommand(distutils.cmd.Command):
             abbr = state["abbr"].lower()
             if abbr in scraper_list:
                 state["has_docs"] = abbr in has_docs
+                module = import_module(f"warn.scrapers.{abbr}")
+                state["authors"] = sorted(module.__authors__)
+                state["tags"] = sorted(module.__tags__)
                 haves.append(state)
             else:
                 state["has_docs"] = False
+                state["authors"] = None
+                state["tags"] = None
                 have_nots.append(state)
         print(f"{len(haves)} states and territories have a scraper")
         print(f"{len(have_nots)} states and territories do not have a scraper")
@@ -98,7 +104,7 @@ class TallyCommand(distutils.cmd.Command):
             "have_nots": have_nots,
             "targets": target_list,
         }
-        template = env.get_template("sources.md")
+        template = env.get_template("sources.md.tmpl")
         md = template.render(**context)
 
         with open(this_dir / "docs" / "sources.md", "w") as fh:
