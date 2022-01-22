@@ -55,9 +55,19 @@ def scrape(
 
     # Convert the sheet to a list of lists
     row_list = []
-    for r in worksheet.rows:
-        column = [cell.value for cell in r]
-        row_list.append(column)
+    for row in worksheet.rows:
+        # Get the cells
+        cell_list = [cell.value for cell in row]
+
+        # Skip empty rows
+        try:
+            # A list with only empty cell will throw an error
+            next(i for i in cell_list if i)
+        except StopIteration:
+            continue
+
+        # Add it to the pile
+        row_list.append(cell_list)
 
     # Set the export path
     data_path = data_dir / "mt.csv"
