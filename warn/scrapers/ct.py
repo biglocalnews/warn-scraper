@@ -76,7 +76,7 @@ def scrape(
         "union",
         "union_address",
     ]
-    row_list = header_row + output_rows
+    row_list = [header_row] + output_rows
 
     # Set the export path
     data_path = data_dir / "ct.csv"
@@ -114,7 +114,7 @@ def _scrape_table(table) -> list:
         for table_cell in table_cells:
             cell = table_cell.text.strip()
             cell = " ".join(cell.split())
-            row_list.append(cell)
+            output_row.append(cell)
 
         # test to see if the row is blank
         if not output_row:
