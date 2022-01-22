@@ -27,7 +27,6 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-
     state_code = "id"
     base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
     file_name = "WARNNotice.pdf"
@@ -110,6 +109,11 @@ def _clean_table(rows: list, page_index: int) -> list:
 def _clean_text(text: str) -> str:
     """
     Clean up text from a PDF cell.
+
+    Keyword arguments:
+    text -- the text to clean
+
+    Returns: the cleaned text
     """
     if text is None:
         return ""
