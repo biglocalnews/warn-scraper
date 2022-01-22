@@ -1,10 +1,10 @@
-import csv
 import logging
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
@@ -25,63 +25,62 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "in.csv"
-    # max_entries = 378 # manually inserted
-    # start_row_list = range(1, max_entries, 50)
-    url1 = "https://www.in.gov/dwd/2567.htm"
-    page = utils.get_url(url1)
-    logger.debug(f"Page status is {page.status_code} for {url1}")
-    soup = BeautifulSoup(page.text, "html.parser")
-    tables = soup.find_all("table")  # output is list-type
-    # find header
-    first_row = tables[0].find_all("tr")[0]
-    headers = first_row.find_all("th")
-    output_header = []
-    for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
-    output_header
-    # save header
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-    for table in tables:
-        output_rows = []
-        for table_row in table.find_all("tr"):
-            columns = table_row.find_all("td")
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
-            output_rows.append(output_row)
-        output_rows.pop(0)
-        # print(output_rows[0])
-        if len(output_rows) > 0:
-            with open(output_csv, "a") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-    url2 = "https://www.in.gov/dwd/3125.htm"
-    page = utils.get_url(url2)
-    logger.debug(f"Page status is {page.status_code} for {url2}")
-    soup = BeautifulSoup(page.text, "html.parser")
-    tables = soup.find_all("table")  # output is list-type
-    len(tables)
-    for table in tables:
-        output_rows = []
-        for table_row in table.find_all("tr"):
-            columns = table_row.find_all("td")
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
-            output_rows.append(output_row)
-        output_rows.pop(0)
-        # print(output_rows[0])
-        if len(output_rows) > 0:
-            with open(output_csv, "a") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-    return output_csv
+    # Open the cache
+    cache = Cache(cache_dir)
+
+    # Get the HTML
+    latest_url = "https://www.in.gov/dwd/2567.htm"
+    r = utils.get_url(latest_url)
+    latest_html = r.text
+    cache.write("in/latest.html", latest_html)
+
+    # Parse tables
+    latest_soup = BeautifulSoup(latest_html, "html.parser")
+    latest_tables = latest_soup.find_all("table")
+
+    # Scrape table
+    output_rows = []
+    for i, table in enumerate(latest_tables):
+        row_list = _parse_table(table)
+        logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
+        output_rows.extend(row_list)
+
+    # Get the archive tables
+    archive_url = "https://www.in.gov/dwd/3125.htm"
+    r = utils.get_url(archive_url)
+    archive_html = r.text
+    cache.write("in/archive.html", archive_html)
+
+    # Parse tables
+    archive_soup = BeautifulSoup(archive_html, "html.parser")
+    archive_tables = archive_soup.find_all("table")
+
+    # Scrape table
+    for i, table in enumerate(archive_tables):
+        row_list = _parse_table(table)
+        logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
+        output_rows.extend(row_list)
+
+    # Write out
+    data_path = data_dir / "in.csv"
+    utils.write_rows_to_csv(output_rows, data_path)
+
+    # Return the path to the CSV
+    return data_path
+
+
+def _parse_table(table) -> list:
+    # Parse the cells
+    row_list = []
+    for row in table.find_all("tr"):
+        cell_list = row.find_all(["th", "td"])
+        if not cell_list:
+            continue
+        cell_list = [c.text.strip() for c in cell_list]
+        row_list.append(cell_list)
+
+    # Return it
+    return row_list
 
 
 if __name__ == "__main__":
