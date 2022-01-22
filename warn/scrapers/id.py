@@ -43,7 +43,7 @@ def scrape(
     cache_state = Path(cache_dir, state_code)
     cache_state.mkdir(parents=True, exist_ok=True)
 
-    cache_key = f"{cache_state}/WARNNotice.pdf"
+    cache_key = f"{cache_state}/{file_name}"
 
     # verify=False because there's a persistent cert error
     # we're working around.
