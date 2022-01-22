@@ -41,7 +41,7 @@ def scrape(
     # Scrape table
     output_rows = []
     for i, table in enumerate(latest_tables):
-        row_list = _parse_table(table)
+        row_list = _parse_table(table, include_headers=i == 0)
         logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
         output_rows.extend(row_list)
 
@@ -57,7 +57,7 @@ def scrape(
 
     # Scrape table
     for i, table in enumerate(archive_tables):
-        row_list = _parse_table(table)
+        row_list = _parse_table(table, include_headers=False)
         logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
         output_rows.extend(row_list)
 
@@ -69,11 +69,16 @@ def scrape(
     return data_path
 
 
-def _parse_table(table) -> list:
+def _parse_table(table, include_headers) -> list:
     # Parse the cells
     row_list = []
+    tags = [
+        "td",
+    ]
+    if include_headers:
+        tags.append("th")
     for row in table.find_all("tr"):
-        cell_list = row.find_all(["th", "td"])
+        cell_list = row.find_all(tags)
         if not cell_list:
             continue
         cell_list = [c.text.strip() for c in cell_list]
