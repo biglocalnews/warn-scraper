@@ -25,10 +25,10 @@ def scrape(
     Returns: the Path where the file is written
     """
     output_csv = data_dir / "ct.csv"
-    
+
     # Hardcoded start year of 2015
-    years = list(reveresed(range(2015, datetime.datetime.now().year + 1)))
-    
+    years = list(reversed(range(2015, datetime.datetime.now().year + 1)))
+
     header_row = [
         "warn_date",
         "affected_company",
