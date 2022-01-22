@@ -70,7 +70,7 @@ def scrape(
     # Patch in missing header value
     output_rows[0][3] = "Employees Affected"
 
-    data_path = Path(data_dir, f"{state_code}.csv")
+    data_path = data_dir, / f"{state_code}.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
     return data_path
