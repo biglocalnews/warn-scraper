@@ -1,4 +1,3 @@
-import csv
 import logging
 import re
 from pathlib import Path
@@ -6,6 +5,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html"]
@@ -26,36 +26,48 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "sd.csv"
+    # Open the cache
+    cache = Cache(cache_dir)
+
+    # Get the HTML
     url = "https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx"
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
-    # find header
-    first_row = table[0].find_all("tr")[0]
-    headers = first_row.find_all("td")
-    output_header = []
-    for header in headers:
-        output_header.append(header.text)
-    # output_header = [x.strip().replace("\r\n","").replace("\s", "") for x in output_header]
-    output_header = [" ".join(x.split()) for x in output_header]
-    # if len(table) == 1:
-    output_rows = []
-    for table_row in table[0].find_all("tr"):
-        columns = table_row.find_all("td")
-        output_row = []
-        for column in columns:
-            txt = column.text.strip()
-            cleantext = re.sub(r"\s+", " ", txt)
-            output_row.append(cleantext)
-        output_rows.append(output_row)
-    # remove first empty row
-    output_rows.pop(0)
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-        writer.writerows(output_rows)
-    return output_csv
+    r = utils.get_url(url)
+    html = r.text
+    cache.write("sd/source.html", html)
+
+    # Scrape out the data
+    row_list = _parse_table(html)
+
+    # Write out
+    data_path = data_dir / "sd.csv"
+    utils.write_rows_to_csv(row_list, data_path)
+
+    # Return the path to the CSV
+    return data_path
+
+
+def _parse_table(html) -> list:
+    # Parse table
+    soup = BeautifulSoup(html, "html.parser")
+    table_list = soup.find_all("table")
+
+    # We expect the first table to be there with our data
+    assert len(table_list) > 0
+    table = table_list[0]
+
+    # Parse the cells
+    row_list = []
+    for row in table.find_all("tr"):
+        cell_list = []
+        for cell in row.find_all(["th", "td"]):
+            cell = re.sub(r"\s+", " ", cell.text.strip())
+            cell_list.append(cell)
+        if not cell_list:
+            continue
+        row_list.append(cell_list)
+
+    # Return it
+    return row_list
 
 
 if __name__ == "__main__":
