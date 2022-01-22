@@ -2,7 +2,7 @@
 Contributing
 ############
 
-Our project welcomes new contributors who want to help us fix bugs and improve our scrapers. We want your help. We need your help. Here's how to get started.
+Our project welcomes new contributors who want to help us fix bugs and improve our scrapers. The current status of our effort is documented in our `sources list <./sources.html>`_ and `issue tracker <https://github.com/biglocalnews/warn-scraper/issues>`_. We want your help. We need your help. Here's how to get started.
 
 Adding features and fixing bugs is managed using the GitHub’s `pull request <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests>`_ system.
 
