@@ -40,8 +40,8 @@ def scrape(
 
     # Scrape out the data
     row_list = []
-    for table in table_list:
-        row_list.extend(_parse_table(table))
+    for i, table in enumerate(table_list):
+        row_list.extend(_parse_table(table, i == 0))
 
     # Write out
     data_path = data_dir / "ut.csv"
@@ -51,11 +51,14 @@ def scrape(
     return data_path
 
 
-def _parse_table(table) -> list:
+def _parse_table(table, include_headers) -> list:
     # Parse the cells
     row_list = []
+    tags = ["td"]
+    if include_headers:
+        tags.append("th")
     for row in table.find_all("tr"):
-        cell_list = row.find_all(["th", "td"])
+        cell_list = row.find_all(tags)
         if not cell_list:
             continue
         cell_list = [c.text.strip() for c in cell_list]
