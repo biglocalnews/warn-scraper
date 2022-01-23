@@ -36,7 +36,7 @@ jobs:
           python-version: 3.7
 
       - id: mypy
-        name: mypy
+        name: Mypy
         run: make mypy
 
   test-docs:
