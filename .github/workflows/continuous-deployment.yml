@@ -23,7 +23,7 @@ jobs:
         run: make lint
 
   mypy-python:
-    name: Static type checking
+    name: Static type check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
