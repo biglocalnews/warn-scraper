@@ -30,16 +30,19 @@ def scrape(
     """
     # Fire up the cache
     cache = Cache(cache_dir)
+    
+    # The basic configuration for the scrape
+    state_code = "la"
+    base_url = "https://www.laworks.net/"
+    file_base = "Downloads_WFD"
 
     # Download the root page
-    base_url = "https://www.laworks.net/"
-    url = f"{base_url}Downloads/Downloads_WFD.asp"
+    url = f"{base_url}Downloads/{file_base}.asp"
     page = utils.get_url(url)
     html = page.text
 
     # Save it to the cache
-    state_code = "la"
-    cache_key = f"{state_code}/Downloads_WFD.html"
+    cache_key = f"{state_code}/{file_base}.html"
     cache.write(cache_key, html)
 
     # Parse out the PDF links
