@@ -35,8 +35,8 @@ jobs:
         with:
           python-version: 3.7
 
-      - id: lint
-        name: Lint
+      - id: mypy
+        name: mypy
         run: make mypy
 
   test-docs:

@@ -87,7 +87,7 @@ lint: ## run the linter
 
 mypy: ## run mypy type checks
 	$(call banner,        🔩 Running mypy 🔩)
-	@$(PIPENV) mypy ./warn/**/*.py --ignore-missing-imports --verbose
+	@$(PIPENV) mypy ./warn --ignore-missing-imports
 
 
 test: ## run all tests
