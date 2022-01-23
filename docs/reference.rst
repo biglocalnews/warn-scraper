@@ -21,6 +21,7 @@ A number of custom commands are available to developers via `make <https://www.g
     format               automatically format Python code with black
     help                 Show this help. Example: make help
     lint                 run the linter
+    mypy                 run mypy type checks
     run                  run a scraper. example: `make run scraper=IA`
     serve-docs           start the documentation test server
     tally-sources        update sources dashboard in the docs

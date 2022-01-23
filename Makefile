@@ -85,6 +85,11 @@ lint: ## run the linter
 	@$(PIPENV) flake8 -v ./
 
 
+mypy: ## run mypy type checks
+	$(call banner,        🔩 Running mypy 🔩)
+	@$(PIPENV) mypy ./warn/**/*.py --ignore-missing-imports --verbose
+
+
 test: ## run all tests
 	$(call banner,       🤖 Running tests 🤖)
 	@$(PYTHON) setup.py -q test
@@ -148,6 +153,7 @@ help: ## Show this help. Example: make help
         dist \
         format \
         lint \
+        mypy \
         release \
         run \
         serve-docs \
