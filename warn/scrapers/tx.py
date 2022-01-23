@@ -39,8 +39,13 @@ def scrape(
     row_list = []
     for link in links:
         link_url = link.get("href")
+
+        # extract year as integer
         filename_regex = re.match(r".*-(.{4})(\..*)$", link_url, re.I)
-        year = int(filename_regex.group(1)[-4:])  # extract year as integer
+        assert filename_regex is not None
+        year_str = filename_regex.group(1)[-4:]
+        year = int(year_str)
+
         # only scrape after year 2019 since our historical document covers 2018 and before
         # (the historical doc includes 2019 too but the year seems to be missing some entries)
         if year >= 2019:

@@ -20,6 +20,7 @@ jinja2 = "*"
 flake8-bugbear = "*"
 pre-commit = "*"
 sphinxcontrib-napoleon = "*"
+types-requests = "*"
 
 [packages]
 bs4 = "*"

@@ -55,7 +55,7 @@ class TallyCommand(distutils.cmd.Command):
     """Tally scrapers and update sources dashboard in the docs."""
 
     description = "Tally scrapers and update sources dashboard in the docs"
-    user_options = []
+    user_options: list = []
 
     def initialize_options(self):
         """Set default values for options."""

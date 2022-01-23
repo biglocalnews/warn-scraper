@@ -62,7 +62,7 @@ def scrape(
         )
 
         # Concatenate the rows
-        output_rows = output_rows + new_rows
+        output_rows.extend(new_rows)
 
     # Write out the results
     data_path = data_dir / f"{state_code}.csv"
