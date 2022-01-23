@@ -28,22 +28,23 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    # Fire up the cache
     cache = Cache(cache_dir)
 
-    state_code = "la"
+    # Download the root page
     base_url = "https://www.laworks.net/"
     url = f"{base_url}Downloads/Downloads_WFD.asp"
-
-    cache_key = f"{state_code}/Downloads_WFD.html"
-
     page = utils.get_url(url)
     html = page.text
 
+    # Save it to the cache
+    state_code = "la"
+    cache_key = f"{state_code}/Downloads_WFD.html"
     cache.write(cache_key, html)
 
+    # Parse out the PDF links
     document = BeautifulSoup(html, "html.parser")
     links = document.find_all("a")
-
     pdf_urls = [
         f"{base_url}{link['href']}" for link in links if "WARN Notices" in link.text
     ]
@@ -60,19 +61,28 @@ def scrape(
             for page_index, page in enumerate(pdf.pages):
                 rows = page.extract_table()
 
+                # Loop through the rows
                 for row_index, row in enumerate(rows):
+                    # Skip headers on all but first page of first PDF
+                    if pdf_index > 0 and row_index == 0:
+                        print(row)
+                        logger.debug(f"Skipping header row on PDF {pdf_index+1} page {page_index+1}")
+                        continue
+
+                    # Extract data
                     output_row = [_clean_text(cell) for cell in row]
 
-                    # Skip headers on all but first page of first PDF
-                    if (pdf_index == 0 and page_index == 0) or row_index != 0:
-                        output_rows.append(output_row)
+                    # Write row
+                    output_rows.append(output_row)
 
     # Patch in missing header value
     output_rows[0][3] = "Employees Affected"
 
+   # Write out to CSV
     data_path = data_dir / f"{state_code}.csv"
     utils.write_rows_to_csv(output_rows, data_path)
 
+    # Return the path
     return data_path
 
 
@@ -85,8 +95,10 @@ def _clean_text(text: str) -> str:
 
     Returns: the cleaned text
     """
+    # Replace None with an empty string
     if text is None:
         return ""
+
     # Standardize whitespace
     return re.sub(r"\s+", " ", text)
 
