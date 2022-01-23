@@ -13,10 +13,7 @@ WARN_USER_DIR = Path(os.path.expanduser("~"))
 WARN_DEFAULT_OUTPUT_DIR = WARN_USER_DIR / ".warn-scraper"
 
 # Set the home directory
-if os.environ.get("WARN_OUTPUT_DIR"):
-    WARN_OUTPUT_DIR = Path(os.environ.get("WARN_OUTPUT_DIR"))
-else:
-    WARN_OUTPUT_DIR = WARN_DEFAULT_OUTPUT_DIR
+WARN_OUTPUT_DIR = Path(os.environ.get("WARN_OUTPUT_DIR", WARN_DEFAULT_OUTPUT_DIR))
 
 # Set the subdirectories for other bits
 WARN_CACHE_DIR = WARN_OUTPUT_DIR / "cache"
@@ -95,7 +92,7 @@ def get_all_scrapers():
     this_dir = Path(__file__).parent
     scrapers_dir = this_dir / "scrapers"
     return sorted(
-        [p.stem for p in scrapers_dir.glob("*.py") if "__init__.py" not in str(p)]
+        p.stem for p in scrapers_dir.glob("*.py") if "__init__.py" not in str(p)
     )
 
 

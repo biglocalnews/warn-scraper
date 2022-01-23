@@ -20,6 +20,8 @@ jinja2 = "*"
 flake8-bugbear = "*"
 pre-commit = "*"
 sphinxcontrib-napoleon = "*"
+types-requests = "*"
+mypy = "*"
 
 [packages]
 bs4 = "*"
