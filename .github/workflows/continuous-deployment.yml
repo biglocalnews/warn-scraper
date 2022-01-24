@@ -85,8 +85,12 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - id: run
-        name: Run
+        name: Run tests
         run: make test
+
+      - id: coverage
+        name: Coverage report
+        run: make coverage
 
   test-build:
     name: Build Python package
