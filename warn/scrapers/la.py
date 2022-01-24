@@ -84,7 +84,6 @@ def _process_pdf(pdf_path: Path) -> list:
 
     Returns: a list of rows
     """
-
     output_rows = []
 
     with pdfplumber.open(pdf_path) as pdf:
@@ -226,7 +225,7 @@ def _is_header(row: list) -> bool:
 
 def _is_clean_header(row: list) -> bool:
     """
-    Return true for a header with "Employees Affected."
+    Return true for a header with a clean column name.
 
     Keyword arguments:
     row -- the rows to check
@@ -250,8 +249,7 @@ def _is_not_header(row: list) -> bool:
 
 def _extract_note(chars: list) -> str:
     """
-    Extract a note from a PDF cell. This is text that appears after
-    the company name or location that isn't part of either.
+    Extract a note from a PDF cell.
 
     Keyword arguments:
     chars -- the characters to extract the note from
