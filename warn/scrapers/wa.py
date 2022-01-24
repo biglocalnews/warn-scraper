@@ -117,7 +117,7 @@ def _parse_table(table) -> list:
         row_list.append(cell_list)
 
     # Return it with a slice to cut the cruft
-    return row_list[3 : len(row_list) - 2]
+    return row_list[2 : len(row_list) - 2]
 
 
 def _clean_text(text):
