@@ -53,6 +53,7 @@ class Cache:
             File content as string or error if file doesn't
         """
         path = Path(self.path, name)
+        logger.debug(f"Reading from cache {path}")
         with open(path, newline="") as infile:
             return infile.read()
 
@@ -66,6 +67,7 @@ class Cache:
             list of rows
         """
         path = Path(self.path, name)
+        logger.debug(f"Reading CSV from cache {path}")
         with open(path) as fh:
             return list(csv.reader(fh))
 
