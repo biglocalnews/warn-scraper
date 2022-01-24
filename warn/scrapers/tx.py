@@ -27,51 +27,63 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    # Set up the cache
     cache = Cache(cache_dir)
 
+    # Get the root URL
     url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
     page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
+    html = page.text
 
-    # download each year's excel file
-    links = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))
+    # Cache it
+    cache.write("tx/source.html", html)
 
-    row_list = []
-    for link in links:
-        link_url = link.get("href")
+    # Get all the Excel links
+    soup = BeautifulSoup(page.text, "html5lib")
+    link_list = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))
 
-        # extract year as integer
-        filename_regex = re.match(r".*-(.{4})(\..*)$", link_url, re.I)
-        assert filename_regex is not None
-        year_str = filename_regex.group(1)[-4:]
-        year = int(year_str)
-
-        # only scrape after year 2019 since our historical document covers 2018 and before
-        # (the historical doc includes 2019 too but the year seems to be missing some entries)
+    # Clean up the links and filter 'em down
+    href_list = []
+    for link in link_list:
+        # Extract year
+        href = link.get("href")
+        # Only keep links after 2019 since our historical document covers 2018 and before
+        year = _get_year(href)
         if year >= 2019:
-            file_extension = filename_regex.group(
-                2
-            )  # extract extension string (eg .xls, .xlsx)
+            href_list.append(href)
 
-            # get each url from the HTML links we found
-            data_url = f'https://www.twc.texas.gov{link.get("href")}'
+    # Loop through the links we want to download
+    row_list = []
+    for ihref, href in enumerate(href_list):
 
-            # download the excel file
-            excel_path = cache.download(f"tx/{year}{file_extension}", data_url)
+        # get each url from the HTML links we found
+        data_url = f"https://www.twc.texas.gov{href}"
 
-            # Open it up
-            workbook = load_workbook(filename=excel_path)
+        # download the excel file
+        year = _get_year(href)
+        ext = _get_ext(href)
+        excel_path = cache.download(f"tx/{year}{ext}", data_url)
 
-            # Get the first sheet
-            worksheet = workbook.worksheets[0]
+        # Open it up
+        workbook = load_workbook(filename=excel_path)
 
-            # Convert the sheet to a list of lists
-            for r in worksheet.rows:
-                column = [cell.value for cell in r]
-                # Skip empty rows
-                if column[0] is None:
-                    continue
-                row_list.append(column)
+        # Get the first sheet
+        worksheet = workbook.worksheets[0]
+
+        # Convert the sheet to a list of lists
+        for irow, row in enumerate(worksheet.rows):
+
+            # Skip headers after the first workbook
+            if ihref > 0 and irow == 0:
+                continue
+            cell_list = [cell.value for cell in row]
+
+            # Skip empty rows
+            if cell_list[0] is None:
+                continue
+
+            # Add what's left to the pile
+            row_list.append(cell_list)
 
     # Get historical URL
     historical_url = (
@@ -86,9 +98,23 @@ def scrape(
     worksheet = workbook.worksheets[0]
 
     # Convert the sheet to a list of lists
-    for r in worksheet.rows:
-        column = [cell.value for cell in r]
-        row_list.append(column)
+    for row in worksheet.rows:
+
+        # Trim down to only the columns in the scrape, so they match
+        select_columns = [
+            row[8],  # NOTICE_DATE
+            row[0],  # JOB_SITE_NAME
+            row[2],  # COUNTY_NAME
+            row[5],  # WDA_NAME
+            row[6],  # TOTAL_LAYOFF_NUMBER
+            row[7],  # LayOff_Date
+            row[11],  # WFDD_RECEIVED_DATE
+            row[1],  # CITY_NAME
+        ]
+
+        # Tack 'em on
+        cell_list = [c.value for c in select_columns]
+        row_list.append(cell_list)
 
     # Set the export path
     data_path = data_dir / "tx.csv"
@@ -98,6 +124,21 @@ def scrape(
 
     # Return the path to the file
     return data_path
+
+
+def _get_year(url: str) -> int:
+    """Plucks the year from the provided URL."""
+    filename_regex = re.match(r".*-(.{4})(\..*)$", url, re.I)
+    assert filename_regex is not None
+    year_str = filename_regex.group(1)[-4:]
+    return int(year_str)
+
+
+def _get_ext(url: str) -> str:
+    """Plucks the file extension from the provided URL."""
+    filename_regex = re.match(r".*-(.{4})(\..*)$", url, re.I)
+    assert filename_regex is not None
+    return filename_regex.group(2)
 
 
 if __name__ == "__main__":
