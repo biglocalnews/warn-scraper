@@ -63,7 +63,7 @@ def scrape(
 
     # Write out
     data_path = data_dir / "in.csv"
-    utils.write_rows_to_csv(output_rows, data_path)
+    utils.write_rows_to_csv(data_path, output_rows)
 
     # Return the path to the CSV
     return data_path
