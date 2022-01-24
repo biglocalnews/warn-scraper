@@ -1,10 +1,12 @@
-import csv
 import logging
+import re
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html"]
@@ -29,65 +31,96 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "mo.csv"
-    raw_csv = cache_dir / "mo_raw.csv"
-    years = range(2021, 2014, -1)
-    url = "https://jobs.mo.gov/warn2021"
+    # Set the cache
+    cache = Cache(cache_dir)
 
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
+    # Get the range of years we're after
+    today = datetime.today()
+    current_year = today.year
+    year_range = list(range(2015, current_year + 1))
+    year_range.reverse()
 
-    # find header
-    first_row = table[0].find_all("tr")[0]
-    headers = first_row.find_all("th")
-    output_header = []
-    for header in headers:
-        output_header.append(header.text.strip())
-    # save header
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-    with open(raw_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
+    # Download them all
+    html_list = []
+    for year in year_range:
 
-    # save body of 2021-2015
-    for year in years:
-        _write_body(year, output_csv)
-        _write_body(year, raw_csv)
+        # Set the URL, with a hack for 2020 and 2022
+        if year == 2020:
+            url = "https://jobs.mo.gov/content/2020-missouri-warn-notices"
+        elif year == 2022:
+            url = "https://jobs.mo.gov/content/2022-warn-notices"
+        else:
+            url = f"https://jobs.mo.gov/warn{year}"
 
-    return output_csv
+        # Read from cache if available and not this year or the year before
+        cache_key = f"mo/{year}.html"
+        if cache.exists(cache_key) and year < current_year - 1:
+            html = cache.read(cache_key)
+        else:
+            # Otherwise, go request it
+            r = utils.get_url(url)
+            html = r.text
+            # Save it to the cache
+            cache.write(cache_key, html)
 
+        # Add it to the list
+        html_list.append(html)
 
-def _write_body(year, output_csv):
-    # 2020 has a different link structure
-    url = (
-        f"https://jobs.mo.gov/warn{year}"
-        if (year != 2020)
-        else "https://jobs.mo.gov/content/2020-missouri-warn-notices"
-    )
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
+    # Parse them all
     output_rows = []
-    for table_row in table[0].find_all("tr"):
-        columns = table_row.find_all("td")
-        output_row = []
-        for column in columns:
-            output_row.append(column.text.strip())
-        if len(output_row) < 9:  # to account for the extra column in 2021
-            output_row.insert(2, "")
-        if "raw" not in str(output_csv):
-            if (
-                year == 2019 and "2020" in output_row[0]
-            ):  # account for duplicated 2020 data
-                continue
-        output_rows.append(output_row)
-    output_rows.pop(len(output_rows) - 1)  # pop "Total" row
-    output_rows.pop(0)  # pop header
-    if len(output_rows) > 0:
-        utils.write_rows_to_csv(output_rows, output_csv, mode="a")
+    for i, html in enumerate(html_list):
+        soup = BeautifulSoup(html, "html5lib")
+
+        # Pull out the table
+        table_list = soup.find_all("table")
+        assert len(table_list) > 0
+        table = table_list[0]
+
+        # Get all rows
+        row_list = table.find_all("tr")
+
+        # If it's not the first page, slice off the header
+        if i > 0:
+            row_list = row_list[1:]
+
+        # Loop through all the rows
+        year_rows = []
+        for row in row_list:
+            # Get the cells
+            cell_list = row.find_all(["td", "th"])
+
+            # Clean them up
+            cell_list = [_clean_text(c.text) for c in cell_list]
+
+            if len(cell_list) < 9:  # to account for the extra column in 2021
+                cell_list.insert(2, "")
+
+            # Pass them out
+            year_rows.append(cell_list)
+
+        # pop "Total" row
+        year_rows.pop(len(year_rows) - 1)
+
+        # Add to master list
+        output_rows.extend(year_rows)
+
+    # Set the export path
+    data_path = data_dir / "mo.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(output_rows, data_path)
+
+    # Return the path to the file
+    return data_path
+
+
+def _clean_text(text):
+    """Clean up the provided HTML snippet."""
+    if text is None:
+        return ""
+    text = re.sub(r"\n", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 if __name__ == "__main__":
