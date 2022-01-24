@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 31 of America's 56 states and territories.
+There are currently scrapers for 30 of America's 56 states and territories.
 
 | State | Docs | Authors | Tags |
 | :---- | :--: | :------ | :--- |
@@ -8,7 +8,6 @@ There are currently scrapers for 31 of America's 56 states and territories.
 |[Alaska](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ak.py)||[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Arizona](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/az.py)|[📃](scrapers/az.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[California](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ca.py)|[📃](scrapers/ca.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, html, pdf|
-|[Colorado](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/co.py)|[📃](scrapers/co.md)|[ydoc5212](https://github.com/ydoc5212)|google-sheets|
 |[Connecticut](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ct.py)||[Dilcia19](https://github.com/Dilcia19), [stucka](https://github.com/stucka), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Delaware](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/de.py)|[📃](scrapers/de.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Florida](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/fl.py)||[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html, pdf|
@@ -39,9 +38,10 @@ There are currently scrapers for 31 of America's 56 states and territories.
 
 ## To do
 
-These 25 areas need a scraper:
+These 26 areas need a scraper:
 
 - Arkansas
+- Colorado
 - Hawaii
 - Idaho
 - Illinois
