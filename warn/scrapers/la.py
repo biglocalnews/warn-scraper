@@ -1,8 +1,8 @@
-import os
 import logging
+import os
 import re
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -84,7 +84,7 @@ def _process_pdf(pdf_path: Path) -> list:
 
     Returns: a list of rows
     """
-    output_rows = []
+    output_rows: list = []
 
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
@@ -188,12 +188,12 @@ def _read_or_download(cache: Cache, prefix: str, url: str) -> Path:
 
     # Form a file path so we can read from the cache
     if exists and year < current_year - 1:
-        return f"{cache.path}/{cache_key}"
+        return cache.path / cache_key
 
     return cache.download(cache_key, url)
 
 
-def _extract_year(text: int) -> str:
+def _extract_year(text: str) -> int:
     """
     Extract the year from a PDF file name.
 
@@ -202,13 +202,13 @@ def _extract_year(text: int) -> str:
 
     Returns: the year
     """
-    year_pattern = r"\d{4}"
-    year = re.search(year_pattern, text, re.IGNORECASE)
+    year_pattern = re.compile(r"\d{4}", re.IGNORECASE)
+    year = re.search(year_pattern, text)
 
-    if year is None:
-        return None
+    if year is not None:
+        return int(year.group(0))
     else:
-        return int(year[0])
+        raise Exception(f"Could not extract year from {text}")
 
 
 def _is_header(row: list) -> bool:
@@ -323,7 +323,7 @@ def _is_location(text: str) -> bool:
     Returns: True if the text is likely to be a location, False otherwise
     """
     location_pattern = r"(^\d+|Highway|Hwy|Offshore|Statewide)"
-    return re.match(location_pattern, text, re.IGNORECASE)
+    return re.match(location_pattern, text, re.IGNORECASE) is not None
 
 
 def _parse_links(html: str) -> list:
