@@ -49,7 +49,7 @@ def scrape(
     data_path = data_dir / "va.csv"
 
     # Write out the file
-    utils.write_rows_to_csv(csv_rows, data_path)
+    utils.write_rows_to_csv(data_path, csv_rows)
 
     # Return the export path
     return data_path

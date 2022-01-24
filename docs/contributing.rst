@@ -126,7 +126,7 @@ When adding a new state, you should create a new Python file in the `warn/scrape
         output_csv = data_dir / "xx.csv"
 
         # Write out the rows to the export directory
-        utils.write_rows_to_csv(cleaned_data, output_csv)
+        utils.write_rows_to_csv(output_csv, cleaned_data)
 
         # Return the path to the final CSV
         return output_csv

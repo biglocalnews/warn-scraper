@@ -50,7 +50,7 @@ def scrape(
             discarded_rows.append(data)
     if discarded_rows:
         logger.warn(f"Warning: Discarded {len(discarded_rows)} dirty data row(s)")
-    utils.write_rows_to_csv(output_rows, output_csv)
+    utils.write_rows_to_csv(output_csv, output_rows)
     return output_csv
 
 
