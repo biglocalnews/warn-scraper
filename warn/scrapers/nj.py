@@ -42,7 +42,7 @@ def scrape(
         layoff_data_row = _extract_fields_from_table(table)
         output_rows.append(layoff_data_row)
     # Perform initial write of data
-    utils.write_rows_to_csv(output_rows, output_csv)
+    utils.write_rows_to_csv(output_csv, output_rows)
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     _scrape_2010_to_2004(cache, output_csv)
     return output_csv
@@ -101,7 +101,7 @@ def _scrape_2010_to_2004(cache, output_csv):
         # Remove header row
         output_rows.pop(0)
         if len(output_rows) > 0:
-            utils.write_rows_to_csv(output_rows, output_csv, mode="a")
+            utils.write_rows_to_csv(output_csv, output_rows, mode="a")
 
 
 if __name__ == "__main__":

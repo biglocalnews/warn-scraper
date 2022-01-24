@@ -95,7 +95,7 @@ def write_notice_list(output_path: Path, notice_list: list):
             writer.writerow(notice_dict)
 
 
-def write_rows_to_csv(rows: list, output_path: Path, mode="w"):
+def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
     """Write the provided list to the provided path as comma-separated values.
 
     Args:
@@ -146,17 +146,22 @@ def get_all_scrapers():
     )
 
 
-def get_url(url, user_agent="Big Local News (biglocalnews.org)"):
+def get_url(url, user_agent="Big Local News (biglocalnews.org)", session=None):
     """Request the provided URL and return a response object.
 
     Args:
         url (str): the url to be requested
         user_agent (str): the user-agent header passed with the request (default: biglocalnews.org)
+        session: a session object to use when making the request. optional
     """
     logger.debug(f"Requesting {url}")
     headers = {
         "User-Agent": user_agent,
     }
-    response = requests.get(url, headers=headers)
+    if session is not None:
+        logger.debug(f"Requesting with session {session}")
+        response = session.get(url, headers=headers)
+    else:
+        response = requests.get(url, headers=headers)
     logger.debug(f"Response code: {response.status_code}")
     return response

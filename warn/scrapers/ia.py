@@ -93,7 +93,7 @@ def scrape(
     data_path = data_dir / "ia.csv"
 
     # Write out the file
-    utils.write_notice_list(data_path, notice_list)
+    utils.write_rows_to_csv(data_path, row_list)
 
     # Return the path to the file
     return data_path

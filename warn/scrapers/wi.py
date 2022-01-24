@@ -1,11 +1,12 @@
-import csv
 import logging
 import re
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html"]
@@ -18,7 +19,7 @@ def scrape(
     cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
-    Scrape data from Wisconsin..
+    Scrape data from Wisconsin.
 
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
@@ -26,58 +27,89 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "wi.csv"
-    years = [2016, 2017, 2018, 2019]
-    url = "https://sheets.googleapis.com/v4/spreadsheets/1cyZiHZcepBI7ShB3dMcRprUFRG24lbwEnEDRBMhAqsA/values/Originals?key=AIzaSyDP0OltIjcmRQ6-9TTmEVDZPIX6BSFcunw"
-    response = utils.get_url(url)
-    data = response.json()
-    # find header
-    headers = data["values"][0]
-    output_header = headers[3 : len(headers) - 1]
+    # Set the cache
+    cache = Cache(cache_dir)
+
+    # Get the current year
+    today = datetime.today()
+    current_year = today.year
+
+    # Set the date range we're going to scrape
+    year_range = list(range(2016, current_year + 1))
+    year_range.reverse()
+
+    # Loop through the years and download the pages
+    html_list = []
+    for year in year_range:
+        # Since the 2022 page doesn't exist yet, we're going to hack in a skip
+        if year == 2022:
+            continue
+
+        # Request fresh pages, use cache for old ones
+        cache_key = f"wi/{year}.html"
+        if cache.exists(cache_key) and year < current_year - 1:
+            html = cache.read(cache_key)
+        else:
+            url = f"https://dwd.wisconsin.gov/dislocatedworker/warn/{year}/default.htm"
+            r = utils.get_url(url)
+            html = r.text
+            cache.write(cache_key, html)
+
+        # Add to the list
+        html_list.append(html)
+
     output_rows = []
-    for row in data["values"][1 : len(data["values"])]:
-        output_row = row[3 : len(row)]
-        if output_row and output_row[-1].strip() == "Y":
-            # remove erroneous 'Y' fields
-            output_row = output_row[:-1]
-        output_rows.append(output_row)
-    # save header
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-        writer.writerows(output_rows)
-    for year in years:
-        url = "https://dwd.wisconsin.gov/dislocatedworker/warn/{}/default.htm".format(
-            year
-        )
-        page = utils.get_url(url)
-        soup = BeautifulSoup(page.text, "html.parser")
-        tables = soup.find_all("table")  # output is list-type
-        for table in tables:
-            output_rows = []
-            for table_row in table.find_all("tr"):
-                columns = table_row.find_all("td")
-                output_row = []
-                for column in columns:
-                    entry = column.text
-                    # remove trailing characters after LayoffBeginDate
-                    if re.match(r"^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}", entry):
-                        entry = re.sub(r"(?<=[0-9]{4}).*", "", entry)
-                    output_row.append(entry)
-                output_row = [x.strip() for x in output_row]
-                # filter "Updates to Previously Filed Notices"
-                if output_row and len(output_row) > 2:
-                    output_rows.append(output_row)
-            if len(output_rows) > 0:
+    for ihtml, html in enumerate(html_list):
+        # Parse the HTML
+        soup = BeautifulSoup(html, "html5lib")
+
+        # Fish out the tables
+        table_list = soup.find_all("table")
+
+        # Remove the "Updates to Previously Filed Notices" tables
+        # We can single them out because they only have two columns
+        notice_tables = [t for t in table_list if len(t.find("tr").find_all("th")) > 2]
+
+        # Loop through the tables
+        for itable, table in enumerate(notice_tables):
+            # Get all the rows
+            row_list = table.find_all("tr")
+
+            # If this is the first table on the first page, get headers too
+            tags = ["td"]
+            if ihtml == 0 and itable == 0:
+                tags.append("th")
+
+            for row in row_list:
+                # Pull out the cells and clean them
+                cell_list = [_clean_text(c.text) for c in row.find_all(tags)]
+
+                # Skip empty rows
                 try:
-                    with open(output_csv, "a", newline="") as csvfile:
-                        writer = csv.writer(csvfile)
-                        writer.writerows(output_rows)
-                except UnicodeEncodeError:
-                    with open(output_csv, "a", newline="", encoding="utf-8") as csvfile:
-                        writer = csv.writer(csvfile)
-                        writer.writerows(output_rows)
-    return output_csv
+                    # A list with only empty cell will throw an error
+                    next(i for i in cell_list if i)
+                except StopIteration:
+                    continue
+
+                # Tack what we've got onto the pile
+                output_rows.append(cell_list)
+
+    # Set the export path
+    data_path = data_dir / "wi.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(data_path, output_rows)
+
+    # Return the path to the file
+    return data_path
+
+
+def _clean_text(text):
+    """Clean up the provided cell."""
+    # remove trailing characters after LayoffBeginDate
+    if re.match(r"^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}", text):
+        text = re.sub(r"(?<=[0-9]{4}).*", "", text)
+    return text.strip()
 
 
 if __name__ == "__main__":

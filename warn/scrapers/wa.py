@@ -1,11 +1,12 @@
-import csv
 import logging
+import re
 from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
@@ -26,44 +27,41 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "wa.csv"
-    # pages = range(2, 60, 1)
-    page = 2
-    url = "https://fortress.wa.gov/esd/file/warn/Public/SearchWARN.aspx"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0) Gecko/20100101 Firefox/68.0"
-    }
+    # Set the cache
+    cache = Cache(cache_dir)
+
+    output_rows = []
+
     with requests.Session() as session:
-        response_initial = session.get(url, headers=headers)  # , data = formdata)
-        logger.debug(f"Page status is {response_initial.status_code} for {url}")
-        soup_content = BeautifulSoup(response_initial.content, "html5lib")
-        soup_text = BeautifulSoup(response_initial.text, "html5lib")
-        table = soup_text.find_all("table")  # output is list-type
-        # find and write header
-        first_row = table[0].find_all("tr")[2]
-        table_headers = first_row.find_all("th")
-        output_header = []
-        for table_header in table_headers:
-            output_header.append(table_header.text)
-        output_header = [x.strip() for x in output_header]
-        with open(output_csv, "w") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(output_header)
-        # find and write first page
-        output_rows = []
-        for table_row in table[0].find_all("tr"):
-            columns = table_row.find_all("td")
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
-            output_rows.append(output_row)
-        output_rows = output_rows[3 : len(output_rows) - 2]
-        with open(output_csv, "a") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
+        # Request the initial page
+        url = "https://fortress.wa.gov/esd/file/warn/Public/SearchWARN.aspx"
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0) Gecko/20100101 Firefox/68.0"
+        r = utils.get_url(url, user_agent=user_agent, session=session)
+
+        # Save it to the cache
+        html = r.text
+        cache.write("wa/source.html", html)
+
+        # Parse out the headers
+        soup = BeautifulSoup(html, "html5lib")
+        table_list = soup.find_all("table")
+        first_table = table_list[0]
+        first_row = first_table.find_all("tr")[2]
+        th_list = first_row.find_all("th")
+        headers = [_clean_text(th.text) for th in th_list]
+        output_rows.append(headers)
+
+        # Parse the data
+        row_list = _parse_table(first_table)
+        output_rows.extend(row_list)
+
+        # Start jumping through the pages
+        soup_content = BeautifulSoup(r.content, "html5lib")
+
+        page = 2
         while True:
             try:
+                # Post for the next page
                 formdata = {
                     "__EVENTTARGET": "ucPSW$gvMain",
                     "__EVENTARGUMENT": f"Page${page}",
@@ -74,28 +72,61 @@ def scrape(
                         "input", attrs={"name": "__EVENTVALIDATION"}
                     )["value"],
                 }
-                response_next = session.post(url, data=formdata)
-                logger.debug(f"Page status is {response_next.status_code} for {url}")
-                soup_content = BeautifulSoup(response_next.content, "html5lib")
-                soup_text = BeautifulSoup(response_next.text, "html5lib")
-                table_next = soup_text.find_all("table")  # output is list-type
-                output_rows = []
-                for table_row in table_next[0].find_all("tr"):
-                    columns = table_row.find_all("td")
-                    output_row = []
-                    for column in columns:
-                        output_row.append(column.text)
-                    output_row = [x.strip() for x in output_row]
-                    output_rows.append(output_row)
-                output_rows = output_rows[3 : len(output_rows) - 2]
-                # first row of page
-                with open(output_csv, "a") as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerows(output_rows)
+                next = session.post(url, data=formdata)
+                logger.debug(f"Page status is {next.status_code} for {url}")
+
+                # Update the input variables
+                soup_content = BeautifulSoup(next.content, "html5lib")
+
+                # Cache the html
+                html = next.text
+                cache.write(f"wa/{page}.html", html)
+
+                # Parse out the data
+                soup = BeautifulSoup(html, "html5lib")
+                table_list = soup.find_all("table")
+                first_table = table_list[0]
+                row_list = _parse_table(first_table)
+                output_rows.extend(row_list)
+
+                # Up the page number
                 page += 1
+
+            # Once it fails, we're done
             except Exception:
                 break
-    return output_csv
+
+    # Set the export path
+    data_path = data_dir / "wa.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(data_path, output_rows)
+
+    # Return the path to the file
+    return data_path
+
+
+def _parse_table(table) -> list:
+    # Parse the cells
+    row_list = []
+    for row in table.find_all("tr"):
+        cell_list = row.find_all(["td"])
+        if not cell_list:
+            continue
+        cell_list = [_clean_text(c.text) for c in cell_list]
+        row_list.append(cell_list)
+
+    # Return it with a slice to cut the cruft
+    return row_list[2 : len(row_list) - 2]
+
+
+def _clean_text(text):
+    """Clean up the provided HTML snippet."""
+    if text is None:
+        return ""
+    text = re.sub(r"\n", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 if __name__ == "__main__":

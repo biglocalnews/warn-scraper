@@ -85,8 +85,12 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - id: run
-        name: Run
+        name: Run tests
         run: make test
+
+      - id: coverage
+        name: Coverage report
+        run: make coverage
 
   test-build:
     name: Build Python package
@@ -139,6 +143,9 @@ jobs:
       - id: publish
         name: Publish release
         uses: pypa/gh-action-pypi-publish@release/v1
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        if: env.PYPI_API_TOKEN != null
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}

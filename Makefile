@@ -92,11 +92,10 @@ mypy: ## run mypy type checks
 
 test: ## run all tests
 	$(call banner,       🤖 Running tests 🤖)
-	@$(PYTHON) setup.py -q test
+	@$(PIPENV) coverage run setup.py -q test
 
 
 coverage: ## check code coverage
-	@$(PIPENV) coverage run --source warn -m pytest
 	@$(PIPENV) coverage report -m
 
 #

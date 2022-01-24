@@ -94,7 +94,7 @@ def scrape(
     data_path = data_dir / "tx.csv"
 
     # Write out the file
-    utils.write_rows_to_csv(row_list, data_path)
+    utils.write_rows_to_csv(data_path, row_list)
 
     # Return the path to the file
     return data_path
