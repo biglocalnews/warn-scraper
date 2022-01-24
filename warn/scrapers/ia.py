@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
+from typing import Any
 
+from attrs import define
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
@@ -11,6 +13,22 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire"]
 __tags__ = ["html", "excel"]
 
 logger = logging.getLogger(__name__)
+
+
+@define(frozen=True)
+class Notice:
+    """A WARN notice posted by the state of Iowa."""
+
+    company: Any = utils.rawfield("Company")
+    address_line_1: Any = utils.rawfield("Address Line 1")
+    city: Any = utils.rawfield("City")
+    county: Any = utils.rawfield("County")
+    st: Any = utils.rawfield("St")
+    zip: Any = utils.rawfield("ZIP")
+    notice_type: Any = utils.rawfield("Notice Type")
+    emp_number: Any = utils.rawfield("Emp #")
+    notice_date: Any = utils.rawfield("Notice Date")
+    layoff_date: Any = utils.rawfield("Layoff Date")
 
 
 def scrape(
@@ -49,19 +67,43 @@ def scrape(
     worksheet = workbook.worksheets[0]
 
     # Convert the sheet to a list of lists
-    row_list = []
-    for r in worksheet.rows:
-        column = [cell.value for cell in r]
-        row_list.append(column)
+    notice_list = []
+    for i, r in enumerate(worksheet.rows):
+        # Skip the header row
+        if i == 0:
+            continue
+
+        # There is only data in first 10 columns
+        column_list = r[:10]
+
+        # Pull the values
+        cell_list = [_clean_cell(cell.value) for cell in column_list]
+
+        # Skip empty rows
+        try:
+            # A list with only empty cell will throw an error
+            next(i for i in cell_list if i)
+        except StopIteration:
+            continue
+
+        notice_obj = Notice(*cell_list)
+        notice_list.append(notice_obj)
 
     # Set the export path
     data_path = data_dir / "ia.csv"
 
     # Write out the file
-    utils.write_rows_to_csv(row_list, data_path)
+    utils.write_notice_list(data_path, notice_list)
 
     # Return the path to the file
     return data_path
+
+
+def _clean_cell(val):
+    """Clean the provided cell and return it."""
+    if isinstance(val, str):
+        return val.strip()
+    return val
 
 
 if __name__ == "__main__":

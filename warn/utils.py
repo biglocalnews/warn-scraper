@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 import requests
+from attrs import asdict, field
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,17 @@ WARN_OUTPUT_DIR = Path(os.environ.get("WARN_OUTPUT_DIR", WARN_DEFAULT_OUTPUT_DIR
 WARN_CACHE_DIR = WARN_OUTPUT_DIR / "cache"
 WARN_DATA_DIR = WARN_OUTPUT_DIR / "exports"
 WARN_LOG_DIR = WARN_OUTPUT_DIR / "logs"
+
+
+def rawfield(name: str):
+    """Create an attr field with the raw name storeed as metadata.
+
+    Args:
+        name (str): The raw name of the field in the source data.
+
+    Returns (field): An attrs field object with the name configured as metadata.
+    """
+    return field(metadata={"name": name})
 
 
 def create_directory(path: Path, is_file: bool = False):
@@ -43,6 +55,44 @@ def create_directory(path: Path, is_file: bool = False):
     # If not, lets make it
     logger.debug(f"Creating directory at {directory}")
     directory.mkdir(parents=True)
+
+
+def write_notice_list(output_path: Path, notice_list: list):
+    """
+    Write the provided list of Notice objects to the provided path as comma-separated values.
+
+    Args:
+        output_path (Path): the Path where the result will be saved
+        notice_list (List): A list of attr's created objects that will be written out.
+    """
+    create_directory(output_path, is_file=True)
+    logger.debug(f"Writing {len(notice_list)} rows to {output_path}")
+
+    # Get the headers
+    fieldname_crosswalk = {
+        a.name: a.metadata["name"] for a in notice_list[0].__attrs_attrs__
+    }
+
+    # Open up a file for writing
+    with open(output_path, "w", newline="") as f:
+
+        # Create the writer object
+        writer = csv.DictWriter(f, fieldnames=fieldname_crosswalk.values())
+
+        # Write out the headers
+        writer.writeheader()
+
+        # Loop through the notices
+        for notice_obj in notice_list:
+
+            # Convert them to dicts
+            notice_dict = asdict(notice_obj)
+
+            # Convert the clean field names to raw ones
+            notice_dict = {fieldname_crosswalk[k]: v for k, v in notice_dict.items()}
+
+            # Write it out
+            writer.writerow(notice_dict)
 
 
 def write_rows_to_csv(rows: list, output_path: Path, mode="w"):

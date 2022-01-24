@@ -125,6 +125,7 @@ setup(
         warn-scraper=warn.cli:main
     """,
     install_requires=[
+        "attrs",
         "click",
         "bs4",
         "html5lib",
