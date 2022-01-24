@@ -92,9 +92,9 @@ def _process_pdf(pdf_path: Path) -> list:
                 for index, row in enumerate(table.rows):
                     row = [_extract_cell_chars(page, cell) for cell in row.cells]
 
-                    # If the first row in a table appears to be carried over from a prior page,
-                    # (as indicated by mostly blank cells), append the row to the
-                    # previous row
+                    # If the first row in a table appears to be carried over from
+                    # a prior page, (as indicated by mostly blank cells), append the
+                    # row to the previous row
                     if (
                         index == 0
                         and len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
@@ -113,6 +113,15 @@ def _process_pdf(pdf_path: Path) -> list:
 
 
 def _clean_rows(rows: list) -> list:
+    """
+    Clean up rows.
+
+    Keyword arguments:
+    rows -- the rows to clean
+
+    Returns: the cleaned rows
+    """
+
     output_rows = []
 
     for row in rows:
@@ -150,6 +159,15 @@ def _clean_rows(rows: list) -> list:
 
 
 def _extract_cell_chars(page: pdfplumber.pdf.Page, bbox: tuple) -> list:
+    """
+    Extract the characters from a cell.
+
+    Keyword arguments:
+    page -- the page from which to extract the characters
+    bbox -- the bounding box of the cell
+
+    Returns: a list of characters
+    """
     # If the bounding box is empty, append an empty list
     if bbox is None:
         return []
