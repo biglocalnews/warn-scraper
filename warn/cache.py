@@ -125,6 +125,7 @@ class Cache:
         """
         out = Path(self.path, name)
         out.parent.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"Writing to cache {out}")
         with open(out, "w", newline="") as fh:
             fh.write(content)
         return str(out)
