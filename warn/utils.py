@@ -45,7 +45,7 @@ def create_directory(path: Path, is_file: bool = False):
     directory.mkdir(parents=True)
 
 
-def write_rows_to_csv(rows: list, output_path: Path, mode="w"):
+def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
     """Write the provided list to the provided path as comma-separated values.
 
     Args:

@@ -100,7 +100,7 @@ def scrape(
     data_path = data_dir / "wa.csv"
 
     # Write out the file
-    utils.write_rows_to_csv(output_rows, data_path)
+    utils.write_rows_to_csv(data_path, output_rows)
 
     # Return the path to the file
     return data_path

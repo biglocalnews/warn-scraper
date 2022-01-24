@@ -59,7 +59,7 @@ def scrape_state(
         "record_number",
         "detail_page_url",
     ]
-    write_rows_to_csv([headers], raw_csv)
+    write_rows_to_csv(raw_csv, [headers])
     # Execute the scrape in two batches
     # 1. Current and prior year. Always scrape fresh (i.e. never use cached files)
     #    in case records have been updated.
