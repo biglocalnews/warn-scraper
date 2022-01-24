@@ -2,6 +2,7 @@ import os
 import logging
 import re
 from pathlib import Path
+from datetime import datetime
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -10,7 +11,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["chriszs"]
-__tags__ = ["pdf"]
+__tags__ = ["html", "pdf"]
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ def scrape(
     """
     # Fire up the cache
     cache = Cache(cache_dir)
-    
+
     # The basic configuration for the scrape
     state_code = "la"
     base_url = "https://www.laworks.net/"
@@ -38,48 +39,33 @@ def scrape(
 
     # Download the root page
     url = f"{base_url}Downloads/{file_base}.asp"
-    page = utils.get_url(url)
-    html = page.text
+    html = utils.get_url(url).text
 
     # Save it to the cache
     cache_key = f"{state_code}/{file_base}.html"
     cache.write(cache_key, html)
 
-    # Parse out the PDF links
-    document = BeautifulSoup(html, "html.parser")
-    links = document.find_all("a")
-    pdf_urls = [
-        f"{base_url}{link['href']}" for link in links if "WARN Notices" in link.text
-    ]
+    # Parse out the links to WARN notice PDFs
+    links = _parse_links(html)
 
     output_rows = []
 
-    for pdf_index, pdf_url in enumerate(pdf_urls):
-        file_name = os.path.basename(pdf_url)
-        cache_key = f"{state_code}/{file_name}"
+    for link in links:
+        if "WARN Notices" in link.text:
+            # Download the PDF
+            pdf_url = f"{base_url}{link['href']}"
+            pdf_path = _read_or_download(cache, state_code, pdf_url)
 
-        pdf_path = cache.download(cache_key, pdf_url)
+            # Process the PDF
+            rows = _process_pdf(pdf_path)
+            output_rows.extend(rows)
 
-        with pdfplumber.open(pdf_path) as pdf:
-            for page_index, page in enumerate(pdf.pages):
-                rows = page.extract_table()
-
-                # Loop through the rows
-                for row_index, row in enumerate(rows):
-                    # Skip headers on all but first page of first PDF
-                    if pdf_index > 0 and row_index == 0:
-                        print(row)
-                        logger.debug(f"Skipping header row on PDF {pdf_index+1} page {page_index+1}")
-                        continue
-
-                    # Extract data
-                    output_row = [_clean_text(cell) for cell in row]
-
-                    # Write row
-                    output_rows.append(output_row)
-
-    # Patch in missing header value
-    output_rows[0][3] = "Employees Affected"
+    # Insert a header row with clean column names.
+    # We are here assuming that the columns don't change between years
+    # and that one that contains "Employees Affected" will be clean.
+    output_rows = [list(filter(_is_clean_header, output_rows))[0]] + list(
+        filter(_is_not_header, output_rows)
+    )
 
     # Write out to CSV
     data_path = data_dir / f"{state_code}.csv"
@@ -87,6 +73,287 @@ def scrape(
 
     # Return the path
     return data_path
+
+
+def _process_pdf(pdf_path: Path) -> list:
+    """
+    Process a PDF file.
+
+    Keyword arguments:
+    pdf_path -- the path to the PDF file
+
+    Returns: a list of rows
+    """
+
+    output_rows = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            for table in page.debug_tablefinder().tables:
+                for index, row in enumerate(table.rows):
+                    row = [_extract_cell_chars(page, cell) for cell in row.cells]
+
+                    # If the first row in a table appears to be carried over from a prior page,
+                    # (as indicated by mostly blank cells), append the row to the
+                    # previous row
+                    if (
+                        index == 0
+                        and len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
+                        and len(output_rows) > 0
+                    ):
+                        for column_index, cell in enumerate(row):
+                            if column_index < len(output_rows[len(output_rows) - 1]):
+                                output_rows[len(output_rows) - 1][column_index].extend(
+                                    cell
+                                )
+                    # Otherwise, append the row
+                    else:
+                        output_rows.append(row)
+
+    return _clean_rows(output_rows)
+
+
+def _clean_rows(rows: list) -> list:
+    output_rows = []
+
+    for row in rows:
+        output_row = []
+        for column_index, chars in enumerate(row):
+            text = _clean_text(pdfplumber.utils.extract_text(chars))
+
+            # If we're on the first column, try to extract location and notes
+            if column_index == 0:
+                # Tries to extract a company name, appends it to the row
+                company_name = _extract_company_name(chars)
+                output_row.append(company_name)
+                remaining_text = text.replace(company_name, "")
+
+                # Tries to extract a note, typically UPDATE or WARN RESCINDED
+                note = _extract_note(chars).strip()
+
+                # Whatever is left is assumbed to be the location
+                location = remaining_text.strip().replace(note, "")
+
+                # Append the location and note to the row or headers for those
+                if _is_header(output_row):
+                    output_row.append("Location")
+                    output_row.append("Note")
+                else:
+                    output_row.append(location)
+                    output_row.append(note)
+            else:
+                # Appends the remaining text to the row
+                output_row.append(text)
+
+        output_rows.append(output_row)
+
+    return output_rows
+
+
+def _extract_cell_chars(page: pdfplumber.pdf.Page, bbox: tuple) -> list:
+    # If the bounding box is empty, append an empty list
+    if bbox is None:
+        return []
+
+    # Expand the bounding box to ensure it encompasses the bottom line of text
+    vertical_threshold = 5
+
+    expanded_bbox = (
+        bbox[0],
+        bbox[1],
+        bbox[2],
+        bbox[3] + vertical_threshold,
+    )
+
+    # Get the characters from the cell
+    return page.within_bbox(expanded_bbox).chars
+
+
+def _read_or_download(cache: Cache, prefix: str, url: str) -> Path:
+    """
+    Read a file from the cache or downloads it.
+
+    Keyword arguments:
+    cache -- the cache to use
+    prefix -- the prefix to use for the cache key
+    url -- the URL to download
+
+    Returns: the path to the file
+    """
+    file_name = os.path.basename(url)
+    cache_key = f"{prefix}/{file_name}"
+
+    exists = cache.exists(cache_key)
+    year = _extract_year(file_name)
+    current_year = datetime.now().year
+
+    # Form a file path so we can read from the cache
+    if exists and year < current_year - 1:
+        return f"{cache.path}/{cache_key}"
+
+    return cache.download(cache_key, url)
+
+
+def _extract_year(text: int) -> str:
+    """
+    Extract the year from a PDF file name.
+
+    Keyword arguments:
+    text -- the text to extract the year from
+
+    Returns: the year
+    """
+    year_pattern = r"\d{4}"
+    year = re.search(year_pattern, text, re.IGNORECASE)
+
+    if year is None:
+        return None
+    else:
+        return int(year[0])
+
+
+def _is_header(row: list) -> bool:
+    """
+    Determine if a row is a header row.
+
+    Keyword arguments:
+    row -- the row to check
+
+    Returns: True if the row is a header row, False otherwise
+    """
+    return row[0].strip().lower() == "company name"
+
+
+def _is_clean_header(row: list) -> bool:
+    """
+    Return true for a header with "Employees Affected."
+
+    Keyword arguments:
+    row -- the rows to check
+
+    Returns: true if the row is a clean header
+    """
+    return _is_header(row) and "Employees Affected" in row
+
+
+def _is_not_header(row: list) -> bool:
+    """
+    Return true for a row that is not a header.
+
+    Keyword arguments:
+    row -- the rows to check
+
+    Returns: true if the row is not a header
+    """
+    return not _is_header(row)
+
+
+def _extract_note(chars: list) -> str:
+    """
+    Extract a note from a PDF cell. This is text that appears after
+    the company name or location that isn't part of either.
+
+    Keyword arguments:
+    chars -- the characters to extract the note from
+
+    Returns: the note
+    """
+    text = pdfplumber.utils.extract_text(chars)
+
+    # Split text into lines
+    lines = text.split("\n")
+
+    notes = []
+
+    for line in lines:
+        note_pattern = r"((UPDATE.*|WARN RESCINDED))+"
+        note = re.search(note_pattern, line, re.IGNORECASE)
+        if note:
+            notes.append(_clean_text(note[0]))
+
+    return " ".join(notes)
+
+
+def _extract_company_name(chars: list) -> str:
+    """
+    Extract the company name from a PDF cell.
+
+    Keyword arguments:
+    chars -- the characters to extract the company name from
+
+    Returns: the company name
+    """
+    text = pdfplumber.utils.extract_text(chars)
+
+    # Split text into lines
+    lines = text.split("\n")
+
+    # We're assuming first line is always part of a company name
+    company_name = _clean_text(lines[0])
+
+    # Try to extract bold text in the cell
+    bold_text = _clean_text(_extract_bold_text(chars))
+    remaining_bold_text = bold_text.replace(company_name, "").strip()
+
+    # Loop through all but first and last lines
+    for index, line in enumerate(lines[1:-1]):
+        line_text = _clean_text(line)
+
+        # If line is bolded or doesn't match a pattern
+        # it's probably part of the company name
+        if remaining_bold_text.startswith(line_text) or (
+            bold_text == "" and index < 1 and not _is_location(line_text)
+        ):
+            company_name += f" {line_text}"
+
+            remaining_bold_text = remaining_bold_text.replace(line_text, "").strip()
+        # The first time we hit a line that doesn't match our expectations,
+        # we assume we've reached the end of the company name
+        else:
+            break
+
+    return company_name
+
+
+def _is_location(text: str) -> bool:
+    """
+    Determine if text is likely to be a location.
+
+    Keyword arguments:
+    text -- the text to check
+
+    Returns: True if the text is likely to be a location, False otherwise
+    """
+    location_pattern = r"(^\d+|Highway|Hwy|Offshore|Statewide)"
+    return re.match(location_pattern, text, re.IGNORECASE)
+
+
+def _parse_links(html: str) -> list:
+    """
+    Extract links from HTML.
+
+    Keyword arguments:
+    html -- the HTML to extract links from
+
+    Returns: the list of links
+    """
+    document = BeautifulSoup(html, "html.parser")
+    links = document.find_all("a")
+    return links
+
+
+def _extract_bold_text(chars: list) -> str:
+    """
+    Extract the bold text from a PDF cell.
+
+    Keyword arguments:
+    chars -- the list of characters in the cell
+
+    Returns: the bold text
+    """
+    bold_chars = [char["text"] for char in chars if "Bold" in char["fontname"]]
+    bold_text = "".join(bold_chars)
+    return bold_text
 
 
 def _clean_text(text: str) -> str:
@@ -103,7 +370,9 @@ def _clean_text(text: str) -> str:
         return ""
 
     # Standardize whitespace
-    return re.sub(r"\s+", " ", text)
+    clean_text = re.sub(r"\s+", " ", text).strip()
+
+    return clean_text
 
 
 if __name__ == "__main__":
