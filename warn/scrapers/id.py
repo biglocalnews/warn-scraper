@@ -51,7 +51,7 @@ def scrape(
     with open(cache_key, "wb") as file:
         file.write(response.content)
 
-    output_rows = []
+    output_rows: list = []
 
     with pdfplumber.open(cache_key) as pdf:
         for index, page in enumerate(pdf.pages):
@@ -76,7 +76,7 @@ def _clean_table(rows: list, page_index: int) -> list:
 
     Returns: a list of lists, where each inner list is a row in the table
     """
-    output_rows = []
+    output_rows: list = []
 
     for row_index, row in enumerate(rows):
         output_row = []
