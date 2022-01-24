@@ -26,43 +26,29 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "nj.csv"
+    # Fire up the cache
+    cache = Cache(cache_dir)
+
+    # Get the root URL
     url = "http://lwd.state.nj.us/WorkForceDirectory/warn.jsp"
-    logger.debug(f"Scraping {url}")
-    html = _scrape_page(url)
+    r = utils.get_url(url)
+    r.encoding = "utf-8"
+    html = r.text
+
+    # Cache the result
+    cache.write("nj/source.html", html)
+
+    # Parse out the tables
     soup = BeautifulSoup(html, "html.parser")
-    tables = soup.find_all("table")  # output is list-type
-    # The header and each line of company data lives in its own table.
-    # Old school.
-    header_table = tables.pop(0)
-    headers = _extract_fields_from_table(header_table)
-    output_rows = [headers]
-    # Process company "rows"
-    for table in tables:
-        layoff_data_row = _extract_fields_from_table(table)
-        output_rows.append(layoff_data_row)
-    # Perform initial write of data
-    utils.write_rows_to_csv(output_csv, output_rows)
-    cache = Cache(cache_dir)  # ~/.warn-scraper/cache
-    _scrape_2010_to_2004(cache, output_csv)
-    return output_csv
+    table_list = soup.find_all("table")
 
+    # Each row is its own table. Yes, I know.
+    output_rows = []
+    for table in table_list:
+        cell_list = [c.text.strip() for c in table.find_all("td")]
+        output_rows.append(cell_list)
 
-def _scrape_page(url):
-    response = utils.get_url(url)
-    response.encoding = "utf-8"
-    return response.text
-
-
-def _extract_fields_from_table(table):
-    row = table.find_all("tr")[0]
-    data = []
-    for field in row.find_all("td"):
-        data.append(field.text.strip())
-    return data
-
-
-def _scrape_2010_to_2004(cache, output_csv):
+    # Get historical data from separate source
     years = [2010, 2009, 2008, 2007, 2006, 2005, 2004]
     months = [
         "Jan",
@@ -83,25 +69,43 @@ def _scrape_2010_to_2004(cache, output_csv):
         html_page_name = f"{month}{year}Warn.html"
         # Add the state postal as cache key prefix
         cache_key = f"nj/{html_page_name}"
-        try:
+        # Get the HTML, trying the cache first
+        if cache.exists(cache_key):
             html = cache.read(cache_key)
-            logger.debug(f"Page fetched from cache: {cache_key}")
-        except FileNotFoundError:
+        else:
             # If file not found in cache, scrape the page and save to cache
             url = f"https://www.nj.gov/labor/lwdhome/warn/{year}/{html_page_name}"
-            html = _scrape_page(url)
+            r = utils.get_url(url)
+            r.encoding = "utf-8"
+            html.text
             cache.write(cache_key, html)
-            logger.debug(f"Scraped and cached {url}")
-        soup = BeautifulSoup(html, "html.parser")
-        table = soup.find_all("table")  # output is list-type
-        output_rows = []
-        for tr in table[0].find_all("tr"):
-            row_data = [field.text.strip() for field in tr.find_all("td")]
-            output_rows.append(row_data)
-        # Remove header row
-        output_rows.pop(0)
-        if len(output_rows) > 0:
-            utils.write_rows_to_csv(output_csv, output_rows, mode="a")
+
+        # Parse out the tables
+        soup = BeautifulSoup(html, "html5lib")
+        table_list = soup.find_all("table")
+        table = table_list[0]
+
+        # Loop through the rows
+        for i, row in enumerate(table.find_all("tr")):
+
+            # Skip the header row
+            if i == 0:
+                continue
+
+            # Parse the data
+            cell_list = [c.text.strip() for c in row.find_all("td")]
+
+            # Add it to the pile
+            output_rows.append(cell_list)
+
+    # Set the export path
+    data_path = data_dir / "nj.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(data_path, output_rows)
+
+    # Return the path to the file
+    return data_path
 
 
 if __name__ == "__main__":
