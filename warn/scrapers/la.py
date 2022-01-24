@@ -121,7 +121,6 @@ def _clean_rows(rows: list) -> list:
 
     Returns: the cleaned rows
     """
-
     output_rows = []
 
     for row in rows:
