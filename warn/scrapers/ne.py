@@ -1,5 +1,5 @@
-import csv
 import logging
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -26,149 +26,92 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = cache_dir / "ne" / "raw1.csv"
-    utils.create_directory(output_csv, is_file=True)
-    years = range(2019, 2009, -1)
-    url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year=2020"
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
-    # find header
-    first_row = table[0].find_all("tr")[2]
-    headers = first_row.find_all("th")
-    output_header = []
-    for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
-    # save header
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-    # save 2020
-    output_rows = []
-    for table_row in table[0].find_all("tr"):
-        columns = table_row.find_all("td")
-        output_row = []
-        for column in columns:
-            output_row.append(column.text)
-        output_row = [x.strip() for x in output_row]
-        output_rows.append(output_row)
-    output_rows.pop(0)  # pop headers
-    output_rows.pop(0)  # pop headers
-    output_rows.pop(0)  # pop headers
-    if len(output_rows) > 0:
-        with open(output_csv, "a") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
-    # save 2019-2010
-    for year in years:
-        url = "https://dol.nebraska.gov/LayoffServices/WARNReportData/?year={}".format(
-            year
-        )
-        page = utils.get_url(url)
-        soup = BeautifulSoup(page.text, "html.parser")
-        table = soup.find_all("table")  # output is list-type
-        output_rows = []
-        for table_row in table[0].find_all("tr"):
-            columns = table_row.find_all("td")
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
-            output_rows.append(output_row)
-        output_rows.pop(0)
-        output_rows.pop(0)
-        output_rows.pop(0)
-        if len(output_rows) > 0:
-            with open(output_csv, "a") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-    _nebraska_two(cache_dir)
-
-    # Read in the two CSVs
+    # Open the cache
     cache = Cache(cache_dir)
-    row_list = []
-    for i, f in enumerate(["ne/raw1.csv", "ne/raw2.csv"]):
-        # Read in the file
-        data = cache.read_csv(f)
 
-        # Cut the header from everything after the first file
-        if i > 0:
-            data = data[1:]
+    current_year = datetime.now().year
+    year_range = range(2010, current_year + 1)
 
-        # Add it to the combined list
-        row_list.extend(data)
-
-    # Write them out
-    output_csv = data_dir / "ne.csv"
-    utils.write_rows_to_csv(row_list, output_csv)
-
-    # Return the path
-    return output_csv
-
-
-def _nebraska_two(cache_dir):
-    output_csv = cache_dir / "ne" / "raw2.csv"
-    utils.create_directory(output_csv, is_file=True)
-    years = range(2019, 2009, -1)
-    url = (
-        "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year=2020"
-    )
-    page = utils.get_url(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
-    # find header
-    first_row = table[0].find_all("tr")[2]
-    headers = first_row.find_all("th")
-    output_header = []
-    for header in headers:
-        output_header.append(header.text)
-    output_header = [x.strip() for x in output_header]
-    # save header
-    with open(output_csv, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(output_header)
-    # save 2020
+    # Scrape rows
     output_rows = []
-    for table_row in table[0].find_all("tr"):
-        columns = table_row.find_all("td")
-        output_row = []
-        for column in columns:
-            output_row.append(column.text)
-        output_row = [x.strip() for x in output_row]
-        output_rows.append(output_row)
-    output_rows.pop(0)  # pop headers
-    output_rows.pop(0)  # pop headers
-    output_rows.pop(0)  # pop headers
-    if len(output_rows) > 0:
-        with open(output_csv, "a") as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(output_rows)
-    # save 2019-2010
-    for year in years:
-        url = "https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year={}".format(
-            year
+    for year in year_range:
+        # Get WARN page
+        warn_url = (
+            f"https://dol.nebraska.gov/LayoffServices/WARNReportData/?year={year}"
         )
-        page = utils.get_url(url)
-        soup = BeautifulSoup(page.text, "html.parser")
-        table = soup.find_all("table")  # output is list-type
-        output_rows = []
-        for table_row in table[0].find_all("tr"):
-            columns = table_row.find_all("td")
-            output_row = []
-            for column in columns:
-                output_row.append(column.text)
-            output_row = [x.strip() for x in output_row]
-            output_rows.append(output_row)
-        output_rows.pop(0)
-        output_rows.pop(0)
-        if len(output_rows) > 0:
-            output_rows.pop(0)
-        if len(output_rows) > 0:
-            with open(output_csv, "a") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
-    return output_csv
+        warn_key = f"ne/warn-{year}.html"
+
+        # Read from cache if available and not this year or the year before
+        if cache.exists(warn_key) and year < current_year - 1:
+            warn_html = cache.read(warn_key)
+        else:
+            warn_r = utils.get_url(warn_url)
+            warn_html = warn_r.text
+            cache.write(warn_key, warn_html)
+
+        # Parse the table
+        warn_headers = ["Date", "Company", "Jobs Affected", "City", "Location"]
+        warn_rows = _parse_table(warn_html, warn_headers)
+
+        # Add it to the big list
+        output_rows.extend(warn_rows)
+
+        # Do the same for the layoffs page
+        layoff_url = f"https://dol.nebraska.gov/LayoffServices/LayoffAndClosureReportData/?year={year}"
+        layoff_key = f"ne/layoff-{year}.html"
+
+        # Read from cache if available and not this year or the year before
+        if cache.exists(layoff_key) and year < current_year - 1:
+            layoff_html = cache.read(layoff_key)
+        else:
+            page = utils.get_url(layoff_url)
+            layoff_html = page.text
+            cache.write(layoff_key, layoff_html)
+
+        # Parse the table
+        layoff_headers = [
+            "Date",
+            "Company",
+            "Type",
+            "Jobs Affected",
+            "City",
+            "Location",
+        ]
+        layoff_rows = _parse_table(layoff_html, layoff_headers)
+
+        # Add it to the big list
+        output_rows.extend(layoff_rows)
+
+    # Write out the results
+    data_path = data_dir / "ne.csv"
+    utils.write_dict_rows_to_csv(
+        data_path, layoff_headers, output_rows, extrasaction="ignore"
+    )
+
+    # Return the path to the CSV
+    return data_path
+
+
+def _parse_table(html, headers) -> list:
+    # Parse table
+    soup = BeautifulSoup(html, "html.parser")
+    table_list = soup.find_all("table")
+
+    # We expect the first table to be there with our data
+    assert len(table_list) > 0
+    table = table_list[0]
+
+    # Parse the cells
+    row_list = []
+    for row in table.find_all("tr"):
+        cell_list = row.find_all("td")
+        if not cell_list:
+            continue
+        cell_dict = {headers[i]: c.text.strip() for i, c in enumerate(cell_list)}
+        row_list.append(cell_dict)
+
+    # Return it
+    return row_list
 
 
 if __name__ == "__main__":
