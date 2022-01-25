@@ -18,7 +18,7 @@ class Runner:
     The cache_dir and output_dir arguments can specify any
     location, but it's not a bad idea to have them as sibling directories:
 
-        /tmp/WARN/working # ETL fiiles
+        /tmp/WARN/working # ETL files
         /tmp/WARN/exports # Final, polished data e.g CSVs for analysis
 
     Args:
