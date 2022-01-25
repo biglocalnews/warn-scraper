@@ -34,18 +34,22 @@ def scrape_state(
     Returns:
         Full path to exported csv (e.g. ~/.warn-scraper/exports/ks.csv)
     """
-    raw_csv = f"{cache_dir}/{state_postal.lower()}_raw.csv"
     yearly_dates = _date_ranges_to_scrape(stop_year)
+
     # No caching should be used for current and prior year, so
     # we have to separate those from remaining years.
     no_cache_years = [yearly_dates.pop(0), yearly_dates.pop(0)]
+
     # Set up scraper instance
     state_cache_dir = cache_dir / state_postal.lower()
     site = JobCenterSite(state_postal.upper(), search_url, cache_dir=state_cache_dir)
+
     # Date-based searches produce search result pages that appear to have certain
     # records duplicated over paged results. We'll initially write all data to a raw
     # file which we then deduplicate to produce the final output_csv.
+    raw_csv = cache_dir / f"{state_postal.lower()}_raw.csv"
     logger.debug(f"Generating {raw_csv}")
+
     # 0. Write header row first
     headers = [
         "employer",
