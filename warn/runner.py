@@ -3,6 +3,8 @@ import shutil
 from importlib import import_module
 from pathlib import Path
 
+from . import utils
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,7 +27,11 @@ class Runner:
         data_dir (str): Path where final output files are saved.
     """
 
-    def __init__(self, data_dir: Path, cache_dir: Path):
+    def __init__(
+        self,
+        data_dir: Path = utils.WARN_DATA_DIR,
+        cache_dir: Path = utils.WARN_CACHE_DIR,
+    ):
         """Initialize a new instance."""
         self.data_dir = data_dir
         self.cache_dir = cache_dir
