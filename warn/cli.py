@@ -59,7 +59,6 @@ def main(
 
     # Runner config
     runner = Runner(data_dir, cache_dir)
-    runner.setup()
 
     # Delete files, if asked
     if delete:

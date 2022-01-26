@@ -1,4 +1,5 @@
 import logging
+import shutil
 from importlib import import_module
 from pathlib import Path
 
@@ -26,15 +27,14 @@ class Runner:
         data_dir (str): Path where final output files are saved.
     """
 
-    def __init__(self, data_dir: Path, cache_dir: Path):
+    def __init__(
+        self,
+        data_dir: Path = utils.WARN_DATA_DIR,
+        cache_dir: Path = utils.WARN_CACHE_DIR,
+    ):
         """Initialize a new instance."""
         self.data_dir = data_dir
         self.cache_dir = cache_dir
-
-    def setup(self):
-        """Create the necessary directories."""
-        utils.create_directory(self.data_dir)
-        utils.create_directory(self.cache_dir)
 
     def scrape(self, state):
         """Run the scraper for the provided state."""
@@ -51,12 +51,8 @@ class Runner:
         return data_path
 
     def delete(self):
-        """Delete the files in the output directory."""
-        logger.info(f"Deleting files in {self.output_dir}")
-        for f in self._output_dir_files:
-            Path(f).unlink()
-
-    @property
-    def _output_dir_files(self):
-        """Get a list of output files."""
-        return [str(f) for f in Path(self.output_dir).glob("*")]
+        """Delete the files in the output directories."""
+        logger.debug(f"Deleting files in {self.data_dir}")
+        shutil.rmtree(self.data_dir, ignore_errors=True)
+        logger.debug(f"Deleting files in {self.cache_dir}")
+        shutil.rmtree(self.cache_dir, ignore_errors=True)
