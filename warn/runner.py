@@ -1,8 +1,7 @@
 import logging
+import shutil
 from importlib import import_module
 from pathlib import Path
-
-from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -31,11 +30,6 @@ class Runner:
         self.data_dir = data_dir
         self.cache_dir = cache_dir
 
-    def setup(self):
-        """Create the necessary directories."""
-        utils.create_directory(self.data_dir)
-        utils.create_directory(self.cache_dir)
-
     def scrape(self, state):
         """Run the scraper for the provided state."""
         # Get the module
@@ -51,12 +45,8 @@ class Runner:
         return data_path
 
     def delete(self):
-        """Delete the files in the output directory."""
-        logger.info(f"Deleting files in {self.output_dir}")
-        for f in self._output_dir_files:
-            Path(f).unlink()
-
-    @property
-    def _output_dir_files(self):
-        """Get a list of output files."""
-        return [str(f) for f in Path(self.output_dir).glob("*")]
+        """Delete the files in the output directories."""
+        logger.debug(f"Deleting files in {self.data_dir}")
+        shutil.rmtree(self.data_dir, ignore_errors=True)
+        logger.debug(f"Deleting files in {self.cache_dir}")
+        shutil.rmtree(self.cache_dir, ignore_errors=True)
