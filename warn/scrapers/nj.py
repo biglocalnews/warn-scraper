@@ -77,7 +77,7 @@ def scrape(
             url = f"https://www.nj.gov/labor/lwdhome/warn/{year}/{html_page_name}"
             r = utils.get_url(url)
             r.encoding = "utf-8"
-            html.text
+            html = r.text
             cache.write(cache_key, html)
 
         # Parse out the tables
