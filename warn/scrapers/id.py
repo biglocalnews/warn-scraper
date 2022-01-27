@@ -4,9 +4,9 @@ import re
 from pathlib import Path
 
 import pdfplumber
-import requests
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["pdf"]
@@ -27,6 +27,8 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    cache = Cache(cache_dir)
+
     state_code = "id"
     base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
     file_name = "WARNNotice.pdf"
@@ -40,24 +42,19 @@ def scrape(
 
     url = f"{base_url}{file_name}?v={cache_buster}"
 
-    cache_state = Path(cache_dir, state_code)
-    cache_state.mkdir(parents=True, exist_ok=True)
-
-    cache_key = f"{cache_state}/{file_name}"
+    cache_key = f"{state_code}/{file_name}"
 
     # verify=False because there's a persistent cert error
     # we're working around.
-    response = requests.get(url, verify=False)
-    with open(cache_key, "wb") as file:
-        file.write(response.content)
+    pdf_file = cache.download(cache_key, url, verify=False)
 
     output_rows: list = []
 
-    with pdfplumber.open(cache_key) as pdf:
+    with pdfplumber.open(pdf_file) as pdf:
         for index, page in enumerate(pdf.pages):
             rows = page.extract_table()
 
-            output_rows +=  _clean_table(rows, index)
+            output_rows += _clean_table(rows, index)
 
     # Write out the data to a CSV
     data_path = data_dir / f"{state_code}.csv"
@@ -88,10 +85,10 @@ def _clean_table(rows: list, page_index: int) -> list:
             # which is effectively a total for all locations in the merged cell
             # and which we don't want a data user to double count.
             if (
-                clean_text == ""
-                and row_index > 0
-                and col_index < len(output_rows[row_index - 1])
-                and output_rows[0][col_index] != "No. of Employees Affected"
+                _is_empty(clean_text)
+                and _column_exists_in_prior_row(row_index, col_index, output_rows)
+                and "No. of Employees"
+                not in _column_name_from_index(col_index, output_rows)
             ):
                 clean_text = output_rows[row_index - 1][col_index]
 
@@ -104,6 +101,47 @@ def _clean_table(rows: list, page_index: int) -> list:
         return output_rows[1:]
 
     return output_rows
+
+
+def _is_empty(text: str) -> bool:
+    """
+    Determine if a cell is empty.
+
+    Keyword arguments:
+    text -- the text to check
+
+    Returns: True if the cell is empty, False otherwise
+    """
+    return text == ""
+
+
+def _column_exists_in_prior_row(
+    row_index: int, col_index: int, output_rows: list
+) -> bool:
+    """
+    Determine if a column exists in the prior row.
+
+    Keyword arguments:
+    row_index -- the index of the row
+    col_index -- the index of the column
+    output_rows -- the output rows
+
+    Returns: True if the column exists, False otherwise
+    """
+    return row_index > 0 and col_index < len(output_rows[row_index - 1])
+
+
+def _column_name_from_index(col_index: int, output_rows: list) -> str:
+    """
+    Determine the column name from the column index.
+
+    Keyword arguments:
+    col_index -- the index of the column
+    output_rows -- the output rows
+
+    Returns: the column name
+    """
+    return output_rows[0][col_index]
 
 
 def _clean_text(text: str) -> str:
