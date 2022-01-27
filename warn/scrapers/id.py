@@ -27,39 +27,36 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    cache = Cache(cache_dir)
-
-    state_code = "id"
+    # Create the URL of the source PDF
     base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
     file_name = "WARNNotice.pdf"
-
     # There's a numeric parameter called v on this PDF URL that updates
     # from time to time. Suspect this is a cache-buster. We're using a
     # random number instead.
     min_cache_buster = 0
     max_cache_buster = 10000000000
     cache_buster = random.randrange(min_cache_buster, max_cache_buster)
-
     url = f"{base_url}{file_name}?v={cache_buster}"
 
+    # Download the PDF with verify=False because
+    # there's a persistent cert error we're working around.
+    cache = Cache(cache_dir)
+    state_code = "id"
     cache_key = f"{state_code}/{file_name}"
-
-    # verify=False because there's a persistent cert error
-    # we're working around.
     pdf_file = cache.download(cache_key, url, verify=False)
 
+    # Loop through the PDF pages and scrape out the data
     output_rows: list = []
-
     with pdfplumber.open(pdf_file) as pdf:
         for index, page in enumerate(pdf.pages):
             rows = page.extract_table()
-
             output_rows += _clean_table(rows, index)
 
     # Write out the data to a CSV
     data_path = data_dir / f"{state_code}.csv"
     utils.write_rows_to_csv(data_path, output_rows)
 
+    # Return the path to the CSV
     return data_path
 
 
