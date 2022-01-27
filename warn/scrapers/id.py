@@ -57,11 +57,11 @@ def scrape(
         for index, page in enumerate(pdf.pages):
             rows = page.extract_table()
 
-            output_rows = output_rows + _clean_table(rows, index)
+            output_rows +=  _clean_table(rows, index)
 
     # Write out the data to a CSV
-    data_path = Path(data_dir, f"{state_code}.csv")
-    utils.write_rows_to_csv(output_rows, data_path)
+    data_path = data_dir / f"{state_code}.csv"
+    utils.write_rows_to_csv(data_path, output_rows)
 
     return data_path
 
