@@ -71,20 +71,20 @@ class Cache:
         with open(path) as fh:
             return list(csv.reader(fh))
 
-    def download(self, name: str, url: str) -> Path:
+    def download(self, name: str, url: str, **kwargs) -> Path:
         """
         Download the provided URL and save it in the cache.
 
         Args:
             name (str): The path where the file will be saved. Can be a simple string like "ia/data.xlsx"
             url (str): The URL to download
+            **kwargs: Additional arguments to pass to requests.get()
 
         Returns: The Path where the file was saved
         """
         # Request the URL
         logger.debug(f"Requesting {url}")
-        with requests.get(url, stream=True) as r:
-
+        with requests.get(url, stream=True, **kwargs) as r:
             # If there's no encoding, set it
             if r.encoding is None:
                 r.encoding = "utf-8"
