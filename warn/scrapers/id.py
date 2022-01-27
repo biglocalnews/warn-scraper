@@ -86,9 +86,9 @@ def _clean_table(rows: list, page_index: int) -> list:
             # and which we don't want a data user to double count.
             if (
                 _is_empty(clean_text)
-                and _column_exists_in_prior_row(row_index, col_index, output_rows)
+                and _column_exists_in_prior_row(output_rows, row_index, col_index)
                 and "No. of Employees"
-                not in _column_name_from_index(col_index, output_rows)
+                not in _column_name_from_index(output_rows, col_index)
             ):
                 clean_text = output_rows[row_index - 1][col_index]
 
@@ -116,7 +116,7 @@ def _is_empty(text: str) -> bool:
 
 
 def _column_exists_in_prior_row(
-    row_index: int, col_index: int, output_rows: list
+    output_rows: list, row_index: int, col_index: int
 ) -> bool:
     """
     Determine if a column exists in the prior row.
@@ -131,7 +131,7 @@ def _column_exists_in_prior_row(
     return row_index > 0 and col_index < len(output_rows[row_index - 1])
 
 
-def _column_name_from_index(col_index: int, output_rows: list) -> str:
+def _column_name_from_index(output_rows: list, col_index: int) -> str:
     """
     Determine the column name from the column index.
 
