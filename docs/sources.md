@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 32 of America's 56 states and territories.
+There are currently scrapers for 33 of America's 56 states and territories.
 
 | State | Docs | Authors | Tags |
 | :---- | :--: | :------ | :--- |
@@ -16,6 +16,7 @@ There are currently scrapers for 32 of America's 56 states and territories.
 |[Indiana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/in.py)|[📃](scrapers/in.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Iowa](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ia.py)|[📃](scrapers/ia.md)|[Dilcia19](https://github.com/Dilcia19), [palewire](https://github.com/palewire), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|excel, html|
 |[Kansas](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ks.py)|[📃](scrapers/ks.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
+|[Louisiana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/la.py)||[chriszs](https://github.com/chriszs)|html, pdf|
 |[Maine](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/me.py)|[📃](scrapers/me.md)|[zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Maryland](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/md.py)|[📃](scrapers/md.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Missouri](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mo.py)|[📃](scrapers/mo.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
@@ -40,14 +41,13 @@ There are currently scrapers for 32 of America's 56 states and territories.
 
 ## To do
 
-These 24 areas need a scraper:
+These 23 areas need a scraper:
 
 - Arkansas
 - Colorado
 - Hawaii
 - Illinois
 - Kentucky
-- Louisiana
 - Massachusetts
 - Michigan
 - Minnesota
