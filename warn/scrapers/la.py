@@ -48,7 +48,7 @@ def scrape(
     # Parse out the links to WARN notice PDFs
     links = _parse_links(html)
 
-    output_rows = []
+    all_rows = []
 
     for link in links:
         if "WARN Notices" in link.text:
@@ -58,13 +58,13 @@ def scrape(
 
             # Process the PDF
             rows = _process_pdf(pdf_path)
-            output_rows.extend(rows)
+            all_rows.extend(rows)
 
     # Insert a header row with clean column names.
     # We are here assuming that the columns don't change between years
     # and that one that contains "Employees Affected" will be clean.
-    output_rows = [list(filter(_is_clean_header, output_rows))[0]] + list(
-        filter(_is_not_header, output_rows)
+    output_rows = [list(filter(_is_clean_header, all_rows))[0]] + list(
+        filter(_is_not_header, all_rows)
     )
 
     # Write out to CSV
