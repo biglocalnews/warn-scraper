@@ -3,6 +3,7 @@ import os
 import re
 import urllib.parse
 from pathlib import Path
+from typing import Optional
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -60,11 +61,14 @@ def scrape(
             else:
                 file_path = cache.download(cache_key, report_url)
 
-            year = int(re.search(r"\d{4}", file_name)[0])
-
             logger.debug(f"Processing {file_name}")
 
-            if str(file_path).lower().endswith(".pdf") and year >= first_year:
+            year = _extract_year(file_name)
+            if (
+                str(file_path).lower().endswith(".pdf")
+                and year is not None
+                and year >= first_year
+            ):
                 output_rows.extend(_parse_pdf(file_path))
             elif str(file_path).lower().endswith(".xlsx"):
                 output_rows.extend(_parse_xlsx(file_path))
@@ -103,7 +107,7 @@ def _parse_pdf(pdf_path: Path) -> list:
     return output_rows
 
 
-def _parse_pdf_tables(page: str) -> list:
+def _parse_pdf_tables(page: pdfplumber.pdf.Page) -> list:
     """
     Parse PDF tables.
 
@@ -200,6 +204,23 @@ def _clean_column_name(name: str) -> str:
         return "iNTIAL NOTICE DATE"
 
     return name
+
+
+def _extract_year(text: str) -> Optional[int]:
+    """
+    Extract the year from a string.
+
+    Keyword arguments:
+    text -- the string to extract the year from
+
+    Returns: the year
+    """
+    match = re.search(r"\d{4}", text)
+
+    if match is not None:
+        return int(match.group(0))
+
+    return None
 
 
 if __name__ == "__main__":
