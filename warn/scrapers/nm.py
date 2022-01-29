@@ -23,9 +23,11 @@ def scrape(
 ) -> Path:
     """
     Scrape data from New Mexico.
+
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
+
     Returns: the Path where the file is written
     """
     # Fire up the cache
@@ -94,8 +96,10 @@ def scrape(
 def _clean_text(text: str) -> str:
     """
     Clean up text from a PDF cell.
+
     Keyword arguments:
     text -- the text to clean
+
     Returns: the cleaned text
     """
     # Replace None with an empty string
