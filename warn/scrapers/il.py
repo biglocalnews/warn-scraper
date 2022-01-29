@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import urllib.parse
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -13,7 +14,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["chriszs"]
-__tags__ = ["html", "pdf", "xlsx"]
+__tags__ = ["html", "pdf", "excel"]
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ def scrape(
     cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
     """
-    Scrape data from Georgia.
+    Scrape data from Illinois.
 
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
@@ -35,10 +36,9 @@ def scrape(
 
     state_code = "il"
     base_url = "https://www.illinoisworknet.com"
-    first_year = 2004  # We don't currently support PDFs from years before this
 
+    # Get the list of years
     index_url = f"{base_url}/LayoffRecovery/Pages/ArchivedWARNReports.aspx"
-
     page = utils.get_url(index_url)
     html = page.text
 
@@ -53,25 +53,27 @@ def scrape(
     for link in links:
         href = link.get("href")
         if href is not None and href.startswith("/DownloadPrint"):
-            report_url = f"{base_url}{href}"
+            # Decide whether to process based on the year in the file name
             file_name = urllib.parse.unquote(os.path.basename(href))
-            cache_key = f"{state_code}/{file_name}"
-            if cache.exists(cache_key):
-                file_path = Path(cache_dir, cache_key)
-            else:
-                file_path = cache.download(cache_key, report_url)
-
-            logger.debug(f"Processing {file_name}")
-
             year = _extract_year(file_name)
-            if (
-                str(file_path).lower().endswith(".pdf")
-                and year is not None
-                and year >= first_year
-            ):
-                output_rows.extend(_parse_pdf(file_path))
-            elif str(file_path).lower().endswith(".xlsx"):
-                output_rows.extend(_parse_xlsx(file_path))
+            first_year = 2004  # We don't currently support PDFs from years before this
+            current_year = datetime.now().year
+            if year is not None and year >= first_year:
+                # Download the file or provide the cache location
+                cache_key = f"{state_code}/{file_name}"
+                if cache.exists(cache_key) and year < current_year - 1:
+                    file_path = Path(cache_dir, cache_key)
+                else:
+                    report_url = f"{base_url}{href}"
+                    file_path = cache.download(cache_key, report_url)
+
+                logger.debug(f"Processing {file_name}")
+
+                # Parse the file
+                if str(file_path).lower().endswith(".pdf"):
+                    output_rows.extend(_parse_pdf(file_path))
+                elif str(file_path).lower().endswith(".xlsx"):
+                    output_rows.extend(_parse_xlsx(file_path))
 
     headers = set().union(*(row.keys() for row in output_rows))
 
@@ -139,7 +141,7 @@ def _parse_pdf_tables(page: pdfplumber.pdf.Page) -> list:
     return output_rows
 
 
-def _parse_pdf_text(page: str) -> list:
+def _parse_pdf_text(page: pdfplumber.pdf.Page) -> list:
     """
     Parse PDF text.
 
@@ -190,6 +192,14 @@ def _parse_xlsx(xlsx_path: Path) -> list:
 
 
 def _clean_column_name(name: str) -> str:
+    """
+    Merge columns with similar names.
+
+    Keyword arguments:
+    name -- the column name
+
+    Returns: the cleaned column name
+    """
     name = name.replace(":", "").strip()
 
     if name == "TELEPHONE":
@@ -201,7 +211,7 @@ def _clean_column_name(name: str) -> str:
     if name == "# WORKERS AFFECTED" or name == "ADDITIONAL WORKERS AFFECTED":
         return "WORKERS AFFECTED"
     if name == "WARN NOTIFIED DATE" or name == "WARN RECEIVED DATE":
-        return "iNTIAL NOTICE DATE"
+        return "INITIAL NOTICE DATE"
 
     return name
 
