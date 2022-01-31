@@ -12,19 +12,18 @@ class Runner:
     """High-level interface for scraping state data.
 
     Provides methods for:
-     - directory setup
      - scraping a state
      - deleting files from prior runs
 
-    The cache_dir and output_dir arguments can specify any
+    The data_dir and cache_dir arguments can specify any
     location, but it's not a bad idea to have them as sibling directories:
 
         /tmp/WARN/working # ETL files
         /tmp/WARN/exports # Final, polished data e.g CSVs for analysis
 
     Args:
-        cache_dir (str): Path to store intermediate files used in ETL.
         data_dir (str): Path where final output files are saved.
+        cache_dir (str): Path to store intermediate files used in ETL.
     """
 
     def __init__(
@@ -36,8 +35,14 @@ class Runner:
         self.data_dir = data_dir
         self.cache_dir = cache_dir
 
-    def scrape(self, state):
-        """Run the scraper for the provided state."""
+    def scrape(self, state: str) -> Path:
+        """Run the scraper for the provided state.
+
+        Args:
+            state (str): the two-letter postal code of the state to scrape.
+
+        Returns: a Path object leading to the CSV file.
+        """
         # Get the module
         state = state.strip().lower()
         state_mod = import_module(f"warn.scrapers.{state}")
