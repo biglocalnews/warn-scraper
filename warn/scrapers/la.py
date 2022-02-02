@@ -46,7 +46,8 @@ def scrape(
     cache.write(cache_key, html)
 
     # Parse out the links to WARN notice PDFs
-    links = _parse_links(html)
+    document = BeautifulSoup(html, "html.parser")
+    links = document.find_all("a")
 
     all_rows = []
 
@@ -64,7 +65,7 @@ def scrape(
     # We are here assuming that the columns don't change between years
     # and that one that contains "Employees Affected" will be clean.
     output_rows = [list(filter(_is_clean_header, all_rows))[0]] + list(
-        filter(_is_not_header, all_rows)
+        filter(lambda row: not _is_header(row), all_rows)
     )
 
     # Write out to CSV
@@ -73,6 +74,71 @@ def scrape(
 
     # Return the path
     return data_path
+
+
+def _append_to_cells_in_row_above(rows: list, index: int, row: list) -> list:
+    """
+    If the first row in a table appears to be carried over from
+    a prior page, (as indicated by mostly blank cells), append the
+    row to the previous row
+
+    Keyword arguments:
+    index -- the index of the row
+    row -- the row to check
+    rows -- the rows to append to
+    """
+    for column_index, cell in enumerate(row):
+        if _cell_above_exists(column_index, rows):
+            rows[len(rows) - 1][column_index].extend(cell)
+    return rows
+
+
+def _cell_above_exists(column_index: int, rows: list) -> bool:
+    """
+    Return True if the cell above the current cell exists
+
+    Keyword arguments:
+    column_index -- the index of the column
+    rows -- the rows to check
+    """
+    return column_index < len(rows[len(rows) - 1])
+
+
+def _has_rows(rows: list) -> bool:
+    """
+    Determine if the table has rows.
+
+    Keyword arguments:
+    rows -- the rows to check
+
+    Returns: True if the table has rows, False otherwise
+    """
+    return len(rows) > 0
+
+
+def _is_first(index: int) -> bool:
+    """
+    Determine if a row is the first row in a table.
+
+    Keyword arguments:
+    index -- the index of the row
+
+    Returns: True if the row is the first row in a table, False otherwise
+    """
+    return index == 0
+
+
+def _is_mostly_empty(row: list) -> bool:
+    """
+    Determine if a row has few populated cells.
+    This is our clue that it might be carried over from a previous page.
+
+    Keyword arguments:
+    row -- the row to check
+
+    Returns: True if the row is mostly empty, False otherwise
+    """
+    return len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
 
 
 def _process_pdf(pdf_path: Path) -> list:
@@ -92,19 +158,16 @@ def _process_pdf(pdf_path: Path) -> list:
                 for index, row in enumerate(table.rows):
                     row = [_extract_cell_chars(page, cell) for cell in row.cells]
 
-                    # If the first row in a table appears to be carried over from
-                    # a prior page, (as indicated by mostly blank cells), append the
-                    # row to the previous row
+                    # If the first row in a table is mostly empty,
+                    # append its contents to the previous row
                     if (
-                        index == 0
-                        and len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
-                        and len(output_rows) > 0
+                        _is_first(index)
+                        and _is_mostly_empty(row)
+                        and _has_rows(output_rows)
                     ):
-                        for column_index, cell in enumerate(row):
-                            if column_index < len(output_rows[len(output_rows) - 1]):
-                                output_rows[len(output_rows) - 1][column_index].extend(
-                                    cell
-                                )
+                        output_rows = _append_to_cells_in_row_above(
+                            output_rows, index, row
+                        )
                     # Otherwise, append the row
                     else:
                         output_rows.append(row)
@@ -129,7 +192,7 @@ def _clean_rows(rows: list) -> list:
             text = _clean_text(pdfplumber.utils.extract_text(chars))
 
             # If we're on the first column, try to extract location and notes
-            if column_index == 0:
+            if _is_first(column_index):
                 # Tries to extract a company name, appends it to the row
                 company_name = _extract_company_name(chars)
                 output_row.append(company_name)
@@ -173,16 +236,28 @@ def _extract_cell_chars(page: pdfplumber.pdf.Page, bbox: tuple) -> list:
 
     # Expand the bounding box to ensure it encompasses the bottom line of text
     vertical_threshold = 5
-
-    expanded_bbox = (
-        bbox[0],
-        bbox[1],
-        bbox[2],
-        bbox[3] + vertical_threshold,
-    )
+    expanded_bbox = _vertically_expand_bounding_box(bbox, vertical_threshold)
 
     # Get the characters from the cell
     return page.within_bbox(expanded_bbox).chars
+
+
+def _vertically_expand_bounding_box(bbox: tuple, increase: int) -> tuple:
+    """
+    Expand the bounding box by a given amount in the vertical direction.
+
+    Keyword arguments:
+    bbox -- the bounding box to expand
+    increase -- the amount to expand the bounding box
+
+    Returns: the expanded bounding box
+    """
+    return (
+        bbox[0],
+        bbox[1],
+        bbox[2],
+        bbox[3] + increase,
+    )
 
 
 def _read_or_download(cache: Cache, prefix: str, url: str) -> Path:
@@ -250,18 +325,6 @@ def _is_clean_header(row: list) -> bool:
     Returns: true if the row is a clean header
     """
     return _is_header(row) and "Employees Affected" in row
-
-
-def _is_not_header(row: list) -> bool:
-    """
-    Return true for a row that is not a header.
-
-    Keyword arguments:
-    row -- the rows to check
-
-    Returns: true if the row is not a header
-    """
-    return not _is_header(row)
 
 
 def _extract_note(chars: list) -> str:
@@ -341,20 +404,6 @@ def _is_location(text: str) -> bool:
     """
     location_pattern = r"(^\d+|Highway|Hwy|Offshore|Statewide)"
     return re.match(location_pattern, text, re.IGNORECASE) is not None
-
-
-def _parse_links(html: str) -> list:
-    """
-    Extract links from HTML.
-
-    Keyword arguments:
-    html -- the HTML to extract links from
-
-    Returns: the list of links
-    """
-    document = BeautifulSoup(html, "html.parser")
-    links = document.find_all("a")
-    return links
 
 
 def _extract_bold_text(chars: list) -> str:
