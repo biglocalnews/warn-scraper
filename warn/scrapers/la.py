@@ -76,11 +76,9 @@ def scrape(
     return data_path
 
 
-def _append_to_cells_in_row_above(rows: list, index: int, row: list) -> list:
+def _append_contents_to_cells_in_row_above(rows: list, index: int, row: list) -> list:
     """
-    If the first row in a table appears to be carried over from
-    a prior page, (as indicated by mostly blank cells), append the
-    row to the previous row
+    Append the contents of a row to the contents of the cell above it.
 
     Keyword arguments:
     index -- the index of the row
@@ -95,7 +93,7 @@ def _append_to_cells_in_row_above(rows: list, index: int, row: list) -> list:
 
 def _cell_above_exists(column_index: int, rows: list) -> bool:
     """
-    Return True if the cell above the current cell exists
+    Return True if the cell above the current cell exists.
 
     Keyword arguments:
     column_index -- the index of the column
@@ -130,8 +128,7 @@ def _is_first(index: int) -> bool:
 
 def _is_mostly_empty(row: list) -> bool:
     """
-    Determine if a row has few populated cells.
-    This is our clue that it might be carried over from a previous page.
+    Check if a row has few populated cells. Used to determine if carried over from a previous page.
 
     Keyword arguments:
     row -- the row to check
@@ -165,7 +162,7 @@ def _process_pdf(pdf_path: Path) -> list:
                         and _is_mostly_empty(row)
                         and _has_rows(output_rows)
                     ):
-                        output_rows = _append_to_cells_in_row_above(
+                        output_rows = _append_contents_to_cells_in_row_above(
                             output_rows, index, row
                         )
                     # Otherwise, append the row
