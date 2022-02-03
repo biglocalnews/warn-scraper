@@ -98,7 +98,10 @@ def scrape(
     worksheet = workbook.worksheets[0]
 
     # Convert the sheet to a list of lists
-    for row in worksheet.rows:
+    for i, row in enumerate(worksheet.rows):
+        # Skip header
+        if i == 0:
+            continue
 
         # Trim down to only the columns in the scrape, so they match
         select_columns = [
