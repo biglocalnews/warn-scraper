@@ -1,5 +1,4 @@
 import logging
-import traceback
 from pathlib import Path
 
 import click
@@ -55,7 +54,6 @@ def main(
     # Local logging config
     logging.basicConfig(level=log_level, format="%(asctime)s - %(name)s - %(message)s")
     logger = logging.getLogger(__name__)
-    utils.WARN_LOG_DIR.mkdir(parents=True, exist_ok=True)
 
     # Runner config
     runner = Runner(data_dir, cache_dir)
@@ -65,40 +63,14 @@ def main(
         logger.info("Deleting files generated from previous scraper run.")
         runner.delete()
 
-    # Track how we do
-    succeeded = []
-    failed = []
-
     # If the user has asked for all states, give it to 'em
     if "all" in scrapers:
         scrapers = utils.get_all_scrapers()
 
     # Loop through the states
     for scrape in scrapers:
-        try:
-            # Try running the scraper
-            runner.scrape(scrape)
-
-            # Tally if it succeeds
-            succeeded.append(scrape)
-        except Exception:
-            # If it fails, log out the traceback
-            log_path = utils.WARN_LOG_DIR / f"{scrape.lower()}_err.log"
-            with open(log_path, "w") as f:
-                f.write(traceback.format_exc())
-
-            # And spit an error to the terminal
-            msg = f"ERROR: {scrape} scraper. See traceback in {log_path}"
-            logger.error(msg)
-
-            # Then add the state to our tally of failures
-            failed.append(scrape)
-
-    # Log out our final status
-    if succeeded:
-        logger.info(f"{len(succeeded)} ran successfully: {', '.join(succeeded)}")
-    if failed:
-        logger.info(f"{len(failed)} failed to run: {', '.join(failed)}")
+        # Try running the scraper
+        runner.scrape(scrape)
 
 
 if __name__ == "__main__":
