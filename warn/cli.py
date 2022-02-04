@@ -56,6 +56,8 @@ def main(
     logger = logging.getLogger(__name__)
 
     # Runner config
+    data_dir = Path(data_dir)
+    cache_dir = Path(cache_dir)
     runner = Runner(data_dir, cache_dir)
 
     # Delete files, if asked
