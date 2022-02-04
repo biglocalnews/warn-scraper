@@ -98,7 +98,7 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre --dev --pre
+      - run: pipenv install --dev --pre
 
       - id: run
         name: Run tests
