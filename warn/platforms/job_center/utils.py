@@ -3,8 +3,7 @@ import re
 from collections import OrderedDict
 from datetime import datetime as dt
 
-from warn.utils import write_dict_rows_to_csv, write_rows_to_csv
-
+from ... import utils
 from .site import Site as JobCenterSite
 
 logger = logging.getLogger(__name__)
@@ -63,7 +62,7 @@ def scrape_state(
         "record_number",
         "detail_page_url",
     ]
-    write_rows_to_csv(raw_csv, [headers])
+    utils.write_rows_to_csv(raw_csv, [headers])
     # Execute the scrape in two batches
     # 1. Current and prior year. Always scrape fresh (i.e. never use cached files)
     #    in case records have been updated.
@@ -90,7 +89,7 @@ def _scrape_years(site, output_csv, headers, start_end_dates, use_cache=True):
         pages_dict, data = site.scrape(**kwargs)
         rows = [_prepare_row(row) for row in data]
         # We previously wrote the header so use append mode for data rows
-        write_dict_rows_to_csv(output_csv, headers, rows, mode="a")
+        utils.write_dict_rows_to_csv(output_csv, headers, rows, mode="a")
 
 
 def _prepare_row(row):
@@ -121,12 +120,14 @@ def _dedupe(raw_csv, output_csv):
     """Create an ordered dict to discard dupes while preserving row order."""
     data = OrderedDict()
     raw_count = 0
+    utils.create_directory(raw_csv, is_file=True)
     with open(raw_csv, newline="") as src:
         for row in src:
             raw_count += 1
             data[row] = row
     # Write the deduped rows to final output_csv
     final_count = 0
+    utils.create_directory(output_csv, is_file=True)
     with open(output_csv, "w", newline="") as out:
         for row in data.keys():
             final_count += 1
