@@ -20,7 +20,7 @@ jobs:
           python-version: '3.7'
           cache: 'pipenv'
 
-      - run: pipenv install
+      - run: pipenv install --dev --pre
 
       - id: lint
         name: Lint
@@ -41,7 +41,7 @@ jobs:
           python-version: '3.7'
           cache: 'pipenv'
 
-      - run: pipenv install
+      - run: pipenv install --dev --pre
 
       - id: mypy
         name: Mypy
@@ -62,7 +62,7 @@ jobs:
           python-version: '3.7'
           cache: 'pipenv'
 
-      - run: pipenv install
+      - run: pipenv install --dev --pre
 
       - id: tally
         name: Tally sources
@@ -98,7 +98,7 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pipenv'
 
-      - run: pipenv install
+      - run: pipenv install --dev --pre --dev --pre
 
       - id: run
         name: Run tests
