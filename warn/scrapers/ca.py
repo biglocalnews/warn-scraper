@@ -76,6 +76,7 @@ def scrape(
                 temp_csv, output_headers, data, mode="a", extrasaction="ignore"
             )
         # If all went well, copy temp csv over pre-existing output csv
+        utils.create_directory(output_csv, is_file=True)
         shutil.copy2(temp_csv, output_csv)
     return output_csv
 
