@@ -76,7 +76,7 @@ def scrape(
 
         # Save it to the cache
         cache_key = uuid.uuid5(uuid.NAMESPACE_URL, href)
-        cache.write(f"md/{cache_key}.html", html)
+        cache.write(f"dc/{cache_key}.html", html)
 
         # Add it to the list
         html_list.append(html)
