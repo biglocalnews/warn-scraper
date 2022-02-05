@@ -2,12 +2,13 @@ import logging
 from pathlib import Path
 
 from bs4 import BeautifulSoup
+from openpyxl import load_workbook
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
-__tags__ = ["html"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "chriszs"]
+__tags__ = ["excel"]
 
 logger = logging.getLogger(__name__)
 
@@ -28,14 +29,35 @@ def scrape(
     # Open the cache
     cache = Cache(cache_dir)
 
+    state_code = "ri"
+
     # Get the HTML
-    url = "https://dlt.ri.gov/wds/warn/"
+    base_url = "https://dlt.ri.gov/"
+    url = f"{base_url}/employers/worker-adjustment-and-retraining-notification-warn"
     r = utils.get_url(url)
     html = r.text
-    cache.write("ri/source.html", html)
+    cache.write(f"{state_code}/source.html", html)
 
-    # Scrape out the data
-    row_list = _parse_table(html)
+    # Find links
+    soup = BeautifulSoup(html, "html.parser")
+    links = soup.find_all("a")
+
+    row_list = []
+
+    for link in links:
+        if "WARN Report" in link.text:
+            excel_url = f"{base_url}{link.get('href')}"
+            excel_path = cache.download(f"{state_code}/WARN Report.xlsx", excel_url)
+
+            # Open it up
+            workbook = load_workbook(filename=excel_path)
+
+            # Get the first sheet
+            worksheet = workbook.worksheets[0]
+
+            for r in list(worksheet.rows)[2:]:
+                column = [cell.value for cell in r]
+                row_list.append(column)
 
     # Write out
     data_path = data_dir / "ri.csv"
@@ -43,28 +65,6 @@ def scrape(
 
     # Return the path to the CSV
     return data_path
-
-
-def _parse_table(html) -> list:
-    # Parse table
-    soup = BeautifulSoup(html, "html.parser")
-    table_list = soup.find_all("table")
-
-    # We expect the first table to be there with our data
-    assert len(table_list) > 0
-    table = table_list[0]
-
-    # Parse the cells
-    row_list = []
-    for row in table.find_all("tr"):
-        cell_list = row.find_all(["th", "td"])
-        if not cell_list:
-            continue
-        cell_list = [c.text.strip() for c in cell_list]
-        row_list.append(cell_list)
-
-    # Return it
-    return row_list
 
 
 if __name__ == "__main__":
