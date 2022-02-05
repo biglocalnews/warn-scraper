@@ -182,16 +182,15 @@ class Site:
             "notice_date": "",
         }
         soup = BeautifulSoup(html, "html.parser")
-        headers = [self._snake_case(header.text) for header in soup.find_all("dt")]
-        values = [field.text.strip() for field in soup.find_all("dd")]
+        headers = [
+            self._snake_case(header.text)
+            for header in soup.select(".definition-list__title")
+        ]
+        values = [
+            field.text.strip() for field in soup.select(".definition-list__definition")
+        ]
         data = dict(zip(headers, values))
         payload.update(data)
-        num_str = payload["number_of_employees_affected"]
-        # Convert number to int if possible
-        try:
-            payload["number_of_employees_affected"] = int(num_str)
-        except ValueError:
-            pass
         payload["html"] = html
         return payload
 
