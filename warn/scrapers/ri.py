@@ -55,7 +55,7 @@ def scrape(
             # Get the first sheet
             worksheet = workbook.worksheets[0]
 
-            for r in list(worksheet.rows)[2:]:
+            for r in list(worksheet.rows)[3:]:
                 column = [cell.value for cell in r]
                 row_list.append(column)
 
