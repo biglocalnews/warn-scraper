@@ -12,11 +12,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install
-        name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.8'
+          cache: 'pipenv'
+
+      - run: pipenv install --dev --pre
 
       - id: lint
         name: Lint
@@ -29,11 +33,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install
-        name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.8'
+          cache: 'pipenv'
+
+      - run: pipenv install --dev --pre
 
       - id: mypy
         name: Mypy
@@ -46,11 +54,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install
-        name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.8'
+          cache: 'pipenv'
+
+      - run: pipenv install --dev --pre
 
       - id: tally
         name: Tally sources
@@ -78,11 +90,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install
-        name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+          cache: 'pipenv'
+
+      - run: pipenv install --dev --pre
 
       - id: run
         name: Run tests
@@ -100,11 +116,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install
-        name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v2
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.7'
+          cache: 'pipenv'
+
+      - run: pipenv install --dev --pre
 
       - id: build
         name: Build release
@@ -159,10 +179,9 @@ jobs:
     needs: [test-build]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: '3.9'
 
       - id: fetch
         name: Fetch artifact
