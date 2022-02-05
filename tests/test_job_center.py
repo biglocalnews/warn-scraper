@@ -47,7 +47,7 @@ def test_scrape_integration(ok_site):
     assert details["company_name"] == "Exterran Energy Solutions"
     assert details["address"] == "20602 E. 81st Street\nBroken Arrow, Oklahoma 74014"
     assert details["notice_date"] == "Jan 13, 2021"
-    assert details["number_of_employees_affected"] == 0
+    assert details["number_of_employees_affected"] == "0"
     assert "html" in details.keys()
 
 
@@ -78,7 +78,7 @@ def test_missing_detail_page_values(ks_site):
     assert detail["company_name"] == "Spirit AeroSystems, Inc."
     # This record has a malformed date
     assert detail["notice_date"] == "Jul 31, 2020"
-    assert detail["number_of_employees_affected"] == 1100
+    assert detail["number_of_employees_affected"] == "1100"
     # Record is missing the address field
     assert detail["address"] == ""
 
