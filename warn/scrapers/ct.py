@@ -105,6 +105,7 @@ def _scrape_table(table) -> list:
         if len(table_cells) > 9:
             output_row = _problem_cells(table_cells)
             row_list.append(output_row)
+            continue
         # if a row has less than 9 it is skipped because it is incomplete
         elif len(table_cells) < 9:
             continue
