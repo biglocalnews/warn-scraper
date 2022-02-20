@@ -14,7 +14,7 @@ from .. import utils
 from ..cache import Cache
 
 __authors__ = ["chriszs"]
-__tags__ = ["html", "pdf", "excel"]
+__tags__ = ["html", "excel"]
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,8 @@ def scrape(
 
                 # Parse the file
                 if str(file_path).lower().endswith(".pdf"):
-                    output_rows.extend(_parse_pdf(file_path))
+                    # output_rows.extend(_parse_pdf(file_path))
+                    pass  # TODO: Implement PDF parsing
                 elif str(file_path).lower().endswith(".xlsx"):
                     output_rows.extend(_parse_xlsx(file_path))
 
