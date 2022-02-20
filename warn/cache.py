@@ -4,7 +4,7 @@ import os
 from os.path import expanduser, join
 from pathlib import Path
 
-import requests
+from .utils import get_url
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ class Cache:
         """
         # Request the URL
         logger.debug(f"Requesting {url}")
-        with requests.get(url, stream=True, **kwargs) as r:
+        with get_url(url, stream=True, **kwargs) as r:
             # If there's no encoding, set it
             if r.encoding is None:
                 r.encoding = "utf-8"
