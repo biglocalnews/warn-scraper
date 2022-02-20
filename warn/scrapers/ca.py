@@ -128,7 +128,7 @@ def _get_file_links():
     soup = BeautifulSoup(html, "html.parser")
     links = []
     for link in soup.find_all("a"):
-        relative_file_url = link.attrs.get("href", "")
+        relative_file_url = link.attrs.get("href", "").strip()
         if _is_warn_report_link(relative_file_url):
             file_url = f"{base_url}/{relative_file_url}"
             meta = _get_file_metadata(file_url)
