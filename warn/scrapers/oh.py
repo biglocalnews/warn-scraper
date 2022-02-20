@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -28,14 +29,28 @@ def scrape(
     # Open the cache
     cache = Cache(cache_dir)
 
-    # Get the HTML
-    url = "https://jfs.ohio.gov/warn/current.stm"
-    r = utils.get_url(url)
-    html = r.text
-    cache.write("oh/source.html", html)
+    # Get years
+    first_year = 2020  # First year of HTML data (prior years are PDFs)
+    current_year = datetime.now().year
+    years = range(first_year, current_year + 1)
 
-    # Parse the table
-    row_list = _parse_table(html)
+    row_list = []
+
+    # Loop through years
+    base_url = "https://jfs.ohio.gov/warn/"
+    for year in years:
+        if year == current_year:
+            url = f"{base_url}current.stm"
+        else:
+            url = f"{base_url}archive.stm?year={year}"
+
+        # Get the HTML
+        r = utils.get_url(url)
+        html = r.text
+        cache.write(f"oh/{year}.html", html)
+
+        # Parse the table
+        row_list.extend(_parse_table(html))
 
     # Write out
     data_path = data_dir / "oh.csv"
