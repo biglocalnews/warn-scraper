@@ -38,7 +38,7 @@ def scrape(
 
     # Loop through years
     base_url = "https://jfs.ohio.gov/warn/"
-    for year in years:
+    for i, year in enumerate(years):
         if year == current_year:
             url = f"{base_url}current.stm"
         else:
@@ -50,7 +50,7 @@ def scrape(
         cache.write(f"oh/{year}.html", html)
 
         # Parse the table
-        row_list.extend(_parse_table(html))
+        row_list.extend(_parse_table(html, i > 0))
 
     # Write out
     data_path = data_dir / "oh.csv"
@@ -60,7 +60,7 @@ def scrape(
     return data_path
 
 
-def _parse_table(html) -> list:
+def _parse_table(html, skip_header) -> list:
     # Parse table
     soup = BeautifulSoup(html, "html.parser")
     table_list = soup.find_all("table")
@@ -71,7 +71,9 @@ def _parse_table(html) -> list:
 
     # Parse the cells
     row_list = []
-    for row in table.find_all("tr"):
+    for i, row in enumerate(table.find_all("tr")):
+        if i == 0 and skip_header:
+            continue
         cell_list = row.find_all(["th", "td"])
         if not cell_list:
             continue
