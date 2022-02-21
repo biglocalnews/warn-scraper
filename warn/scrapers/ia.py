@@ -42,6 +42,34 @@ def scrape(
     # Download the Excel file
     excel_path = cache.download("ia/source.xlsx", excel_url)
 
+    # Parse it
+    row_list = _parse_xlsx(excel_path)
+
+    # Get historic file
+    historic_url = "https://www.iowaworkforcedevelopment.gov/sites/search.iowaworkforcedevelopment.gov/files/documents/2018/WARN_20180503.xlsx"
+    historic_excel_path = cache.download("ia/source.xlsx", historic_url)
+
+    # Parse it
+    row_list += _parse_xlsx(historic_excel_path)
+
+    # Set the export path
+    data_path = data_dir / "ia.csv"
+
+    # Write out the file
+    utils.write_rows_to_csv(data_path, row_list)
+
+    # Return the path to the file
+    return data_path
+
+
+def _parse_xlsx(excel_path: Path) -> list:
+    """Parse the XLSX file at the provided path.
+
+    Args:
+    excel_path (Path): The path to an XLSX file
+
+    Returns a list of values ready to write.
+    """
     # Open it up
     workbook = load_workbook(filename=excel_path)
 
@@ -54,14 +82,8 @@ def scrape(
         column = [cell.value for cell in r]
         row_list.append(column)
 
-    # Set the export path
-    data_path = data_dir / "ia.csv"
-
-    # Write out the file
-    utils.write_rows_to_csv(data_path, row_list)
-
-    # Return the path to the file
-    return data_path
+    # Pass it back
+    return row_list
 
 
 if __name__ == "__main__":
