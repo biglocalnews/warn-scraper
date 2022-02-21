@@ -31,37 +31,37 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    cache = Cache(cache_dir)
-
-    state_code = "il"
+    # Get the root page
     base_url = "https://www.illinoisworknet.com"
-
-    # Get the list of years
     index_url = f"{base_url}/LayoffRecovery/Pages/ArchivedWARNReports.aspx"
     page = utils.get_url(index_url)
     html = page.text
 
+    # Save it to the cache
+    state_code = "il"
+    cache = Cache(cache_dir)
     cache.write(f"{state_code}/ArchivedWARNReports.html", html)
 
+    # Parse out the list of links
     document = BeautifulSoup(html, "html.parser")
     table = document.find_all("table")[0]
-    links = table.find_all("a")
+    link_list = table.find_all("a")
 
+    # Loop through the links
     output_rows = []
-
-    for link in links:
+    current_year = datetime.now().year
+    for link in link_list:
         href = link.get("href")
         if href is not None and href.startswith("/DownloadPrint"):
             # Decide whether to process based on the year in the file name
             file_name = urllib.parse.unquote(os.path.basename(href))
             year = _extract_year(file_name)
             first_year = 2004  # We don't currently support PDFs from years before this
-            current_year = datetime.now().year
             if year is not None and year >= first_year:
                 # Download the file or provide the cache location
                 cache_key = f"{state_code}/{file_name}"
                 if cache.exists(cache_key) and year < current_year - 1:
-                    file_path = Path(cache_dir, cache_key)
+                    file_path = cache_dir / cache_key
                 else:
                     report_url = f"{base_url}{href}"
                     file_path = cache.download(cache_key, report_url)
@@ -70,10 +70,11 @@ def scrape(
 
                 # Parse the file
                 if str(file_path).lower().endswith(".pdf"):
-                    pass  # TODO: Implement PDF parsing
+                    continue  # TODO: Implement PDF parsing
                 elif str(file_path).lower().endswith(".xlsx"):
                     output_rows.extend(_parse_xlsx(file_path))
 
+    # Get the headers from the last row
     headers = set().union(*(row.keys() for row in output_rows))
 
     # Write out the results
