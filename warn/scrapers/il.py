@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-import pdfplumber
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
@@ -71,7 +70,6 @@ def scrape(
 
                 # Parse the file
                 if str(file_path).lower().endswith(".pdf"):
-                    # output_rows.extend(_parse_pdf(file_path))
                     pass  # TODO: Implement PDF parsing
                 elif str(file_path).lower().endswith(".xlsx"):
                     output_rows.extend(_parse_xlsx(file_path))
@@ -84,80 +82,6 @@ def scrape(
 
     # Return the path to the CSV
     return data_path
-
-
-def _parse_pdf(pdf_path: Path) -> list:
-    """
-    Parse PDF.
-
-    Keyword arguments:
-    pdf_path -- the Path to the PDF
-
-    Returns: a list of dicts that represent rows
-    """
-    output_rows = []
-
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            rows = _parse_pdf_tables(page)
-
-            if len(rows) > 0:
-                output_rows.extend(rows)
-            else:
-                rows = _parse_pdf_text(page)
-                output_rows.extend(rows)
-
-    return output_rows
-
-
-def _parse_pdf_tables(page: pdfplumber.pdf.Page) -> list:
-    """
-    Parse PDF tables.
-
-    Keyword arguments:
-    page -- a PDF page
-
-    Returns: a list of dicts that represent rows
-    """
-    output_rows = []
-
-    tables = page.extract_tables()
-
-    output_row = {}
-
-    if len(tables) > 0:
-        for table in tables:
-            for row in table:
-                for col_index, column in enumerate(row):
-                    if (
-                        column is not None
-                        and column.endswith(":")
-                        and col_index + 2 < len(row)
-                    ):
-                        col_name = _clean_column_name(column)
-                        output_row[col_name] = row[col_index + 2]
-
-            output_rows.append(output_row)
-
-    return output_rows
-
-
-def _parse_pdf_text(page: pdfplumber.pdf.Page) -> list:
-    """
-    Parse PDF text.
-
-    Keyword arguments:
-    page -- a PDF page
-
-    Returns: a list of dicts that represent rows
-    """
-    pass
-
-    # text = page.extract_text()
-
-    # print(text)
-
-    return []
 
 
 def _parse_xlsx(xlsx_path: Path) -> list:
@@ -212,7 +136,7 @@ def _clean_column_name(name: str) -> str:
     if name == "# WORKERS AFFECTED" or name == "ADDITIONAL WORKERS AFFECTED":
         return "WORKERS AFFECTED"
     if name == "WARN NOTIFIED DATE" or name == "WARN RECEIVED DATE":
-        return "INITIAL NOTICE DATE"
+        return "NOTICE DATE"
 
     return name
 
