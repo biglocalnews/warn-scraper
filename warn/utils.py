@@ -1,9 +1,11 @@
 import csv
 import logging
 import os
+import typing
 from pathlib import Path
 
 import requests
+from openpyxl import load_workbook
 
 logger = logging.getLogger(__name__)
 
@@ -119,3 +121,42 @@ def get_url(
         response = requests.get(url, **kwargs)
     logger.debug(f"Response code: {response.status_code}")
     return response
+
+
+def parse_excel(excel_path: Path, keep_header: bool = True) -> typing.List[typing.List]:
+    """Parse the Excel file at the provided path.
+
+    Args:
+        excel_path (Path): The path to an XLSX file
+        keep_header (bool): Whether or not to return the header row. Default  True.
+
+    Returns: List of values ready to write.
+    """
+    # Open it up
+    workbook = load_workbook(filename=excel_path)
+
+    # Get the first sheet
+    worksheet = workbook.worksheets[0]
+
+    # Convert the sheet to a list of lists
+    row_list = []
+    for i, r in enumerate(worksheet.rows):
+        # Skip the header row, if that's what the user wants
+        if i == 0 and not keep_header:
+            continue
+
+        # Parse cells
+        cell_list = [cell.value for cell in r]
+
+        # Skip empty rows
+        try:
+            # A list with only empty cells will throw an error
+            next(c for c in cell_list if c)
+        except StopIteration:
+            continue
+
+        # Add to the master list
+        row_list.append(cell_list)
+
+    # Pass it back
+    return row_list

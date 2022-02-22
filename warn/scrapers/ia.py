@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 
 from bs4 import BeautifulSoup
-from openpyxl import load_workbook
 
 from .. import utils
 from ..cache import Cache
@@ -43,14 +42,14 @@ def scrape(
     excel_path = cache.download("ia/source.xlsx", excel_url)
 
     # Parse it
-    row_list = _parse_xlsx(excel_path)
+    row_list = utils.parse_excel(excel_path)
 
     # Get historic file
     historic_url = "https://www.iowaworkforcedevelopment.gov/sites/search.iowaworkforcedevelopment.gov/files/documents/2018/WARN_20180503.xlsx"
     historic_excel_path = cache.download("ia/historic.xlsx", historic_url)
 
     # Parse it, minus the header
-    row_list += _parse_xlsx(historic_excel_path)[1:]
+    row_list += utils.parse_excel(historic_excel_path, keep_header=False)
 
     # Set the export path
     data_path = data_dir / "ia.csv"
@@ -60,30 +59,6 @@ def scrape(
 
     # Return the path to the file
     return data_path
-
-
-def _parse_xlsx(excel_path: Path) -> list:
-    """Parse the XLSX file at the provided path.
-
-    Args:
-    excel_path (Path): The path to an XLSX file
-
-    Returns a list of values ready to write.
-    """
-    # Open it up
-    workbook = load_workbook(filename=excel_path)
-
-    # Get the first sheet
-    worksheet = workbook.worksheets[0]
-
-    # Convert the sheet to a list of lists
-    row_list = []
-    for r in worksheet.rows:
-        column = [cell.value for cell in r]
-        row_list.append(column)
-
-    # Pass it back
-    return row_list
 
 
 if __name__ == "__main__":
