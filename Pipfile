@@ -31,6 +31,7 @@ openpyxl = "*"
 pdfplumber = "*"
 tenacity = "*"
 click = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.8"
