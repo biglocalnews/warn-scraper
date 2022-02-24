@@ -20,7 +20,7 @@ jobs:
           python-version: '3.8'
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre
+      - run: pipenv install --dev
 
       - id: lint
         name: Lint
@@ -38,10 +38,10 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.8'
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre
+      - run: pipenv install --dev
 
       - id: mypy
         name: Mypy
@@ -62,7 +62,7 @@ jobs:
           python-version: '3.8'
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre
+      - run: pipenv install --dev
 
       - id: tally
         name: Tally sources
@@ -98,7 +98,7 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre
+      - run: pipenv install --dev
 
       - id: run
         name: Run tests
@@ -121,10 +121,10 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.8'
           cache: 'pipenv'
 
-      - run: pipenv install --dev --pre
+      - run: pipenv install --dev
 
       - id: build
         name: Build release
@@ -151,7 +151,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9
+          python-version: '3.8'
 
       - id: fetch
         name: Fetch artifact
@@ -181,7 +181,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.8'
 
       - id: fetch
         name: Fetch artifact
