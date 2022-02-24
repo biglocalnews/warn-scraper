@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -43,56 +44,10 @@ def scrape(
     link_list = soup.find_all("a")
     pdf_list = [a for a in link_list if "pdf" in a["href"]]
 
-    # Define crosswalks for how data is structured
-    # by year and page
-    schema = {
-        2022: {
-            1: {
-                "company": 1,
-                "location": 2,
-                "date": 3,
-                "jobs": 6,
-                "type": 9,
-                "naics": 10,
-            }
-        },
-        2021: {
-            1: {
-                "company": 1,
-                "location": 2,
-                "date": 3,
-                "jobs": 6,
-                "type": 9,
-                "naics": 10,
-            },
-            2: {
-                "company": 1,
-                "location": 2,
-                "date": 3,
-                "jobs": 4,
-                "type": 5,
-                "naics": 6,
-            },
-        },
-        2020: {
-            1: {
-                "company": 1,
-                "location": 2,
-                "date": 7,
-                "jobs": 6,
-                "type": 4,
-                "naics": 8,
-            },
-            2: {
-                "company": 1,
-                "location": 3,
-                "date": 8,
-                "jobs": 7,
-                "type": 5,
-                "naics": 9,
-            },
-        },
-    }
+    # Pattern to find and extract data cells
+    naics_re = re.compile("^[0-9]{6}$")
+    date_re = re.compile("^[0-9]{1,2}/[0-9]{1,2}[/]{1,2}[0-9]{2}")
+    jobs_re = re.compile("^[0-9]{1,5}$")
 
     current_year = datetime.now().year
     output_rows = []
@@ -110,7 +65,7 @@ def scrape(
         with pdfplumber.open(pdf_path) as pdf:
 
             # Loop through the pages
-            for i, page in enumerate(pdf.pages):
+            for page in pdf.pages:
 
                 # Pull out the table
                 row_list = page.extract_table()
@@ -119,36 +74,47 @@ def scrape(
                 if not row_list:
                     continue
 
+                # Skip skinny and empty rows
                 real_rows = []
                 for row in row_list:
-                    # Skip skinny and empty rows
                     values = [v for v in row if v]
                     if len(values) < 4:
                         continue
                     real_rows.append(row)
 
                 # Loop through each row in the table
-                for x, row in enumerate(real_rows):
-
-                    # Skip the header on the first page
-                    if i == 0 and x == 0:
-                        continue
+                for row in real_rows:
 
                     # Clean values
-                    cell_list = [_clean_cell(c) for c in row]
+                    cell_list = [_clean_cell(c) for c in row if _clean_cell(c)]
 
-                    # Pluck out the values in the old places we expect them
+                    # Pluck out the values based on our regex
                     d = {}
-                    print(cell_list)
-                    for header, index in schema[pdf_year][i + 1].items():
-                        d[header] = cell_list[index]
-                    print(d)
-                    # Keep what's left
+                    for cell in cell_list:
+                        if naics_re.search(cell):
+                            d["naics"] = cell
+                        elif date_re.search(cell):
+                            d["date"] = cell
+                        elif jobs_re.search(cell):
+                            d["jobs"] = int(cell)
+
+                    # If there haven't been at least two matches, it must be junk
+                    if len(d) < 2:
+                        continue
+
+                    # The first one should be the company
+                    d["company"] = cell_list[0]
+
+                    # The second one should be the location
+                    d["location"] = cell_list[1]
+
+                    # Keep what we got
                     output_rows.append(d)
 
     # Write out the data to a CSV
     data_path = data_dir / "sc.csv"
-    utils.write_rows_to_csv(data_path, output_rows)
+    headers = ["company", "location", "date", "jobs", "naics"]
+    utils.write_dict_rows_to_csv(data_path, headers, output_rows, extrasaction="ignore")
 
     # Return the Path to the CSV
     return data_path
