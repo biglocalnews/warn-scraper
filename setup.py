@@ -131,6 +131,7 @@ setup(
         "pdfplumber",
         "requests",
         "openpyxl",
+        "xlrd",
         "tenacity",
     ],
     license="Apache 2.0 license",
