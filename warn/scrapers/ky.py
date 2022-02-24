@@ -44,7 +44,7 @@ def scrape(
     for sheet in latest_workbook.sheet_names():
         # Get the data as a list of lists
         sheet_obj = latest_workbook.sheet_by_name(sheet)
-        sheet_list = parse_xls(sheet_obj)
+        sheet_list = parse_xls(sheet_obj, latest_workbook.datemode)
 
         # Convert to list of dicts
         headers = sheet_list[0]
@@ -85,7 +85,7 @@ def scrape(
     return data_path
 
 
-def parse_xls(worksheet) -> typing.List[typing.List]:
+def parse_xls(worksheet, datemode) -> typing.List[typing.List]:
     """Parse the Excel xls file at the provided path.
 
     Args:
@@ -94,8 +94,17 @@ def parse_xls(worksheet) -> typing.List[typing.List]:
     Returns: List of dicts ready to write.
     """
     row_list = []
-    for i in range(0, worksheet.nrows):
-        row = worksheet.row_values(i)
+    num_cols = worksheet.ncols
+    for row_idx in range(0, worksheet.nrows):
+        row = []
+        for col_idx in range(0, num_cols):
+            cell_obj = worksheet.cell(row_idx, col_idx)
+            cell_type = worksheet.cell_type(row_idx, col_idx)
+            if cell_type == xlrd.XL_CELL_DATE:
+                value = xlrd.xldate.xldate_as_datetime(cell_obj.value, datemode)
+            else:
+                value = cell_obj.value
+            row.append(value)
         row_list.append(row)
     return row_list
 
