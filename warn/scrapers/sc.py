@@ -45,9 +45,9 @@ def scrape(
     pdf_list = [a for a in link_list if "pdf" in a["href"]]
 
     # Pattern to find and extract data cells
-    naics_re = re.compile("^[0-9]{6}$")
+    naics_re = re.compile("^[0-9]{5,6}$")
     date_re = re.compile("^[0-9]{1,2}/[0-9]{1,2}[/]{1,2}[0-9]{2}")
-    jobs_re = re.compile("^[0-9]{1,5}$")
+    jobs_re = re.compile("^[0-9]{1,4}$")
 
     current_year = datetime.now().year
     output_rows = []
