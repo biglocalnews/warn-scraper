@@ -43,8 +43,27 @@ def scrape(
     dict_list = []
     for sheet in latest_workbook.sheet_names():
         # Get the data as a list of lists
-        sheet_obj = latest_workbook.sheet_by_name(sheet)
-        sheet_list = parse_xls(sheet_obj, latest_workbook.datemode)
+        worksheet = latest_workbook.sheet_by_name(sheet)
+        sheet_list = []
+        num_cols = worksheet.ncols
+        for row_idx in range(0, worksheet.nrows):
+            row = []
+            for col_idx in range(0, num_cols):
+                cell_obj = worksheet.cell(row_idx, col_idx)
+                cell_type = worksheet.cell_type(row_idx, col_idx)
+                # Carve out hack for the 2017 tab, which has the jobs as a date instead of an int
+                if sheet == "2017" and col_idx == 5:
+                    value = cell_obj.value
+                # For all the rest of the dates
+                elif cell_type == xlrd.XL_CELL_DATE:
+                    value = xlrd.xldate.xldate_as_datetime(
+                        cell_obj.value, latest_workbook.datemode
+                    )
+                # and then the rest of it
+                else:
+                    value = cell_obj.value
+                row.append(value)
+            sheet_list.append(row)
 
         # Convert to list of dicts
         headers = sheet_list[0]
@@ -83,30 +102,6 @@ def scrape(
 
     # Pass it out
     return data_path
-
-
-def parse_xls(worksheet, datemode) -> typing.List[typing.List]:
-    """Parse the Excel xls file at the provided path.
-
-    Args:
-        worksheet: An xlrd worksheet ready to parse
-
-    Returns: List of dicts ready to write.
-    """
-    row_list = []
-    num_cols = worksheet.ncols
-    for row_idx in range(0, worksheet.nrows):
-        row = []
-        for col_idx in range(0, num_cols):
-            cell_obj = worksheet.cell(row_idx, col_idx)
-            cell_type = worksheet.cell_type(row_idx, col_idx)
-            if cell_type == xlrd.XL_CELL_DATE:
-                value = xlrd.xldate.xldate_as_datetime(cell_obj.value, datemode)
-            else:
-                value = cell_obj.value
-            row.append(value)
-        row_list.append(row)
-    return row_list
 
 
 def parse_xlsx(worksheet) -> typing.List[typing.List]:
