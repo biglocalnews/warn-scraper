@@ -43,6 +43,57 @@ def scrape(
     link_list = soup.find_all("a")
     pdf_list = [a for a in link_list if "pdf" in a["href"]]
 
+    # Define crosswalks for how data is structured
+    # by year and page
+    schema = {
+        2022: {
+            1: {
+                "company": 1,
+                "location": 2,
+                "date": 3,
+                "jobs": 6,
+                "type": 9,
+                "naics": 10,
+            }
+        },
+        2021: {
+            1: {
+                "company": 1,
+                "location": 2,
+                "date": 3,
+                "jobs": 6,
+                "type": 9,
+                "naics": 10,
+            },
+            2: {
+                "company": 1,
+                "location": 2,
+                "date": 3,
+                "jobs": 4,
+                "type": 5,
+                "naics": 6,
+            },
+        },
+        2020: {
+            1: {
+                "company": 1,
+                "location": 2,
+                "date": 7,
+                "jobs": 6,
+                "type": 4,
+                "naics": 8,
+            },
+            2: {
+                "company": 1,
+                "location": 3,
+                "date": 8,
+                "jobs": 7,
+                "type": 5,
+                "naics": 9,
+            },
+        },
+    }
+
     current_year = datetime.now().year
     output_rows = []
     for pdf in pdf_list:
@@ -59,7 +110,7 @@ def scrape(
         with pdfplumber.open(pdf_path) as pdf:
 
             # Loop through the pages
-            for _i, page in enumerate(pdf.pages):
+            for i, page in enumerate(pdf.pages):
 
                 # Pull out the table
                 row_list = page.extract_table()
@@ -68,49 +119,32 @@ def scrape(
                 if not row_list:
                     continue
 
-                # Loop through each row in the table
+                real_rows = []
                 for row in row_list:
-
                     # Skip skinny and empty rows
                     values = [v for v in row if v]
                     if len(values) < 4:
+                        continue
+                    real_rows.append(row)
+
+                # Loop through each row in the table
+                for x, row in enumerate(real_rows):
+
+                    # Skip the header on the first page
+                    if i == 0 and x == 0:
                         continue
 
                     # Clean values
                     cell_list = [_clean_cell(c) for c in row]
 
-                    # If the first cell is empty, pop it out
-                    # This is a common bug in the PDFs
-                    if not cell_list[0]:
-                        cell_list.pop(0)
-
+                    # Pluck out the values in the old places we expect them
+                    d = {}
+                    print(cell_list)
+                    for header, index in schema[pdf_year][i + 1].items():
+                        d[header] = cell_list[index]
+                    print(d)
                     # Keep what's left
-                    output_rows.append(cell_list)
-
-    #                # Loop through the rows
-    #                for row_index, row in enumerate(rows):
-    #                    # Skip headers on all but first page of first PDF
-    #                    if pdf_index > 0 and row_index == 0:
-    #                        logger.debug(
-    #                            f"Skipping header row on PDF {pdf_index+1} page {page_index+1}"
-    #                        )
-    #                        continue
-
-    #    # Loop through the table and grab the data
-    #    output_rows = []
-    #    for table_row in table[0].find_all("tr"):
-    #        columns = table_row.find_all("td")
-    #        output_row = []
-    #        for column in columns:
-    #            # Collapse newlines
-    #            partial = re.sub(r"\n", " ", column.text)
-    #            # Standardize whitespace
-    #            clean_text = re.sub(r"\s+", " ", partial)
-    #            output_row.append(clean_text)
-    #        output_row = [x.strip() for x in output_row]
-    #        if output_row == [""] or output_row[0] == "":
-    #            continue
-    #        output_rows.append(output_row)
+                    output_rows.append(d)
 
     # Write out the data to a CSV
     data_path = data_dir / "sc.csv"
