@@ -48,26 +48,24 @@ def scrape(
     assert len(table_list) > 0
 
     # Grab all the links
-    # link_table = table_list[0]
-    # href_list = [a["href"] for a in link_table.find_all("a")]
+    link_table = table_list[0]
+    link_lookup = {_extract_year(a.string): a["href"] for a in link_table.find_all("a")}
 
-    # As documented in #238, only the most recent pages appear to work.
-    # For now, I'm going to manually set the list of links and skip scraping
-    # https://github.com/biglocalnews/warn-scraper/issues/238
-    # This should be replaced with something drawn from the scrape above
-    # after the the bug is fixed by DC government
-    href_hack = [
-        "https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-2021",
-        "https://does.dc.gov/node/1468786",
-        "https://does.dc.gov/node/445852",
-        "https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-0",
-    ]
+    # As documented in #238, the page for 2014 is missing. We're
+    # testing whether the URL for the 2019 page is the same as the
+    # the 2014 link currently points to and scraping an archived copy
+    # from 2017 instead.
+    if link_lookup.get("2014") == link_lookup.get("2018"):
+        logger.warning("2014 link is the same as 2018 link, using archived 2014")
+        link_lookup[
+            "2014"
+        ] = "https://web.archive.org/web/20170210010137/http://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
 
     # Download them all
     html_list = [
         root_html,
     ]
-    for href in href_hack:
+    for href in link_lookup.values():
 
         # Request the HTML
         r = utils.get_url(href)
@@ -76,7 +74,7 @@ def scrape(
 
         # Save it to the cache
         cache_key = uuid.uuid5(uuid.NAMESPACE_URL, href)
-        cache.write(f"md/{cache_key}.html", html)
+        cache.write(f"dc/{cache_key}.html", html)
 
         # Add it to the list
         html_list.append(html)
@@ -106,8 +104,10 @@ def scrape(
             # Clean them up
             cell_list = [_clean_text(c.text) for c in cell_list]
 
-            # Pass them out
-            output_rows.append(cell_list)
+            # Add to the list if any cell in the row has data
+            # (filters out empty rows)
+            if any(cell_list):
+                output_rows.append(cell_list)
 
     # Set the export path
     data_path = data_dir / "dc.csv"
@@ -126,6 +126,13 @@ def _clean_text(text):
     text = re.sub(r"\n", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
+
+
+def _extract_year(text):
+    """Extract the year from the string."""
+    if text is None:
+        return None
+    return re.sub(r"\D", "", text)
 
 
 if __name__ == "__main__":
