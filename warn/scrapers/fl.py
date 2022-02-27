@@ -54,13 +54,20 @@ def scrape(
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, "html.parser")
     # find & visit each year's WARN page
-    links = soup.find_all(
-        "a", href=re.compile("^http://reactwarn.floridajobs.org/WarnList/")
-    )
+    base_url = "http://reactwarn.floridajobs.org/WarnList/"
+    links = soup.find_all("a", href=re.compile(base_url))
+    href_lookup = {_extract_year(link.text): link.get("href") for link in links}
+
+    # Loop through years and add any missing to the lookup
+    most_recent_year = int(list(href_lookup.keys())[0])
+    earliest_year = 2015  # We expect files to be available for at least 2015
+    for year in range(earliest_year, most_recent_year):
+        if str(year) not in href_lookup:
+            href_lookup[str(year)] = f"{base_url}viewPreviousYearsPDF?year={year}"
+
     output_rows = []
-    # scraped most recent year first
-    for year_url in links:
-        year_url = year_url.get("href")  # get URL from link
+    # Loop through years and scrape data
+    for year_url in href_lookup.values():
         if "PDF" in year_url:
             rows_to_add = _scrape_pdf(cache, cache_dir, year_url, headers)
         else:
@@ -158,7 +165,7 @@ def _scrape_pdf(cache, cache_dir, url, headers):
     # sidestep SSL error
     urllib3.disable_warnings()
     # extract year from URL
-    year = re.search(r"year=([0-9]{4})", url, re.I).group(1)
+    year = _extract_year(url)
     pdf_cache_key = f"fl/{year}.pdf"
     download = ""
     # download pdf if not in the cache
@@ -229,6 +236,13 @@ def _is_header_row(field_idx, field):
     # and we need to remove them from the data
     # because we only need 1 header row.
     return field_idx == 0 and field == "COMPANY NAME"
+
+
+def _extract_year(text):
+    """Extract the year from the string."""
+    if text is None:
+        return None
+    return re.search(r"(\d{4})", text).group(1)
 
 
 if __name__ == "__main__":
