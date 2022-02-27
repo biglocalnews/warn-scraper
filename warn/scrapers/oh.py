@@ -1,14 +1,15 @@
 import logging
-from datetime import datetime
+import re
 from pathlib import Path
 
+import pdfplumber
 from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19"]
-__tags__ = ["html"]
+__authors__ = ["zstumgoren", "Dilcia19", "chriszs"]
+__tags__ = ["html", "pdf"]
 
 logger = logging.getLogger(__name__)
 
@@ -29,38 +30,76 @@ def scrape(
     # Open the cache
     cache = Cache(cache_dir)
 
-    # Get years
-    first_year = 2020  # First year of HTML data (prior years are PDFs)
-    current_year = datetime.now().year
-    years = range(first_year, current_year + 1)
+    # Get the HTML
+    base_url = "https://jfs.ohio.gov/warn/"
+    r = utils.get_url(f"{base_url}index.stm")
+    html = r.text
+
+    # Save it to the cache
+    state_code = "oh"
+    cache.write(f"{state_code}/index.html", html)
+
+    # Get the list of links
+    soup = BeautifulSoup(html, "html5lib")
+    link_list = soup.find(class_="warnYears").find_all("a")
+    href_lookup = {a.text: a["href"] for a in link_list}
+
+    # Loop through years and add any missing to the lookup
+    most_recent_year = int(list(href_lookup.keys())[0])
+    earliest_year = 2015  # We expect files to be available for at least 2015
+    for year in range(earliest_year, most_recent_year):
+        if str(year) not in href_lookup:
+            href_lookup[str(year)] = f"{base_url}WARN{year}.stm"
 
     row_list = []
 
-    # Loop through years
-    base_url = "https://jfs.ohio.gov/warn/"
-    for i, year in enumerate(years):
-        if year == current_year:
-            url = f"{base_url}current.stm"
+    # Loop through the links and scrape the data
+    for year, href in href_lookup.items():
+        # Form the URL
+        if href.startswith("http"):
+            url = href.replace("http://", "https://")
         else:
-            url = f"{base_url}archive.stm?year={year}"
+            url = f"{base_url}{href.replace('./', '')}"
 
-        # Get the HTML
-        r = utils.get_url(url)
-        html = r.text
-        cache.write(f"oh/{year}.html", html)
+        # If URL does not contain current or archive, assume it's a PDF
+        if "archive" not in url and "current" not in url:
+            cache_key = f"{state_code}/{year}.pdf"
+        else:
+            cache_key = f"{state_code}/{year}.html"
 
-        # Parse the table
-        row_list.extend(_parse_table(html, i > 0))
+        # Get the file
+        file_path = cache.download(cache_key, url)
+
+        if str(file_path).endswith(".pdf"):
+            # Parse the PDF
+            row_list += _parse_pdf(file_path)
+        else:
+            # Parse the HTML
+            row_list += _parse_html(file_path)
+
+    header = list(filter(_is_header, row_list))[0]
+    output_rows = [header] + list(filter(lambda row: not _is_header(row), row_list))
 
     # Write out
-    data_path = data_dir / "oh.csv"
-    utils.write_rows_to_csv(data_path, row_list)
+    data_path = data_dir / f"{state_code}.csv"
+    utils.write_rows_to_csv(data_path, output_rows)
 
     # Return the path to the CSV
     return data_path
 
 
-def _parse_table(html, skip_header) -> list:
+def _parse_html(file_path: Path) -> list:
+    """
+    Parse the table from the HTML.
+
+    Keyword arguments:
+    file_path -- the Path to the HTML file
+
+    Returns: a list of lists of strings
+    """
+    # Get the HTML
+    html = open(file_path).read()
+
     # Parse table
     soup = BeautifulSoup(html, "html.parser")
     table_list = soup.find_all("table")
@@ -72,8 +111,6 @@ def _parse_table(html, skip_header) -> list:
     # Parse the cells
     row_list = []
     for i, row in enumerate(table.find_all("tr")):
-        if i == 0 and skip_header:
-            continue
         cell_list = row.find_all(["th", "td"])
         if not cell_list:
             continue
@@ -82,6 +119,79 @@ def _parse_table(html, skip_header) -> list:
 
     # Return it
     return row_list
+
+
+def _parse_pdf(pdf_path: Path) -> list:
+    """
+    Parse a PDF file and return a list of rows.
+
+    Keyword arguments:
+    pdf_path -- the Path to the PDF file
+
+    Returns: a list of rows
+    """
+    # Loop through the PDF pages and scrape out the data
+    row_list: list = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            rows = page.extract_table({"explicit_horizontal_lines": page.curves})
+
+            for row_index, row in enumerate(rows):
+                output_row = []
+                for col_index, column in enumerate(row):
+                    clean_text = _clean_text(column)
+
+                    # If cell is empty, copy from the cell above it
+                    # to deal with merged cells. Except for numbers, e.g. of employees,
+                    # which we don't want to double count.
+                    if (
+                        clean_text == ""
+                        and row_index > 0
+                        and col_index < len(row_list[row_index - 1])
+                        and row_list[row_index - 1][col_index] is not None
+                        and not row_list[row_index - 1][col_index].strip().isnumeric()
+                    ):
+                        clean_text = row_list[row_index - 1][col_index]
+
+                    output_row.append(clean_text)
+
+                row_list.append(output_row)
+
+    return row_list
+
+
+def _clean_text(text: str) -> str:
+    """
+    Clean up text from a PDF cell.
+
+    Keyword arguments:
+    text -- the text to clean
+
+    Returns: the cleaned text
+    """
+    if text is None:
+        return ""
+    # Collapse newlines
+    partial = re.sub(r"\n", " ", text)
+    # Standardize whitespace
+    return re.sub(r"\s+", " ", partial)
+
+
+def _is_header(row: list) -> bool:
+    """
+    Determine if a row is a header.
+
+    Keyword arguments:
+    row -- the row to check
+
+    Returns: True if the row is a header, False otherwise
+    """
+    return (
+        row[0].startswith("Date Rec")
+        or row[0].startswith("DateReceived")
+        or row[0].endswith("WARN Notices")
+    )
 
 
 if __name__ == "__main__":
