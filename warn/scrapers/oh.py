@@ -110,7 +110,7 @@ def _parse_html(file_path: Path) -> list:
 
     # Parse the cells
     row_list = []
-    for i, row in enumerate(table.find_all("tr")):
+    for row in table.find_all("tr"):
         cell_list = row.find_all(["th", "td"])
         if not cell_list:
             continue
