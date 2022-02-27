@@ -92,7 +92,7 @@ def scrape(
 def _scrape_html(cache, url, headers, page=1):
     urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
-    year = re.search(r"year=([0-9]{4})", url, re.I).group(1)
+    year = _extract_year(url)
     html_cache_key = f"fl/{year}_page_{page}.html"
     current_year = datetime.date.today().year
     last_year = str(current_year - 1)
