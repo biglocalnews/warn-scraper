@@ -238,7 +238,7 @@ If there have been significant changes to the main branch since you started work
     # Rebase your changes on top of main
     git rebase main
 
-If any `code conflicts <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts>_ arise, you can open the listed files and seek to reconcile them yourself. If you need help, reach out to the maintainers.
+If any `code conflicts <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts>`_ arise, you can open the listed files and seek to reconcile them yourself. If you need help, reach out to the maintainers.
 
 Once that's complete, commit any changes and push again to your fork's branch.
 
