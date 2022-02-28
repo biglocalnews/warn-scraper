@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Alabama
 
 - [Homepage](https://www.madeinalabama.com/)

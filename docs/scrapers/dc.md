@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Washington D.C.
 
 - The most recent page for WARN: https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-2021

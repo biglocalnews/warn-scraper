@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Oregon
 
 - [Home page](https://ccwd.hecc.oregon.gov/Layoff/WARN)

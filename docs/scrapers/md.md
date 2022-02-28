@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Maryland
 
 - [Homepage](http://www.dllr.state.md.us/employment/warn.shtml)

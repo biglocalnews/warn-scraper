@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Texas
 
 URL: https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices

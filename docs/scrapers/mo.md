@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Missouri
 
 - [Homepage](https://jobs.mo.gov/)

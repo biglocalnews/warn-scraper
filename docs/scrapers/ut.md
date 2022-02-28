@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Utah
 
 - [Homepage](https://jobs.utah.gov/employer/business/warnnotices.html)

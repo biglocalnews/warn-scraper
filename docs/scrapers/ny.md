@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # New York
 
 - [Homepage](https://dol.ny.gov/warn-notices)

@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Vermont
 
 > This state uses the Job Center platform. See the [Job Center docs](job_center.md)
