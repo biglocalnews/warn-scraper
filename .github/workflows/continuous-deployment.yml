@@ -20,7 +20,9 @@ jobs:
           python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: lint
         name: Lint
@@ -41,7 +43,9 @@ jobs:
           python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: mypy
         name: Mypy
@@ -62,7 +66,9 @@ jobs:
           python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: tally
         name: Tally sources
@@ -98,7 +104,9 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pipenv'
 
-      - run: pipenv install --dev --python `which python`
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: run
         name: Run tests
@@ -124,7 +132,9 @@ jobs:
           python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: build
         name: Build release
