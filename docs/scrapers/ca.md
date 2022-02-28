@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # California
 
 California provides historical data as PDFs and data for the current fiscal year as
