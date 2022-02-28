@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
       - run: pipenv install --dev
@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
       - run: pipenv install --dev
@@ -59,7 +59,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
       - run: pipenv install --dev
@@ -121,7 +121,7 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
       - run: pipenv install --dev
@@ -151,7 +151,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
       - id: fetch
         name: Fetch artifact
@@ -181,7 +181,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
       - id: fetch
         name: Fetch artifact
