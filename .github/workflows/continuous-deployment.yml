@@ -17,10 +17,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: lint
         name: Lint
@@ -38,10 +40,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: mypy
         name: Mypy
@@ -59,10 +63,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: tally
         name: Tally sources
@@ -98,7 +104,9 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: run
         name: Run tests
@@ -121,10 +129,12 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
           cache: 'pipenv'
 
-      - run: pipenv install --dev
+      - id: pipenv-install
+        name: Install Python dependencies
+        run: pipenv install --dev --python `which python`
 
       - id: build
         name: Build release
@@ -151,7 +161,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
       - id: fetch
         name: Fetch artifact
@@ -181,7 +191,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
       - id: fetch
         name: Fetch artifact
