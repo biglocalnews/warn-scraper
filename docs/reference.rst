@@ -45,7 +45,7 @@ The `Cache` class is used to save the raw HTML, PDFs and CSVs files our scrapers
 Utilities
 #########
 
-The [utils](https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py) module contains a variety of variables and functions used by our scrapers.
+The `utils <https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py>`_ module contains a variety of variables and functions used by our scrapers.
 
 .. automodule:: warn.utils
     :members:
