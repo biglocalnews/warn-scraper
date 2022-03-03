@@ -139,7 +139,7 @@ def _parse_table(html, include_headers=True):
             elif not is_empty:
                 name = "LOCATION"
                 value = clean_text
-            
+
             if name and value:
                 if name not in row:
                     row[name] = value
