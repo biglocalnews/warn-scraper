@@ -40,10 +40,9 @@ def scrape(
     output_rows = []
 
     for link in links:
-        url = f"{base_url}/{link.get('href')}"
+        url = f"{base_url}{link.get('href')}"
         cache_key = f"{state_code}/{os.path.basename(url).replace('.aspx', '')}.html"
 
-        print(url)
         page = utils.get_url(url)
         html = page.text
         cache.write(cache_key, html)
@@ -56,7 +55,18 @@ def scrape(
 
     # Write out the results
     data_path = data_dir / f"{state_code}.csv"
-    utils.write_rows_to_csv(data_path, output_rows)
+    utils.write_dict_rows_to_csv(
+        data_path,
+        [
+            "COMPANY",
+            "ADDRESS",
+            "COUNTY",
+            "# AFFECTED",
+            "EFFECTIVE DATE",
+            "CLOSURE OR LAYOFF",
+        ],
+        output_rows,
+    )
 
     # Return the path to the CSV
     return data_path
@@ -74,18 +84,78 @@ def _parse_table(html, include_headers=True):
     """
     # Parse out data table
     document = BeautifulSoup(html, "html.parser")
-    records = document.find_all("table")[0].find_all("td")
+    cells = document.find_all("table")[0].find_all("td")
 
     output_rows = []
 
-    for record in records:
-        company_name = record.find("strong")
-        if company_name is not None:
-            company_name = re.sub(r"\*[^\*]*\*", "", company_name.text).strip()
-            print(company_name)
-            output_rows.append([company_name])
+    for cell in cells:
+        row = {}
+        seen_fields = False
+
+        cell_html = str(cell)
+        lines = re.split(r"\<[\/]{0,1}(?:div|br|p)[^\>]*\>|\n", cell_html)
+
+        for line in lines:
+            clean_text = _clean_text(re.sub(r"\<[^>]*\>|\xa0", " ", line))
+            is_bolded = bool(re.search(r"\<strong|b\>", line))
+            has_colon = bool(re.search(r"\:.+", clean_text))
+            is_type = bool(re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT", clean_text, re.I))
+            is_empty = len(clean_text) == 0
+
+            name = None
+            value = None
+            if has_colon:
+                seen_fields = True
+                parts = clean_text.split(":")
+                name = parts[0].upper()
+
+                if "DATE" in name:
+                    name = "EFFECTIVE DATE"
+                elif "LAYOFF" in name:
+                    name = "CLOSURE OR LAYOFF"
+                elif "AFFECTED" in name:
+                    name = "# AFFECTED"
+                elif "COUNTIES" in name:
+                    name = "COUNTY"
+                elif "MULTIPLE STATE EMPLOYER" in name:
+                    continue
+                elif "LOCATION" in name:
+                    name = "ADDRESS"
+
+                value = parts[1].strip()
+            elif is_bolded and is_type and seen_fields:
+                name = "CLOSURE OR LAYOFF"
+                value = clean_text
+            elif is_bolded:
+                if seen_fields:
+                    output_rows.append(row)
+                    row = {}
+                    seen_fields = False
+                name = "COMPANY"
+                value = clean_text
+            elif not is_empty:
+                name = "ADDRESS"
+                value = clean_text
+            
+            if name and value:
+                if name not in row:
+                    row[name] = value
+                else:
+                    row[name] += f" {value}"
+
+        if len(row.values()) > 0:
+            output_rows.append(row)
 
     return output_rows
+
+
+def _clean_text(text):
+    """Clean up the provided HTML snippet."""
+    if text is None:
+        return ""
+    text = re.sub(r"\n", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 if __name__ == "__main__":
