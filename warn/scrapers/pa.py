@@ -59,7 +59,7 @@ def scrape(
         data_path,
         [
             "COMPANY",
-            "ADDRESS",
+            "LOCATION",
             "COUNTY",
             "# AFFECTED",
             "EFFECTIVE DATE",
@@ -97,7 +97,7 @@ def _parse_table(html, include_headers=True):
 
         for line in lines:
             clean_text = _clean_text(re.sub(r"\<[^>]*\>|\xa0", " ", line))
-            is_bolded = bool(re.search(r"\<strong|b\>", line))
+            is_bolded = bool(re.search(r"\<\/?strong|b\>", line))
             has_colon = bool(re.search(r"\:.+", clean_text))
             is_type = bool(re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT", clean_text, re.I))
             is_empty = len(clean_text) == 0
@@ -120,7 +120,7 @@ def _parse_table(html, include_headers=True):
                 elif "MULTIPLE STATE EMPLOYER" in name:
                     continue
                 elif "LOCATION" in name:
-                    name = "ADDRESS"
+                    name = "LOCATION"
 
                 value = parts[1].strip()
             elif is_bolded and is_type and seen_fields:
@@ -133,8 +133,11 @@ def _parse_table(html, include_headers=True):
                     seen_fields = False
                 name = "COMPANY"
                 value = clean_text
+            elif clean_text.startswith("Phase "):
+                name = "EFFECTIVE DATE"
+                value = clean_text
             elif not is_empty:
-                name = "ADDRESS"
+                name = "LOCATION"
                 value = clean_text
             
             if name and value:
