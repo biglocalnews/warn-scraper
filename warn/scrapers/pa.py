@@ -100,7 +100,7 @@ def _parse_table(html, include_headers=True):
                 re.sub(r"\<[^>]*\>|\xa0", " ", line).replace("&amp;", "&")
             )
             is_bolded = bool(re.search(r"\<\/?strong|b\>", line))
-            has_colon = bool(re.search(r"\:.+|# AFFECTED\:", clean_text))
+            is_field = bool(re.search(r"\:.+|# AFFECTED\:|EFFECTIVE DATE\:", clean_text))
             is_type = bool(
                 re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED", clean_text, re.I)
             )
@@ -108,7 +108,7 @@ def _parse_table(html, include_headers=True):
 
             name = None
             value = None
-            if has_colon:
+            if is_field:
                 seen_fields = True
                 parts = clean_text.split(":")
                 name = parts[0].upper()
