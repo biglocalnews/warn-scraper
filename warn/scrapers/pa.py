@@ -96,10 +96,14 @@ def _parse_table(html, include_headers=True):
         lines = re.split(r"\<[\/]{0,1}(?:div|br|p)[^\>]*\>|\n", cell_html)
 
         for line in lines:
-            clean_text = _clean_text(re.sub(r"\<[^>]*\>|\xa0", " ", line))
+            clean_text = _clean_text(
+                re.sub(r"\<[^>]*\>|\xa0", " ", line).replace("&amp;", "&")
+            )
             is_bolded = bool(re.search(r"\<\/?strong|b\>", line))
-            has_colon = bool(re.search(r"\:.+", clean_text))
-            is_type = bool(re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT", clean_text, re.I))
+            has_colon = bool(re.search(r"\:.+|# AFFECTED\:", clean_text))
+            is_type = bool(
+                re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED", clean_text, re.I)
+            )
             is_empty = len(clean_text) == 0
 
             name = None
