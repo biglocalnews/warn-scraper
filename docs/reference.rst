@@ -54,6 +54,9 @@ The `utils <https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py
 Research
 ########
 
+CRS
+---
+
 A 2013 summary by the Congressional Research Service
 
 .. raw:: html
@@ -67,7 +70,10 @@ A 2013 summary by the Congressional Research Service
       sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
     ></iframe>
 
-Government Accountability Office’s 2003 audit
+GAO
+---
+
+A 2003 audit by the Government Accountability Office
 
 .. raw:: html
 
