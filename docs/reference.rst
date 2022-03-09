@@ -49,3 +49,18 @@ The `utils <https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py
 
 .. automodule:: warn.utils
     :members:
+
+
+Research
+########
+
+.. raw:: html
+
+    <iframe
+      src="https://embed.documentcloud.org/documents/21403574-crs-report-on-the-warn-act/?embed=1&amp;responsive=1&amp;title=1"
+      title="CRS report on the WARN Act (Hosted by DocumentCloud)"
+      width="700"
+      height="905"
+      style="border: 1px solid #aaa; width: 100%; height: 800px; height: calc(100vh - 100px);"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
+    ></iframe>
