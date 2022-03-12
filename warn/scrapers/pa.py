@@ -102,7 +102,7 @@ def _parse_table(html, include_headers=True):
             is_bolded = bool(re.search(r"\<\/?strong|b\>", line))
             is_field = bool(re.search(r"\:.+|# AFFECTED\:|EFFECTIVE DATE\:", clean_text))
             is_type = bool(
-                re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED", clean_text, re.I)
+                re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED|REDUCTION OF FORCE", clean_text, re.I)
             )
             is_empty = len(clean_text) == 0
 
