@@ -1,6 +1,7 @@
 import csv
 import logging
 import os
+import re
 import typing
 from pathlib import Path
 
@@ -160,3 +161,18 @@ def parse_excel(excel_path: Path, keep_header: bool = True) -> typing.List[typin
 
     # Pass it back
     return row_list
+
+
+def clean_text(text):
+    """Clean up the provided text.
+
+    Args:
+        text (str): The text to be cleaned up.
+
+    Returns: The cleaned up text.
+    """
+    if text is None:
+        return ""
+    text = re.sub(r"\n", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()

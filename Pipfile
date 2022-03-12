@@ -33,6 +33,8 @@ pdfplumber = "*"
 tenacity = "*"
 click = "*"
 xlrd = "*"
+spatula = "*"
+scrapelib = "*"
 
 [requires]
 python_version = "3.9"

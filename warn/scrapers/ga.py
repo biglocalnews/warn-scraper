@@ -1,14 +1,106 @@
-import re
 from datetime import datetime
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+import requests
+import scrapelib
+from spatula import CSS, URL, HtmlListPage, ListPage, NullSource, SkipItem
 
 from .. import utils
 from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["html"]
+
+
+class NoticeListSource(URL):
+    """The source for the list of notices.
+
+    Args:
+        year (int): The year to get the list for.
+
+    Returns:
+        ListPage: The list of notices.
+    """
+
+    def __init__(
+        self,
+        year: int,
+        area: int = 9,
+        base_url: str = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
+    ) -> None:
+        """Initialize the source. Forms a URL from the provided year.
+
+        Args:
+            year (int): The year to get the list for.
+            area (int): The area to get the list for. Defaults to 9 (statewide).
+            base_url (str): The base URL to use.
+        """
+        self.year = year
+        self.area = area
+        self.base_url = base_url
+        url = f"{self.base_url}?geoArea={self.area}&year={self.year}&step=search"
+        super().__init__(url)
+
+    def get_response(self, scraper: scrapelib.Scraper) -> requests.models.Response:
+        """Get the response from the source, then writes it to a cache.
+
+        Args:
+            scraper (scrapelib.Scraper): The scraper to use.
+
+        Returns:
+            requests.models.Response: The response from the source.
+        """
+        response = scraper.get(self.url)
+
+        # Write the response to the cache
+        cache_key = f"ga/{self.year}.html"
+        html = response.text
+        cache = Cache()
+        cache.write(cache_key, html)
+
+        return response
+
+
+class YearList(ListPage):
+    """The list of years to scrape."""
+
+    source = NullSource()
+
+    first_year = 2002  # first available year
+
+    @property
+    def current_year(self):
+        """Get the current year."""
+        return datetime.now().year
+
+    @property
+    def years(self):
+        """Get the list of years to scrape."""
+        return reversed(list(range(self.first_year, self.current_year + 1)))
+
+    def process_page(self):
+        """Process the page."""
+        for year in self.years:
+            source = NoticeListSource(year)
+            yield NoticeList(source=source)
+
+
+class NoticeList(HtmlListPage):
+    """The list of notices for a given year."""
+
+    selector = CSS("#emplrList tr")
+
+    def process_item(self, item):
+        """Process an item."""
+        cells = item.getchildren()
+        text = tuple(utils.clean_text(header.text_content()) for header in cells)
+
+        # Skip the header row, saving headers as property
+        if cells[0].tag == "th":
+            self.headers = text
+            raise SkipItem("headers")
+
+        return dict(zip(self.headers, text))
 
 
 def scrape(
@@ -24,98 +116,21 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    state_code = "ga"
-    cache = Cache(cache_dir)
-
-    # The basic configuration for the scrape
-    base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
-
-    area = 9  # statewide
-
-    current_year = datetime.now().year
-    first_year = 2002  # first available year
-
-    years = list(range(first_year, current_year + 1))
-    years.reverse()
-
     # Loop through the years and scrape them one by one
-    output_rows = []
-    for i, year in enumerate(years):
-        # Concoct the URL
-        url = f"{base_url}?geoArea={area}&year={year}&step=search"
-        cache_key = f"{state_code}/{year}.html"
-
-        # Read from cache if available and not this year or the year before
-        if cache.exists(cache_key) and year < current_year - 1:
-            html = cache.read(cache_key)
-        else:
-            # Otherwise, go request it
-            page = utils.get_url(url)
-            html = page.text
-            cache.write(cache_key, html)
-
-        # Scrape out the table
-        new_rows = _parse_table(
-            html,
-            "emplrList",
-            include_headers=i == 0,  # After the first loop, we can skip the headers
-        )
-
-        # Concatenate the rows
-        output_rows.extend(new_rows)
+    years = YearList()
+    rows = tuple(years.do_scrape())
+    headers = rows[0].keys()
 
     # Write out the results
-    data_path = data_dir / f"{state_code}.csv"
-    utils.write_rows_to_csv(data_path, output_rows)
+    data_path = data_dir / "ga.csv"
+    utils.write_dict_rows_to_csv(
+        data_path,
+        headers,
+        rows,
+    )
 
     # Return the path to the CSV
     return data_path
-
-
-def _parse_table(html, id, include_headers=True):
-    """
-    Parse HTML table with given ID.
-
-    Keyword arguments:
-    html -- the HTML to parse
-    id -- the ID of the table to parse
-    include_headers -- whether to include the headers in the output (default True)
-
-    Returns: a list of rows
-    """
-    # Parse out data table
-    soup = BeautifulSoup(html, "html.parser")
-    table_list = soup.find_all(id=id)  # output is list-type
-
-    # We expect the first table to be there with our data
-    assert len(table_list) > 0
-    table = table_list[0]
-
-    output_rows = []
-    column_tags = ["td"]
-
-    if include_headers:
-        column_tags.append("th")
-
-    # Loop through the table and grab the data
-    for table_row in table.find_all("tr"):
-        columns = table_row.find_all(column_tags)
-        output_row = []
-
-        for column in columns:
-            # Collapse newlines
-            partial = re.sub(r"\n", " ", column.text)
-            # Standardize whitespace
-            clean_text = re.sub(r"\s+", " ", partial).strip()
-            output_row.append(clean_text)
-
-        # Skip any empty rows
-        if len(output_row) == 0 or output_row == [""]:
-            continue
-
-        output_rows.append(output_row)
-
-    return output_rows
 
 
 if __name__ == "__main__":
