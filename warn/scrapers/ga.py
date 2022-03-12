@@ -93,7 +93,7 @@ class NoticeList(HtmlListPage):
     def process_item(self, item):
         """Process an item."""
         cells = item.getchildren()
-        text = tuple(utils.clean_text(header.text_content()) for header in cells)
+        text = tuple(utils.clean_text(cell.text_content()) for cell in cells)
 
         # Skip the header row, saving headers as property
         if cells[0].tag == "th":
