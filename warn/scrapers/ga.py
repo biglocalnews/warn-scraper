@@ -1,70 +1,17 @@
 from datetime import datetime
 from pathlib import Path
 
-import requests
-import scrapelib
-from spatula import CSS, URL, HtmlListPage, ListPage, NullSource, SkipItem
+from spatula import CSS, HtmlListPage, ListPage, NullSource, SkipItem
 
 from .. import utils
-from ..cache import Cache
+from ..cache import CachedURL
 
 __authors__ = ["chriszs"]
 __tags__ = ["html"]
 
 
-class NoticeListSource(URL):
-    """The source for the list of notices.
-
-    Args:
-        year (int): The year to get the list for.
-
-    Returns:
-        ListPage: The list of notices.
-    """
-
-    def __init__(
-        self,
-        year: int,
-        area: int = 9,
-        base_url: str = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
-    ) -> None:
-        """Initialize the source. Forms a URL from the provided year.
-
-        Args:
-            year (int): The year to get the list for.
-            area (int): The area to get the list for. Defaults to 9 (statewide).
-            base_url (str): The base URL to use.
-        """
-        self.year = year
-        self.area = area
-        self.base_url = base_url
-        url = f"{self.base_url}?geoArea={self.area}&year={self.year}&step=search"
-        super().__init__(url)
-
-    def get_response(self, scraper: scrapelib.Scraper) -> requests.models.Response:
-        """Get the response from the source, then writes it to a cache.
-
-        Args:
-            scraper (scrapelib.Scraper): The scraper to use.
-
-        Returns:
-            requests.models.Response: The response from the source.
-        """
-        response = scraper.get(self.url)
-
-        # Write the response to the cache
-        cache_key = f"ga/{self.year}.html"
-        html = response.text
-        cache = Cache()
-        cache.write(cache_key, html)
-
-        return response
-
-
 class YearList(ListPage):
     """The list of years to scrape."""
-
-    source = NullSource()
 
     first_year = 2002  # first available year
 
@@ -81,7 +28,10 @@ class YearList(ListPage):
     def process_page(self):
         """Process the page."""
         for year in self.years:
-            source = NoticeListSource(year)
+            source = CachedURL(
+                f"https://www.dol.state.ga.us/public/es/warn/searchwarns/list?geoArea=9&year={year}&step=search"
+            )
+            source.cache_dir = self.source.cache_dir
             yield NoticeList(source=source)
 
 
@@ -117,7 +67,9 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Loop through the years and scrape them one by one
-    years = YearList()
+    source = NullSource()
+    source.cache_dir = cache_dir / "ga"
+    years = YearList(source=source)
     rows = tuple(years.do_scrape())
     headers = rows[0].keys()
 

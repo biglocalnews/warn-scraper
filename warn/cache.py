@@ -4,6 +4,12 @@ import os
 import typing
 from os.path import expanduser, join
 from pathlib import Path
+from typing import Optional
+
+import requests
+import scrapelib
+from scrapelib.cache import FileCache
+from spatula import URL, Source
 
 from .utils import get_url
 
@@ -171,3 +177,32 @@ class Cache:
     def _path_default(self):
         """Get the default filesystem location of the cache."""
         return join(expanduser("~"), ".warn-scraper")
+
+
+class CachedSource(Source):
+    """A source that uses a cache to store downloaded files."""
+
+    cache_dir = None
+
+    def get_response(
+        self, scraper: scrapelib.Scraper
+    ) -> Optional[requests.models.Response]:
+        """
+        Get the response, optionally using a cache.
+
+        Args:
+            scraper (scrapelib.Scraper): The scraper to use.
+
+        Returns:
+            requests.models.Response: The response from the scraper.
+        """
+        if self.cache_dir is not None:
+            scraper.cache_storage = FileCache(self.cache_dir)
+
+        return super().get_response(scraper)
+
+
+class CachedURL(CachedSource, URL):
+    """A URL that uses a cache to store downloaded files."""
+
+    pass
