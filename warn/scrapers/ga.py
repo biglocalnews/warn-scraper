@@ -13,17 +13,16 @@ __tags__ = ["html"]
 class YearList(ListPage):
     """The list of years to scrape."""
 
-    first_year = 2002  # first available year
-
-    @property
-    def current_year(self):
-        """Get the current year."""
-        return datetime.now().year
+    def __init__(self, *, start, end=None, **kwargs):
+        """Initialize a new instance."""
+        super().__init__(None, **kwargs)
+        self.start = start
+        self.end = end or datetime.now().year
 
     @property
     def years(self):
         """Get the list of years to scrape."""
-        return reversed(list(range(self.first_year, self.current_year + 1)))
+        return reversed(range(self.start, self.end + 1))
 
     def process_page(self):
         """Process the page."""
@@ -35,22 +34,43 @@ class YearList(ListPage):
             yield NoticeList(source=source)
 
 
-class NoticeList(HtmlListPage):
-    """The list of notices for a given year."""
+class HtmlTableRow:
+    """A row in a table."""
 
-    selector = CSS("#emplrList tr")
+    def __init__(self, item):
+        """Initialize a new instance."""
+        self.item = item
+
+    def is_header(self):
+        """Test whether the row is a header."""
+        return self.item[0].tag == "th"
+
+    def get_text(self):
+        """Get the text of the row."""
+        return tuple(utils.clean_text(cell.text_content()) for cell in self.item)
+
+
+class HmlTable(HtmlListPage):
+    """A table of HTML elements."""
+
+    selector = CSS("table tr")
 
     def process_item(self, item):
         """Process an item."""
-        cells = item.getchildren()
-        text = tuple(utils.clean_text(cell.text_content()) for cell in cells)
+        row = HtmlTableRow(item)
 
         # Skip the header row, saving headers as property
-        if cells[0].tag == "th":
-            self.headers = text
+        if row.is_header():
+            self.headers = row
             raise SkipItem("headers")
 
-        return dict(zip(self.headers, text))
+        return dict(zip(self.headers.get_text(), row.get_text()))
+
+
+class NoticeList(HmlTable):
+    """The list of notices for a given year."""
+
+    selector = CSS("#emplrList tr")
 
 
 def scrape(
@@ -69,7 +89,7 @@ def scrape(
     # Loop through the years and scrape them one by one
     source = NullSource()
     source.cache_dir = cache_dir / "ga"
-    years = YearList(source=source)
+    years = YearList(start=2002, source=source)
     rows = tuple(years.do_scrape())
     headers = rows[0].keys()
 
