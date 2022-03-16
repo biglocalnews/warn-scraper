@@ -1,10 +1,8 @@
 import logging
 import re
-import shutil
 from pathlib import Path
 
 import pdfplumber
-import requests
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
@@ -34,18 +32,49 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    output_csv = data_dir / "ca.csv"
-    # Set up cache dir for state
-    cache_state = Path(cache_dir, "ca")
-    cache_state.mkdir(parents=True, exist_ok=True)
-    # Initially write to a temp file in cache_dir before
-    # over-writing prior output_csv, so we can use append
-    # mode while avoiding data corruption if script errors out
-    temp_csv = cache_state / "ca_temp.csv"
-    # Create Cache instance for downstream operations
     cache = Cache(cache_dir)
-    # Update pdfs and Excel files
-    files_have_changed = _update_files(cache)
+    base_url = "https://edd.ca.gov/Jobs_and_Training"
+
+    # Get the page with the link list
+    logger.debug("Scraping list of data files")
+    list_url = f"{base_url}/Layoff_Services_WARN.htm"
+    list_page = utils.get_url(list_url)
+    list_html = list_page.text
+    cache.write("ca/list.html", list_html)
+
+    # Parse out all the links
+    list_soup = BeautifulSoup(list_html, "html.parser")
+    link_list = []
+    for link in list_soup.find_all("a"):
+        # Grab the URL
+        relative_url = link.attrs.get("href", "").strip()
+
+        # If it's a WARN link ...
+        if re.search(r"warn[-_]?report", relative_url, re.I):
+
+            # Build it up
+            full_url = f"{base_url}/{relative_url}"
+
+            # Add it to the list
+            link_list.append(full_url)
+
+    # Download all the data files
+    file_list = []
+    for link in link_list:
+        file_name = link.replace("https://edd.ca.gov/Jobs_and_Training/warn/", "")
+        file_path = cache.download(f"ca/{file_name}", link)
+        file_list.append(file_path)
+
+    # Parse all the data files
+    output_rows = []
+    for file_ in file_list:
+        if str(file_).endswith("pdf"):
+            row_list = _extract_pdf_data(file_)
+        else:
+            row_list = _extract_excel_data(file_)
+        output_rows += row_list
+
+    # Write it out
     output_headers = [
         "notice_date",
         "effective_date",
@@ -58,90 +87,13 @@ def scrape(
         "address",
         "source_file",
     ]
-    if files_have_changed:
-        logger.info("One or more source data files have changed")
-        logger.info("Extracting Excel data for current fiscal year")
-        wb_path = cache.files(subdir="ca", glob_pattern="*.xlsx")[0]
-        excel_data = _extract_excel_data(wb_path)
-        # Write mode when processing Excel
-        utils.write_dict_rows_to_csv(
-            temp_csv, output_headers, excel_data, mode="w", extrasaction="ignore"
-        )
-        logger.info("Extracting PDF data for prior years")
-        for pdf in cache.files(subdir="ca", glob_pattern="*.pdf"):
-            logger.info(f"Extracting data from {pdf}")
-            data = _extract_pdf_data(pdf)
-            # Append mode when processing PDFs
-            utils.write_dict_rows_to_csv(
-                temp_csv, output_headers, data, mode="a", extrasaction="ignore"
-            )
-        # If all went well, copy temp csv over pre-existing output csv
-        utils.create_directory(output_csv, is_file=True)
-        shutil.copy2(temp_csv, output_csv)
-    return output_csv
+    output_path = data_dir / "ca.csv"
+    utils.write_dict_rows_to_csv(
+        output_path, output_headers, output_rows, extrasaction="ignore"
+    )
 
-
-def _update_files(cache):
-    files_have_changed = False
-    # Create lookup of pre-existing PDF files and their size
-    files = {}
-    for local_file in cache.files(subdir="ca/"):
-        fname = local_file.split("/")[-1]
-        extension = fname.split(".")[-1]
-        if extension in ["pdf", "xlsx"]:
-            files[fname] = Path(local_file).stat().st_size
-    # Download file if it has changed or not present.
-    links = _get_file_links()
-    for link in links:
-        file_name = link["url"].split("/")[-1]
-        download_status = False
-        # If file doesn't exist, update download status
-        try:
-            local_size = files[file_name]
-        except KeyError:
-            download_status = True
-            local_size = None
-        # If size doesn't match, update download status
-        if local_size != link["size"]:
-            download_status = True
-        if download_status is True:
-            files_have_changed = True
-            cache.download(f"ca/{file_name}", link["url"])
-    # Delete local files whose names don't match
-    # data files on remote site, in order to guard against
-    # duplicates if the source agency renames files
-    for obsolete_file in _obsolete_local_files(files, links):
-        files_have_changed = True
-        logger.info(
-            f"Deleting local file no longer present on source site: {obsolete_file}"
-        )
-        Path(cache.path, f"ca/{obsolete_file}").unlink()
-    return files_have_changed
-
-
-def _get_file_links():
-    """Get links to historical PDFs and the Excel file."""
-    logger.info("Getting metadata for data files")
-    base_url = "https://edd.ca.gov/Jobs_and_Training"
-    home_page = f"{base_url}/Layoff_Services_WARN.htm"
-    html = utils.get_url(home_page).text
-    soup = BeautifulSoup(html, "html.parser")
-    links = []
-    for link in soup.find_all("a"):
-        relative_file_url = link.attrs.get("href", "").strip()
-        if _is_warn_report_link(relative_file_url):
-            file_url = f"{base_url}/{relative_file_url}"
-            meta = _get_file_metadata(file_url)
-            links.append(meta)
-    return links
-
-
-def _is_warn_report_link(url):
-    return True if re.search(r"warn[-_]?report", url, re.I) else False
-
-
-def _get_file_metadata(url):
-    return {"url": url, "size": int(requests.head(url).headers["Content-Length"])}
+    # Return the path
+    return output_path
 
 
 def _extract_excel_data(wb_path):
@@ -170,9 +122,9 @@ def _extract_excel_data(wb_path):
             "effective_date": _convert_date(row[4].value),
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
-            "num_employees": row[10].value,
-            "address": row[12].value.strip(),
-            "source_file": wb_path.split("/")[-1],
+            "num_employees": row[9].value,
+            "address": row[11].value.strip(),
+            "source_file": str(wb_path).split("/")[-1],
         }
         payload.append(data)
     return payload
@@ -195,6 +147,7 @@ def _extract_pdf_data(pdf_path):
         "source_file",
     ]
     data = []
+    logger.debug(f"Opening {pdf_path} for PDF parsing")
     with pdfplumber.open(pdf_path) as pdf:
         for idx, page in enumerate(pdf.pages):
             # All pages pages except last should have a single table
@@ -222,17 +175,11 @@ def _extract_pdf_data(pdf_path):
                     {
                         "effective_date": data_row["effective_date"].replace(" ", ""),
                         "received_date": data_row["received_date"].replace(" ", ""),
-                        "source_file": pdf_path.split("/")[-1],
+                        "source_file": str(pdf_path).split("/")[-1],
                     }
                 )
                 data.append(data_row)
     return data
-
-
-def _obsolete_local_files(pdfs, links):
-    pdfs_uniq = set(pdfs.keys())
-    remote_files = {link["url"].split("/")[-1] for link in links}
-    return pdfs_uniq - remote_files
 
 
 if __name__ == "__main__":
