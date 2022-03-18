@@ -123,7 +123,7 @@ def _extract_excel_data(wb_path):
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
             "num_employees": row[9].value,
-            "address": row[11].value.strip(),
+            "address": row[12].value.strip(),
             "source_file": str(wb_path).split("/")[-1],
         }
         payload.append(data)
