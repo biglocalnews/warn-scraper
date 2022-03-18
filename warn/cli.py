@@ -46,15 +46,15 @@ def main(
 
     SCRAPERS -- a list of one or more postal codes to scrape. Pass `all` to scrape all supported states and territories.
     """
-    # Set higher log-level on third-party libs that use DEBUG logging,
-    # In order to limit debug logging to our library
-    logging.getLogger("urllib3").setLevel(logging.ERROR)
-    logging.getLogger("pdfminer").setLevel(logging.WARNING)
-
     # Local logging config
     logging.basicConfig(level=log_level, format="%(asctime)s - %(name)s - %(message)s")
     logger = logging.getLogger(__name__)
 
+    # Set higher log-level on third-party libs that use DEBUG logging,
+    # In order to limit debug logging to our library
+    logging.getLogger("urllib3").setLevel(logging.ERROR)
+    logging.getLogger("pdfminer").setLevel(logging.WARNING)
+    
     # Runner config
     data_dir = Path(data_dir)
     cache_dir = Path(cache_dir)
