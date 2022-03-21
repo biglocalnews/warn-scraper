@@ -1,0 +1,1405 @@
+Mercy Hospital                      Detroit              1/6/2000 1 1300
+Bing Manufacturing, Inc.            Detroit              1/6/2000 1 10
+G­P Gypsum                          Grand Rapids         1/14/2000 1 74
+Oakwood Hospital Beyer Center       Ypsilanti            1/18/2000 1 330
+J&L Speciality Steel, Inc.          Detroit              1/24/2000 1 49
+Howard Delivery Service             Belleville           1/25/2000 2 90
+GBC Automated Finishing Division    Auburn Hills         1/31/2000 1 54
+TTX Company (Draco Division)        Waterford            1/31/2000 1 143
+Villa Elizabeth                     Grand Rapids         2/12/2000 1 160
+TRW Automotive                      Rochester Hills      2/8/2000 1 102
+M.C. Aerospace Corporation          Lake Orion           2/8/2000 1 66
+GE Tech Team                        Sault Ste. Marie     2/11/2000 1 213
+Grand Haven Brass Foundry           Grand Haven          2/22/2000 1 133
+Mark Travel Corporation             Southfield           2/24/2000 1 60
+US Airways                          Detroit              3/2/2000 1 0
+US Airways                          Grand Rapids         3/2/2000 1 0
+Micromatic Textron                  Holland              3/3/2000 1 104
+J.C. Penny                          Southfield           3/8/2000 1 286
+J.C. Penny                          Harper Woods         3/8/2000 1 286
+Kmart Corporation (Store #3463)     East Pointe          3/13/2000 1 113
+YWCA Head Start                     Inkster              3/2/2000 1 0
+AV Technology                       Shelby Township      3/16/2000 2 32
+Garden State Tanning                Adrian               3/24/2000 1 40
+Kirsch Newell Corporation           Sturgis              3/27/2000 1 470
+Fairway Foods Of Michigan           Menominee            4/4/2000 1 172
+American Home Helath Care, Inc.     Warren               4/11/2000 1 131
+Ambar Chemical, Inc.                Manistee             4/13/2000 1 66
+Penske Logistics                    Flint                4/25/2000 1 94
+Becker Group                        Roseville            4/25/2000 2 56
+Craft House Corporation             Kalkaska             4/20/2000 1 133
+Dearborn Glass Plant                Dearborn             4/21/2000 1 0
+Excel Corporation                   Fenton               4/24/2000 1 119
+Becker Group                        Sterling Heights     4/25/2000 2 400
+Ameriserve Food Distribution, Inc.  Walled Lake          5/2/2000 1 69
+Crown Vantage                       Parchment            8/22/2000 1 425
+Ameriserve                          Grand Rapids         9/22/2000 1 185
+Chasco Systems, Incorporated        Livonia              5/12/2000 1 147
+Sawyer Lumber Company, Llc          Gwinn                5/15/2000 1 226
+Glen's Markets                      Alpena               5/18/2000 1 80
+G & L Industries                    Chesterfield         5/22/2000 1 228
+G & L Industries                    Owosso               5/22/2000 1 0
+Autoalliance International          Flat Rock            5/25/2000 2 950
+Whitehall Leather                   Whitehall            5/24/2000 1 86
+Reckitt Benckiser                   Rockwood             5/30/2000 1 217
+Special Packaging Operation         Rockwood             5/30/2000 1 60
+SPX Corporation                     Wayland              7/18/2000 1 71
+Tyco Electronics                    Boyne City           7/26/2000 1 80
+Kmart #44                           Walker               8/7/2000 1 92
+Newcor, Inc., Turn­Matic Division   Clinton Township     8/10/2000 1 53
+Mead Corporation                    Kalamazoo            8/17/2000 1 182
+Innovative Home Products, Inc.      Birmingham           8/21/2000 1 73
+Environ Incorporated                Romulus              8/29/2000 1 108
+Lansing Craft Center                Lansing              8/31/2000 2 200
+Kmart Store #4027                   Detroit              8/7/2000 1 151
+Crouse Cartage Company              Grand Rapids         9/21/2000 1 42
+Tower Automotive Products           Kalamazoo            10/2/2000 1 375
+Parkedale Pharmaceuticals, Inc.     Rochester            10/16/2000 2 204
+Chiquita Processed Foods, Llc       Scottville           10/9/2000 1 46
+Avery Dennison (Spartan Internt'l)  Holt                 10/23/2000 1 127
+Great White North L.L.C/Deutch Pos  Livonia              10/24/2000 1 80
+American Driveline, Inc.            Detroit              10/27/2000 1 66
+Harbor Industries                   Travese City         10/31/2000 1 44
+ANR Pipeline                        Detroit              11/6/2000 1 650
+Plainwell, Inc.                     Plainwell            11/6/2000 1 289
+Country Roads, Inc.                 Greenville           11/13/2000 1 126
+Metalforming Technologies, Inc.     Davisburg            11/21/2000 1 101
+Dura Automotive Systems             East Jordan          12/6/2000 1 280
+Talon Automotive                    Rochester Hills      12/6/2000 1 18
+Talon Automotive Group, Inc.        Oxford               12/6/2000 1 177
+Talon Automotive Group, Inc.        New Baltimore        12/6/2000 1 181
+Mexican Industries                  Dearborn             12/7/2000 1 0
+Prospect Airport Services, Inc.     Detroit              12/8/2000 1 72
+GM Truck Group                      Pontiac              12/12/2000 1 1230
+Fletcher Paper Company              Alpena               12/18/2000 1 189
+FCB Worldwide                       Southfield           12/19/2000 2 240
+Oem/Erie Westland Division          Westland             12/27/2000 1 160
+Outboard Marine Corporation (Omc)   Cadillac             12/26/2000 1 551
+Total Layoffs: 14,597
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+Becker Group                        Roseville            1/8/2001 1 110
+Detroit Brake Machining, Inc.    Detroit              1/9/2001 1 216
+Pilot Industries                    Sterling Heights   1/12/2001 1 93
+Fox River Paper Company        Vicksburg            1/16/2001 1 214
+Montgomery Ward #505            Grand Rapids      1/17/2001 1 134
+Montgomery Ward #509            Grand Rapids      1/17/2001 1 111
+Montgomery Ward                    Jackson              1/17/2001 1 88
+Montgomery Ward                    Kalamazoo          1/17/2001 1 110
+Montgomery Ward                    Flint                1/17/2001 1 132
+Montgomery Ward                    Mount Clemens   1/17/2001 1 191
+Montgomery Ward                    Pontiac              1/17/2001 1 105
+Montgomery Ward                    Southfield           1/17/2001 1 114
+Montgomery Ward                    Warren               1/17/2001 1 154
+Montgomery Ward                    Dearborn             1/17/2001 1 95
+Montgomery Ward                    Livonia              1/17/2001 1 185
+Montgomery Ward                    Southgate            1/17/2001 1 118
+Daimler Chrysler                    Detroit              1/30/2001 2 823
+Daimler Chrysler                    Auburn Hills         1/29/2001 2 820
+Daimler Chrysler                    Auburn Hills         1/29/2001 2 559
+Quest Diagnostics, Inc.            Grand Rapids      1/30/2001 2 80
+Lionel Llc                          Chesterfield         2/12/2001 1 325
+Tecumseh Products                  Tecumseh           2/6/2001 2 138
+General Motors Nao Orion AsseOrion                2/7/2001 2 0
+Family Golf Center, Inc.            Plymouth             2/9/2001 1 36
+Whittier Towers, Inc./Phoenix LifDetroit              2/12/2001 1 66
+Crown Vantage (Curtis Fine PapYpsilanti            4/19/2001 1 57
+Plastomer Corporation              Livonia              3/1/2001 3 0
+Meridian Automotive Systems, ILapeer               3/1/2001 1 450
+Textron Automotive                  New Baltimore     3/2/2001 2 159
+Bangor Industries                   Bangor               3/8/2001 1 64
+Mexican Industries                  Detroit              3/5/2001 1 0
+Ludlow Building Products          Adrian               3/7/2001 1 54
+Blue Care Network                   Lansing              3/8/2001 4 20
+Chivas Industries, Llc              Canton               3/12/2001 1 63
+Selectcare, Inc                     Troy                 3/15/2001 1 358
+Welsh, Inc.                                              3/15/2001 1 0
+Old Kent Financial #4420          Kentwood             3/20/2001 2 398
+Old Kent Financial #1850          Grand Rapids      3/20/2001 2 306
+Old Kent Financial #5253          Grand Rapids      3/20/2001 2 15
+Old Kent Financial #4460          Kentwood             3/20/2001 2 35
+Old Kent Financial #111             Grand Rapids      3/20/2001 2 116
+Old Kent Financial #5249          Grand Rapids      3/20/2001 2 85
+TRW Corporation                     Milford              3/21/2001 1 120
+Alken­Ziegler Novi                  Novi                 3/28/2001 1 79
+Hoskins Manufacturing CorporatCharlevoix           4/19/2001 1 119
+Ryder Integrated Logistics, Inc. Detroit              4/13/2001 1 74
+Brillcast, Inc.                     Wyoming            4/16/2001 2 79
+Steelcase, Inc.                     Grand Rapids      4/24/2001 2 500
+Best Buy                            Livonia              4/30/2001 1 110
+Standard Federal Bank #320     Troy                 4/30/2001 2 25
+Standard Federal Bank #340     Troy                 4/30/2001 2 25
+Dana Corporation/Wix Filtration Ferndale             5/3/2001 1 134
+Johnson Controls                    Taylor               5/1/2001 2 69
+Automotive Component Carrier, IFlint                5/7/2001 1 373
+Harvard Industries                  Jackson              6/7/2001 1 75
+Tower Automotive                    Sebewaing          5/7/2001 1 509
+Howard Delivery Service, Inc.    Belleville           5/7/2001 2 70
+Textron Automotive/Cwc DivisioJackson              5/11/2001 1 40
+General Cable Industries, Inc.   Cass City            5/14/2001 1 154
+Johnson Controls                    Lapeer               5/14/2001 2 140
+Commonwealth Industries         Detroit              5/14/2001 1 56
+GHSP                                Grand Haven       5/16/2001 1 157
+Steiger Lumber Company          Bessemer           4/23/2001 1 38
+Welsh, Inc.                         Benton Harbor     5/23/2001 1 0
+Jobbers Warehouse Service, IncWyoming            5/24/2001 1 100
+Equifax City Directory              Traverse City        6/4/2001 1 60
+Wollin Products, Inc.               Stevensville         6/5/2001 1 194
+Michigan Bulb Company           Grand Rapids      6/29/2001 1 210
+Lear Corporation                    Romulus              6/5/2001 2 174
+Michigan Machine And EngineerFenton               6/8/2001 1 81
+R & B Machine Tool                  Saline               6/12/2001 1 220
+Imagyn Medical Technologies    Richland Twnship 6/13/2001 1 92
+Becker Group                        Warren               6/25/2001 1 85
+Becker Group                        Owosso               6/25/2001 1 72
+Jacobson Stores, Inc.               Saginaw              7/3/2001 1 158
+Tel Gen Corporation                 Lansing              7/12/2001 2 46
+Commuter Transportation CompDearborn Heights 7/5/2001 2 39
+CPI Graphics                        Lansing              7/9/2001 1 70
+Hayes Lemmerz International, InPetersburg           7/12/2001 1 159
+Kett Engineering Corporation     Flint                7/16/2001 2 68
+Dow Chemical Company          Midland              8/6/2001 2 260
+Interstate Brands Companies    Detroit              7/24/2001 1 238
+Michigan National Bank            Livonia              7/20/2001 1 315
+Jackson Precision Die Cast      Jackson              7/24/2001 1 200
+Paladigm Systems Llc              Kentwood             7/27/2001 1 86
+Michigan National Bank            Lansing              8/2/2001 2 91
+Rosenblutt International            Southfield           8/8/2001 1 64
+Olds Manor Inc                      Grand Rapids      8/24/2001 1 99
+Vaungarde, Inc.                     Owosso               8/27/2001 1 60
+Carron Industries                   Inkster              8/20/2001 2 200
+Connolly North America, Llc      Highland Park      9/6/2001 1 246
+Blue Bird Products                  Highland Park      9/10/2001 1 57
+AT&T­ACS                            Ann Arbor            9/12/2001 2 80
+Fiber Mark, Inc.                    Rochester            9/20/2001 1 83
+Bing Blanking, LLC                  Dearborn             9/21/2001 1 83
+Northwest Airlines Inc              Detroit              9/23/2001 2 960
+Northwest Airlines                  Grand Rapids      9/23/2001 2 12
+Northwest Airlines/Flint Internt'l Flint                9/23/2001 2 12
+Northwest Airlines Reserv CenteLivonia              9/24/2001 2 100
+Herman Miller Inc.                  Spring Lake          9/25/2001 2 121
+Autodie, International              Grand Rapids      10/5/2001 2 151
+LSG Sky Chefs                       Detroit              10/9/2001 2 100
+Fort Dearborn Company            Coldwater            10/11/2001 1 120
+Modern Prototype                    Troy                 10/16/2001 2 87
+Cingular Wireless                   Farmington Hills  10/18/2001 1 113
+Polynorm Automotive                Holland              10/18/2001 1 61
+Stanley Knight Corporation        New Troy             10/19/2001 1 98
+Saks Fifth Avenue                   Dearborn             10/19/2001 1 92
+Tyco Capital                        BLoomfield Hills   10/23/2001 2 33
+Marysville Products, Inc.           Marysville           10/29/2001 1 100
+Leaseway Motorcar Transport    Auburn Hills         10/29/2001 1 174
+Asplundh Tree Company #93     Wixom                10/29/2001 2 43
+Asplundh Tree  Company #80    Taylor               10/29/2001 2 23
+Asplundh Tree Company #27     Deckerville          10/29/2001 2 31
+Asplundh Tree Company #89     Warren               10/29/2001 2 51
+Asplundh Tree Company #11     Detroit              10/29/2001 2 40
+Asplundh Tree Company #71     Oxford               10/29/2001 2 29
+Asplundh Tree Company #40     Marysville           10/29/2001 2 30
+Asplundh Tree Company #43     Mt. Clemens       10/29/2001 2 37
+Asplundh Tree Company #843   Howell               10/29/2001 2 23
+Asplundh Tree Company #31     Dundee               10/29/2001 2 26
+A. G. Simpson Automotive        Sterling Heights   11/5/2001 1 121
+Metalloy Corporation                Hudson               11/7/2001 1 60
+Collins & Aikman                    Warren               11/7/2001 1 40
+Telex Communications             Buchanan             12/18/2001 1 170
+Vision Metals                       South Lyon           11/14/2001 1 286
+Dos Manos Technologies          Detroit              11/15/2001 1 202
+Empire Iron Mining Partnership  Palmer               11/21/2001 1 0
+Kitty Hawk Charters                 Ypsilanti            11/26/2001 1 0
+Wolverine World Wide               Rockford             12/7/2001 2 20
+HDS Services                        Rochester Hills    12/20/2001 2 25
+Total Layoffs: 19,091
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+Aurora Healthcare, Inc.             Detroit              1/3/2002 2 200
+London's Farm Dairy                 Port Huron           1/15/2002 1 106
+IBP Foods                           Grand Rapids         1/11/2002 1 460
+IBP Foods Company                   Detroit              1/11/2002 1 554
+IBP Foods Company                   Farmington Hills     1/11/2002 1 59
+Teleflex, Inc.                      Auburn Hills         1/10/2002 1 66
+Eaton Corporation                   Southfield           1/15/2002 2 57
+Haworth                             Holland              1/15/2002 2 165
+US Manufacturing                    Bad Axe              1/15/2002 1 96
+US Manufacturing                    Lexington            1/15/2002 1 84
+Collins & Aikman                    Warren               1/16/2002 1 40
+MSX International                   Detroit              1/22/2002 2 68
+Newcor, Inc.                        Troy                 1/22/2002 1 100
+Worthington Steel                   Jackson              1/29/2002 1 58
+Steelcase, Inc.                     Caledonia            2/6/2002 2 120
+General Motors/NAO Orion Assem.     Orion                2/14/2002 2 1700
+TDS Automotive                      Oxford               2/14/2002 2 102
+MSX International                   Flint                2/15/2002 2 5
+Farmer Jack                         Detroit              2/19/2002 1 85
+IBP Foods                           Hamtramick           2/19/2002 1 54
+Carron Industries                   Inkster              3/4/2002 1 234
+Jervis B. Webb Company              New Hudson           3/4/2002 1 107
+SBC Ameritech                       Southfield           3/8/2002 1 264
+SBC Ameritech 29777                 Southfield           3/8/2002 1 24
+Kmart #3537                         Novi                 3/8/2002 1 44
+Kmart #4352                         Livonia              3/8/2002 1 32
+Kmart #4393                         Taylor               3/8/2002 1 72
+Kmart #3181                         Niles                3/8/2002 1 25
+Kmart #3344                         Kentwood             3/8/2002 1 34
+Kmart # 3421                        Benton Harbor        3/8/2002 1 25
+Kmart #3496                         Battle Creek         3/8/2002 1 25
+Kmart # 3950                        Three Rivers         3/8/2002 1 30
+Kmart # 4256                        Lansing              3/8/2002 1 35
+Kmart #7337                         Plainwell            3/8/2002 1 25
+Kmart #9003                         Coldwater            3/8/2002 1 18
+Kmart #9288                         Albion               3/8/2002 1 20
+Kmart #9709                         Charlotte            3/8/2002 1 23
+Kmart #3843                         Ludington            3/8/2002 1 32
+Kmart # 3139                        Essexville           3/8/2002 1 24
+Kmart #3000                         Marquette            3/8/2002 1 34
+Kmart #3069                         Flint                3/8/2002 1 30
+Kmart #9583                         Houghton             3/8/2002 1 20
+Emerson Tool Company                Menominee            3/14/2002 1 213
+Midwest Metalurgical Laboratories   Marshall             3/15/2002 1 66
+Regal Plastics                      Roseville            3/20/2002 1 82
+Clements Manufacturing LLC          Harbor Beach         4/1/2002 2 51
+Collins & Aikman                    Clinton Township     4/9/2002 1 150
+Penske Auto Center ­ Troy           Troy                 4/12/2002 1 73
+Penske Auto Center ­ Auburn Hills   Auburn Hills         4/12/2002 1 30
+ASC Incorporated; Lansing Trim      Lansing              4/23/2002 2 95
+Collins & Aikman                    Marshall             4/26/2002 1 194
+Hayes ­ Albion Corporation          Albion               5/6/2002 1 496
+Attwood Corporation                 Lowell               5/13/2002 2 221
+Charter Michigan Bankcorp, Inc.     Wyandotte            5/20/2002 2 70
+Citi­Mortgage                       Farmington Hills     5/23/2002 2 473
+United Stationers                   Livonia              5/31/2002 1 112
+Key Plastics                        Chesterfield         5/31/2002 2 71
+Key Plastics                        Port Huron           5/31/2002 1 173
+SUR­FLO Plastics & Eng., Inc.       Warren               6/7/2002 2 6
+Samuel­Whittar, Inc.                Detroit              6/7/2002 1 132
+SMART ­ Troy                        Troy                 6/11/2002 3 0
+SMART ­ Inkster                     Inkster              6/11/2002 3 0
+SMART ­ Pontiac                     Pontiac              6/11/2002 3 0
+SMART ­ Clinton Township            Clinton Township     6/11/2002 3 0
+SMART ­ Detroit                     Detroit              6/11/2002 3 0
+Wingcast LLC                        Allen Park           6/5/2002 1 7
+Johnson Controls                    Lapeer               6/21/2002 1 165
+Allstate ­ Clinton Township         Clinton Townshp      6/14/2002 1 4
+Allstate ­ Southfield               Southfield           6/14/2002 1 0
+Allstate ­ Troy                     Troy                 6/17/2002 1 0
+Unistrut Corp.                      Wayne                6/18/2002 1 93
+Federated Capital Corp.             Farmington Hills     6/24/2002 1 22
+Meridian Automotive Systems         Madison Hights       6/24/2002 1 115
+Arthur Andersen LLP                 Detroit              6/27/2002 1 0
+Blue Care Network ­ Bay City        Bay City             6/28/2002 1 22
+Blue Care Network ­ Flint           Flint                6/28/2002 1 61
+Blue Care Network ­ Saginaw         Saginaw              6/28/2002 2 22
+NYCE Corporation                    Dearborn             7/8/2002 1 45
+Roundy's, Inc.                      Muskegon             7/15/2002 1 131
+Collins & Aikman                    Clawson              7/19/2002 1 59
+General Mills                       Hillsdale            7/23/2002 1 122
+Owens Corning                       Grand Rapids         8/6/2002 1 80
+Huntleigh USA Corporation           Freeland             7/31/2002 1 32
+ITWB&L Plastis                      Rockford             8/2/2002 1 57
+Detroit Diesel Corp.                Detroit              8/6/2002 2 700
+National City Bank                  Southgate            8/7/2002 2 77
+Jacobsons Stores, Inc.  (Ann Arbor) Ann Arbor            8/7/2002 1 120
+Jacobsons Stores, Inc.  (Okemos)    Okemos               8/7/2002 1 75
+Jacobsons Stores, Inc. (E. GR)      E. Grand Rapids      8/7/2002 1 90
+Jacobsons Stores, Inc. (Grosse Pte) Grosse Pointe        8/7/2002 1 77
+Jacobsons Stores, Inc. (Birmingham) Birmingham           8/7/2002 1 78
+Jacobsons Stores, Inc. (Rchstr Hill Rochester Hills      8/7/2002 1 74
+Jacobsons Stores, Inc. (Livonia)    Livonia              8/7/2002 1 130
+Saturn Electronics & Engineering    Auburn Hills         8/8/2002 2 48
+Getronics Govt'l Solutions LLC      Selfridge            8/5/2002 1 2
+Advanced Transcription Services     Taylor               8/16/2002 1 10
+Baker Electrical Products, Inc.     Memphis              8/19/2002 2 79
+SPX Air Gage                        Livonia              8/26/2002 2 68
+Sportservice Corporation            Detroit              8/27/2002 1 0
+Flint Special Services, Inc.        Pontiac              9/3/2002 2 47
+Assurant Group                      Grand Rapids         10/1/2002 1 159
+Marriott Distribution Services      Warren               10/1/2002 1 100
+Northwest Airlines, Inc.            Romulus              10/2/2002 2 644
+AT & T (Ann Arbor)                  Ann Arbor            10/16/2002 2 88
+Riverside Osteopathic Hospital      Trenton              10/16/2002 1 520
+Sealy Incorporated                  Taylor               10/18/2002 1 119
+Steelcase North America             Grand Rapids         10/31/2002 2 0
+SBC Ameritech (2555 S Grand Traver) Flint                10/28/2002 2 58
+SBC Ameritech (2610 Grand Traverse) Flint                10/28/2002 2 1
+AMT Freight                         Battle Creek         10/31/2002 1 100
+Fidlar Doubleday, Inc.              Kalamazoo            11/4/2002 2 52
+Mechanical Products                 Jackson              11/4/2002 2 162
+Ampco System                        Detroit              11/12/2002 2 90
+National Refractories & Minerals    State­wide           11/19/2002 2 6
+Lakeside Machine, Inc.              Gladstone            11/25/2002 1 39
+Lakeside Machine, Inc.              Escanaba'            12/6/2002 1 96
+WorldCom, Inc.                      Ann Arbor            12/13/2002 2 66
+Magellan Behavioral Health          Detroit              12/18/2002 1 28
+Dura Automotive Systems, Inc.       Livonia              12/18/2002 1 108
+Norgen Automotive, Inc.­Anchorville Anchorville          12/19/2002 1 49
+NorgenAUtomotive, Inc.­Mt. Clemens  Mt. Clemens          12/19/2002 2 19
+Total Layoffs: 14,451
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+Menasha Packaging Company, LLC    Coloma               1/3/2003 1 115
+Dean Specialty Foods Group          Benton Harbor        1/6/2003 2 46
+Liberty Mutual Group                Bingham Farms        1/13/2003 1 115
+Davis Tool & Engineering Company    Detroit              1/13/2003 1 197
+Kmart Corporation #9089             Cadillac             1/16/2003 1 25
+Kmart Corporation                   Auburn Hills         1/16/2003 1 200
+Kmart Corporation #4990             Canton Township      1/16/2003 1 225
+Kmart #7249                         Chesterfield Twnshp  1/16/2003 1 0
+Kmart Corporation #4915             Dearborn             1/16/2003 1 358
+Kmart Corporation #4994             Detroit              1/16/2003 1 283
+Kmart Corporation #7272             Flat Rock            1/16/2003 1 92
+Kmart Corporation #4949             Lincoln Park         1/16/2003 1 250
+Kmart Corporation #3262             Roseville            1/16/2003 1 34
+Kmart Corporation #4192             Southfield           1/16/2003 1 125
+Kmart Corporation #4982             Sterling Heights     1/16/2003 1 100
+Kmart Corporation #7589             Utica                1/16/2003 1 45
+GM Detroit Hamtramack Assembly     Detroit              1/24/2003 2 400
+Alltel                              Grand Rapids         1/31/2003 1 92
+Robert Bosch Corporation            Kentwood             2/5/2003 1 1350
+Northwest Airlines                  Romulus              2/13/2003 2 185
+Wherehouse Music                    Rochester Hills      2/13/2003 1 9
+Charter House of Farmington Hills   Farmington Hills     2/19/2003 2 0
+Charter House of Novi               Novi                 2/19/2003 2 0
+National Steel                      Ecorse               2/21/2003 1 200
+National Steel                      Canton               2/21/2003 1 0
+National Steel                      Detroit              2/21/2003 1 0
+National Steel                      Trenton              2/21/2003 1 11
+Lucent Technologies                 Wixom                2/27/2003 2 2
+Edgcomb Metals                      Roseville            2/28/2003 1 56
+Lucent Technologies                  Detroit             3/3/2003 2 0
+National City                       Kalamazoo            2/27/2003 2 100
+Cadillac Asphalt                    Dearborn             3/5/2003 2 76
+Veltri Metal Products               Harrison Township    3/13/2003 1 85
+J.L. French                          Grandville          3/17/2003 1 107
+Anderson Pattern Inc.               Muskegon Heights     3/17/2003 1 28
+Northwest Airlines                   Kalamazoo           3/22/2003 2 5
+Northwest Airlines                  Grand Rapids         3/22/2003 2 7
+Northwest  Airlines                 Bay City             3/22/2003 2 9
+Northwest  Airlines                 Flint                3/22/2003 2 4
+Northwest Airlines                  Romulus              3/22/2003 2 984
+Northwest  Airlines                 Lansing              3/22/2003 2 5
+Milford Fabricating Company         Detroit              3/25/2003 2 173
+CBCA                                Grand Rapids         3/25/2003 2 48
+Doctors Hospital                    Jackson              4/28/2003 1 210
+Brown & Williamson Tobacco Corp     Auburn Hills         4/11/2003 2 4
+Ingersoll CM Systems                Midland              4/16/2003 1 64
+Pfizer                              Kalamazoo            4/22/2003 2 0
+Plassein International               Martin              4/24/2003 1 93
+Ave Maria University                Orchard Lake         4/30/2003 1 92
+Centis                              Paw Paw              4/30/2003 1 130
+Centis                              Niles                4/30/2003 1 50
+Martinrea                           Dexter               4/30/2003 1 57
+Martinrea                           Manchester           4/30/2003 1 138
+Citation Tool, Inc.                 Fraser               4/30/2003 1 12
+Eimo Americas                       Battle Creek         5/1/2003 1 170
+Venture Industries                  Grand Rapids         5/1/2003 1 95
+Citation Tool, Inc.                 Roseville            5/5/2003 1 3
+Steelcase                           Caledonia            5/6/2003 2 68
+Steelcase                           Grand Rapids         5/6/2003 2 247
+Detroit's Work Place                Detroit              5/15/2003 2 0
+Straits Steel & Wire Company        Ludington            5/19/2003 1 168
+Textron Fastening Systems           Madison Heights      5/19/2003 1 85
+Brown & Williamson Tobacco          Livonia              5/21/2003 2 18
+Target                              Detroit              5/27/2003 1 169
+Federated Group                     Novi                 5/29/2003 1 0
+Wohlert                             Lansing              5/30/2003 1 258
+Detroit Medical Center              Detroit              6/2/2003 2 0
+Wohlert                             Sault Ste. Marie     6/12/2003 1 145
+MSX International                   Warren               6/10/2003 2 70
+SPX Contech                         Dowagiac             6/27/2003 2 80
+Fasco Motors                        Hillsdale            6/30/2003 1 65
+Ampco System                        Detroit              7/2/2003 1 137
+Baxter Healthcare                   Rochester            7/2/2003 1 216
+APL Logistics                       Coloma               7/7/2003 2 145
+General Aluminum                    Hudson               7/15/2003 2 133
+Milford Fabricating Company         Detroit              7/15/2003 2 143
+Curtis Specialty Paper              Port Huron           7/17/2003 1 267
+Newcor                              Royal Oak            7/17/2003 2 87
+Beckett Associates                  Sterling Heights     7/17/2003 1 82
+Beckett Associates                  Warren               7/17/2003 1 10
+Northern Tube                       Pinconning           7/24/2003 2 151
+Pemco Die Casing Corporation        Bridgman             7/28/2003 1 234
+Metal Powder Components             Coldwater            8/11/2003 1 88
+Regal Plastics                      Owosso               11/14/2003 1 180
+SRI Surgical Express                Westland             8/12/2003 2 61
+Philips Products                    Charlotte            8/21/2003 1 225
+Federal Mogul                       Southfield           8/21/2003 2 70
+Citi Mortgage                       Farmington Hills     8/27/2003 2 130
+Rowe International                  Grand Rapids         9/2/2003 1 145
+Collins & Aikman                    St. Joseph           9/3/2003 1 164
+IPMC                                Detroit              9/11/2003 1 150
+Standard Distributing               Detroit              9/15/2003 1 81
+Whatman Inc.                        Ann Arbor            9/16/2003 1 62
+Kindred Hospital                    Detroit              9/18/2003 2 100
+Northwest Airlines                   Livonia             9/25/2003 1 588
+Pulte Home Sciences                 Detroit              9/29/2003 2 53
+Daimler Chrysler Glass Plant        Detroit              9/29/2003 1 648
+Marshall Brass                      Marshall             10/6/2003 2 23
+Interstate Brands Companies         Grand Rapids         10/2/2003 1 161
+Means Industries                    Vassar               11/7/2003 2 80
+Flex N Gate                         Warren               11/12/2003 1 130
+Apex Digital                        Oak Park             11/12/2003 1 60
+Marysville Plastics                  Marysville          11/17/2003 1 105
+Steelcase                           Grand Rapids         11/14/2003 2 0
+Toys R Us                           Southgate            11/25/2003 1 125
+Raytheon Technical Services CompanyMt. Clemens          12/1/2003 1 129
+McCamly Plaza Hotel                 Battle Creek         12/5/2003 1 8
+Ice Mountain Spring Water Facility  Stanwood             12/8/2003 1 0
+Venture                             Grand Rapids         12/15/2003 1 73
+Caliber Auto                        Melvindale           12/29/2003 1 0
+Farmer Jack                         Okemos               12/31/2003 1 40
+Total Layoffs: 16,286
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+Farmer Jack Store #618              Detroit              1/12/2004 1 90
+Farmer Jack Store #670              Detroit              1/12/2004 1 80
+Farmer Jack Store #688              Highland Park      1/12/2004 1 80
+Farmer Jack Store #720              Hamtramck         1/12/2004 1 100
+Farmer Jack Store # 606             Detroit              1/12/2004 1 100
+Farmer Jack                         Delta Township    1/7/2004 1 30
+Kmart Store #4096                   Saginaw              1/20/2004 1 35
+Parker Motor Freight                Grand Rapids      1/23/2004 1 250
+Blue Care Network                   Essexville           1/27/2004 1 10
+Blue Care Network                   Saginaw              1/27/2004 1 150
+Blue Care Network                   Midland              1/27/2004 1 20
+Farmer Jack                         Wayne                1/28/2004 1 100
+Keeler Die Cast                     Grand Rapids      2/3/2004 1 120
+Wolverine World Wide                Rockford             2/11/2004 2 145
+Johnson Diversey                    Southfield           2/17/2004 1 96
+Melody Farms                        Lansing              3/15/2004 1 129
+Eagle Picher (Hillsdale Tool)       Hillsdale            2/24/2004 1 100
+TI Automotive                       Warren               2/26/2004 2 83
+Lear Corporation                    Auburn Hills         3/1/2004 1 326
+Lear Corporation                    Walker               3/1/2004 1 50
+Bank One                            Grand Blanc        3/1/2004 1 84
+Lear Corporation                    Grand Rapids      3/2/2004 1 0
+TRW Automotive                      Sterling Hts         3/2/2004 2 94
+Veltri Metal Products               New Baltimore     3/2/2004 1 179
+Takata Petri                        Port Huron           3/16/2004 1 210
+Kindred Hospital                    Detroit              3/23/2004 2 45
+Collins & Aikman                    Sterling Heights   3/23/2004 2 245
+General Motors Acceptance Corp.Flint                3/31/2004 1 3
+Hayes Lemmerz International, Inc.Howell               4/1/2004 1 180
+General Motors (Assembly Plant) Lansing              4/2/2004 1 907
+General Motors (Body Plant)        Lansing              4/12/2004 1 659
+MSX International Inc.              Dearborn             4/9/2004 1 67
+Saginaw Transit Authority RegionaSaginaw              4/27/2004 2 63
+Kmart Store #4428                   Muskegon           4/28/2004 1 100
+Micro Craft, Inc.                   Novi                 5/14/2004 1 237
+DT Industries                       Saginaw              5/18/2004 2 49
+DT Industries                       Livonia              5/18/2004 2 74
+Tecumseh Products                   Tecumseh           5/21/2004 2 346
+Lapeer Metal Stamping               Dearborn             5/25/2004 2 57
+D & L Industrial Services, Inc.     Portage              6/9/2004 2 107
+OmniCare TPA                        Detroit              6/28/2004 1 152
+Brown & Williamson Tobacco Cor Livonia              7/2/2004 2 38
+Penske Logistics                    Flint                7/2/2004 2 140
+ACS State & Local Solutions        Lansing              7/6/2004 1 0
+Rock­Tenn Company                   Otsego               7/7/2004 1 104
+EDS                                 Troy                 7/9/2004 2 426
+De Vlieg Bullard II, Inc.           Frankenmuth       7/16/2004 2 55
+East Area Health Clinic             Detroit              8/3/2004 1 80
+Northwest Health Center             Oak Park             8/3/2004 1 50
+Robert Bosch Corp. Chassis DivisSi t. Joseph           8/6/2004 2 530
+Hahn Elastomer Corporation         Plymouth             8/11/2004 1 112
+Plastigage Corporation              Jackson              8/10/2004 1 97
+Hahn Elastomer Corporation         Warren               8/11/2004 1 45
+Chelsea Industries                  Saline               8/24/2004 1 70
+Dana Cor. ­ Perfect Circle Div.     Muskegon           8/9/2004 1 86
+Collins & Aikman                    New Baltimore     9/3/2004 1 80
+Collins & Aikman                    New Baltimore     9/3/2004 1 0
+Franks Nursery & Crafts, Inc.      Troy                 9/8/2004 2 119
+Tower Automotive                    Greenville           9/9/2004 2 135
+Johnson Controls, Inc.              Battle Creek         9/15/2004 2 153
+Eerdmans Printing Company        Grand Rapids      9/15/2004 1 52
+Choice One Communications       Grand Rapids      9/23/2004 2 90
+Sparta Foundry                      Sparta               9/24/2004 1 58
+Marathon Services, Inc.             Detroit              9/24/2004 1 97
+Metropolitan Life Insurance Comp Southfield           10/4/2004 2 370
+Magna / Cosma Body & Chassis Troy                 10/20/2004 1 71
+Hydro Automotive Systems         Holland              10/21/2004 2 160
+Straits Steel & Wire                Greenville           10/22/2004 1 150
+Daiken Clutch Corporation           Bellville            11/1/2004 1 115
+Eagle Ottawa                        Rochester Hills    11/2/2004 2 75
+ZF Sachs Automotive of America  Troy                11/2/2004 1 0
+Oxford Automotive                   Alma                 11/5/2004 1 260
+Metalforming Technologies, Inc.    Burton               11/8/2004 1 108
+SET Enterprises                     Warren               11/8/2004 2 190
+Money's Foods USA, Inc.            Fennville            11/16/2004 1 264
+Detroit Stoker Co.                  Monroe               11/22/2004 2 31
+Oakland Regional Hospital           Southfield           12/9/2004 1 64
+K­Mart Store # 3197                 Kalamazoo          12/15/2004 1 70
+American Specialty Cars             Livonia              12/20/2004 1 67
+TOTAL LAYOFFS: 11,145
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+A transfer indicates that jobs were transferred to a new owner or location that is within
+normal commuting distance.
+January 1 through December 31: 2004 2003 2002 2001 2000
+Number of notices received Y­T­D 86 106 120 131 67
+Number of layoffs indicated Y­T­D  11,145 17,773 14,976 19,136 14,597
+Cingular Wireless                   Southfield           1/3/2005 2 9
+Ternes Packaging Company            Westland           1/11/2005 1 100
+Ternes Packaging Company            Westland           1/11/2005 2 67
+Dana Corporation (Perfect Circle )  Muskegon          7/7/2005 2 250
+Paulstra CRC                        Ithaca               1/14/2005 2 30
+Kmart                               Canton               1/25/2005 1 320
+Raybestos Automotive Components Co.Sterling Heights  2/3/2005 1 300
+Federal Reserve Bank                Detroit              2/11/2005 2 61
+Lexington Plastics                  Lexington            2/16/2005 1 0
+Crotty Corporation                  Quincy               2/21/2005 1 290
+General Motors (Lansing Car Ass'y)  Lansing              3/2/2005 1 1775
+General Motors  ­ Lansing Car Assem Lansing              3/2/2005 1 2200
+ACS State & Local Solutions         Lansing              3/10/2005 1 63
+Leaseway Motorcar                   Lansing              3/10/2005 2 0
+Comprehensive Logistics             Lansing              3/11/2005 1 220
+Michigan Sugar Company              Carrollton           3/16/2005 1 176
+Lear Corporation                    Walker               3/22/2005 2 207
+Robert Bosch Corporation            Kentwood           3/25/2005 2 0
+Second Chance Body Armor            Central Lake       3/29/2005 1 97
+Steelcase                           Grand Rapids     3/28/2005 1 600
+Key Plastics                        Chesterfield         3/30/2005 1 52
+Johnson Controls, Inc.              Holland              4/11/2005 2 35
+Johnson Controls, Inc.              Holland              4/12/2005 2 60
+BASF Corporation                    Southfield           4/12/2005 2 72
+Rogers Department Store             Wyoming           4/13/2005 1 200
+Active USA, Inc.                    Ypsilanti            4/14/2005 1 59
+Griswold Machine & Engineering      Union City           4/19/2005 1 125
+Motor City Central Parking          Detroit              4/25/2005 2 94
+Food Basics 557                     Detroit              4/27/2005 1 45
+Food Basics #563                    Highland Park     4/29/2005 1 20
+Lear Corporation                    Monroe               4/27/2005 1 121
+Food Basics #550                    Wayne                4/26/2005 1 10
+Tiercon Industries                  Vassar               5/5/2005 1 102
+Danly I.E.M. Inc.                   Ionia                5/5/2005 1 50
+Robinson Industries Inc.            Coleman            5/9/2005 1 191
+Service Transport Inc.              Grand Rapids     5/12/2005 1 11
+Service Transport Inc.              Lincoln Park       5/11/2005 1 19
+Flow Robotic Systems                Wixom                6/7/2005 1 28
+Farmer Jack Store #785              Sandusky          6/14/2005 1 16
+Farmer Jack Store #492              Bad Axe              6/14/2005 1 23
+Farmer Jack Store #575              Grand Blanc       6/14/2005 1 23
+Farmer Jack Store #790              Saginaw              6/14/2005 1 23
+Farmer Jack Store #777              Midland              6/14/2005 1 12
+Farmer Jack Store #799              Flint                6/14/2005 1 23
+A.M.S.E.A., Inc.                    Fenton               7/1/2005 1 58
+Recticel North America              Clarkston            7/5/2005 2 52
+Metro One Telecom                   Farmington Hills 7/6/2005 1 139
+Auto Resources Group of New Boston  New Boston       7/15/2005 1 114
+Sappi Fine Paper North America      Muskegon          7/28/2005 2 351
+MI Youth Correctional Facility      Baldwin              7/28/2005 1 219
+Detroit Newspapers                  Detroit              8/11/2005 1 41
+Maverick Tube Corp.                 Ferndale             8/11/2005 1 98
+Pack 'Em Enterprises                Detroit              8/15/2005 1 6
+Uni­Boring Co., Inc.                Detroit              8/15/2005 1 0
+CSX Transportation                  Saginaw              8/30/2005 1 124
+ABN AMRO Services Co., Inc.         Troy                 8/30/2005 2 48
+Farmer Jack                         White Lake        8/31/2005 1 81
+Shiawassee Co. Comm. Mental Health  Owosso             10/5/2005 2 105
+Forest City Technologies            Wixom                9/8/2005 1 68
+Samuel, Son & Co., Midwest, Inc.    Detroit              9/8/2005 2 60
+Barnes Group, Inc.                  Troy                 9/16/2005 1 69
+LaSalle Bank                        Troy                 9/20/2005 2 20
+General Motors Acceptance Corp.     Auburn Hills         9/20/2005 1 73
+Northwest Airlines                  Romulus            9/22/2005 2 662
+VMP Mortgage Solutions              Fraser               9/22/2005 2 73
+SITEL Corporation                   Detroit              10/5/2005 1 67
+HOPE Network ­ South                Kalamazoo         10/7/2005 2 96
+Lear Corporation                    Plymouth           11/14/2005 1 95
+Cross Huller                        Port Huron           11/21/2005 2 7
+Cincinnati Lamb Technicon           Warren               11/22/2005 1 59
+Robert Bosch Engineering            Kentwood           12/13/2005 1 55
+ARAMARK ­ Dow Corning               Midland              12/22/2005 1 61
+Total Layoffs: 11,441
+* "1" = Facility Closure; "2" = Layoff Event
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+January 1 through December 31: 2005 2004 2003 2002 2001
+Number of notices received Y­T­D 77 84 121 131 141
+Number of layoffs indicated Y­T­D  11,441 10,854 17,813 14,976 19,136
+Voss Lantz (Hildale)                Detroit              1/5/2006 2 7
+Voss Lantz (Sherwood)               Detroit              1/5/2006 2 85
+Gray & Company                      Hart                 1/11/2006 2 80
+GM Craft Center                     Lansing              1/12/2006 1 400
+American Specialty Cars (ASC)       Lansing              1/17/2006 1 177
+Olympic Laser Processing            Belleville           1/17/2006 1 92
+Nova Star Mortgage                  Troy                 1/18/2006 1 72
+Tawas Powerline                     Troy                 1/31/2006 2 65
+Haden International                 Auburn Hills         2/6/2006 1 178
+J. L. French Automotive Casting     Benton Harbor        2/10/2006 1 54
+Cracker Barrel                      Grand Rapids         2/21/2006 1 70
+Oval Transportation Services        Dearborn Heights     2/21/2006 1 31
+Commuter Express                    Dearborn Heights     2/21/2006 1 114
+Manufacturers Products Co.          Warren               2/22/2006 1 131
+Protocol Integrated Dir. Marketing  Lansing              2/23/2006 1 170
+Tower Automotive                    Greenville           2/28/2006 1 216
+ACS                                 Southgate            3/3/2006 1 70
+Georgia Pacific Corporation         Gaylord              3/6/2006 1 211
+Ryder Integrated Logistics, Inc.    Ypsilanti            3/6/2006 2 0
+Stanley Security Solutions, Inc.    Romulus              3/6/2006 1 71
+Ex­Cell­O Machine Tools, Inc.       Sterling Heights     3/8/2006 1 93
+Tenneco Incorporated                Sterling Heights     3/10/2006 1 80
+Engineered Plastic Products         Ypsilanti            3/13/2006 2 89
+NSK Corp.                           Ann Arbor            3/13/2006 1 240
+Citizens Banking Corp.              Flint                3/14/2006 2 38
+Citizens Banking Corp.              Saginaw              3/14/2006 2 6
+Hughes Manufacturing                Farmington Hills     3/14/2006 1 138
+Romanow Building Services           Saginaw              3/16/2006 1 76
+Lapeer Metal Stamping               Lapeer               3/15/2006 2 25
+Lapeer Metal Stamping               Lapeer               3/15/2006 1 115
+Johnson Controls, Inc.              Bellville            3/17/2006 2 94
+Johnson Controls, Inc.              Mt. Clemens          3/21/2006 1 136
+Washington Mutual                   Novi                 3/29/2006 2 70
+Lear Corporation                    Elsie                10/11/2006 1 251
+Tec­Mar Distribution Services, Inc. Pontiac              3/30/2006 1 181
+Cintas Corporation                  Detroit              4/3/2006 1 84
+American Airlines                   Detroit              4/4/2006 2 0
+American Specialty Cars             Trenton              4/4/2006 1 81
+Carboloy, Incorporated              Warren               4/6/2006 1 100
+Federal Mogul                       St. Johns            4/10/2006 1 425
+Ford Motor Credit Company           Allen Park           4/18/2006 1 43
+Lord & Taylor                       Dearborn             4/19/2006 1 129
+ABN AMRO                            Ann Arbor            4/21/2006 2 81
+Ruth's Chris Steak House            Troy                 5/1/2006 1 0
+Automotive Components Holdings, LLChesterfield         5/1/2006 1 0
+Engineered Plastic Products         Owosso               5/25/2006 1 115
+Engineered Plastic Products         Auburn Hills         5/25/2006 1 23
+Engineered Plastic Products         Ypsilanti            5/25/2006 1 88
+SMART Wayne Terminal                Inkster              6/7/2006 2 0
+SMART Pontiac Terminal              Pontiac              6/7/2006 2 0
+SMART Macomb Terminal               Clinton Township     6/7/2006 2 0
+SMART Administrative Office         Detroit              6/7/2006 2 0
+SMART Oakland Terminal              Troy                 6/7/2006 2 0
+Sun Microsystems, Inc.              Allen Park           6/22/2006 2 1
+Sun Microsystems, Inc.              Southfield           6/22/2006 2 4
+Oakwood Custom Coating              Taylor               7/5/2006 1 129
+Cadence Innovation                  Fraser               7/6/2006 1 4
+Cadence Innovation                  Sterling Heights     7/6/2006 1 98
+Cadence Innovation                  Troy                 7/6/2006 1 8
+Cadence Innovation                  Grand Blanc          7/6/2006 1 178
+Advantage Logistics                 Livonia              7/10/2006 2 180
+Pall Life Sciences                  Ann Arbor            7/10/2006 1 260
+Medilodge of Bloomfield Hills, Inc. Bloomfield Hills     7/14/2006 1 188
+Link Technologies, LLC              Macomb               7/17/2006 1 65
+Creative Engineered Polymer Prod.   Lapeer               8/7/2006 1 0
+ARAMARK, Incorporated               Benton Harbor        8/8/2006 1 95
+Eagle Ottawa                        Grand Haven          8/17/2006 1 158
+AAR Cargo Services                  Livonia              8/21/2006 1 84
+AT&T Services, Inc.                 Saginaw              8/22/2006 1 72
+Autodie International               Grand Rapids         8/22/2006 1 13
+Robert Bosch Corp.                  Kentwood             8/24/2006 2 20
+Mayco Plastics, Inc.                Sterling Heights     8/31/2006 2 65
+Heckman Furniture                   Grand Rapids         9/1/2006 1 72
+GM Hamtramck Assembly Plant        Detroit              9/8/2006 2 581
+Up North Industries                 Petosky              9/12/2006 1 75
+Lear Corporation                    Elsie                9/25/2006 1 0
+Sun Microsystems, Inc.              statewide            9/28/2006 2 9
+Lear Corporation                    Warren               10/6/2006 2 80
+Creative Engineered Polymer ProductBellville            10/6/2006 1 168
+Meridian Automotive Systems         Grand Rapids         10/12/2006 2 91
+Sovereign Sales LLC                 Livonia              10/20/2006 2 113
+Newcor, Inc.                        Royal Oak            10/23/2006 1 111
+Acument Global Technologies         Troy                 10/26/2006 2 129
+Cattleman's Meat, Inc.              Detroit              11/2/2006 2 100
+Deluxe Media Services               Wayne                11/9/2006 1 45
+MSX International                   Auburn Hills         11/9/2006 1 62
+Cadillac Products Automotive        Troy                 10/31/2006 1 34
+Cadillac Products Automotive        Warren               10/31/2006 1 79
+Alma Products                       Alma                 11/13/2006 2 260
+Jewish Vocational Service           Southfield           11/15/2006 1 59
+Cooper Standard Automotive          Tawas City           11/17/2006 2 65
+Qualex, Inc.                        Novi                 11/28/2006 1 82
+Edscha                              Jackson              12/6/2006 1 170
+Macy's North Distribution Center    Warren               12/7/2006 1 115
+Collins & Aikman                    Southfield           12/27/2006 1 0
+Collins & Aikman                    Plymouth             12/27/2006 1 0
+January 1 through December 3: 2006 2005 2004 2003 2002
+Number of notices received Y­T­D 101 77 84 121 131
+Number of layoffs indicated Y­T­D  9,434 11,431 10,854 17,813 14,976
+Collins & Aikman Port Huron 1/5/2007 Plant Closing 515
+Martinrea Industries, Inc. Clare 1/8/2007 Plant Closing 139
+Creative Foam Corporation Fenton 1/10/2007 Mass Layoff 70
+Eaton Aerospace Jackson 1/17/2007 Plant Closing 100
+Eaton Aerospace Jackson 1/17/2007 Mass Layoff 70
+Collins & Aikman Corporation Sterling Heights 1/17/2007 Plant Closing 400
+Flint Special Services Detroit 1/18/2007 Plant Closing 16
+Ryder Ypsilanti 1/23/2007 Plant Closing 50
+Northwest MI Community Health Agency Charlevoix 1/25/2007 Mass Layoff 0
+Avon Automotive Manton 2/6/2007 Plant Closing 150
+Yamaha Music Manufacturing, Inc. Kentwood 2/7/2007 Plant Closing 6
+Yamaha Music Manufacturing, Inc. Kentwood 2/7/2007 Plant Closing 184
+VCST Power Train Components, Inc. Chesterfield 2/7/2007 Plant Closing 91
+Cedar Knoll Center Jackson 2/9/2007 Plant Closing 150
+Comau, Inc. Southfield 2/20/2007 Mass Layoff 6
+Johnson Controls, Inc. Holland 2/20/2007 Plant Closing 0
+Asimco Technologies Grand Haven 2/28/2007 Plant Closing 350
+Ford Motor Company (MI Truck Plant) Wayne 2/28/2007 Mass Layoff 1,004
+Paulstra CRC Grand Rapids 3/2/2007 Mass Layoff 72
+Paulstra CRC Grand Rapids 3/2/2007 Plant Closing 12
+Cadence Innovation Clinton Twp. 3/5/2007 Plant Closing 292
+Saline Metal Systems Saline 3/6/2007 Plant Closing 156
+Pine River Plastics St. Clair 3/9/2007 Plant Closing 430
+Schoeller Arca Systems Detroit 3/12/2007 Plant Closing 107
+Lear Corporation Detroit 3/14/2007 Plant Closing 354
+D.O.C. Optics Corporation Southfield 3/15/2007 Plant Closing 128
+GM Powertrain Saginaw 3/15/2007 Plant Closing 226
+Dura Convertibles Adrian 3/19/2007 Plant Closing 68
+Tec­Mar Distribution Services Lansing 3/26/2007 Plant Closing 42
+Llink Technologies Brown City 3/26/2007 Mass Layoff 70
+Continental Structural Plastics Petoskey 3/27/2007 Plant Closing 156
+Chrome Craft Corporation Highland Park 3/29/2007 Mass Layoff 49
+Johnson Controls, Inc. Plymouth 4/4/2007 Plant Closing 87
+Deckerville Metal Systems Deckerville 4/12/2007 Plant Closing 117
+ABN AMRO Madison Heights 4/13/2007 Plant Closing 158
+ABN AMRO Troy 4/13/2007 Plant Closing 419
+Ameriwood Industries Dowagiac 4/17/2007 Plant Closing 293
+Litchfield Nursing & Rehab Center Hillsdale 4/24/2007 Plant Closing 64
+St. John Detroit Riverview Hospital Detroit 4/25/2007 Plant Closing 1,500
+Collins & Aikman Evart 4/26/2007 Plant Closing 0
+Tecumseh Products Tecumseh 4/27/2007 Mass Layoff 160
+ABN AMRO Ann Arbor 5/3/2007 Mass Layoff 207
+Motor City Central Parking Detroit 5/7/2007 Mass Layoff 54
+Digitron Packaging Incorporated Redford 5/10/2007 Plant Closing 436
+Lear Corporation Walker 5/11/2007 Plant Closing 400
+Simplicity Pattern Co. Niles 5/23/2007 Plant Closing 90
+Industrial Rubber Goods St. Joseph 5/31/2007 Mass Layoff 80
+Spirit Airlines Clinton Twp. 6/4/2007 Plant Closing 131
+Blue Water Automotive Systems Lexington 6/6/2007 Plant Closing 76
+Lear Corporation Romulus 6/6/2007 Mass Layoff 98
+Galaxy Industries Corporation Canton 6/6/2007 Plant Closing 70
+Hillsdale Automotive Traverse City 6/11/2007 Mass Layoff 0
+Farmer Jack Stores Statewide 6/12/2007 Plant Closing 3,400
+ARAMARK Educational Services, LLC Woodhaven 6/13/2007 Plant Closing 82
+VCST Machine Products, LLC Clinton Twp. 6/14/2007 Plant Closing 20
+United Fixtures Interlake Niles 6/22/2007 Plant Closing 76
+ArcelorMittal Walker Wire Inc. Ferndale 6/26/2007 Mass Layoff 60
+Intier Automotive Interiors (Atrium) Brighton 7/5/2007 Plant Closing 204
+Sallie Mae Novi 7/9/2007 Mass Layoff 80
+Trussway LTD Sparta 7/10/2007 Plant Closing 260
+Meridian Automotive Systems, Plant # 7 Grand Rapids 7/11/2007 Plant Closing 156
+Mahle Engine Components Muskegon 7/13/2007 Plant Closing 55
+Mahle Engine Components Muskegon Heights 7/13/2007 Plant Closing 70
+Thule Towing Systems, Inc. Madison Heights 7/16/2007 Mass Layoff 103
+Great Lakes Downs Muskegon 7/23/2007 Plant Closing 50
+Spirit Airlines Detroit 7/31/2007 Plant Closing 233
+King Pharmaceuticals, Inc. Rochester 8/2/2007 Plant Closing 0
+GM Creative Services Operation Wixom 8/7/2007 Plant Closing 132
+Magna Donnelly Grand Haven 8/8/2007 Plant Closing 300
+HomeView Lending, Inc. Troy 8/21/2007 Plant Closing 41
+Janesville Acoustics Grand Rapids 8/29/2007 Plant Closing 58
+Hillsdale Tool Jonesville 9/13/2007 Plant Closing 113
+CDG Management Muskegon 9/19/2007 Plant Closing 10
+TI Automotive Warren 9/26/2007 Plant Closing 59
+Sun Microsystems, Inc. Southfield 9/27/2007 Mass Layoff 16
+Asset Acceptance Capital Corp. Wixom 9/28/2007 Plant Closing 124
+Solar Stamping & Manufacturing Detroit 10/4/2007 Plant Closing 107
+JDC Logistics New Buffalo 10/10/2007 Plant Closing 13
+JDC Logistics Warren 10/10/2007 Plant Closing 14
+GM ­ Hamtramck "Poletown" Ass'y Plant Detroit 10/16/2007 Mass Layoff 767
+CL Automotive Highland Park 10/22/2007 Plant Closing 167
+GM ­ Lansing (Delta Twp.) Lansing 10/22/2007 Mass Layoff 1,010
+Lapeer Metal Stamping Mt. Clemens 10/22/2007 Plant Closing 49
+Ternes Packaging Company Westland 10/22/2007 Plant Closing 180
+Eagle Ottawa Rochester Hills 10/29/2007 Mass Layoff 23
+Lapeer Metal Stamping, Plant #2 Lapeer 11/1/2007 Plant Closing 33
+Lapeer Metal Stamping, Plant #1 Lapeer 11/1/2007 Mass Layoff 50
+Noble Metal Products South Haven 11/8/2007 Plant Closing 250
+CoreComm Internet Services East Lansing 11/9/2007 Plant Closing 69
+Select Medical Corp. Battle Creek 11/9/2007 Plant Closing 88
+Metron Integrated Health Systems Bloomingdale 11/9/2007 Plant Closing 90
+Synergis Technologies Group Grand Rapids 11/13/2007 Plant Closing 60
+Synergis Technologies Group Kentwood 11/13/2007 Plant Closing 25
+Dielink International Grand Rapids 11/13/2007 Plant Closing 80
+GMAC ResCap Farmington Hills 11/13/2007 Plant Closing 53
+Advance Nursing Center Inkster 11/26/2007 Plant Closing 78
+Elder­Beerman Norton Shores 11/28/2007 Plant Closing 15
+Chrysler Corporation (Jefferson North) Detroit 11/30/2007 Mass Layoff 911
+Children's Home of Detroit Warren 12/5/2007 Plant Closing 105
+Citizens RepublicBancorp Farmington Hills 12/13/2007 Plant Closing 63
+Fluid Routing Systems Detroit 12/21/2007 Mass Layoff 243
+TOTAL LAYOFFS: 22,299
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+January 1 through December 31: 2007 2006 2005 2004 2003
+Number of notices received Y­T­D 111 100 77 84 121
+Number of layoffs indicated Y­T­D  22,299 9,337 11,431 10,854 17,780
+Company Name City Date Incident Number of  
+  Received Type Layoffs  
+   
+Arvin Meritor Detroit 1/3/2008 Mass Layoff 47  
+Faurecia Automotive Seating, Inc. Sterling Heights 1/4/2008 Mass Layoff 90  
+Mahle Clevite Muskegon 1/9/2008 Plant Closing 36  
+Faurecia Automotive Seating, Inc. Sterling Heights 1/14/2008 Mass Layoff 80  
+Magna Closures Shelby Twp 1/14/2008 Plant Closing 50  
+Eagle Ottawa Rochester Hills 1/23/2008 Plant Closing 35  
+SuperValu Livonia 1/24/2008 Plant Closing 366  
+Bank of America Troy 1/25/2008 Mass Layoff 260  
+RSDC of Michigan Holt 1/30/2008 Mass Layoff 103  
+Diversified Distribution Systems, Inc. Detroit 2/1/2008 Mass Layoff 31  
+Diversified Distribution Systems, Inc. Detroit 2/1/2008 Plant Closing 7  
+Diversified Distribution Systems, Inc. Detroit 2/1/2008 Plant Closing 14  
+Diversified Distribution Systems, Inc. Detroit 2/1/2008 Plant Closing 7  
+Midwest Product Finishing, Inc. Ottawa Lake 2/1/2008 Plant Closing 250  
+World Super Services Livonia 2/8/2008 Plant Closing 12  
+Martin Transportation Systems Burton 2/15/2008 Plant Closing 97  
+SkyWest Airlines Saginaw 2/19/2008 Plant Closing 15  
+SkyWest Airlines Lansing 2/19/2008 Plant Closing 18  
+Landaal Packaging Systems Burton 2/29/2008 Mass Layoff 60  
+Menlo Worldwide Logistics Brownstown Twp. 3/17/2008 Mass Layoff 55  
+Bank of America Lansing 3/19/2008 Plant Closing 179  
+Penske Logistics Romulus 3/24/2008 Plant Closing 108  
+AT&T Detroit 3/24/2008 Plant Closing 83  
+Steelcase (inc. Caledonia Wood Plant) Grand Rapids 3/28/2008 Mass Layoff 550  
+CNI, Inc. Owosso 3/17/2008 Plant Closing 110  
+Dura Automotive Systems Mancelona 4/1/2008 Plant Closing 300  
+Chrysler Corporation (Sterling Hts. Ass'y IT) Sterling Heights 4/2/2008 Plant Closing 92  
+Champion Air Detroit 4/4/2008 Plant Closing 29  
+Citizens Bank Hancock 4/9/2008 Mass Layoff 21  
+Centex Homes (Midwest Region) Southfield 4/17/2008 Plant Closing 75  
+Detroit Electro­Coatings Co., LLC Detroit 4/18/2008 Plant Closing 106  
+Kaneka Texas Corporation Jackson 4/21/2008 Plant Closing 50  
+Sturgis Iron & Metal Company, Inc. Sturgis 4/22/2008 Plant Closing 73  
+GM ­ Pontiac Assembly Center Pontiac 4/28/2008 Mass Layoff 1212  
+GM ­ Flint Assembly Plant Flint 4/28/2008 Mass Layoff 0  
+Lear Corporation Romulus 4/30/2008 Plant Closing 280  
+Flint Special Services Pontiac 5/2/2008 Mass Layoff 118  
+Handleman Company Troy 6/2/2008 Plant Closing 185  
+Kaneka Jackson 6/2/2008 Plant Closing 50  
+Spirit Airlines, Incorporated Detroit 6/4/2008 Plant Closing 142  
+Brazeway, Inc. Albion 6/5/2008 Mass Layoff 60  
+Plastech Engineered Products, Inc. Clarkston 6/13/2008 Plant Closing 57  
+Plastech Grandville 6/13/2008 Plant Closing 39  
+GM Powertrain Flint North Flint 6/24/2008 Plant Closing 0  
+Allied Systems Wayne 7/2/2008 Plant Closing 29  
+Kmart #4895 Ionia 7/2/2008 Plant Closing 80  
+American Airlines, Inc. Detroit 7/8/2008 Mass Layoff 8  
+RCO Engineering Roseville 7/9/2008 Mass Layoff 114  
+HMS Host Corporation Detroit 7/11/2008 Mass Layoff 154  
+Sun Microsystems Southfield 7/11/2008 Plant Closing 27  
+Modern Plastics Coloma 7/23/2008 Plant Closing 45  
+Marshall Brass Marshall 7/30/2008 Mass Layoff 47  
+Ford Motor Co. (Dearborn Truck) Dearborn 7/8/2008 Mass Layoff 828  
+Comcast Southfield 8/4/2008 Plant Closing 108  
+Semperian Troy 8/1/2008 Plant Closing 53  
+Semperian Auburn Hills 8/1/2008 Mass Layoff 48  
+GMAC ResCap Troy 8/4/2008 Mass Layoff 73  
+Von Weise, Inc. Eaton Rapids 8/5/2008 Mass Layoff 37  
+Johnson Controls, Inc. Caro 8/7/2008 Plant Closing 160  
+Johnson Controls, Inc. Hartland 8/6/2008 Plant Closing 106  
+Visteon Ypsilanti 8/13/2008 Plant Closing 160  
+ICG Castings, Inc. Dowagiac 8/15/2008 Plant Closing 150  
+ICG Castings, Inc. Bridgeman 8/15/2008 Plant Closing 50  
+Action Distribution Grand Rapids 8/28/2008 Mass Layoff 60  
+Lapeer Metal Stamping Plant #2 Lapeer 9/3/2008 Plant Closing 106  
+Lapeer Metal Stamping Sebawaing 9/3/2008 Plant Closing 159  
+Lapeer Metal Stamping Dearborn 9/5/2008 Plant Closing 87  
+Double JJ Resort Rothbury 9/3/2008 Plant Closing 150  
+Rehrig United (United Steel & Wire) Battle Creek 9/5/2008 Plant Closing 114  
+Citizens Bank Flint 9/10/2008 Plant Closing 37  
+Len Industries, Inc. Leslie 9/16/2008 Mass Layoff 50  
+Hewitt Associates Kalamazoo 9/24/2008 Plant Closing 57  
+Tower Automotive Traverse City 9/29/2008 Plant Closing 347  
+TrimQuest Walker 10/3/2008 Plant Closing 172  
+International Paper Company Warren 10/6/2008 Plant Closing 82  
+Archway & Mothers Cookie Company Battle Creek 10/3/2008 Plant Closing 59  
+Johnson Controls, Inc. Croswell 10/9/2008 Plant Closing 120  
+B&V Construction Wixom 10/13/2008 Plant Closing 121  
+GM ­ Grand Rapids Metal Center Grand Rapids 10/13/2008 Plant Closing 1500  
+GM ­ Hamtramck Assembly Plant Detroit 10/16/2008 Mass Layoff 500  
+Visteon (ACH) Saline 10/22/2008 Mass Layoff 120  
+Flex­N­Gate Warren 10/27/2008 Mass Layoff 106  
+AT&T Flint 10/27/2008 Plant Closing 62  
+Coca Cola Enterprise Flint 10/31/2008 Mass Layoff 63  
+Cadence Innovation Fraser 10/31/2008 Plant Closing 4  
+Cadence Innovation Fraser 10/31/2008 Plant Closing 195  
+Cadence Innovation Fraser 10/31/2008 Plant Closing 29  
+Cadence Innovation Troy 10/31/2008 Plant Closing 150  
+Cadence Innovation Clinton Twnship 10/31/2008 Plant Closing 186  
+Cadence Innovation Hillsdale 10/31/2008 Plant Closing 133  
+Cadence Innovation Chesterfield Towns 10/31/2008 Plant Closing 780  
+Cadence Innovation Fraser 10/31/2008 Plant Closing 7  
+National Copper Products Dowagiac 11/5/2008 Plant Closing 175  
+Universal Forest Products, Inc. White Pigeon 11/7/2008 Mass Layoff 49  
+Cliffs Natural Resources (Tilden Mine) Ishpeming 11/7/2008 Mass Layoff 179  
+Cliffs Natural Resources (Empire) Negaunee 11/7/2008 Mass Layoff 150  
+GM ­ Lake Orion Ass'y Plant Lake Orion 11/8/2008 Mass Layoff 1227  
+SKD Automotive Group Troy 11/12/2008 Plant Closing 55  
+SKD Automotive Group Jonesville 11/12/2008 Mass Layoff 0  
+Speedrack Quincy 11/14/2008 Mass Layoff 45  
+Diversified Machine, Inc. Detroit 11/17/2008 Mass Layoff 18  
+International Paper Co. Brownstown 11/17/2008 Plant Closing 89  
+International Paper Co. Newport 11/17/2008 Plant Closing 52  
+U. S. Steel (Great Lakes Works) River Rouge 11/21/2008 Plant Closing 2038  
+GM (Service Parts Operation) Waterford 11/26/2008 Plant Closing 109  
+ABX Logistics Belleville 11/26/2008 Plant Closing 62  
+Kalitta Air Oscoda 12/3/2008 Plant Closing 219  
+Kalitta Air Ypsilanti 12/3/2008 Mass Layoff 245  
+USA Jet Airlines, Inc. Belleville 12/5/2008 Mass Layoff 98  
+Ventura Manufacturing Zeeland 12/8/2008 Mass Layoff 35  
+DHL Express Niles 12/9/2008 Plant Closing 336  
+DHL Express Southfield 12/9/2008 Plant Closing 100  
+DHL Express Troy 12/9/2008 Plant Closing 100  
+DHL Express Detroit 12/9/2008 Plant Closing 200  
+Nyloncraft Jonesville 12/10/2008 Mass Layoff 110  
+Koppy Corporation Lake Orion 12/15/2008 Plant Closing 41  
+Sigma Stamping Auburn Hills 12/15/2008 Plant Closing 35  
+Sigma Stamping Auburn Hills 12/15/2008 Plant Closing 35  
+Flint Special Services Detroit 12/15/2008 Plant Closing 125  
+Means Industries Saginaw 12/17/2008 Mass Layoff 48  
+Meridian/Magnesium Products of America, Inc. Eaton Rapids 12/17/2008 Mass Layoff 160  
+Musashi Battle Creek 12/22/2008 Mass Layoff 55  
+Shape Corp. Grand Haven 12/22/2008 Mass Layoff 400  
+Checker Motors Corporation Kalamazoo 12/29/2008 Mass Layoff 150  
+Manpower Allegan 12/30/2008 Plant Closing 68  
+ 
+Notes:  
+ 
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,  
+but with a projected layoff of zero.  
+ 
+January 1 through December 31: 2008 2007 2006 2005 2004
+Number of notices received Y­T­D 138 113 102 77 84
+Number of layoffs indicated Y­T­D  23,253 22,520 9,683 11,428 10,853
+Company Name City Date Incident Number of  
+  Received Type Layoffs  
+     
+Office Depot Plymouth 1/5/2009 Plant Closing 115  
+Wolverine World Wide (Tannery) Rockford 1/8/2009 Plant Closing 73  
+Summit Polymers, Inc. Portage 1/8/2009 Plant Closing 215  
+Pittsburg Glass Works Evart 1/9/2009 Plant Closing 160  
+Steelcase (Grand Rapids Wood Plant) Caledonia 1/8/2009 Plant Closing 150  
+Steelcase (Kentwood Manufacturing) Complex) Kentwood 1/8/2009 Plant Closing 150  
+Cliffs Natural Resources Ishpeming 1/9/2009 Mass Layoff 72  
+Wellington­Almont, LLC Almont 1/12/2009 Plant Closing 108  
+Grede Foundries Kingsford 1/14/2009 Mass Layoff 148  
+Acument Global Technologies Fenton 1/16/2009 Plant Closing 105  
+Coca Cola Enterprises, Incorporated Auburn Hills 1/20/2009 Plant Closing 127  
+International Paper Howell 1/26/2009 Plant Closing 101  
+GM ­ Lansing Delta Township Lansing 1/26/2009 Mass Layoff 1,246  
+Dott Manufacturing Deckerville 1/29/2009 Plant Closing 170  
+Bridgewater Interiors, Inc. Lansing 1/30/2009 Mass Layoff 172  
+Asama Coldwater Manufacturing Coldwater 2/4/2009 Mass Layoff 45  
+Android Industries Lansing 2/2/2009 Mass Layoff 81  
+Ryder Lansing 2/2/2009 Mass Layoff 209  
+Visteon­ACH Monroe 2/2/2009 Mass Layoff 13  
+Bing Metals Assembly Detroit 2/4/2009 Plant Closing 66  
+Lenawee Stamping Corporation Tecumseh 2/5/2009 Mass Layoff 126  
+GM Powertrain Flint Engine South Flint 2/9/2009 Mass Layoff 190  
+Morgan Olson Sturgis 2/10/2009 Mass Layoff 176  
+FormTech Detroit 2/2/2009 Plant Closing 61  
+Enterprise Automotive Systems Saginaw 2/13/2009 Plant Closing 25  
+Enterprise Automotive Systems Plant 1 Saginaw 2/13/2009 Plant Closing 30  
+Enterprise Automotive Systems Warren 2/13/2009 Plant Closing 36  
+Enterprise Custom Products, LLC Warren 2/13/2009 Plant Closing 30  
+Nicholas Plastics LLC Allendale 2/17/2009 Plant Closing 103  
+AMETEK M&CT Division Clawson 2/17/2009 Mass Layoff 21  
+GM ­ Grand Blanc Weld Tool Center Grand Blanc 2/19/2009 Mass Layoff 170  
+Quality Spring TOGO Coldwater 2/20/2009 Mass Layoff 71  
+Yorozu Automotive Battle Creek 6/11/2009 Plant Closing 72  
+Invensys Controls Holland 2/25/2009 Plant Closing 150  
+ARAMARK Detroit 2/26/2009 Plant Closing 324  
+Duncan Aviation Battle Creek 2/26/2009 Mass Layoff 130  
+Red Spot Paint & Varnish Company Westland 2/26/2009 Mass Layoff 45  
+Rowe International Grand Rapids 2/27/2009 Plant Closing 96  
+Sappi Paper Muskegon 3/2/2009 Mass Layoff 236  
+Nisshinbo Automotive Corp. Sterling Heights 3/6/2009 Plant Closing 47  
+Michigan Casting Center Fruitport 3/6/2009 Mass Layoff 40  
+Cequent Performance Products Tekonsha 3/10/2009 Mass Layoff 50  
+Center Manufacturing Wayland 3/10/2009 Plant Closing 46  
+Penguin Inc. LLC Sturgis 3/13/2009 Mass Layoff 150  
+Call Center HR Jackson 3/16/2009 Plant Closing 5  
+Technicolor Video Services of Michigan Detroit 3/17/2009 Mass Layoff 563  
+Foamade Industries Auburn Hills 3/18/2009 Plant Closing    
+Foamade Industries Hillsdale 3/18/2009 Plant Closing    
+Foamade Industries Hillsdale 3/18/2009 Plant Closing    
+Valley Publishing Bay City 3/23/2009 Mass Layoff 63  
+Flint Journal Flint 3/23/2009 Mass Layoff 82  
+Android Industries, LLC Warren 3/23/2009 Plant Closing 102  
+American Axle ("Die Room") Detroit 3/24/2009 Plant Closing 35  
+Hydro Aluminum Adrian 3/31/2009 Plant Closing 141  
+Noble International Warren 4/3/2009 Plant Closing 400  
+Intra Corporation Westland 4/3/2009 Mass Layoff 56  
+Sun Microsystems Southfield 4/3/2009 Mass Layoff 38  
+NYX, Inc. Livonia 4/8/2009 Plant Closing 82  
+Observer/Eccentric Newspapers Detroit 4/13/2009 Plant Closing 44  
+Carlton Creek Ironworks Rothbury 4/13/2009 Mass Layoff 207  
+Country Fresh Flint 4/17/2009 Plant Closing 110  
+American Refractories Company White Cloud 4/20/2009 Mass Layoff 60  
+Noble International South Haven 4/22/2009 Plant Closing 300  
+Johnson Controls, Inc. ("Maplewood") Holland 4/22/2009 Plant Closing 55  
+Noble International Spring Lake 4/23/2009 Plant Closing 38  
+Sara Lee Marquette 4/23/2009 Plant Closing 80  
+Contech U.S., LLC Walled Lake 4/22/2009 Plant Closing    
+Checker Sedan Dearborn Heights 5/1/2009 Plant Closing    
+Commuter Express Dearborn Heights 5/1/2009 Plant Closing    
+Metaldyne Middleville 5/1/2009 Plant Closing 125  
+Michigan Waste Energy Detroit 5/4/2009 Plant Closing 150  
+Global Engine Manufacturing Alliance Dundee 5/4/2009 Plant Closing 257  
+Means Industries Saginaw 5/5/2009 Mass Layoff 68  
+Sur­Flo Plastics & Engineering Warren 5/5/2009 Mass Layoff 17  
+Sur­Flo Plastics & Engineering, Inc. Fraser 5/5/2009 Mass Layoff    
+Tyler Refrigeration Corp. Niles 5/8/2009 Plant Closing 520  
+CDG Management Lansing 5/8/2009 Plant Closing 74  
+Milsco Manufacturing Jackson 5/8/2009 Plant Closing 93  
+American Axle Three Rivers 5/11/2009 Mass Layoff 0  
+Penda Corporation Lapeer 5/14/2009 Plant Closing 143  
+The Wackenhut Corporation Livonia 5/14/2009 Mass Layoff 58  
+Integrated Metal Technologies Spring Lake 7/7/2009 Plant Closing 167  
+Plastic Trim International East Tawas 6/3/2009 Mass Layoff 120  
+Flint Special Services Pontiac 6/3/2009 Plant Closing    
+Hilton Hotels Corporation (Hilton Suites) Auburn Hills 6/4/2009 Plant Closing 64  
+GM ­ Flint Assembly Flint 6/8/2009 Plant Closing 396  
+Syncreon Brownstown 6/5/2009 Plant Closing 58  
+Southwest Airlines Co. Statewide 6/9/2009 Mass Layoff    
+Design Craftsmen, LLC Midland 6/9/2009 Mass Layoff 93  
+Android Industries Flint 6/10/2009 Mass Layoff 90  
+National Archive Publishing Co. Scio Township 6/10/2009 Mass Layoff 120  
+Sears Benton Harbor 6/10/2009 Plant Closing 83  
+Allied Systems, Ltd. Flint 6/11/2009 Plant Closing 125  
+Bharat Forge America Lansing 6/22/2009 Mass Layoff 106  
+Faurecia Automotive Seating, Inc. Auburn Hills 6/22/2009 Mass Layoff 187  
+Faurecia Automotive Seating, Inc. Shelby Township 6/22/2009 Plant Closing 111  
+Centerplate Auburn Hills 6/23/2009 Plant Closing 211  
+Allied Systems, Ltd. Pontiac 6/25/2009 Plant Closing 64  
+Visteon (ACH) Plymouth 6/25/2009 Mass Layoff 330  
+Allstate Grand Rapids 6/29/2009 Plant Closing 52  
+Contech Castings LLC Dowagiac 6/29/2009 Plant Closing 64  
+GM ­ Lake Orion Assembly Plant Lake Orion 6/1/2009 Mass Layoff 2,801  
+Wagon Automotive, Incorporated Wixom 7/7/2009 Plant Closing 66  
+Caraco Pharmaceutical Laboratories, Ltd Detroit 7/7/2009 Mass Layoff 280  
+Caraco Pharmaceutical Laboratories, Ltd Farmington Hills 7/7/2009 Mass Layoff 82  
+Basell USA Inc. Wilmington 7/7/2009 Mass Layoff 2  
+Serco Inc. Brownstown 7/8/2009 Plant Closing 98  
+World Alliance Financial Corp. Troy 7/10/2009 Plant Closing 62  
+Blue Care Network Lansing 7/17/2009 Plant Closing 98  
+Maple Manor Nursing Home Ontonagon 7/20/2009 Plant Closing 62  
+Inalfa Roof Systems Auburn Hills 7/22/2009 Mass Layoff 30  
+Chrome Craft Corporation Highland Park 8/3/2009 Plant Closing 64  
+Nachi Machining Technology Co. Macomb 8/3/2009 Plant Closing 55  
+Kmart Corp. Farmington 8/6/2009 Plant Closing 80  
+Kmart Corp. Troy 8/6/2009 Plant Closing 102  
+Kmart Corp Commerce Township 8/6/2009 Plant Closing 80  
+Lear Corp. Rochester Hills 8/10/2009 Plant Closing 22  
+Morley ­ Great Lakes Technology Center Flint 8/12/2009 Mass Layoff 100  
+Syncreon Automotive Riverview 8/17/2009 Plant Closing 30  
+Yale Lift­Tech Muskegon 8/17/2009 Plant Closing 269  
+Pro Logistics, Inc. Romulus 8/14/2009 Mass Layoff 0  
+NU­VU Menominee 8/18/2009 Mass Layoff 8  
+Ready Set Service, LLC. Elk Grove Village, IL 8/18/2009 Mass Layoff 96  
+Grede Foundries Vassar 8/24/2009 Plant Closing 163  
+Taminco Higher Amines, Inc. Riverview 8/31/2009 Plant Closing 80  
+Smurfit­Stone Container Corp. Ontonagon 8/31/2009 Plant Closing 150  
+Ameriprise Financial Detroit 9/3/2009 Mass Layoff 154  
+Propak Holland 10/2/2009 Plant Closing 90  
+Metavations, LLC Traverse City 10/2/2009 Plant Closing 122  
+Premier Manufacturing Support Services Lake Orion 10/2/2009 Plant Closing 60  
+FormTech Industries, LLC Fraser 10/9/2009 Plant Closing 97  
+Kmart #3662 Holland 10/8/2009 Plant Closing 76  
+Michigan Rubber Products Cadillac 10/9/2009 Plant Closing 22  
+Pilkington North America Clinton 10/23/2009 Plant Closing 130  
+Valenite LLC Madison Heights 10/28/2009 Mass Layoff 133  
+Veolia Transportation Detroit 11/10/2009 Plant Closing 132  
+Carson­Dellosa Publishing, LLC Walker 11/16/2009 Mass Layoff 66  
+Michigan Bell Telephone (AT&T) Dearborn 11/17/2009 Mass Layoff 76  
+Campbell's Marshall 11/17/2009 Mass Layoff 80  
+Bing Metals Group (Stamp & Assembly Operations) Detroit 11/12/2009 Plant Closing 360  
+AEES Automotive  ­ Engineered Plastic Components Mattawan 11/20/2009 Plant Closing 372  
+VisionIT Lansing 11/10/2009 Plant Closing 73  
+Big Boy Restaurants International LLC Warren 12/10/2009 Plant Closing 103  
+PHD Detroit Troy 12/14/2009 Plant Closing 50  
+Saturn Troy 12/14/2009 Plant Closing 66  
+Express Scripts Farmington Hills 12/2/2009 Plant Closing    
+Allied Systems, Ltd. Flint 12/14/2009 Plant Closing 81  
+Chrysler Financial (Customer Contact Center) Troy 12/18/2009 Plant Closing 250  
+Design Ware Kalamazoo 12/22/2009 Plant Closing 400  
+         
+Total Layoffs:   21,547  
+     
+Notes:  
+ 
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed, 
+but with a projected layoff of zero.  
+ 
+January 1 through December 31: 2009 2008 2007 2006 2005
+Number of notices received Y­T­D 164 141 113 102 77
+Number of layoffs indicated Y­T­D  21,547 22,968 22,520 9,863 11,428
+Macy's Waterford 1/6/2010 Plant Closing 130
+Syncreon Detroit 1/11/2010 Plant Closing 103
+Kalamazoo Gazzette Kalamazoo 1/11/2010 Plant Closing 105
+Spartan Stores, Inc. Plymouth 1/11/2010 Plant Closing 178
+Technicolor Video Services of Michigan Redford 1/4/2010 Mass Layoff 6
+Masonico LLC Fraser 1/14/2010 Plant Closing 176
+JC Penney Waterford 1/19/2010 Plant Closing 96
+Grand Traverse Stamping Traverse City 1/15/2010 Plant Closing 25
+Owens Illinois (Brockway­Glass Containers) Charlotte 1/28/2010 Plant Closing 137
+Steelcase ­ Wood Division Grand Rapids 2/1/2010 Mass Layoff 116
+Android Industries Flint 2/2/2010 Mass Layoff 138
+Butterball Farms Grand Rapids 2/19/2010 Mass Layoff 80
+Logistics Services, Inc. Flat Rock 2/23/2010 Mass Layoff 105
+PNC Bank Royal Oak 2/26/2010 Plant Closing 100
+City of Romulus Romulus 4/12/2010 Mass Layoff 67
+Covance Kalamazoo 4/14/2010 Plant Closing 63
+Means Industries Saginaw 4/5/2010 Mass Layoff 64
+American Community Mutual Insurance Co. Livonia 4/26/2010 Mass Layoff 101
+CEVA Logistics, Incorporated Brownstown 5/3/2010 Plant Closing 225
+JPMorgan Chase & Co. Troy 5/4/2010 Plant Closing 276
+HAVI Logistics North America, LLC Livonia 5/18/2010 Plant Closing 23
+Nash Finch Company Bridgeport 5/26/2010 Plant Closing 84
+Whirlpool Corp. Benton Harbor 6/2/2010 Plant Closing 216
+National Precast, Inc. Shelby Township 6/9/2010 Plant Closing 35
+National Precast, Inc. Roseville 6/9/2010 Plant Closing 69
+Michigan Waste Energy Detroit 6/10/2010 Plant Closing 150
+Excel Inc. Monroe 6/23/2010 Plant Closing 69
+SMART Detroit 7/19/2010 Mass Layoff 0
+ProBuild Marne 7/20/2010 Plant Closing 65
+Visteon Corp. Milan 7/27/2010 Mass Layoff 0
+Omni Detroit at River Place Detroit 8/12/2010 Plant Closing 76
+Spartan Motors/Road Rescue Charlotte 8/9/2010 Mass Layoff 13
+United Solar Ovonic LLC Auburn Hills 8/11/2010 Mass Layoff 145
+GM Powertrain Flint North Flint 8/31/2010 Mass Layoff 330
+Spirit Airlines, Incorporated Romulus 9/9/2010 Mass Layoff 64
+Patriot Antenna (Cobham) Albion 9/9/2010 Plant Closing 70
+Men's Wearhouse Bay City 9/13/2010 Plant Closing 80
+Chrysler Group LLC Trenton 9/17/2010 Plant Closing 900
+Continental Plastics Company Chesterfield Town 9/21/2010 Plant Closing 0
+St. John's Providence Health System Senior Community Detroit 11/4/2010 Plant Closing 0
+Janesville Accoustics Grand Rapids 11/8/2010 Plant Closing 0
+Doctor's Hospital of Michigan Pontiac 11/8/2010 Plant Closing 0
+Target Store Waterford 11/10/2010 Plant Closing 80
+CompX Durislide Byron Center 12/7/2010 Mass Layoff 100
+Total Layoffs: 5,502
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+January 1 through December 31: 2010 2009 2008 2007 2006
+Number of notices received Y­T­D 49 165 138 113 101
+Number of layoffs indicated Y­T­D  5,502 20,976 22,612 22,520 9,863
+Med­Tech Ambulance Corporation White Pigeon 1/6/2011 Plant Closing 70
+Continental Plastics Benzonia 1/18/2011 Plant Closing 73
+Continental Plastics China Township 1/18/2011 Plant Closing 85
+Continental Plastics Fraser 1/18/2011 Plant Closing 85
+Continental Plastics Chesterfield 1/18/2011 Plant Closing 85
+J.C. Penny Call Center Wyoming 1/25/2011 Plant Closing 365
+Modineer Niles 1/27/2011 Mass Layoff 52
+Consumer Services Jackson 2/2/2011 Plant Closing 23
+Home Depot Holland 2/10/2011 Plant Closing 79
+Henkel Corporation Port Huron 2/22/2011 Plant Closing 65
+Detroit Public Library Detroit 2/25/2011 Mass Layoff 70
+Micro Focus, Inc. Troy 3/8/2011 Mass Layoff 80
+International Automotive Components Warren 3/28/2011 Plant Closing 65
+Sodexo, Inc. Detroit 5/16/2011 Mass Layoff 150
+Manheim Metro Detroit Flat Rock 5/24/2011 Plant Closing 268
+American Axle Detroit 6/30/2011 Plant Closing 261
+AT & T Customer Care Center Saginaw 7/26/2011 Plant Closing 58
+Manistique Papers Manistique 8/5/2011 Mass Layoff 20
+Durcon, Inc. Canton 8/9/2011 Plant Closing 84
+Randstad Ann Arbor 8/11/2011 Mass Layoff 158
+Northlake Correctional Facility Baldwin 9/6/2011 Mass Layoff 146
+Schneider Logistics Grand Blanc 9/19/2011 Mass Layoff 82
+Mesaba Airlines Romulus 10/5/2011 Plant Closing 427
+Mesaba Airlines Detroit 10/5/2011 Plant Closing 103
+SMART Inkster 10/12/2011 Mass Layoff 35
+SMART Troy 10/12/2011 Mass Layoff 46
+SMART Clinton Twp. 10/12/2011 Mass Layoff 43
+Lowe's Home Centers, Inc. Ionia 10/17/2011 Plant Closing 89
+Burtek, Inc. Chesterfield 10/20/2011 Plant Closing 214
+Booth Newspapers Grand Rapids 11/7/2011 Mass Layoff 55
+Tri­County Beverage Co. Dearborn 11/3/2011 Plant Closing 124
+Bay City Times Bay City 11/7/2011 Mass Layoff 71
+Valley Publishing Bay City 11/7/2011 Mass Layoff 20
+The Saginaw News Saginaw 11/7/2011 Mass Layoff 12
+The Flint Journal Flint 11/7/2011 Plant Closing 91
+Kalamazoo Gazette Kalamazoo 11/7/2011 Mass Layoff 77
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.
+January 1 through December 31: 2011 2010 2009 2,008 2007
+Number of notices received Y­T­D 40 50 165 140 113
+Number of layoffs indicated Y­T­D  4,202 5,614 20,976 22,730 22,520
+Henry Ford Macomb Campus Warren 1/18/2012 Plant Closing 30
+Americare Convalescent Center Detroit 1/23/2012 Plant Closing 86
+Sodexo Mount Clemens 1/30/2012 Plant Closing 20
+Schneider Logisitics Statewide 1/31/2012 Mass Layoff 114
+Republic Airways Grand Rapids 2/13/2012 Mass Layoff 52
+Acord Leasing, LLC Auburn Hills 2/15/2012 Plant Closing 187
+Pamida Ontonagon 3/2/2012 Plant Closing 14
+Pamida Sparta 3/2/2012 Plant Closing 10
+Verizon Wireless Southfield 3/9/2012 Plant Closing 499
+Starcom Detroit 3/12/2012 Plant Closing 75
+Marble and Granite Works, LLC Canton 4/2/2012 Plant Closing 43
+The Great Indoors ­ Store #1910 Novi 4/19/2012 Plant Closing 81
+Sodexo Detroit 4/20/2012 Plant Closing 150
+Sodexo Novi 4/27/2012 Plant Closing 1
+Powerlink Detroit 4/26/2012 Plant Closing 0
+ARAMARK Healthcare Detroit 5/9/2012 Plant Closing 26
+Lipari Foods, Inc. Warren 5/10/2012 Plant Closing 83
+GMA Cover Corp. Port Huron 5/17/2012 Plant Closing 260
+Auto Warehouse Company Woodhaven 6/22/2012 Mass Layoff 96
+Southeastern Michigan Health Association (Detroit 6/28/2012 Mass Layoff 102
+International Paper Kalamazoo 7/20/2012 Plant Closing 77
+Richfield Management and Landfill 7/24/2012 Plant Closing 0
+Caparo Automotive Components Novi 8/2/2012 Plant Closing 260
+Dean Foods/Liberty Dairy Evart 8/2/2012 Mass Layoff 98
+Alken­Ziegler Taylor 8/6/2012 Plant Closing 106
+Regional Elite Airline Services Freeland 8/22/2012 Plant Closing 31
+Hyatt Regency Dearborn 8/23/2012 Plant Closing 322
+Automotive Component Carrier, Inc. Detroit 9/10/2012 Plant Closing 102
+American Airlines Romulus 9/18/2012 Mass Layoff 53
+Regional Elite Airline Services Romulus 10/3/2012 Plant Closing 0
+Regional Elite Airline Services Traverse City 10/10/2012 Plant Closing 35
+Kmart Woodhaven 10/12/2012 Plant Closing 8
+National Airlines Ypsilanti 10/12/2012 Plant Closing 50
+Knight Facilities Management, Inc. Warren 10/22/2012 Plant Closing 277
+Awrey Bakeries, LLC Livonia 11/28/2012 Plant Closing 203
+Hostess Brands, Inc. Cadillac 11/20/2012 Plant Closing 11
+Hostess Brands, Inc. Lansing 11/20/2012 Plant Closing 13
+Hostess Brands, Inc. Livonia 11/20/2012 Plant Closing 46
+Hostess Brands, Inc. Marysville 11/20/2012 Plant Closing 22
+Hostess Brands, Inc. Saginaw 11/20/2012 Plant Closing 18
+Hostess Brands, Inc. Troy 11/20/2012 Plant Closing 58
+Total Layoffs: 3,859
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.  Layoff figures are subject to change as new information becomes available.
+January 1 through December 31: 2012 2011 2010 2009 2008
+Number of notices received Y­T­D 46 44 50 165 140
+Number of layoffs indicated Y­T­D  3,859 4,479 5,614 20,976 22,730
+Commerce Corporation Grand Rapids 1/4/2013 Plant Closing 267
+American Suzuki Motor Corporation Wixom 1/11/2013 Plant Closing 4
+YWCA of Western Wayne County 9 locations 1/25/2013 Plant Closing 134
+Stefanini, Inc. Allen Park 2/1/2013 Plant Closing 107
+The Manor Jonesville 2/5/2013 Plant Closing 140
+GM Delphi Flint East Flint 2/6/2013 Plant Closing 287
+Journal Register Company Statewide 2/19/2013 Plant Closing 844
+Bolton Conductive Systems Walled Lake 2/20/2013 Plant Closing 90
+Entertainment Publications, LLC Troy 3/12/2013 Plant Closing 225
+AAR Mobility Systems Cadillac 4/2/2013 Mass Layoff 130
+Logistics Services, Inc. Flat Rock 4/8/2013 Plant Closing 0
+Tower Defense & Aerospace Detroit 4/24/2013 Plant Closing 190
+Community Development Institute Head Start County­wide 4/25/2013 Plant Closing 70
+Cranbrook Geriatric Village Detroit 5/3/2013 Plant Closing 82
+Elmwood Geriatric Village Detroit 5/3/2013 Plant Closing 98
+Pall Life Sciences Corporation Ann Arbor 5/10/2013 Plant Closing 55
+GM ­ Romulus Engine Plant Romulus 6/7/2013 Plant Closing 569
+Dana Corporation Rochester Hills 6/10/2013 Plant Closing 37
+Avi Foodsystems, Inc. Detroit 6/12/2013 Plant Closing 183
+Sodexo Detroit 6/18/2013 Plant Closing 0
+Powerlink Detroit 6/18/2013 Plant Closing 185
+Terumo Heart, Inc. Ann Arbor 7/12/2013 Mass Layoff 68
+Flagstar Bank Troy 7/18/2013 Plant Closing 324
+OneWest Bank Kalmazoo 6/17/2013 Plant Closing 168
+Asset Acceptance Corporation Warren 8/2/2013 Mass Layoff 73
+Metavation Vassar 8/13/2013 Plant Closing 113
+Benteler Automotive Grand Rapids 8/14/2013 Plant Closing 200
+Sprint Farmington Hills 8/26/2013 Mass Layoff 56
+FirstMerit Bank Flint 8/30/2013 Mass Layoff 135
+Inergy Automotive Milan 9/23/2013 Plant Closing 104
+JP Morgan Chase Troy 9/24/2013 Plant Closing 372
+MEDLAB Farmington Hills 10/28/2013 Plant Closing
+ReCellular, Inc. Dexter 11/1/2013 Plant Closing 94
+VGs Shelby Township 11/5/2013 Plant Closing
+VGs Burton 11/5/2013 Plant Closing
+Scherer & Trier Saline 11/8/2013 Mass Layoff
+First National Bank West Bloomfield 12/27/2013 Mass Layoff 18
+Total Layoffs: 6,309
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+January 1 through December 31: 2013 2012 2011 2,010 2009
+Number of notices received Y­T­D 42 49 44 50 165
+Number of layoffs indicated Y­T­D  6,309 4,103 4,479 5,614 20,976
+Technicolor Videocassette of MI Livonia 1/13/2014 Mass Layoff 200
+Teleperformance Ann Arbor 1/15/2014 Plant Closing 430
+ConAgra Foods Wyoming 1/28/2014 Plant Closing 261
+Syncreon US,. Inc. Sterling Heights 1/30/2014 Plant Closing 94
+Charles River Laboratories Portage 2/7/2014 Plant Closing 84
+DAL Global Service Romulus 2/12/2014 Mass Layoff
+Consolidated Transport Services/Tandem Eastern Gaylord 3/6/2014 Plant Closing 20
+Lakeland Specialty Hospital Berrien Center 3/11/2014 Plant Closing 190
+Logistics Services, Inc. Flat Rock 3/10/2014 Plant Closing 250
+Associated Spring Saline 3/20/2014 Plant Closing 47
+Enovate Medical Canton 4/8/2014 Plant Closing 145
+Pro Logistics Romulus 4/10/2014 Mass Layoff 40
+St. James Leasing, Inc. Romulus 4/10/2014 Mass Layoff 40
+LSJ Marketing Troy 4/10/2014 Plant Closing 115
+Harvard Drug Group Livonia 4/11/2014 Plant Closing 55
+Sodexo West Bloomfield 4/22/2014 Plant Closing 77
+Gannett Publishing Services Lansing 4/29/2014 Plant Closing 103
+Inalfa Roof Systems Lake Orion 4/30/2014 Plant Closing 14
+Caraco Pharmaceuticals Laboratories Detroit 5/1/2014 Plant Closing 179
+Sodexo Detroit 5/6/2014 Plant Closing 359
+CSC Auburn Hills 5/12/2014 Plant Closing 56
+Head Start Detroit 5/16/2014 Plant Closing 287
+HMS Host Detroit 6/13/2014 Plant Closing 50
+Sodexo Birmingham 6/16/2014 Mass Layoff 30
+Old National Bancorp Tecumseh 6/17/2014 Mass Layoff 80
+Sassy, Inc. Kentwood 6/20/2014 Plant Closing 72
+Scherer & Trier Saline 7/1/2014 Plant Closing 35
+Penske MSC Riverview 7/7/2014 Plant Closing 183
+Kmart Detroit 7/10/2014 Plant Closing 15
+Kmart Southgate 7/10/2014 Plant Closing 15
+Concessions International Detroit 7/21/2014 Plant Closing 83
+United Airlines Airport Operations DIV Detroit 8/4/2014 Mass Layoff 109
+Sodexo Benton Harbor 9/11/2014 Plant Closing 20
+Staples Southfield 9/18/2014 Plant Closing 67
+IPH Detroit 9/19/2014 Plant Closing 135
+Kmart Port Huron 9/24/2014 Plant Closing 19
+Bridgewater Interiors Detroit 9/23/2014 Plant Closing 249
+Starr Commonwealth Albion 11/5/2014 Plant Closing 188
+Adoba Hotel Dearborn 11/3/2014 Plant Closing 0
+American Laser Skincare Farmington Hills 11/19/2014 Plant Closing 94
+MagnumCare Albion 12/4/2014 Plant Closing 70
+Southwest Regional Rehabilitation Center Battle Creek 12/15/2014 Plant Closing 60
+Comprehensive Logistics Lansing 12/15/2014 Mass Layoff 58
+Total Layoffs: 5,722
+Notes:
+Incidents that have been rescinded or otherwise changed to have no layoffs are still listed,
+but with a projected layoff of zero.  Layoff figures are subject to change as new information becomes available.
+January 1 through December 31: 2014 2013 2012 2011 2010
+Number of notices received Y­T­D 48 42 49 44 50
+Number of layoffs indicated Y­T­D  5,722 6,560 4,103 4,479 5,614
+Apothecary Products St. Charles 1/5/2015 Plant Closing 68
+Technicolor Video Cassette of Michigan Livonia 1/9/2015 Mass Layoff 162
+Macy's Southfield 1/9/2015 Plant Closing 142
+Comprehensive Logistics Lansing 1/21/2015 Plant Closing 7
+Meijer Store #28 Flint 2/25/2015 Plant Closing 248
+Asset Acceptance LLC Warren 2/26/2015 Mass Layoff 125
+FTE Automotive USA Auburn Hills 10/20/2015 Plant Closing 65
+Reliance One, Inc. Auburn Hills 3/18/2015 Mass Layoff 50
+Compass Airlines Romulus 4/3/2015 Mass Layoff 112
+Grant Associates Detroit 4/3/2015 Mass Layoff 72
+Ford Motor Co. ­ Michigan Assembly Wayne 4/30/2015 Mass Layoff 700
+Hiller Incorporated Statewide 5/1/2015 Plant Closing 846
+Visteon Holland Techincal Center Holland 5/6/2015 Plant Closing 151
+Bortz Health Care Statewide 5/5/2015 Plant Closing 68
+Georgia Pacific ­ Dixie Consumer Products Parchment 5/11/2015 Plant Closing 58
+Cliffs Natural Resources Ishpeming 4/30/2015 Mass Layoff 7
+De­Sta­Co Auburn Hills 7/16/2015 Plant Closing 57
+Presbyterian Villages Redford 8/4/2015 Plant Closing
+SodexoMAGIC, Inc. Saginaw 8/19/2015 Mass Layoff
+Total Linen Service Detroit 8/31/2015 Mass Layoff 63
+Stant USA Corporation Romeo 9/4/2015 Plant Closing 175
+Leon Interiors, Inc. Wyoming 9/10/2015 Plant Closing 123
+Powerlink Warren 9/11/2015 Mass Layoff 245
+Su­Dan Corporation Orion Township 9/28/2015 Plant Closing 131
+Aramark Auburn Hills 9/30/2015 Mass Layoff 129
+Parker Hannifin Corporation Oxford 10/19/2015 Plant Closing 65
+GM­Orion Assembly Lake Orion 10/23/2015 Mass Layoff 538
+GM ­ Orion Assembly (Subsystems) Lake Orion 10/23/2015 Mass Layoff 119
+Astadia Center Line 10/27/2015 Plant Closing 98
+Morley ­ Honda Research Division Saginaw 11/3/2015 Plant Closing
+Automotive Components Carrier Inc Flint 11/10/2015 Mass Layoff 26
+Automotive Components Carrier Inc Lansing 11/10/2015 Mass Layoff
+Automotive Components Carrier Inc. Saginaw 11/10/2015 Mass Layoff 6
+Total Layoffs: 4,656
+Number of notices received Y­T­D 33 48 42 49 44
+Number of layoffs indicated Y­T­DÂ  4,656 5,722 6,560 4,103 4,479
