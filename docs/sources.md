@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 37 of America's 56 states and territories.
+There are currently scrapers for 38 of America's 56 states and territories.
 
 | State | Docs | Authors | Tags |
 | :---- | :--: | :------ | :--- |
@@ -21,6 +21,7 @@ There are currently scrapers for 37 of America's 56 states and territories.
 |[Louisiana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/la.py)||[chriszs](https://github.com/chriszs)|html, pdf|
 |[Maine](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/me.py)|[📃](scrapers/me.md)|[zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Maryland](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/md.py)|[📃](scrapers/md.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
+|[Michigan](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mi.py)||[anikasikka](https://github.com/anikasikka)|html, pdf|
 |[Missouri](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mo.py)|[📃](scrapers/mo.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Montana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mt.py)||[ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, html|
 |[Nebraska](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ne.py)||[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
@@ -45,13 +46,12 @@ There are currently scrapers for 37 of America's 56 states and territories.
 
 ## To do
 
-These 19 areas need a scraper:
+These 18 areas need a scraper:
 
 - Arkansas
 - Colorado
 - Hawaii
 - Massachusetts
-- Michigan
 - Minnesota
 - Mississippi
 - Nevada
