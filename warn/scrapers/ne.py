@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -29,11 +28,31 @@ def scrape(
     # Open the cache
     cache = Cache(cache_dir)
 
-    current_year = datetime.now().year
-    year_range = range(2010, current_year + 1)
+    # Get data from active page
+    active_url = "https://dol.nebraska.gov/ReemploymentServices/LayoffServices/LayoffsAndDownsizingWARN"
+    active_r = utils.get_url(active_url)
+    active_html = active_r.text
+    cache.write("ne/active.html", active_html)
 
-    # Scrape rows
+    soup = BeautifulSoup(active_html, "html5lib")
+    table_list = soup.find_all("table")
+    assert len(table_list) == 1
+
     output_rows = []
+    for row in table_list[0].find_all("tr")[1:]:
+        cell_list = row.find_all("td")
+        d = {
+            "Date": cell_list[0].text.strip(),
+            "Company": cell_list[1].text.strip(),
+            "Jobs Affected": cell_list[2].text.strip(),
+            "Location": cell_list[3].text.strip(),
+        }
+        output_rows.append(d)
+
+    # Get archived data
+    year_range = range(2010, 2020)
+
+    # Scrape archived rows
     for year in year_range:
         # Get WARN page
         warn_url = (
@@ -42,7 +61,7 @@ def scrape(
         warn_key = f"ne/warn-{year}.html"
 
         # Read from cache if available and not this year or the year before
-        if cache.exists(warn_key) and year < current_year - 1:
+        if cache.exists(warn_key):
             warn_html = cache.read(warn_key)
         else:
             warn_r = utils.get_url(warn_url)
@@ -61,7 +80,7 @@ def scrape(
         layoff_key = f"ne/layoff-{year}.html"
 
         # Read from cache if available and not this year or the year before
-        if cache.exists(layoff_key) and year < current_year - 1:
+        if cache.exists(layoff_key):
             layoff_html = cache.read(layoff_key)
         else:
             page = utils.get_url(layoff_url)

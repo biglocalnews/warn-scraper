@@ -22,6 +22,7 @@ pre-commit = "*"
 sphinxcontrib-napoleon = "*"
 types-requests = "*"
 mypy = "*"
+typing-extensions = "*"
 
 [packages]
 bs4 = "*"
@@ -31,9 +32,10 @@ openpyxl = "*"
 pdfplumber = "*"
 tenacity = "*"
 click = "*"
+xlrd = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true

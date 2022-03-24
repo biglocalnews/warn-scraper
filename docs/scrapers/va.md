@@ -1,4 +1,8 @@
-## Virgina
+---
+orphan: true
+---
+
+# Virgina
 
 ### July 20, 2021
 Created a ticket to contact VA about some ambiguous and confusing fields. Frankly they could've done a better job data vetting, but I guess that's what we're here for.

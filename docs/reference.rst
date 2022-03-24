@@ -45,7 +45,43 @@ The `Cache` class is used to save the raw HTML, PDFs and CSVs files our scrapers
 Utilities
 #########
 
-The [utils](https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py) module contains a variety of variables and functions used by our scrapers.
+The `utils <https://github.com/biglocalnews/warn-scraper/blob/main/warn/utils.py>`_ module contains a variety of variables and functions used by our scrapers.
 
 .. automodule:: warn.utils
     :members:
+
+
+Research
+########
+
+CRS
+---
+
+A 2013 summary by the Congressional Research Service
+
+.. raw:: html
+
+    <iframe
+      src="https://embed.documentcloud.org/documents/21403574-crs-report-on-the-warn-act/?embed=1&amp;responsive=1&amp;title=1"
+      title="CRS report on the WARN Act (Hosted by DocumentCloud)"
+      width="700"
+      height="905"
+      style="border: 1px solid #aaa; width: 100%; height: 800px; height: calc(100vh - 100px);"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
+    ></iframe>
+
+GAO
+---
+
+A 2003 audit by the Government Accountability Office
+
+.. raw:: html
+
+    <iframe
+      src="https://embed.documentcloud.org/documents/21403760-gao-audit-the-worker-adjustment-and-retraining-notification-act/?embed=1&amp;responsive=1&amp;title=1"
+      title="GAO Audit: &quot;THE WORKER ADJUSTMENT AND RETRAINING NOTIFICATION ACT&quot; (Hosted by DocumentCloud)"
+      width="700"
+      height="905"
+      style="border: 1px solid #aaa; width: 100%; height: 800px; height: calc(100vh - 100px);"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
+    ></iframe>

@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # America's Job Center
 
 - [Overview](#overview)

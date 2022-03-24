@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Colorado
 
 WARN site: https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list
