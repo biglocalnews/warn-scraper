@@ -47,13 +47,16 @@ def scrape(
     link_list = []
     for link in list_soup.find_all("a"):
         # Grab the URL
-        relative_url = link.attrs.get("href", "").strip()
+        href_url = link.attrs.get("href", "").strip()
 
         # If it's a WARN link ...
-        if re.search(r"warn[-_]?report", relative_url, re.I):
+        if re.search(r"warn[-_]?report", href_url, re.I):
 
             # Build it up
-            full_url = f"{base_url}/{relative_url}"
+            if href_url.startswith("/"):
+                full_url = f"{base_url}/{href_url}"
+            else:
+                full_url = href_url
 
             # Add it to the list
             link_list.append(full_url)
@@ -62,6 +65,7 @@ def scrape(
     file_list = []
     for link in link_list:
         file_name = link.replace("https://edd.ca.gov/Jobs_and_Training/warn/", "")
+        print([link, file_name])
         file_path = cache.download(f"ca/{file_name}", link)
         file_list.append(file_path)
 
@@ -97,6 +101,8 @@ def scrape(
 
 
 def _extract_excel_data(wb_path):
+    """Parse data from the provided Excel file."""
+    logger.debug(f"Reading in {wb_path}")
     wb = load_workbook(filename=wb_path)
     # Get the only worksheet
     ws = wb.worksheets[0]
