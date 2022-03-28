@@ -56,7 +56,7 @@ def scrape(
 
             # Build it up
             if href_url.startswith("/"):
-                full_url = f"{base_url}/{href_url}"
+                full_url = f"https://edd.ca.gov{href_url}"
             else:
                 full_url = href_url
 
@@ -64,7 +64,6 @@ def scrape(
             link_list.append(full_url)
 
     # Download all the data files
-    print(link_list)
     file_list = []
     for link in link_list:
         file_name = os.path.basename(urlparse(link).path)
