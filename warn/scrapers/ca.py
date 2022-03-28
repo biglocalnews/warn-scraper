@@ -1,6 +1,8 @@
 import logging
+import os
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -62,10 +64,10 @@ def scrape(
             link_list.append(full_url)
 
     # Download all the data files
+    print(link_list)
     file_list = []
     for link in link_list:
-        file_name = link.replace("https://edd.ca.gov/Jobs_and_Training/warn/", "")
-        print([link, file_name])
+        file_name = os.path.basename(urlparse(link).path)
         file_path = cache.download(f"ca/{file_name}", link)
         file_list.append(file_path)
 
