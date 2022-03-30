@@ -90,11 +90,13 @@ class TallyCommand(distutils.cmd.Command):
                 module = import_module(f"warn.scrapers.{abbr}")
                 state["authors"] = sorted(module.__authors__)
                 state["tags"] = sorted(module.__tags__)
+                state["source"] = module.__source__
                 haves.append(state)
             else:
                 state["has_docs"] = False
                 state["authors"] = None
                 state["tags"] = None
+                state["source"] = None
                 have_nots.append(state)
         print(f"{len(haves)} states and territories have a scraper")
         print(f"{len(have_nots)} states and territories do not have a scraper")
