@@ -11,6 +11,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "District of Columbia Department of Employment Services",
+    "url": f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{datetime.today().year}",
+}
 
 logger = logging.getLogger(__name__)
 

@@ -6,6 +6,10 @@ from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["jobcenter"]
+__source__ = {
+    "name": "Oklahoma Office of Workforces Development",
+    "url": "https://okjobmatch.com/search/warn_lookups/new",
+}
 
 
 def scrape(

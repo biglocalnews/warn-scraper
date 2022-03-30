@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["historical", "excel"]
+__source__ = {
+    "name": "New York Department of Labor",
+    "url": "https://dol.ny.gov/warn-notices",
+}
 
 logger = logging.getLogger(__name__)
 

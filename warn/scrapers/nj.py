@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "palewire"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "New Jersey Department of Labor and Workforce Development",
+    "url": "https://www.nj.gov/labor/employer-services/warn/",
+}
 
 logger = logging.getLogger(__name__)
 

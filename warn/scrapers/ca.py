@@ -13,6 +13,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html", "pdf", "excel"]
+__source__ = {
+    "name": "California Employment Development Department",
+    "url": "https://edd.ca.gov/en/Jobs_and_Training/Layoff_Services_WARN",
+}
 
 logger = logging.getLogger(__name__)
 

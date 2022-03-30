@@ -13,6 +13,10 @@ __authors__ = [
 __tags__ = [
     "excel",
 ]
+__source__ = {
+    "name": "Kentucky Career Center",
+    "url": "https://kcc.ky.gov/employer/Pages/Business-Downsizing-Assistance---WARN.aspx",
+}
 
 
 def scrape(
