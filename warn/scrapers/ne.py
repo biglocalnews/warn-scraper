@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Nebraska Department of Labor",
+    "url": "https://dol.nebraska.gov/ReemploymentServices/LayoffServices/LayoffsAndDownsizingWARN",
+}
 
 logger = logging.getLogger(__name__)
 

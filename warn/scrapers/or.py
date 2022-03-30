@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["historical", "excel"]
+__source__ = {
+    "name": "Oregon Higher Education Coordinating Commission",
+    "url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+}
 
 logger = logging.getLogger(__name__)
 

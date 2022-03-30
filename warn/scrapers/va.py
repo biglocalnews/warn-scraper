@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html", "csv"]
+__source__ = {
+    "name": "Virginia Employment Commission",
+    "url": "https://www.vec.virginia.gov/warn-notices",
+}
 
 logger = logging.getLogger(__name__)
 

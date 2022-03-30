@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["pdf"]
+__source__ = {
+    "name": "Idaho Department of Labor",
+    "url": "https://www.labor.idaho.gov/dnn/Businesses/Layoff-Assistance#2",
+}
 
 logger = logging.getLogger(__name__)
 

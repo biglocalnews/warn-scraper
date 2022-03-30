@@ -9,6 +9,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Georgia Department of Labor",
+    "url": "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
+}
 
 
 def scrape(

@@ -6,6 +6,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["html", "excel"]
+__source__ = {
+    "name": "Illinois Department of Commerce and Economic Opportunity",
+    "url": "https://www2.illinois.gov/dceo/WorkforceDevelopment/warn/Pages/default.aspx",
+}
 
 logger = logging.getLogger(__name__)
 

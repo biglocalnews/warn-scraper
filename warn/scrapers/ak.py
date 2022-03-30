@@ -9,6 +9,10 @@ __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = [
     "html",
 ]
+__source__ = {
+    "name": "Alaska Department of Labor and Workforce Development",
+    "url": "https://jobs.alaska.gov/RR/WARN_notices.htm",
+}
 
 
 def scrape(

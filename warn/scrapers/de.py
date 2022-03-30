@@ -6,6 +6,10 @@ from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["jobcenter"]
+__source__ = {
+    "name": "Delaware Department of Labor",
+    "url": "https://joblink.delaware.gov/search/warn_lookups/new",
+}
 
 
 def scrape(

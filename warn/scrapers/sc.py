@@ -13,6 +13,10 @@ __tags__ = [
     "html",
     "pdf",
 ]
+__source__ = {
+    "name": "South Carolina Department of Employment and Workforce",
+    "url": "https://scworks.org/employer/employer-programs/at-risk-of-closing/layoff-notification-reports",
+}
 
 
 def scrape(

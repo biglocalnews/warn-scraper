@@ -12,6 +12,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["html", "pdf"]
+__source__ = {
+    "name": "Louisiana Workforce Commission",
+    "url": "https://www.laworks.net/Downloads/Downloads_WFD.asp",
+}
 
 logger = logging.getLogger(__name__)
 
