@@ -143,9 +143,15 @@ def _get_historical_pdf_data(cache):
     )
 
     # Fetch the given file from its URL or the cache, return the local path
-    def download(url):
+    def get_file(url):
         filename = url.split("/")[-1]
-        return cache.download(f"ny/{filename}", url)
+        cache_key = f"ny/{filename}"
+        if cache.exists(cache_key):
+            logger.debug(f"Fetching {filename} from cache")
+            return cache.path / cache_key
+        else:
+            logger.debug(f"Downloading {filename}")
+            return cache.download(cache_key, url)
 
     # Normalize the whitespace (esp. newlines) in a list of strings
     def clean_row(strings):
@@ -177,9 +183,8 @@ def _get_historical_pdf_data(cache):
         with pdfplumber.open(path) as pdf:
             return list(gen_rows_from_pdf(pdf))
 
-    paths = list(map(download, urls))
-    parsed = [y for x in map(parse, paths) for y in x]
-    return parsed
+    paths = list(map(get_file, urls))
+    return [y for x in map(parse, paths) for y in x]
 
 
 if __name__ == "__main__":
