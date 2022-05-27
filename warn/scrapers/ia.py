@@ -41,6 +41,8 @@ def scrape(
     # Parse out the Excel link
     soup = BeautifulSoup(html, "html.parser")
     excel_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
+    if not excel_url.startswith("http"):
+        excel_url = "https://www.iowaworkforcedevelopment.gov" + excel_url
 
     # Download the Excel file
     excel_path = cache.download("ia/source.xlsx", excel_url)
