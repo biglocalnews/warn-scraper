@@ -133,8 +133,8 @@ def _extract_excel_data(wb_path):
             "effective_date": _convert_date(row[4].value),
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
-            "num_employees": row[9].value,
-            "address": row[11].value.strip(),
+            "num_employees": row[10].value,
+            "address": row[12].value.strip(),
             "source_file": str(wb_path).split("/")[-1],
         }
         payload.append(data)
