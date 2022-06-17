@@ -13,6 +13,10 @@ __authors__ = [
     "stucka",
 ]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Connecticut Department of Labor",
+    "url": "https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warnreports.htm",
+}
 
 logger = logging.getLogger(__name__)
 

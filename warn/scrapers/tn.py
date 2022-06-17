@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["anikasikka"]
 __tags__ = ["html", "pdf"]
+__source__ = {
+    "name": "Tennessee Department of Labor and Workforce Development",
+    "url": "https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html",
+}
 
 
 def scrape(

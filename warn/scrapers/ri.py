@@ -9,6 +9,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "chriszs"]
 __tags__ = ["excel"]
+__source__ = {
+    "name": "Rhode Island Department of Labor and Training",
+    "url": "https://dlt.ri.gov/employers/worker-adjustment-and-retraining-notification-warn",
+}
 
 logger = logging.getLogger(__name__)
 

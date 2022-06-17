@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "ydoc5212"]
 __tags__ = ["html", "excel"]
+__source__ = {
+    "name": "Montana Department of Labor and Industry",
+    "url": "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page",
+}
 
 
 def scrape(

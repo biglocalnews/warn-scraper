@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Indiana Department of Workforce Development",
+    "url": "https://www.in.gov/dwd/2567.htm",
+}
 
 logger = logging.getLogger(__name__)
 

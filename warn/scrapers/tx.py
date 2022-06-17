@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["Dilcia19", "ydoc5212"]
 __tags__ = ["html", "excel", "historical"]
+__source__ = {
+    "name": "Texas Workforce Commission",
+    "url": "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices",
+}
 
 logger = logging.getLogger(__name__)
 

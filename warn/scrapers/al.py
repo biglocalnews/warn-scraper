@@ -10,6 +10,10 @@ __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = [
     "html",
 ]
+__source__ = {
+    "name": "Alabama Department of Commerce",
+    "url": "https://www.madeinalabama.com/warn-list/",
+}
 
 logger = logging.getLogger(__name__)
 

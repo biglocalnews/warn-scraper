@@ -1,4 +1,5 @@
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -9,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Georgia Department of Labor",
+    "url": "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
+}
 
 
 def scrape(
@@ -64,6 +69,9 @@ def scrape(
         # Concatenate the rows
         output_rows.extend(new_rows)
 
+        # Sleep a bit
+        time.sleep(2)
+
     # Write out the results
     data_path = data_dir / f"{state_code}.csv"
     utils.write_rows_to_csv(data_path, output_rows)
@@ -84,7 +92,7 @@ def _parse_table(html, id, include_headers=True):
     Returns: a list of rows
     """
     # Parse out data table
-    soup = BeautifulSoup(html, "html.parser")
+    soup = BeautifulSoup(html, "html5lib")
     table_list = soup.find_all(id=id)  # output is list-type
 
     # We expect the first table to be there with our data

@@ -15,6 +15,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html", "pdf"]
+__source__ = {
+    "name": "Florida Department of Economic Opportunity",
+    "url": "http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices",
+}
 
 logger = logging.getLogger(__name__)
 

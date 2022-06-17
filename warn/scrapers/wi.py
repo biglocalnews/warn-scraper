@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Wisconsin Department of Workforce Development",
+    "url": "https://dwd.wisconsin.gov/dislocatedworker/warn/",
+}
 
 logger = logging.getLogger(__name__)
 

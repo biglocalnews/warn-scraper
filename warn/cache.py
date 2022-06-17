@@ -87,7 +87,7 @@ class Cache:
         Returns: The Path where the file was saved
         """
         # Request the URL
-        logger.debug(f"Requesting {url}")
+        logger.debug(f"Downloading {url}")
         with get_url(url, stream=True, **kwargs) as r:
             # If there's no encoding, set it
             if encoding:
