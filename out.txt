@@ -1,0 +1,133 @@
+<a href="https://covid19.colorado.gov/for-coloradans/vaccine/where-can-i-get-vaccinated">"Where can I get vaccinated"</a>
+<a class="visually-hidden focusable skip-link" href="#main-content">
+    Skip to main content
+  </a>
+<a class="header__logo navbar-btn" href="/" rel="home" title="Home">
+        <img alt="Home" class="header__logo--image" src="/sites/cdle/files/logo.svg"/>
+      </a>
+<a class="menuparent" href="/businesses-employers">Employers</a>
+<a href="/employers/employer-audits">Audits</a>
+<a href="/employers/forms-publications">Forms &amp; Publications</a>
+<a class="menuparent" href="/employers/incentives-tax-credits">Incentives &amp; Tax Credits</a>
+<a href="/employers/incentives-tax-credits/federal-bonding">Federal Bonding</a>
+<a href="/work-opportunity-tax-credit">Work Opportunity Tax Credit</a>
+<a class="menuparent" href="/employers/layoff/separations">Layoff &amp; Separations</a>
+<a href="/layoff-alternatives">Layoff Alternatives</a>
+<a href="/respond-job-separations">Responding to Job Separations</a>
+<a class="menuparent" href="/employers/layoff-separations/worker-adjustment-retraining-notification">Worker Adjustment &amp; Retraining Notification</a>
+<a class="is-active" href="/employers/layoff-separations/layoff-warn-list">WARN Listings</a>
+<a href="/employers/myui-employer">MyUI Employer</a>
+<a href="/pay-premiums-and-report-wages">Pay Premiums and Report Wages</a>
+<a class="menuparent" href="/employers/recruiting-hiring">Recruiting &amp; Hiring</a>
+<a href="/employers/recruiting-hiring/hiring-a-veteran">Hiring a Veteran</a>
+<a href="/employers/recruiting-hiring/new-employer-checklist">New Employer Checklist</a>
+<a class="menuparent" href="/employers/recruiting-hiring/planning-strategic-development">Planning &amp; Strategic Development</a>
+<a href="/employers/recruiting-hiring/planning-strategic-development/foreign-labor-certification">Foreign Labor Certification</a>
+<a href="/employers/recruiting-hiring/planning-strategic-development/internships">Internships</a>
+<a class="menuparent" href="/employers/recruiting-hiring/recruiting-screening">Recruiting &amp; Screening</a>
+<a href="/employers/recruiting-hiring/recruiting-screening/assessments">Assessments</a>
+<a href="/employers/recruiting-hiring/recruiting-screening/hiring-events">Hiring Events</a>
+<a href="/employers/starting-a-business">Starting a Business</a>
+<a class="menuparent" href="/jobs-training">Jobs &amp; Training</a>
+<a href="/jobseeker-training">Training</a>
+<a class="menuparent" href="/jobs-training/veterans">Veterans</a>
+<a href="/jobs-training/veterans/veteran-priority" title="Veterans Priority Statement">Veteran Priority</a>
+<a href="/workforce-partners-resources">Workforce Partners Resources</a>
+<a href="/jobs-training/youth">Youth</a>
+<a href="/wfc" title="Workforce Center Locations and Contact Information">Workforce Centers</a>
+<a href="/jobs-training/career-help" title="Career Help">Career Help</a>
+<a href="/jobs-training/find-a-job" title="Find a Job">Find a Job</a>
+<a class="sf-external" href="https://ops.colorado.gov/" title="Division of Oil and Public Safety">Oil &amp; Public Safety</a>
+<a class="menuparent" href="/dlss">Labor Law &amp; Stats</a>
+<a class="sf-external" href="https://www.colmigateway.com/vosnet/lmi/default.aspx?pu=1&amp;plang=E">Labor Market Statistics </a>
+<a href="/laborrules">Labor Rules, Proposed &amp; Adopted</a>
+<a href="/file-complaints-and-employer-responses">Worker Complaints &amp; Employer Responses</a>
+<a href="/colorado-overtime-minimum-pay-standards-comps-order">COMPS (Colorado Overtime &amp; Minimum Pay Standards)</a>
+<a href="/infos">Interpretive Notice &amp; Formal Opinions (INFOs) &amp; Other Published Guidance</a>
+<a href="/posters-0">Posters (Including Translations)</a>
+<a href="/labor-law-stats/pess-public-employees-social-security">Public Employees' Social Security (PESS)</a>
+<a class="menuparent" href="/unemployment">Unemployment</a>
+<a href="/unemployment/faqs-0">FAQs</a>
+<a href="/unemployment/file-a-claim">File a Claim</a>
+<a href="/unemployment/extended-benefits-programs">Extended Benefits Programs</a>
+<a href="/unemployment/faqs">FAQs</a>
+<a href="/unemployment/disaster-unemployment-assistance">Disaster Unemployment Assistance</a>
+<a href="/idme">ID.me</a>
+<a href="/unemployment/program-integrity-holds">Program Integrity Holds</a>
+<a href="/unemployment/protect-yourself-from-scams">Protect Yourself From Scams</a>
+<a href="/fraud-prevention">Report Fraud</a>
+<a href="/returning-work">Return to Work Guidance for Workers</a>
+<a href="/unemployment/ui-glossary-of-commonly-used-terms">UI Glossary of Commonly Used Terms</a>
+<a href="/unemployment/contact-us">Contact Unemployment</a>
+<a class="menuparent" href="/dwc" title="Division of Workers' Compensation">Workers' Comp</a>
+<a href="/dwc/attorneys">Attorneys</a>
+<a href="/dwc/employers">Employers</a>
+<a href="/dwc/injured-workers">Injured Workers</a>
+<a href="/dwc/insurers">Insurers</a>
+<a href="/dwc/medical-providers">Medical Providers</a>
+<a href="/dwc/dwc-resources">Resources</a>
+<a class="sf-external" href="https://dvr.colorado.gov/" title="Division of Vocational Rehabilitation">Voc Rehab</a>
+<a class="sf-external" href="https://famli.colorado.gov/">FAMLI</a>
+<a class="menuparent" href="" title="Offices">Offices</a>
+<a href="/offices/office-of-new-americans">Office of New Americans</a>
+<a class="menuparent" href="/future-of-work">Office of the Future of Work</a>
+<a href="/offices/office-of-the-future-of-work/apprenticeship-colorado">Apprenticeship</a>
+<a href="/digitalinclusion">Digital Literacy and Inclusion Initiative</a>
+<a href="/offices/office-of-the-future-of-work/remote-work-initiative">Remote Work Initiative</a>
+<a class="sf-external" href="https://cdle.colorado.gov/offices/the-office-of-just-transition">The Office of Just Transition</a>
+<a href="/offices/office-of-education-and-training-innovation">Office of Education and Training Innovation</a>
+<a class="sf-external" href="https://cwdc.colorado.gov/" title="Homepage for the Colorado Workforce Development Council">CWDC</a>
+<a href="/">Home</a>
+<a href="/businesses-employers">Employers</a>
+<a href="/employers/layoff/separations">Layoff &amp; Separations</a>
+<a href="/employers/layoff-separations/worker-adjustment-retraining-notification">Worker Adjustment &amp; Retraining Notification</a>
+<a class="dropdown-toggle" data-toggle="dropdown" href="https://cdle.colorado.gov/apprenticeship-employers">Apprenticeship</a>
+<a href="https://cdle.colorado.gov/apprenticeship-events">Apprenticeship Events</a>
+<a href="https://cdle.colorado.gov/apprenticeship-partners">Apprenticeship Partners</a>
+<a href="https://cdle.colorado.gov/apprenticeship-training-resources">Apprenticeship Training</a>
+<a href="https://cdle.colorado.gov/apprenticeship-directory">Apprenticeship Resource Directory</a>
+<a href="https://cdle.colorado.gov/apprenticeship-get-started">Build a Program</a>
+<a href="https://cdle.colorado.gov/manage-apprenticeship">Manage your Program</a>
+<a class="dropdown-toggle" data-drupal-link-system-path="node/10059" data-toggle="dropdown" href="/employers/incentives-tax-credits">Incentives &amp; Tax Credits</a>
+<a data-drupal-link-system-path="node/10063" href="/employers/incentives-tax-credits/federal-bonding">Federal Bonding</a>
+<a data-drupal-link-system-path="node/10062" href="/work-opportunity-tax-credit">Work Opportunity Tax Credit</a>
+<a class="dropdown-toggle active-trail" data-drupal-link-system-path="node/10070" data-toggle="dropdown" href="/employers/layoff/separations">Layoff/Separations</a>
+<a data-drupal-link-system-path="node/10210" href="/layoff-alternatives">Layoff Alternatives</a>
+<a data-drupal-link-system-path="node/10072" href="/respond-job-separations">Responding To Job Separations</a>
+<a class="active-trail" data-drupal-link-system-path="node/10071" href="/employers/layoff-separations/worker-adjustment-retraining-notification">Worker Adjustment &amp; Retraining Notification</a>
+<a class="active-trail is-active" data-drupal-link-system-path="node/11451" href="/employers/layoff-separations/layoff-warn-list">WARN Listings for Layoffs &amp; Separations</a>
+<a class="dropdown-toggle" data-drupal-link-system-path="node/10042" data-toggle="dropdown" href="/employers/recruiting-hiring" title="Recruiting and Hiring with These Tips and Information">Recruiting &amp; Hiring</a>
+<a data-drupal-link-system-path="node/10043" href="/employers/recruiting-hiring/new-employer-checklist">New Employer Checklist</a>
+<a data-drupal-link-system-path="node/10051" href="/employers/recruiting-hiring/planning-strategic-development">Planning &amp; Strategic Development</a>
+<a data-drupal-link-system-path="node/10047" href="/employers/recruiting-hiring/planning-strategic-development/foreign-labor-certification">Foreign Labor Certification</a>
+<a data-drupal-link-system-path="node/10045" href="/employers/recruiting-hiring/hiring-a-veteran">Hiring a Veteran</a>
+<a data-drupal-link-system-path="node/10344" href="/employers/recruiting-hiring/planning-strategic-development/internships">Internships</a>
+<a data-drupal-link-system-path="node/10265" href="/employers/recruiting-hiring/recruiting-screening">Recruiting &amp; Screening</a>
+<a data-drupal-link-system-path="node/10313" href="/employers/recruiting-hiring/recruiting-screening/assessments">Assessments</a>
+<a data-drupal-link-system-path="node/10314" href="/employers/recruiting-hiring/recruiting-screening/hiring-events">Hiring Events</a>
+<a data-drupal-link-system-path="node/10035" href="/employers/starting-a-business" title="Start a Business with These Tips">Starting a Business</a>
+<a id="main-content"></a>
+<a href="https://forms.gle/wbNdq9fWh8YQQDty9" target="_blank">E-WARN</a>
+<a href="mailto:RRTeam@state.co.us">RRTeam@state.co.us</a>
+<a class="btn btn-primary" href="https://docs.google.com/spreadsheets/d/18j0WH8F2D9e0povfX6drLDkbZbxrWJKIslUWVwqAo8g/edit?usp=sharing" target="_blank"><span class="text">View Real-Time WARN Updates</span></a>
+<a href="https://docs.google.com/spreadsheets/d/1HO8Fnm_4xey3Ctt6mYIig61Zx5iNq6_j_dlIaJvBS6o/edit?usp=sharing"><span style="color:#009add;"><strong>View 2021 WARN List</strong></span></a>
+<a href="https://docs.google.com/spreadsheets/d/1Km1mSUnCGE3EtZQTnZEUwxbdDTOcDZmNx6bviTwl2jI/edit?usp=sharing" target="_blank"><span style="color:#009add;">View 2020 WARN List</span></a>
+<a href="https://docs.google.com/spreadsheets/d/1GZEh1FUcHFfovdKeagTHFiv_P-PVVx64Bk4Szc963Gs/edit?usp=sharing" target="_blank"><span style="color:#009add;">View 2019 WARN List</span></a>
+<a href="https://docs.google.com/spreadsheets/d/1AsxrFpcg5nDdlezayogQf03Fq0Bkt6c34plqbEFxljI/edit?usp=sharing"><span style="color:#009add;">View 2018 WARN List</span></a>
+<a href="https://docs.google.com/spreadsheets/d/19YAbx8HAC9mfDbAkxVxBwEl8YCPGHhE91QHJAGi7R98/edit?usp=sharing" target="_blank"><span style="color:#009add;">View 2017 WARN List</span></a>
+<a href="https://drive.google.com/open?id=1M-jYA2cSbehhp1pbpcAa900PtjAgktCHbU556cSjzc4" target="_blank"><span style="color:#009add;">View 2016 WARN List</span></a>
+<a href="https://docs.google.com/spreadsheets/d/1dpKX0g31Fkv8Hs3k3cVCJ19ce4RANNlYSCwpEQA2nrI/edit#gid=0" target="_blank"><span style="color:#009add;">View 2015 WARN List</span></a>
+<a href="https://www.colmigateway.com/admin/gsipub/htmlarea/Uploads/Apr22PR.pdf">April 2022</a>
+<a href="https://www.colmigateway.com/vosnet/lmi/default.aspx" target="_blank"><span style="color:#001970;">Colorado Job Growth (SA)</span></a>
+<a class="btn btn-primary" href="https://forms.gle/wbKD2azB1kKxPLAr8" target="_blank"><i class="fa fa-icon-left fa-user" style="word-spacing: -1em;"> </i>  <span class="text">Give Us Website Feedback</span></a>
+<a class="btn btn-primary" href="https://cdle.colorado.gov/give-us-your-feedback#" target="_blank"><i class="fa fa-icon-left fa-building" style="word-spacing: -1em;"> </i>  <span class="text">Customer Service Feedback</span></a>
+<a class="btn btn-primary" href="https://co.tfaforms.net/f/uifeedback" target="_blank"><i class="fa fa-icon-left fa-file-alt" style="word-spacing: -1em;"> </i>  <span class="text">Submit Claimant Feedback</span></a>
+<a href="/about-us">About Us</a>
+<a href="/careers-at-cdle" title="Careers at CDLE">Careers at CDLE</a>
+<a href="/equal-opportunity" title="Equal Opportunity">Equal Opportunity</a>
+<a href="/cora" title="CORA">Open Records</a>
+<a href="/performance-plans" title="Performance Plans">Performance Plans</a>
+<a href="/employers/layoff-separations/layoff-warn-list" title="WARN Listings for Layoffs &amp;amp; Separations">WARN</a>
+<a href="https://data.colorado.gov/Government/Transparency-Online-Project-TOPS-State-Government-/rifs-n6ib" target="_blank">Transparency Online</a>
+<a href="https://www.colorado.gov/support">Support</a>
+<a aria-label="Colorado Official State Web Portal" class="logo--cogov" href="https://www.colorado.gov">Colorado Official State Web Portal</a>
