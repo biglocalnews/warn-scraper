@@ -7,6 +7,10 @@ import re
 
 __authors__ = ["anikasikka"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Colorado Department of Labor and Employment",
+    "url": "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
+}
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
