@@ -1,6 +1,8 @@
 import logging
+import os
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -11,6 +13,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html", "pdf", "excel"]
+__source__ = {
+    "name": "California Employment Development Department",
+    "url": "https://edd.ca.gov/en/Jobs_and_Training/Layoff_Services_WARN",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +53,16 @@ def scrape(
     link_list = []
     for link in list_soup.find_all("a"):
         # Grab the URL
-        relative_url = link.attrs.get("href", "").strip()
+        href_url = link.attrs.get("href", "").strip()
 
         # If it's a WARN link ...
-        if re.search(r"warn[-_]?report", relative_url, re.I):
+        if re.search(r"warn[-_]?report", href_url, re.I):
 
             # Build it up
-            full_url = f"{base_url}/{relative_url}"
+            if href_url.startswith("/"):
+                full_url = f"https://edd.ca.gov{href_url}"
+            else:
+                full_url = href_url
 
             # Add it to the list
             link_list.append(full_url)
@@ -61,7 +70,7 @@ def scrape(
     # Download all the data files
     file_list = []
     for link in link_list:
-        file_name = link.replace("https://edd.ca.gov/Jobs_and_Training/warn/", "")
+        file_name = os.path.basename(urlparse(link).path)
         file_path = cache.download(f"ca/{file_name}", link)
         file_list.append(file_path)
 
@@ -97,6 +106,8 @@ def scrape(
 
 
 def _extract_excel_data(wb_path):
+    """Parse data from the provided Excel file."""
+    logger.debug(f"Reading in {wb_path}")
     wb = load_workbook(filename=wb_path)
     # Get the only worksheet
     ws = wb.worksheets[0]
@@ -122,7 +133,7 @@ def _extract_excel_data(wb_path):
             "effective_date": _convert_date(row[4].value),
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
-            "num_employees": row[9].value,
+            "num_employees": row[10].value,
             "address": row[12].value.strip(),
             "source_file": str(wb_path).split("/")[-1],
         }

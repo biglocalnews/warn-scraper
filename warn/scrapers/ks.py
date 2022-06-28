@@ -6,6 +6,10 @@ from .. import utils
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["jobcenter"]
+__source__ = {
+    "name": "Kansas Department of Commerce",
+    "url": "https://www.kansasworks.com/search/warn_lookups/new",
+}
 
 
 def scrape(

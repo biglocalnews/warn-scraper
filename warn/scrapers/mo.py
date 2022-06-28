@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Missouri Office of Workforce Development",
+    "url": "https://jobs.mo.gov/content/2022-warn-notices",
+}
 
 logger = logging.getLogger(__name__)
 

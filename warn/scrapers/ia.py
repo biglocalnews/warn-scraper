@@ -8,6 +8,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire"]
 __tags__ = ["html", "excel"]
+__source__ = {
+    "name": "Iowa Workforce Development Department",
+    "url": "https://www.iowaworkforcedevelopment.gov/worker-adjustment-and-retraining-notification-act",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +41,8 @@ def scrape(
     # Parse out the Excel link
     soup = BeautifulSoup(html, "html.parser")
     excel_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
+    if not excel_url.startswith("http"):
+        excel_url = "https://www.iowaworkforcedevelopment.gov" + excel_url
 
     # Download the Excel file
     excel_path = cache.download("ia/source.xlsx", excel_url)

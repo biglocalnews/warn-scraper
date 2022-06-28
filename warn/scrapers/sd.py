@@ -9,6 +9,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "South Dakota Department of Labor and Regulation",
+    "url": "https://dlr.sd.gov/workforce_services/businesses/warn_notices.aspx",
+}
 
 logger = logging.getLogger(__name__)
 

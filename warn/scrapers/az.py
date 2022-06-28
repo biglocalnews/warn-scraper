@@ -8,6 +8,10 @@ __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = [
     "jobcenter",
 ]
+__source__ = {
+    "name": "Arizona Department of Economic Security",
+    "url": "https://www.azjobconnection.gov/search/warn_lookups/new",
+}
 
 
 def scrape(

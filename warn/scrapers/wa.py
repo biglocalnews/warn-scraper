@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
+__source__ = {
+    "name": "Washington Employment Security Department",
+    "url": "https://esd.wa.gov/about-employees/WARN",
+}
 
 logger = logging.getLogger(__name__)
 

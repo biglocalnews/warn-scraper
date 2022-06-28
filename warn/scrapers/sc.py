@@ -1,3 +1,4 @@
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
@@ -13,6 +14,13 @@ __tags__ = [
     "html",
     "pdf",
 ]
+__source__ = {
+    "name": "South Carolina Department of Employment and Workforce",
+    "url": "https://scworks.org/employer/employer-programs/at-risk-of-closing/layoff-notification-reports",
+}
+
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -42,7 +50,22 @@ def scrape(
     # Parse out the PDF links
     soup = BeautifulSoup(html, "html.parser")
     link_list = soup.find_all("a")
-    pdf_list = [a for a in link_list if "pdf" in a["href"]]
+    pdf_dict = {}
+    for a in link_list:
+        # Pull the data we want to keep
+        a_href = a["href"]
+        a_text = a.text.strip()
+        if "pdf" in a_href:
+            # Make sure that the text is a year
+            try:
+                a_year = int(a_text[:4].strip())
+            except ValueError:
+                logger.info(f"'{a_text}' link does not parse as a year")
+                continue
+            # Make sure the links are unique
+            if a_year not in pdf_dict:
+                pdf_dict[a_year] = a_href
+    logger.debug(f"{len(pdf_dict)} PDF links identified")
 
     # Pattern to find and extract data cells
     naics_re = re.compile("^[0-9]{5,6}$")
@@ -51,14 +74,13 @@ def scrape(
 
     current_year = datetime.now().year
     output_rows = []
-    for pdf in pdf_list:
-        pdf_year = int(pdf.text[:4].strip())
+    for pdf_year, pdf_href in pdf_dict.items():
         cache_key = f"sc/{pdf_year}.pdf"
         if cache.exists(cache_key) and pdf_year < (current_year - 1):
             pdf_path = cache.path / cache_key
         else:
             pdf_path = cache.download(
-                cache_key, f"https://scworks.org/{pdf['href']}", verify=False
+                cache_key, f"https://scworks.org/{pdf_href}", verify=False
             )
 
         # Open the PDF
@@ -108,12 +130,15 @@ def scrape(
                     # The second one should be the location
                     d["location"] = cell_list[1]
 
+                    # Tack in the source PDF
+                    d["source"] = cache_key
+
                     # Keep what we got
                     output_rows.append(d)
 
     # Write out the data to a CSV
     data_path = data_dir / "sc.csv"
-    headers = ["company", "location", "date", "jobs", "naics"]
+    headers = ["company", "location", "date", "jobs", "naics", "source"]
     utils.write_dict_rows_to_csv(data_path, headers, output_rows, extrasaction="ignore")
 
     # Return the Path to the CSV

@@ -10,6 +10,10 @@ from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "chriszs"]
 __tags__ = ["html", "pdf"]
+__source__ = {
+    "name": "Ohio Department of Job and Family Services",
+    "url": "https://jfs.ohio.gov/warn/index.stm",
+}
 
 logger = logging.getLogger(__name__)
 

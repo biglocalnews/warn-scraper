@@ -13,6 +13,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs"]
 __tags__ = ["pdf"]
+__source__ = {
+    "name": "New Mexico Department of Workforce Solutions",
+    "url": "https://www.dws.state.nm.us/Rapid-Response",
+}
 
 logger = logging.getLogger(__name__)
 
