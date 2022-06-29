@@ -12,8 +12,9 @@ __source__ = {
     "url": "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
 }
 
-def scrape(
 
+
+def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
@@ -34,10 +35,10 @@ def scrape(
     cache = Cache(cache_dir)
     cache.write("co/main/source.html", html)
 
-    #setting the headers to centralize among archived and new data
+    # Setting the headers to centralize among archived and new data
     cleaned_data = []
-   
-    #Parses the current year's data into a CSV file
+
+    # Parses the current year's data into a CSV file
     soup = BeautifulSoup(html, "html5lib")
     current_link = str(soup.find("a", class_="btn btn-primary")).split("\"")[3]
 
@@ -49,7 +50,7 @@ def scrape(
     for rows in soup_current.find(class_="waffle").find_all("tr"):
         vals = []
         scrape_spreadsheet(rows, vals)
-        if (len(vals) == 0): 
+        if (len(vals) == 0):
             continue
         cleaned_data.append(vals)
 
