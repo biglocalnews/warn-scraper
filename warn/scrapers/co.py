@@ -12,8 +12,6 @@ __source__ = {
     "url": "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
 }
 
-
-
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
@@ -54,7 +52,7 @@ def scrape(
             continue
         cleaned_data.append(vals)
 
-    #Goes through the accordion links to get past data 
+    # Goes through the accordion links to get past data
     main = soup.find_all('dl')
     for item in main: 
         my_list = item.find('ul')
@@ -71,7 +69,6 @@ def scrape(
                 cleaned_data.append(vals)
     
     # Set the path to the final CSV
-    # We should always use the lower-case state postal code, like nj.csv
     output_csv = data_dir / "co.csv"
 
     # Write out the rows to the export directory
