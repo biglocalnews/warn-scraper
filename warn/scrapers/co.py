@@ -13,6 +13,7 @@ __source__ = {
 }
 
 def scrape(
+
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
 ) -> Path:
@@ -33,10 +34,6 @@ def scrape(
     cache = Cache(cache_dir)
     cache.write("co/main/source.html", html)
 
-    # Parse the source file and convert to a list of rows, with a header in the first row.
-    ## It's up to you to fill in the blank here based on the structure of the source file.
-    ## You could do that here with BeautifulSoup or whatever other technique.
-    
     #setting the headers to centralize among archived and new data
     cleaned_data = []
    
@@ -93,5 +90,4 @@ def scrape_spreadsheet(rows, vals):
         data = (str)(data)
         data = re.sub("\<.*?\>","", data)
         vals.append(data)
-    return vals
 
