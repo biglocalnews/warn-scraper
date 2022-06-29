@@ -55,7 +55,6 @@ def scrape(
         cleaned_data.append(vals)
 
     #Goes through the accordion links to get past data 
-    new_vals = []
     main = soup.find_all('dl')
     for item in main: 
         my_list = item.find('ul')
