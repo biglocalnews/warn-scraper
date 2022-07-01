@@ -67,7 +67,7 @@ def scrape(
                 if (len(vals) == 0): 
                     continue
                 cleaned_data.append(vals)
-    
+
     # Set the path to the final CSV
     output_csv = data_dir / "co.csv"
 
