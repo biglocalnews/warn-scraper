@@ -19,7 +19,6 @@ def scrape(
 ) -> Path:
     """
     Scrape data from Colorado.
-
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
@@ -91,11 +90,11 @@ def scrape_spreadsheet(rows, vals):
 
     Keyword arguments:
     rows -- each row data in the spreadsheet
-    vals -- the dataframe that the scraped data is stored in 
+    vals -- the dataframe that the scraped data is stored in
 
     Returns: nothing
     """
     for data in rows.find_all("td"):
         data = (str)(data)
-        data = re.sub("\<.*?\>","", data)
+        data = re.sub("\<.*?\>", "", data)
         vals.append(data)
