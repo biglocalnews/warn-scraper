@@ -12,6 +12,7 @@ __source__ = {
     "url": "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
 }
 
+
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
@@ -25,6 +26,7 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+
     # Grab the page
     page = utils.get_url("https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list")
     html = page.text
@@ -81,11 +83,10 @@ def scrape(
 if __name__ == "__main__":
     scrape()
 
+
 # Scrapes the google spreadsheet
 def scrape_spreadsheet(rows, vals):
-    for i, data in enumerate(rows.find_all("td")):
+    for data in rows.find_all("td"):
         data = (str)(data)
         data = re.sub("\<.*?\>","", data)
         vals.append(data)
-
-
