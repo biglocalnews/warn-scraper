@@ -56,7 +56,7 @@ def scrape(
 
     # Goes through the accordion links to get past data
     main = soup.find_all('dl')
-    for item in main: 
+    for item in main:
         my_list = item.find('ul')
         for li in my_list.find_all('li'):
             link = (str)(li).split("\"")[1]
@@ -66,7 +66,7 @@ def scrape(
             for rows in soup_archived.find(class_="waffle").find_all("tr"):
                 vals = []
                 scrape_spreadsheet(rows, vals)
-                if (len(vals) == 0): 
+                if (len(vals) == 0):
                     continue
                 cleaned_data.append(vals)
 
@@ -86,6 +86,15 @@ if __name__ == "__main__":
 
 # Scrapes the google spreadsheet
 def scrape_spreadsheet(rows, vals):
+    """
+    Scrapes the spreadsheet data.
+
+    Keyword arguments:
+    rows -- each row data in the spreadsheet
+    vals -- the dataframe that the scraped data is stored in 
+
+    Returns: nothing
+    """
     for data in rows.find_all("td"):
         data = (str)(data)
         data = re.sub("\<.*?\>","", data)
