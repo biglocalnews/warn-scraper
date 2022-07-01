@@ -19,13 +19,13 @@ def scrape(
 ) -> Path:
     """
     Scrape data from Colorado.
+
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
 
     Returns: the Path where the file is written
     """
-
     # Grab the page
     page = utils.get_url("https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list")
     html = page.text
