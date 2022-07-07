@@ -47,7 +47,7 @@ def scrape(
     soup_current = BeautifulSoup(current_html, "html5lib")
 
     for rows in soup_current.find(class_="waffle").find_all("tr"):
-        vals: List[<str>] = []
+        vals: List[str] = []
         scrape_spreadsheet(rows, vals)
         if (len(vals) == 0):
             continue
