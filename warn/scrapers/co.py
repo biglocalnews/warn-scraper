@@ -57,8 +57,10 @@ def scrape(
     # Goes through the accordion links to get past data
     main = soup.find_all('dl')
     for item in main:
+        # Finds all links and parses them
         my_list = item.find('ul')
         for li in my_list.find_all('li'):
+            # Gets the link by splitting the html and obtaining the first value
             link = (str)(li).split("\"")[1]
             archived_page = utils.get_url(link)
             archived_html = archived_page.text
