@@ -2,8 +2,7 @@ import logging
 from pathlib import Path
 
 from openpyxl import load_workbook
-import pdfplumber
-from bs4 import BeautifulSoup
+
 from .. import utils
 from ..cache import Cache
 
@@ -23,11 +22,9 @@ def scrape(
 ) -> Path:
     """
     Scrape data from Oregon.
-
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
-
     Returns: the Path where the file is written
     """
     # Request the page and save it to the cache
@@ -36,12 +33,6 @@ def scrape(
     )
     cache = Cache(cache_dir)
     excel_path = cache.download("or/source.xlsx", url)
-
-    recent_url = (
-        "https://ccwd.hecc.oregon.gov/Layoff/Reports/WARNList_115413.PDF"
-    )
-
-    pdf = cache.download("or/source", recent_url)
 
     # Open it up
     workbook = load_workbook(filename=excel_path)
@@ -55,19 +46,6 @@ def scrape(
     for r in list(worksheet.rows)[2:]:
         column = [cell.value for cell in r]
         row_list.append(column)
-    
-    with pdfplumber.open(pdf) as pdf:
-        string_list = []
-        string_array = []
-        values = []
-        for page in pdf.pages: 
-            data = (page.extract_table())
-            string_array.append(data[1][0].split("\n"))
-        for string in string_array:
-            print (string)
-            #values.append(string.split(" "))
-            #print (values)
-
 
     # Set the export path
     data_path = data_dir / "or.csv"
