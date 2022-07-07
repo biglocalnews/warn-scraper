@@ -151,12 +151,33 @@ def _extract_pdf_data(pdf_path):
         "effective_date",
         "received_date",
         "company",
+        "location",
         "city",
         "county",
         "num_employees",
         "layoff_or_closure",
         "source_file",
     ]
+    header_crosswalk = {
+        "Address": "location",
+        "City": "city",
+        "Company": "company",
+        "County": "county",
+        "Effective\nDate": "effective_date",
+        "Effective \nDate": "effective_date",
+        "Effective  \nDate": "effective_date",
+        "Effective Date": "effective_date",
+        "Employees": "num_employees",
+        "Layoff/Closure": "layoff_or_closure",
+        "Layoff/Closure Type": "layoff_or_closure",
+        "No. Of \nEmployees": "num_employees",
+        "No. Of Employees": "num_employees",
+        "Notice\nDate": "notice_date",
+        "Notice Date": "notice_date",
+        "Received\nDate": "received_date",
+        "Received \nDate": "received_date",
+        "Received Date": "received_date",
+    }
     data = []
     logger.debug(f"Opening {pdf_path} for PDF parsing")
     with pdfplumber.open(pdf_path) as pdf:
@@ -180,7 +201,11 @@ def _extract_pdf_data(pdf_path):
             if "summary" in first_cell:
                 continue
             for row in rows:
-                data_row = dict(zip(headers, row))
+                data_row = {}
+                for i, value in enumerate(row):
+                    this_raw_header = raw_header[i]
+                    this_clean_header = header_crosswalk[this_raw_header]
+                    data_row[this_clean_header] = value
                 # Data clean-ups
                 data_row.update(
                     {
