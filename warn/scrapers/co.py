@@ -4,6 +4,7 @@ from .. import utils
 from ..cache import Cache
 from bs4 import BeautifulSoup
 import re
+from typing import List
 
 __authors__ = ["anikasikka"]
 __tags__ = ["html"]
