@@ -67,10 +67,9 @@ def scrape(
             soup_archived = BeautifulSoup(archived_html, "html5lib")
             for rows in soup_archived.find(class_="waffle").find_all("tr"):
                 vals = scrape_spreadsheet(rows)
-                if (len(vals) == 0):
-                    continue
-                cleaned_data.append(vals)
-
+                if (any(vals)):
+                    cleaned_data.append(vals)
+    
     # Set the path to the final CSV
     output_csv = data_dir / "co.csv"
 
@@ -100,5 +99,6 @@ def scrape_spreadsheet(rows):
     for data in rows.find_all("td"):
         data = str(data)
         data = re.sub(r"\<.*?\>", "", data)
-        vals.append(data)
+        if (data != ''):
+            vals.append(data)
     return vals
