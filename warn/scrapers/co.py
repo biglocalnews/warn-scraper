@@ -96,5 +96,5 @@ def scrape_spreadsheet(rows, vals):
     """
     for data in rows.find_all("td"):
         data = (str)(data)
-        data = re.sub("\<.*?\>", "", data)
+        data = re.sub(r"\<.*?\>", "", data)
         vals.append(data)
