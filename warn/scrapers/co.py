@@ -49,7 +49,7 @@ def scrape(
 
     for rows in soup_current.find(class_="waffle").find_all("tr"):
         vals: List[str] = []
-        scrape_spreadsheet(rows, vals)
+        vals = scrape_spreadsheet(rows)
         if (len(vals) == 0):
             continue
         cleaned_data.append(vals)
@@ -66,8 +66,7 @@ def scrape(
             archived_html = archived_page.text
             soup_archived = BeautifulSoup(archived_html, "html5lib")
             for rows in soup_archived.find(class_="waffle").find_all("tr"):
-                vals = []
-                scrape_spreadsheet(rows, vals)
+                vals = scrape_spreadsheet(rows)
                 if (len(vals) == 0):
                     continue
                 cleaned_data.append(vals)
@@ -87,7 +86,7 @@ if __name__ == "__main__":
 
 
 # Scrapes the google spreadsheet
-def scrape_spreadsheet(rows, vals):
+def scrape_spreadsheet(rows):
     """
     Scrapes the spreadsheet data.
 
@@ -95,9 +94,11 @@ def scrape_spreadsheet(rows, vals):
     rows -- each row data in the spreadsheet
     vals -- the dataframe that the scraped data is stored in
 
-    Returns: nothing
+    Returns: spreadsheet contents
     """
+    vals = []
     for data in rows.find_all("td"):
-        data = (str)(data)
+        data = str(data)
         data = re.sub(r"\<.*?\>", "", data)
         vals.append(data)
+    return vals
