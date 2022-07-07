@@ -22,9 +22,11 @@ def scrape(
 ) -> Path:
     """
     Scrape data from Oregon.
+
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
+
     Returns: the Path where the file is written
     """
     # Request the page and save it to the cache

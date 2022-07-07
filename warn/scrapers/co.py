@@ -1,10 +1,11 @@
+import re
 from pathlib import Path
+from typing import List
+
+from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache
-from bs4 import BeautifulSoup
-import re
-from typing import List
 
 __authors__ = ["anikasikka"]
 __tags__ = ["html"]
@@ -28,7 +29,9 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Grab the page
-    page = utils.get_url("https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list")
+    page = utils.get_url(
+        "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list"
+    )
     html = page.text
 
     # Write the raw file to the cache
@@ -40,7 +43,7 @@ def scrape(
 
     # Parses the current year's data into a CSV file
     soup = BeautifulSoup(html, "html5lib")
-    current_link = str(soup.find("a", class_="btn btn-primary")).split("\"")[3]
+    current_link = str(soup.find("a", class_="btn btn-primary")).split('"')[3]
 
     current_page = utils.get_url(current_link)
     current_html = current_page.text
@@ -50,26 +53,26 @@ def scrape(
     for rows in soup_current.find(class_="waffle").find_all("tr"):
         vals: List[str] = []
         vals = scrape_spreadsheet(rows)
-        if (len(vals) == 0):
+        if len(vals) == 0:
             continue
         cleaned_data.append(vals)
 
     # Goes through the accordion links to get past data
-    main = soup.find_all('dl')
+    main = soup.find_all("dl")
     for item in main:
         # Finds all links and parses them
-        my_list = item.find('ul')
-        for li in my_list.find_all('li'):
+        my_list = item.find("ul")
+        for li in my_list.find_all("li"):
             # Gets the link by splitting the html and obtaining the first value
-            link = str(li).split("\"")[1]
+            link = str(li).split('"')[1]
             archived_page = utils.get_url(link)
             archived_html = archived_page.text
             soup_archived = BeautifulSoup(archived_html, "html5lib")
             for rows in soup_archived.find(class_="waffle").find_all("tr"):
                 vals = scrape_spreadsheet(rows)
-                if (any(vals)):
+                if any(vals):
                     cleaned_data.append(vals)
-    
+
     # Set the path to the final CSV
     output_csv = data_dir / "co.csv"
 
@@ -99,6 +102,6 @@ def scrape_spreadsheet(rows):
     for data in rows.find_all("td"):
         data = str(data)
         data = re.sub(r"\<.*?\>", "", data)
-        if (data != ''):
+        if data != "":
             vals.append(data)
     return vals
