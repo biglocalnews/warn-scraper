@@ -61,7 +61,7 @@ def scrape(
         my_list = item.find('ul')
         for li in my_list.find_all('li'):
             # Gets the link by splitting the html and obtaining the first value
-            link = (str)(li).split("\"")[1]
+            link = str(li).split("\"")[1]
             archived_page = utils.get_url(link)
             archived_html = archived_page.text
             soup_archived = BeautifulSoup(archived_html, "html5lib")
