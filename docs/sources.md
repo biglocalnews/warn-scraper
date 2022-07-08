@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 38 of America's 56 states and territories.
+There are currently scrapers for 39 of America's 56 states and territories.
 
 | State | Source | Docs | Authors | Tags |
 | :---- | :----: | :--: | :------ | :--- |
@@ -8,6 +8,7 @@ There are currently scrapers for 38 of America's 56 states and territories.
 |[Alaska](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ak.py)|[🔗](https://jobs.alaska.gov/RR/WARN_notices.htm)||[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Arizona](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/az.py)|[🔗](https://www.azjobconnection.gov/search/warn_lookups/new)|[📃](scrapers/az.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[California](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ca.py)|[🔗](https://edd.ca.gov/en/Jobs_and_Training/Layoff_Services_WARN)|[📃](scrapers/ca.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, html, pdf|
+|[Colorado](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/co.py)|[🔗](https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list)|[📃](scrapers/co.md)|[anikasikka](https://github.com/anikasikka)|html|
 |[Connecticut](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ct.py)|[🔗](https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warnreports.htm)||[Dilcia19](https://github.com/Dilcia19), [stucka](https://github.com/stucka), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Delaware](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/de.py)|[🔗](https://joblink.delaware.gov/search/warn_lookups/new)|[📃](scrapers/de.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Florida](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/fl.py)|[🔗](http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices)||[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html, pdf|
@@ -27,7 +28,7 @@ There are currently scrapers for 38 of America's 56 states and territories.
 |[Nebraska](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ne.py)|[🔗](https://dol.nebraska.gov/ReemploymentServices/LayoffServices/LayoffsAndDownsizingWARN)||[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[New Jersey](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/nj.py)|[🔗](https://www.nj.gov/labor/employer-services/warn/)||[Dilcia19](https://github.com/Dilcia19), [palewire](https://github.com/palewire), [zstumgoren](https://github.com/zstumgoren)|html|
 |[New Mexico](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/nm.py)|[🔗](https://www.dws.state.nm.us/Rapid-Response)||[chriszs](https://github.com/chriszs)|pdf|
-|[New York](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ny.py)|[🔗](https://dol.ny.gov/warn-notices)|[📃](scrapers/ny.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, historical|
+|[New York](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ny.py)|[🔗](https://dol.ny.gov/warn-notices)|[📃](scrapers/ny.md)|[Dilcia19](https://github.com/Dilcia19), [palewire](https://github.com/palewire), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, historical|
 |[Ohio](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/oh.py)|[🔗](https://jfs.ohio.gov/warn/index.stm)||[Dilcia19](https://github.com/Dilcia19), [chriszs](https://github.com/chriszs), [zstumgoren](https://github.com/zstumgoren)|html, pdf|
 |[Oklahoma](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ok.py)|[🔗](https://okjobmatch.com/search/warn_lookups/new)|[📃](scrapers/ok.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Oregon](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/or.py)|[🔗](https://ccwd.hecc.oregon.gov/Layoff/WARN)|[📃](scrapers/or.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, historical|
@@ -46,10 +47,9 @@ There are currently scrapers for 38 of America's 56 states and territories.
 
 ## To do
 
-These 18 areas need a scraper:
+These 17 areas need a scraper:
 
 - Arkansas
-- Colorado
 - Hawaii
 - Massachusetts
 - Minnesota
