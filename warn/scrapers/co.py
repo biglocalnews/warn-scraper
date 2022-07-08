@@ -1,6 +1,4 @@
-import re
 from pathlib import Path
-from typing import List
 
 from bs4 import BeautifulSoup
 
@@ -38,70 +36,146 @@ def scrape(
     cache = Cache(cache_dir)
     cache.write("co/main/source.html", html)
 
-    # Setting the headers to centralize among archived and new data
-    cleaned_data = []
-
-    # Parses the current year's data into a CSV file
+    # Parse the page
     soup = BeautifulSoup(html, "html5lib")
+
+    # Get the link to the Google Sheet that's on the page
     current_link = str(soup.find("a", class_="btn btn-primary")).split('"')[3]
 
+    # Open the Google Sheet
     current_page = utils.get_url(current_link)
     current_html = current_page.text
 
+    # Parse the Google Sheet
     soup_current = BeautifulSoup(current_html, "html5lib")
-
-    for rows in soup_current.find(class_="waffle").find_all("tr"):
-        vals: List[str] = []
-        vals = scrape_spreadsheet(rows)
-        if len(vals) == 0:
-            continue
-        cleaned_data.append(vals)
+    table = soup_current.find(class_="waffle")
+    cleaned_data = []  # scrape_google_sheets(table)
 
     # Goes through the accordion links to get past data
-    main = soup.find_all("dl")
-    for item in main:
-        # Finds all links and parses them
-        my_list = item.find("ul")
-        for li in my_list.find_all("li"):
-            # Gets the link by splitting the html and obtaining the first value
-            link = str(li).split('"')[1]
-            archived_page = utils.get_url(link)
-            archived_html = archived_page.text
-            soup_archived = BeautifulSoup(archived_html, "html5lib")
-            for rows in soup_archived.find(class_="waffle").find_all("tr"):
-                vals = scrape_spreadsheet(rows)
-                if any(vals):
-                    cleaned_data.append(vals)
+    accordion_list = soup.find_all("dl")
+
+    # Make sure there's only one
+    assert len(accordion_list) == 1
+
+    # Grab the first one from the list
+    accordion = accordion_list[0]
+
+    link_list = accordion.find_all("a")
+    for link in link_list:
+        page = utils.get_url(link["href"])
+        soup = BeautifulSoup(page.text, "html5lib")
+        table = soup.find(class_="waffle")
+        if "2017" in link.text:
+            header_list = [
+                "Company",
+                "Layoff Total",
+                "Workforce Region",
+                "WARN Date",
+                "Reason for Layoff",
+            ]
+        else:
+            header_list = []
+        cleaned_data += scrape_google_sheets(table, header_list)
+
+    # Clean up the headers
+    header_crosswalk = {
+        "Company Name": "company",
+        "Company": "company",
+        "WARN Date": "notice_date",
+        "Total Layoffs": "jobs",
+        "NAICS": "naics",
+        "Workforce Area": "workforce_area",
+        "# Perm": "permanent_job_losses",
+        "#Temp": "temporary_job_losses",
+        "Reduced Hours": "reduced_hours",
+        "#Furloughs": "furloughs",
+        "Begin Date": "begin_date",
+        "End Date": "end_date",
+        "Reason for Layoffs": "reason",
+        "Reason for Layoff": "reason",
+        "WARN Letter": "letter",
+        "Occupations Impacted": "occupations",
+        "Occupations": "occupations",
+        "Select the workforce area": "workforce_area",
+        "Total number of permanent layoffs": "permanent_job_losses",
+        "Total number of temporary layoffs": "temporary_job_losses",
+        "Total number of furloughs": "furloughs",
+        "Begin date of layoffs": "begin_date",
+        "End date of layoffs": "end_date",
+        "Layoff Total": "jobs",
+        "Local Area": "workforce_area",
+        "Layoff Date(s)": "begin_date",
+        "Temp Layoffs": "temporary_job_losses",
+        "Perm Layoffs": "permanent_job_losses",
+        "Furloughs": "furloughs",
+        "Workforce Local Area": "workforce_area",
+        "Workforce Region": "workforce_region",
+    }
+    standardized_data = []
+    for row in cleaned_data:
+        row_dict = {}
+        for key, value in row.items():
+            standardized_key = header_crosswalk[key]
+            row_dict[standardized_key] = value
+        standardized_data.append(row_dict)
 
     # Set the path to the final CSV
     output_csv = data_dir / "co.csv"
 
     # Write out the rows to the export directory
-    utils.write_rows_to_csv(output_csv, cleaned_data)
+    # headers = list(cleaned_data[0].keys())
+    utils.write_dict_rows_to_csv(
+        output_csv, set(header_crosswalk.values()), standardized_data
+    )
 
     # Return the path to the final CSV
     return output_csv
 
 
-if __name__ == "__main__":
-    scrape()
-
-
-# Scrapes the google spreadsheet
-def scrape_spreadsheet(rows):
+def scrape_google_sheets(table, header_list=None):
     """
-    Scrapes the spreadsheet data.
+    Scrapes data out of a Google Sheet.
 
     Keyword arguments:
-    rows -- each row data in the spreadsheet
-    vals -- the dataframe that the scraped data is stored in
+    table -- A Google Sheet table pulled into BeautifulSoup
+    header_list -- A list of header to use. Provide this when the source spreadsheet doesn't have a proper header row.
 
-    Returns: spreadsheet contents
+    Returns: The parsed data as a list of dictionaries
     """
-    vals = []
-    for data in rows.find_all("td"):
-        data = str(data)
-        data = re.sub(r"\<.*?\>", "", data)
-        if data != "":
-            vals.append(data)
-    return vals
+    # If a header list isn't provided, pull one out automatically
+    if not header_list:
+        # Pull out the header row
+        header_soup = table.find_all("tr")[1]
+
+        # Parse the header row into a list,
+        # preserving its order in the sheet
+        header_list = []
+        for cell in header_soup.find_all("td"):
+            cell_text = cell.text.strip()
+            # Skip empty headers
+            if cell_text:
+                header_list.append(cell_text)
+
+    # Loop through all the data rows, which start
+    # after the header and the little bar
+    tr_list = table.find_all("tr")[3:]
+    row_list = []
+    for row in tr_list:
+        # Only pull out the cells that have headers
+        cell_list = row.find_all("td")[: len(header_list)]
+
+        # Loop through the cells and key them into a dictionary using the header
+        row_dict = {}
+        for i, cell in enumerate(cell_list):
+            row_dict[header_list[i]] = cell.text.strip()
+
+        # Skip empty rows
+        if any(list(row_dict.values())):
+            row_list.append(row_dict)
+
+    # Return what we got
+    return row_list
+
+
+if __name__ == "__main__":
+    scrape()
