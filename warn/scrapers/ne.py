@@ -45,6 +45,8 @@ def scrape(
     output_rows = []
     for row in table_list[0].find_all("tr")[1:]:
         cell_list = row.find_all("td")
+        if len(cell_list) == 0:
+            continue
         d = {
             "Date": cell_list[0].text.strip(),
             "Company": cell_list[1].text.strip(),
