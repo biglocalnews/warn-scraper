@@ -170,7 +170,7 @@ def scrape_google_sheets(table, header_list=None):
             row_dict[header_list[i]] = cell.text.strip()
 
         # Skip empty rows
-        if any(list(row_dict.values())):
+        if (any(list(row_dict.values())) and 'WARN Date' not in row_dict.values()):
             row_list.append(row_dict)
 
     # Return what we got
