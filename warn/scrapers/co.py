@@ -175,11 +175,11 @@ def scrape_google_sheets(table, header_list=None):
         # Skip empty rows
         if not any(value_list):
             continue
-        
+
         # Skip header rows
         if 'WARN Date' in value_list:
             continue
-        
+
         # Keep whatever is left
         row_list.append(row_dict)
 
