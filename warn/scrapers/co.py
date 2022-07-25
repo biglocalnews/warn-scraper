@@ -169,12 +169,15 @@ def scrape_google_sheets(table, header_list=None):
         for i, cell in enumerate(cell_list):
             row_dict[header_list[i]] = cell.text.strip()
 
+        # Get values list for examination
+        value_list = list(row_dict.values())
+
         # Skip empty rows
-        if not any(list(row_dict.values())):
+        if not any(value_list):
             continue
         
         # Skip header rows
-        if 'WARN Date' in row_dict.values():
+        if 'WARN Date' in value_list:
             continue
         
         # Keep whatever is left
