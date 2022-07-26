@@ -117,7 +117,19 @@ def _extract_excel_data(wb_path):
         row = rows.pop(0)
         first_cell = row[0].value.strip().lower()
         if first_cell.startswith("county"):
+            # Grab the header
+            headers = row
             break
+
+    # Get the location of the final two fields, which vary from week to week
+    num_employees_index = next(
+        i for i, c in enumerate(headers) if c.value and "employees" in c.value.lower()
+    )
+    address_index = next(
+        i for i, c in enumerate(headers) if c.value and "address" in c.value.lower()
+    )
+
+    # Loop through all the rows
     payload = []
     for row in rows:
         first_cell = row[0].value.strip().lower()
@@ -133,8 +145,8 @@ def _extract_excel_data(wb_path):
             "effective_date": _convert_date(row[4].value),
             "company": row[5].value.strip(),
             "layoff_or_closure": row[8].value.strip(),
-            "num_employees": row[10].value,
-            "address": row[12].value.strip(),
+            "num_employees": row[num_employees_index].value,
+            "address": row[address_index].value.strip(),
             "source_file": str(wb_path).split("/")[-1],
         }
         payload.append(data)
