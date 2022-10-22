@@ -81,7 +81,7 @@ def scrape(
 
     # parse pdf data
     pdf_data = []
-
+    print(pdf_list)
     # Parse the pdfs from 2007-2015
     for file in range(len(pdf_list) - 9, len(pdf_list))[::-1]:
         with pdfplumber.open(pdf_list[file]) as pdf:
