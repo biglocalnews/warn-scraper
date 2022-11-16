@@ -41,7 +41,7 @@ def scrape(
     # Get the range of years we're after
     today = datetime.today()
     current_year = today.year
-    year_range = list(range(2015, current_year + 1))
+    year_range = list(range(2019, current_year + 1))
     year_range.reverse()
 
     # Download them all
