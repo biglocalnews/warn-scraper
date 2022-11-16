@@ -41,7 +41,7 @@ def scrape(
     # Get the range of years we're after
     today = datetime.today()
     current_year = today.year
-    year_range = list(range(2015, current_year + 1))
+    year_range = list(range(2019, current_year + 1))
     year_range.reverse()
 
     # Download them all
@@ -49,12 +49,7 @@ def scrape(
     for year in year_range:
 
         # Set the URL, with a hack for 2020 and 2022
-        if year == 2020:
-            url = "https://jobs.mo.gov/content/2020-missouri-warn-notices"
-        elif year == 2022:
-            url = "https://jobs.mo.gov/content/2022-warn-notices"
-        else:
-            url = f"https://jobs.mo.gov/warn{year}"
+        url = f"https://jobs.mo.gov/warn/{year}"
 
         # Read from cache if available and not this year or the year before
         cache_key = f"mo/{year}.html"
