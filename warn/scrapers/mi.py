@@ -2,12 +2,13 @@ import re
 from pathlib import Path
 
 import pdfplumber
+import pdfplumber
 from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["anikasikka"]
+__authors__ = ["anikasikka, Ash1R"]
 __tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Michigan Department of Technology, Management and Budget",
@@ -25,7 +26,6 @@ def scrape(
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
-
     Returns: the Path where the file is written
     """
     # Grabs the main page with the current year's data
@@ -86,13 +86,13 @@ def scrape(
     for file in range(len(pdf_list) - 9, len(pdf_list))[::-1]:
         with pdfplumber.open(pdf_list[file]) as pdf:
             for i in pdf.pages:
-                pdf_data += process_pdf_2(i.extract_text())
+                pdf_data += process_pdf_2007_2015(i.extract_text())
 
     # Parse pdfs from 2000-2006, which use a different type of spacing
     for file in range(len(pdf_list) - 9)[::-1]:
         with pdfplumber.open(pdf_list[file]) as pdf:
             for i in pdf.pages:
-                pdf_data += process_pdf_1(i.extract_text())
+                pdf_data += process_pdf_2000_2006(i.extract_text())
 
     cleaned_data += pdf_data
 
@@ -107,7 +107,7 @@ def scrape(
     return output_csv
 
 
-def process_pdf_1(txt):
+def process_pdf_2000_2006(txt):
     """Process the 2000-2006 pdfs."""
     # split at newline, remove space placeholders, parts that aren't layoff data
     txt = txt.split("\n")
@@ -165,11 +165,11 @@ def process_pdf_1(txt):
             continue
 
         # add city name to final row
-        final.append(row[compname + 1 : cityname])
+        final.append(row[compname + 1: cityname])
 
         # temp contains the test of the string
         # which has date, event type, and number affected in that order
-        temp = row[cityname + 1 :]
+        temp = row[cityname + 1:]
 
         # split to get date, event type, and number affected seperately
         temp = temp.split()
@@ -192,14 +192,13 @@ def process_pdf_1(txt):
         final = [row.strip() for row in final]
 
         # see function
-        final = handle_edge_cases(final)
 
         # add row to page
         ans.append(final)
     return ans
 
 
-def process_pdf_2(txt):
+def process_pdf_2007_2015(txt):
     """Process 2007-2015 pdfs."""
     # split at newline
     txt = txt.split("\n")
@@ -234,56 +233,6 @@ def process_pdf_2(txt):
 # there doesn't seem to be a pattern to them,
 # so I just fixed them manually
 # there may be a more elegant solution
-def handle_edge_cases(row):
-    """Handle edge cases in 2000-2006 pdfs."""
-    if row[0] == "General Motors Nao Orion AsseOrion":
-        row[1] = "Orion"
-        row[0] = row[0][-5:]
-    if row[1] == "LifDetroit":
-        row[1] = "Detroit"
-    if row[1] == "ILapeer":
-        row[1] = "Lapeer"
-    if row[0] == "Standard Federal Bank #320     Troy":
-        row[1] = "Troy"
-        row[0] = "Standard Federal Bank #320"
-    if row[0] == "Standard Federal Bank #340     Troy":
-        row[1] = "Troy"
-        row[0] = "Standard Federal Bank #340"
-    if row[1] == "IFlint":
-        row[1] = "Flint"
-    if row[1] == "DivisioJackson":
-        row[1] = "Jackson"
-    if row[1] == "IncWyoming":
-        row[1] = "Wyoming"
-    if row[0] == "Michigan Machine And EngineerFenton":
-        row[1] = "Fenton"
-        row[0] = row[0][-6:]
-    if row[1] == "CompDearborn Heights":
-        row[1] = "Dearborn Heights"
-    if row[1] == "InPetersburg":
-        row[1] = "Petersburg"
-    if row[0] == "Asplundh Tree Company #93     Wixom":
-        row[0] = row[0][-5:]
-        row[1] = "Wixom"
-    if row[0] == "Asplundh Tree Company #43     Mt.":
-        row[0] = "Asplundh Tree Company #43"
-        row[1] = "Mt. Clemens"
-    if row[0] == "Asplundh Tree Company #843   Howell":
-        row[0] = "Asplundh Tree Company #843"
-        row[1] = "Howell"
-    if row[1] == "RegionaSaginaw":
-        row[1] = "Saginaw"
-    if row[0] == "Robert Bosch Corp. Chassis DivisSi":
-        row[0] = "Robert Bosch Corp. Chassis Division"
-        row[1] = "St. Joseph"
-    if row[0] == "Magna / Cosma Body & Chassis Troy":
-        row[0] = row[0][-4:]
-        row[1] = "Troy"
-    if row[1] == "Corp.Flint":
-        row[1] = "Flint"
-    if row[1] == "Inc.Howell":
-        row[1] = "Howell"
-    return row
 
 
 def _parse_html_table(soup):
