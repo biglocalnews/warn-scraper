@@ -55,7 +55,7 @@ def scrape(
             html = cache.read(cache_key)
         else:
             # Otherwise, go request it
-            page = utils.get_url(url)
+            page = utils.get_url(url, verify=False)
             html = page.text
             cache.write(cache_key, html)
 

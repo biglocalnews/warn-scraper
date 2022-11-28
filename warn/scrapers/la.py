@@ -142,7 +142,7 @@ def _is_mostly_empty(row: list) -> bool:
     return len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
 
 
-def _process_pdf(pdf_path: Path) -> list:
+def _process_pdf(pdf_path):
     """
     Process a PDF file.
 
@@ -157,7 +157,8 @@ def _process_pdf(pdf_path: Path) -> list:
         for page in pdf.pages:
             for table in page.debug_tablefinder().tables:
                 for index, row in enumerate(table.rows):
-                    row = [_extract_cell_chars(page, cell) for cell in row.cells]
+                    cells = row.cells
+                    row = [_extract_cell_chars(page, cell) for cell in cells]
 
                     # If the first row in a table is mostly empty,
                     # append its contents to the previous row
@@ -176,7 +177,7 @@ def _process_pdf(pdf_path: Path) -> list:
     return _clean_rows(output_rows)
 
 
-def _clean_rows(rows: list) -> list:
+def _clean_rows(rows):
     """
     Clean up rows.
 
@@ -221,7 +222,7 @@ def _clean_rows(rows: list) -> list:
     return output_rows
 
 
-def _extract_cell_chars(page: pdfplumber.pdf.Page, bbox: tuple) -> list:
+def _extract_cell_chars(page, bbox):
     """
     Extract the characters from a cell.
 
@@ -243,7 +244,7 @@ def _extract_cell_chars(page: pdfplumber.pdf.Page, bbox: tuple) -> list:
     return page.within_bbox(expanded_bbox).chars
 
 
-def _vertically_expand_bounding_box(bbox: tuple, increase: int) -> tuple:
+def _vertically_expand_bounding_box(bbox, increase):
     """
     Expand the bounding box by a given amount in the vertical direction.
 
@@ -328,7 +329,7 @@ def _is_clean_header(row: list) -> bool:
     return _is_header(row) and "Employees Affected" in row
 
 
-def _extract_note(chars: list) -> str:
+def _extract_note(chars) -> str:
     """
     Extract a note from a PDF cell.
 
@@ -353,7 +354,7 @@ def _extract_note(chars: list) -> str:
     return " ".join(notes)
 
 
-def _extract_company_name(chars: list) -> str:
+def _extract_company_name(chars) -> str:
     """
     Extract the company name from a PDF cell.
 
@@ -394,7 +395,7 @@ def _extract_company_name(chars: list) -> str:
     return company_name
 
 
-def _is_location(text: str) -> bool:
+def _is_location(text) -> bool:
     """
     Determine if text is likely to be a location.
 
@@ -407,7 +408,7 @@ def _is_location(text: str) -> bool:
     return re.match(location_pattern, text, re.IGNORECASE) is not None
 
 
-def _extract_bold_text(chars: list) -> str:
+def _extract_bold_text(chars) -> str:
     """
     Extract the bold text from a PDF cell.
 
@@ -421,7 +422,7 @@ def _extract_bold_text(chars: list) -> str:
     return bold_text
 
 
-def _clean_text(text: str) -> str:
+def _clean_text(text) -> str:
     """
     Clean up text from a PDF cell.
 

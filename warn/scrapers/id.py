@@ -64,7 +64,7 @@ def scrape(
     return data_path
 
 
-def _clean_table(rows: list, page_index: int) -> list:
+def _clean_table(rows, page_index) -> list:
     """
     Clean up a table from a PDF.
 
