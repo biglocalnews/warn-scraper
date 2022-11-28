@@ -193,7 +193,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-          cache: 'pipenv'
 
       - id: fetch
         name: Fetch artifact
@@ -226,7 +225,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-          cache: 'pipenv'
 
       - id: fetch
         name: Fetch artifact
