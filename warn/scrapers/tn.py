@@ -1,3 +1,4 @@
+import typing
 from pathlib import Path
 
 import pdfplumber
@@ -53,7 +54,7 @@ def scrape(
         "Layoff/Closure",
         "Notice ID",
     ]
-    cleaned_data = [tn_headers]
+    cleaned_data: typing.List[typing.Any] = [tn_headers]
 
     # Parse the latest HTML file and convert to a list of rows, with a header in the first row.
     soup = BeautifulSoup(html, "html5lib")
@@ -115,12 +116,18 @@ def scrape(
 
             # Pull out the table and loop through the rows
             table = my_page.extract_table()
+            if not table:
+                continue
 
             # Cut empty rows
             row_list = [r for r in table if any(r)]
+            if not row_list:
+                continue
 
             # If this is a summary table, skip it
-            if row_list[0][0].lower().strip() == "summary by month":
+            first_cell = row_list[0][0]
+            assert first_cell
+            if first_cell.lower().strip() == "summary by month":
                 continue
 
             # Loop through all the rows ...
