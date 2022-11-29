@@ -33,7 +33,7 @@ def scrape(
     cache = Cache(cache_dir)
 
     # The basic configuration for the scrape
-    base_url = "https://www.dol.state.ga.us/public/es/warn/searchwarns/list"
+    base_url = "http://www.dol.state.ga.us/public/es/warn/searchwarns/list"
 
     area = 9  # statewide
 
