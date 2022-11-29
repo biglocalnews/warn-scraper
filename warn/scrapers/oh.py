@@ -140,13 +140,10 @@ def _parse_pdf(pdf_path: Path) -> list:
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             rows = page.extract_table({"explicit_horizontal_lines": page.curves})
-            if not rows:
-                continue
+
             for row_index, row in enumerate(rows):
                 output_row = []
                 for col_index, column in enumerate(row):
-                    if not column:
-                        continue
                     clean_text = _clean_text(column)
 
                     # If cell is empty, copy from the cell above it
