@@ -1,5 +1,6 @@
 import logging
 import re
+import typing
 from pathlib import Path
 
 import pdfplumber
@@ -140,7 +141,7 @@ def _parse_pdf(pdf_path: Path) -> list:
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             rows = page.extract_table({"explicit_horizontal_lines": page.curves})
-
+            assert rows
             for row_index, row in enumerate(rows):
                 output_row = []
                 for col_index, column in enumerate(row):
@@ -165,7 +166,7 @@ def _parse_pdf(pdf_path: Path) -> list:
     return row_list
 
 
-def _clean_text(text: str) -> str:
+def _clean_text(text: typing.Optional[str]) -> str:
     """
     Clean up text from a PDF cell.
 
