@@ -38,7 +38,7 @@ def scrape(
     """
     # Get URL
     r = utils.get_url(
-        "https://scworks.org/employer/employer-programs/at-risk-of-closing/layoff-notification-reports",
+        "https://scworks.org/employer/employer-programs/risk-closing/layoff-notification-reports",
         verify=False,
     )
     html = r.text
@@ -53,7 +53,11 @@ def scrape(
     pdf_dict = {}
     for a in link_list:
         # Pull the data we want to keep
-        a_href = a["href"]
+        try:
+            a_href = a["href"]
+        except KeyError:
+            # Skip non-links
+            continue
         a_text = a.text.strip()
         if "pdf" in a_href:
             # Make sure that the text is a year
