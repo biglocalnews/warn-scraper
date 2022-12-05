@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 import pdfplumber
-import pdfplumber
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -165,24 +164,16 @@ def process_pdf_2000_2006(txt):
             continue
 
         # add city name to final row
-        final.append(row[compname + 1: cityname])
+        final.append(row[compname + 1 : cityname])
 
         # temp contains the test of the string
         # which has date, event type, and number affected in that order
-        temp = row[cityname + 1:]
+        temp = row[cityname + 1 :]
 
         # split to get date, event type, and number affected seperately
         temp = temp.split()
 
         # they use numbers instead of these words in some of the pdf
-        if temp[1] == "1":
-            temp[1] = "Plant Closing"
-        elif temp[1] == "2":
-            temp[1] = "Mass Layoff"
-        elif temp[1] == "3":
-            temp[1] = ""
-        elif temp[1] == "4":
-            temp[1] = ""
 
         # add date, event type, and number affected to final row
         for j in temp:
