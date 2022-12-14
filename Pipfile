@@ -23,6 +23,7 @@ sphinxcontrib-napoleon = "*"
 types-requests = "*"
 mypy = "*"
 typing-extensions = "*"
+types-retry = "*"
 
 [packages]
 bs4 = "*"
