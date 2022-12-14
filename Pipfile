@@ -33,6 +33,7 @@ pdfplumber = "*"
 tenacity = "*"
 click = "*"
 xlrd = "*"
+retry = "*"
 
 [requires]
 python_version = "3.9"

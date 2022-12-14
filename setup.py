@@ -135,6 +135,7 @@ setup(
         "openpyxl",
         "xlrd",
         "tenacity",
+        "retry",
     ],
     license="Apache 2.0 license",
     zip_safe=False,
