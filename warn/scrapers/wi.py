@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Wisconsin Department of Workforce Development",
@@ -38,15 +38,24 @@ def scrape(
     today = datetime.today()
     current_year = today.year
 
+    # Get the current year of data
+    url = "https://dwd.wisconsin.gov/dislocatedworker/warn/"
+    r = utils.get_url(
+        url,
+        user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+    )
+    html = r.text
+    cache.write(f"wi/{current_year}.html", html)
+    html_list = [html,]
+
     # Set the date range we're going to scrape
     year_range = list(range(2016, current_year + 1))
     year_range.reverse()
 
     # Loop through the years and download the pages
-    html_list = []
     for year in year_range:
-        # Since the 2022 page doesn't exist yet, we're going to hack in a skip
-        if year == 2022:
+        # Since the current year page doesn't exist, we're going to hack in a skip
+        if year == current_year:
             continue
 
         # Request fresh pages, use cache for old ones
@@ -62,8 +71,19 @@ def scrape(
         # Add to the list
         html_list.append(html)
 
-    output_rows = []
-    for ihtml, html in enumerate(html_list):
+    header = [
+        "Company",
+        "City",
+        "Affected Workers",
+        "Notice Received",
+        "Original Notice Type / Update Type",
+        "Layoff Begin Date",
+        "NAICS Description",
+        "County"
+        "Workforce Development Area"
+    ]
+    output_rows = [header,]
+    for html in html_list:
         # Parse the HTML
         soup = BeautifulSoup(html, "html5lib")
 
@@ -75,18 +95,11 @@ def scrape(
         notice_tables = [t for t in table_list if len(t.find("tr").find_all("th")) > 2]
 
         # Loop through the tables
-        for itable, table in enumerate(notice_tables):
+        for table in notice_tables:
             # Get all the rows
-            row_list = table.find_all("tr")
-
-            # If this is the first table on the first page, get headers too
-            tags = ["td"]
-            if ihtml == 0 and itable == 0:
-                tags.append("th")
-
-            for row in row_list:
+            for row in table.find_all("tr"):
                 # Pull out the cells and clean them
-                cell_list = [_clean_text(c.text) for c in row.find_all(tags)]
+                cell_list = [_clean_text(c.text) for c in row.find_all(["td"])]
 
                 # Skip empty rows
                 try:

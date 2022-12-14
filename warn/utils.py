@@ -5,6 +5,7 @@ import typing
 from pathlib import Path
 
 import requests
+from retry import retry
 from openpyxl import load_workbook
 
 logger = logging.getLogger(__name__)
@@ -98,6 +99,7 @@ def get_all_scrapers():
     )
 
 
+@retry(tries=3, delay=15, backoff=2)
 def get_url(
     url, user_agent="Big Local News (biglocalnews.org)", session=None, **kwargs
 ):
@@ -110,16 +112,23 @@ def get_url(
     """
     logger.debug(f"Requesting {url}")
 
+    # Set the headers
     if "headers" not in kwargs:
         kwargs["headers"] = {}
     kwargs["headers"]["User-Agent"] = user_agent
 
+    # Go get it
     if session is not None:
         logger.debug(f"Requesting with session {session}")
         response = session.get(url, **kwargs)
     else:
         response = requests.get(url, **kwargs)
     logger.debug(f"Response code: {response.status_code}")
+
+    # Verify that the response is 200
+    assert response.ok
+
+    # Return the response
     return response
 
 

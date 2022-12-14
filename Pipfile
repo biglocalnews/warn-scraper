@@ -23,6 +23,7 @@ sphinxcontrib-napoleon = "*"
 types-requests = "*"
 mypy = "*"
 typing-extensions = "*"
+types-retry = "*"
 
 [packages]
 bs4 = "*"
@@ -33,6 +34,7 @@ pdfplumber = "*"
 tenacity = "*"
 click = "*"
 xlrd = "*"
+retry = "*"
 
 [requires]
 python_version = "3.9"
