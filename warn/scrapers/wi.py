@@ -83,7 +83,7 @@ def scrape(
         "Workforce Development Area"
     ]
     output_rows = [header,]
-    for ihtml, html in enumerate(html_list):
+    for html in html_list:
         # Parse the HTML
         soup = BeautifulSoup(html, "html5lib")
 
@@ -95,7 +95,7 @@ def scrape(
         notice_tables = [t for t in table_list if len(t.find("tr").find_all("th")) > 2]
 
         # Loop through the tables
-        for itable, table in enumerate(notice_tables):
+        for table in notice_tables:
             # Get all the rows
             for row in table.find_all("tr"):
                 # Pull out the cells and clean them
