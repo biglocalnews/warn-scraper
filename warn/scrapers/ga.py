@@ -48,7 +48,7 @@ def scrape(
     years.reverse()
 
     # Loop through the years and scrape them one by one
-    output_rows = []
+    output_rows: typing.List = []
     for i, year in enumerate(years):
         # Concoct the URL
         url = f"{base_url}?geoArea={area}&year={year}&step=search"
