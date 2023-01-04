@@ -34,7 +34,8 @@ def scrape(
 
     # Get the latest HTML page
     url_list = [
-        dict(year=2022, url="https://dol.ny.gov/warn-notices"),
+        dict(year=2023, url="https://dol.ny.gov/warn-notices"),
+        dict(year=2022, url="https://dol.ny.gov/2022-warn-notices"),
         dict(year=2021, url="https://dol.ny.gov/warn-notices-2021"),
     ]
 
