@@ -1,3 +1,4 @@
+import logging
 import re
 import time
 from datetime import datetime
@@ -14,6 +15,8 @@ __source__ = {
     "name": "Georgia Department of Labor",
     "url": "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -96,7 +99,11 @@ def _parse_table(html, id, include_headers=True):
     table_list = soup.find_all(id=id)  # output is list-type
 
     # We expect the first table to be there with our data
-    assert len(table_list) > 0
+    try:
+        assert len(table_list) > 0
+    except AssertionError:
+        logger.debug("No tables found")
+        return []
     table = table_list[0]
 
     output_rows = []
