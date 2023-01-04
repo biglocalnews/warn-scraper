@@ -66,7 +66,7 @@ def scrape(
         new_rows = _parse_table(
             html,
             "emplrList",
-            include_headers=i == 0,  # After the first loop, we can skip the headers
+            include_headers=len(output_rows) == 0 or i == 0,  # After the first loop, we can skip the headers
         )
 
         # Concatenate the rows
