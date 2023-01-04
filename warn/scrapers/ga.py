@@ -1,6 +1,7 @@
 import logging
 import re
 import time
+import typing
 from datetime import datetime
 from pathlib import Path
 
@@ -47,7 +48,7 @@ def scrape(
     years.reverse()
 
     # Loop through the years and scrape them one by one
-    output_rows = []
+    output_rows: typing.List = []
     for i, year in enumerate(years):
         # Concoct the URL
         url = f"{base_url}?geoArea={area}&year={year}&step=search"
@@ -66,7 +67,7 @@ def scrape(
         new_rows = _parse_table(
             html,
             "emplrList",
-            include_headers=i == 0,  # After the first loop, we can skip the headers
+            include_headers=len(output_rows) == 0 or i == 0,  # After the first loop, we can skip the headers
         )
 
         # Concatenate the rows
@@ -83,7 +84,7 @@ def scrape(
     return data_path
 
 
-def _parse_table(html, id, include_headers=True):
+def _parse_table(html, id, include_headers=True) -> typing.List:
     """
     Parse HTML table with given ID.
 
