@@ -12,7 +12,7 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Missouri Office of Workforce Development",
-    "url": "https://jobs.mo.gov/content/2022-warn-notices",
+    "url": "https://jobs.mo.gov/warn/",
 }
 
 logger = logging.getLogger(__name__)
@@ -66,13 +66,19 @@ def scrape(
         html_list.append(html)
 
     # Parse them all
+    logger.debug(f"{len(html_list)} pages downloaded")
     output_rows = []
     for i, html in enumerate(html_list):
+        logger.debug(f"Parsing page #{i+1}")
         soup = BeautifulSoup(html, "html5lib")
 
         # Pull out the table
         table_list = soup.find_all("table")
-        assert len(table_list) > 0
+        try:
+            assert len(table_list) > 0
+        except AssertionError:
+            logger.debug("No tables found")
+            continue
         table = table_list[0]
 
         # Get all rows
