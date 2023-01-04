@@ -1,6 +1,7 @@
 import logging
 import re
 import time
+import typing
 from datetime import datetime
 from pathlib import Path
 
@@ -83,7 +84,7 @@ def scrape(
     return data_path
 
 
-def _parse_table(html, id, include_headers=True):
+def _parse_table(html, id, include_headers=True) -> typing.List:
     """
     Parse HTML table with given ID.
 
