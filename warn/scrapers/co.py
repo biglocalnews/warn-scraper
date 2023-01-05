@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -11,6 +12,8 @@ __source__ = {
     "name": "Colorado Department of Labor and Employment",
     "url": "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -40,7 +43,9 @@ def scrape(
     soup = BeautifulSoup(html, "html5lib")
 
     # Get the link to the Google Sheet that's on the page
-    current_link = str(soup.find("a", class_="btn btn-primary")).split('"')[3]
+    current_link = soup.find(class_="region-content").find("a", class_="btn-dark-blue")[
+        "href"
+    ]
 
     # Open the Google Sheet
     current_page = utils.get_url(current_link)
@@ -49,10 +54,10 @@ def scrape(
     # Parse the Google Sheet
     soup_current = BeautifulSoup(current_html, "html5lib")
     table = soup_current.find(class_="waffle")
-    cleaned_data = []  # scrape_google_sheets(table)
+    cleaned_data = scrape_google_sheets(table)
 
     # Goes through the accordion links to get past data
-    accordion_list = soup.find_all("dl")
+    accordion_list = soup.find(class_="region-content").find_all("dl")
 
     # Make sure there's only one
     assert len(accordion_list) == 1
@@ -60,7 +65,8 @@ def scrape(
     # Grab the first one from the list
     accordion = accordion_list[0]
 
-    link_list = accordion.find_all("a")
+    link_list = [a for a in accordion.find_all("a") if "feedback" not in a.text]
+    logger.debug(f"Requesting {len(link_list)} discovered links")
     for link in link_list:
         page = utils.get_url(link["href"])
         soup = BeautifulSoup(page.text, "html5lib")
@@ -110,6 +116,14 @@ def scrape(
         "Furloughs": "furloughs",
         "Workforce Local Area": "workforce_area",
         "Workforce Region": "workforce_region",
+        "Contact Name": "contact",
+        "Contact Phone": "phone",
+        "Contact Email": "email",
+        "FEIN": "fein",
+        "Location Address": "location",
+        "Total number of employees at the location": "at_the_location",
+        "Sector 33 (6414) Guided Missle & Space Vehicle": "naics",
+        "@dropdown": "dropdown",
     }
     standardized_data = []
     for row in cleaned_data:
@@ -159,6 +173,7 @@ def scrape_google_sheets(table, header_list=None):
     # Loop through all the data rows, which start
     # after the header and the little bar
     tr_list = table.find_all("tr")[3:]
+    logger.debug(f"Parsing {len(tr_list)} rows")
     row_list = []
     for row in tr_list:
         # Only pull out the cells that have headers
@@ -177,7 +192,7 @@ def scrape_google_sheets(table, header_list=None):
             continue
 
         # Skip header rows
-        if 'WARN Date' in value_list:
+        if "WARN Date" in value_list:
             continue
 
         # Keep whatever is left
