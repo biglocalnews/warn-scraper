@@ -1,5 +1,6 @@
 import logging
 import re
+import typing
 from datetime import datetime
 from pathlib import Path
 
@@ -67,7 +68,7 @@ def scrape(
 
     # Parse them all
     logger.debug(f"{len(html_list)} pages downloaded")
-    output_rows = []
+    output_rows: typing.List = []
     for i, html in enumerate(html_list):
         logger.debug(f"Parsing page #{i+1}")
         soup = BeautifulSoup(html, "html5lib")
