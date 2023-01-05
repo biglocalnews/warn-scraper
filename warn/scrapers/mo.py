@@ -1,5 +1,6 @@
 import logging
 import re
+import typing
 from datetime import datetime
 from pathlib import Path
 
@@ -67,7 +68,7 @@ def scrape(
 
     # Parse them all
     logger.debug(f"{len(html_list)} pages downloaded")
-    output_rows = []
+    output_rows: typing.List = []
     for i, html in enumerate(html_list):
         logger.debug(f"Parsing page #{i+1}")
         soup = BeautifulSoup(html, "html5lib")
@@ -84,8 +85,8 @@ def scrape(
         # Get all rows
         row_list = table.find_all("tr")
 
-        # If it's not the first page, slice off the header
-        if i > 0:
+        # If it's not the first row, slice off the header
+        if len(output_rows) > 0:
             row_list = row_list[1:]
 
         # Loop through all the rows
