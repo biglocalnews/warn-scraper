@@ -10,7 +10,7 @@ __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Indiana Department of Workforce Development",
-    "url": "https://www.in.gov/dwd/2567.htm",
+    "url": "https://www.in.gov/dwd/warn-notices/current-warn-notices/",
 }
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ def scrape(
     cache = Cache(cache_dir)
 
     # Get the HTML
-    latest_url = "https://www.in.gov/dwd/2567.htm"
+    latest_url = "https://www.in.gov/dwd/warn-notices/current-warn-notices/"
     r = utils.get_url(latest_url)
     latest_html = r.text
     cache.write("in/latest.html", latest_html)
@@ -46,22 +46,6 @@ def scrape(
     output_rows = []
     for i, table in enumerate(latest_tables):
         row_list = _parse_table(table, include_headers=i == 0)
-        logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
-        output_rows.extend(row_list)
-
-    # Get the archive tables
-    archive_url = "https://www.in.gov/dwd/3125.htm"
-    r = utils.get_url(archive_url)
-    archive_html = r.text
-    cache.write("in/archive.html", archive_html)
-
-    # Parse tables
-    archive_soup = BeautifulSoup(archive_html, "html.parser")
-    archive_tables = archive_soup.find_all("table")
-
-    # Scrape table
-    for i, table in enumerate(archive_tables):
-        row_list = _parse_table(table, include_headers=False)
         logger.debug(f"Scraped {len(row_list)} rows latest table {i+1}")
         output_rows.extend(row_list)
 
