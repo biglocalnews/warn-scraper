@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["chriszs"]
+__authors__ = ["chriszs, Ash1R"]
 __tags__ = ["html"]
 
 
@@ -21,7 +21,6 @@ def scrape(
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
-
     Returns: the Path where the file is written
     """
     state_code = "pa"
@@ -55,8 +54,8 @@ def scrape(
 
     # Write out the results
     data_path = data_dir / f"{state_code}.csv"
-    utils.write_dict_rows_to_csv(
-        data_path,
+
+    cleaned_data = [
         [
             "COMPANY",
             "LOCATION",
@@ -64,9 +63,35 @@ def scrape(
             "# AFFECTED",
             "EFFECTIVE DATE",
             "CLOSURE OR LAYOFF",
-        ],
-        output_rows,
-    )
+        ]
+    ]
+    print(output_rows)
+    for i in output_rows:
+        final = []
+        datesstart = False
+        date = ""
+        dateadded = False
+        for r in i:
+            if "phase" in r.lower() or "effective" in r.lower():
+                date = date + i[r] + " "
+                datesstart = True
+
+            else:
+                if datesstart:
+                    final.append(date)
+                    final.append(i[r])
+                    dateadded = True
+
+                else:
+                    final.append(i[r])
+                    continue
+        if not dateadded:
+            final.insert(-1, date)
+        if len(final) == 5:
+            final[-1], final[-2] = final[-2], final[-1]
+        cleaned_data.append(final)
+
+    utils.write_rows_to_csv(data_path, cleaned_data)
 
     # Return the path to the CSV
     return data_path
@@ -79,7 +104,6 @@ def _parse_table(html, include_headers=True):
     Keyword arguments:
     html -- the HTML to parse
     include_headers -- whether to include the headers in the output (default True)
-
     Returns: a list of rows
     """
     # Parse out data table
@@ -100,9 +124,15 @@ def _parse_table(html, include_headers=True):
                 re.sub(r"\<[^>]*\>|\xa0", " ", line).replace("&amp;", "&")
             )
             is_bolded = bool(re.search(r"\<\/?strong|b\>", line))
-            is_field = bool(re.search(r"\:.+|# AFFECTED\:|EFFECTIVE DATE\:", clean_text))
+            is_field = bool(
+                re.search(r"\:.+|# AFFECTED\:|EFFECTIVE DATE\:", clean_text)
+            )
             is_type = bool(
-                re.search(r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED|REDUCTION OF FORCE", clean_text, re.I)
+                re.search(
+                    r"LAYOFF|CLOSING|CLOSURE|PERMANENT|CONTRACT CANCELLED|REDUCTION OF FORCE",
+                    clean_text,
+                    re.I,
+                )
             )
             is_empty = len(clean_text) == 0
 
@@ -157,7 +187,6 @@ def _parse_table(html, include_headers=True):
 
 
 def _clean_text(text):
-    """Clean up the provided HTML snippet."""
     if text is None:
         return ""
     text = re.sub(r"\n", " ", text)
