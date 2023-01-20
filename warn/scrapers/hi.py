@@ -1,6 +1,8 @@
+import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
+from dateutil.parser import parse
 
 from .. import utils
 
@@ -34,42 +36,12 @@ def scrape(
     headers = ["Company", "Date", "PDF url"]
     data = [headers]
     for i in range(len(dates)):
-        if len(dates[i]) > 20:
-            includes_date = False
-            for j in [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            ]:
-                if j in dates[i].split(" ")[0]:
-                    dates[i] = (
-                        dates[i].split(" ")[0]
-                        + " "
-                        + dates[i].split(" ")[1]
-                        + " "
-                        + dates[i].split(" ")[2]
-                    )
-                    includes_date = True
-                elif j in dates[i].split(" ")[-3]:
-                    dates[i] = (
-                        dates[i].split(" ")[-3]
-                        + " "
-                        + dates[i].split(" ")[-2]
-                        + " "
-                        + dates[i].split(" ")[-1]
-                    )
-                    includes_date = True
-            if not includes_date:
-                dates[i] = "*Correction"
+
+        parsed_date = parse(dates[i], default=datetime.datetime(1776, 1, 1), fuzzy=True)
+        if parsed_date == datetime.datetime(1776, 1, 1):
+            dates[i] = "Correction"
+        else:
+            dates[i] = parsed_date.date()
 
     for i in range(len(tags)):
         row = []
@@ -77,6 +49,7 @@ def scrape(
         row.append(tags[i].get_text())
 
         row.append(dates[i])
+
         row.append(url)
         data.append(row)
 
