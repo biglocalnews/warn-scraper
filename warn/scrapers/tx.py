@@ -135,7 +135,7 @@ def scrape(
 
 def _get_year(url: str) -> int:
     """Plucks the year from the provided URL."""
-    filename_regex = re.match(r".*-(.{4})(\..*)$", url, re.I)
+    filename_regex = re.match(r".*-(\d{4})(.*)$", url, re.I)
     assert filename_regex is not None
     year_str = filename_regex.group(1)[-4:]
     return int(year_str)
@@ -143,7 +143,7 @@ def _get_year(url: str) -> int:
 
 def _get_ext(url: str) -> str:
     """Plucks the file extension from the provided URL."""
-    filename_regex = re.match(r".*-(.{4})(\..*)$", url, re.I)
+    filename_regex = re.match(r".*-(\d{4})(.*)$", url, re.I)
     assert filename_regex is not None
     return filename_regex.group(2)
 
