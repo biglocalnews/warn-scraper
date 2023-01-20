@@ -24,6 +24,7 @@ def scrape(
     Keyword arguments:
     data_dir -- the Path were the result will be saved (default WARN_DATA_DIR)
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
+    
     Returns: the Path where the file is written
     """
     # Grabs the main page with the current year's data
