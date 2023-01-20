@@ -35,19 +35,20 @@ def scrape(
     cache = Cache(cache_dir)
     cache.write("xx/yy.html", html)
     soup = BeautifulSoup(html, "html5lib")
-    a = soup.select("a[href*=pdf]")
-    alllinks = ["https://mdes.ms.gov/" + link["href"] for link in a]
-    links = []
+    all_pdf_links = soup.select("a[href*=pdf]")
+    links = [
+        f"https://mdes.ms.gov/{link['href']}"
+        for link in all_pdf_links
+        if "map" not in link["href"]
+    ]
     pdf_list = []
-    for link in alllinks:
-        if "map" not in link:
-            links.append(link)
-    for i in links:
-        cache_key = i.split("/")[-2] + i.split("/")[-1]
+
+    for link in links:
+        cache_key = link.split("/")[-2] + link.split("/")[-1]
         if cache.exists(cache_key):
             pdf_file = cache_dir / cache_key
         else:
-            pdf_file = cache.download(cache_key, i)
+            pdf_file = cache.download(cache_key, link)
         pdf_list.append(pdf_file)
 
     headers = [
@@ -66,10 +67,10 @@ def scrape(
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
                 text = page.extract_tables()
-                if text == []:
+                if not text:
                     continue
                 for i in range(len(text)):
-                    if text[i][0][0] != "" and text[i][0][0][0] == "D":
+                    if len(text[i][0][0]) > 1 and ("date" in text[i][0][0].lower()):
                         notices = text[i]
                         break
                 startrow = 0
@@ -87,13 +88,13 @@ def scrape(
                     if notices[row][0] is None or "/" not in notices[row][0]:
                         continue
 
-                    for i in notices[row]:
-                        if i is not None:
-                            final.append(i)
+                    for n in notices[row]:
+                        if n is not None:
+                            final.append(n)
 
-                    for i in notices[row + 1]:
-                        if i is not None:
-                            final.append(i.strip())
+                    for n in notices[row + 1]:
+                        if n is not None:
+                            final.append(n.strip())
                     while len(final) != 9:
                         if "" in final:
                             final.remove("")
