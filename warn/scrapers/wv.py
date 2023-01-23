@@ -52,15 +52,17 @@ def scrape(
                 row = []
                 for k in range(len(data)):
                     if data[k][0] is not None:
-                        if (
-                            (data[k][0].strip() == "Contact Information")
-                            or (data[k][0].strip() == "Region")
-                            or (data[k][0].strip() == "County")
-                            or (data[k][0].strip() == "Date of Notice")
-                            or (data[k][0].strip() == "Projected Date")
-                            or (data[k][0].strip() == "Closure/Mass Layoff")
-                            or (data[k][0].strip() == "Number Affected")
-                        ):
+                        header_whitelist = [
+                            "Contact Information",
+                            "Region",
+                            "County",
+                            "Date of Notice",
+                            "Projected Date",
+                            "Closure/Mass Layoff",
+                            "Number Affected",
+                        ]
+
+                        if data[k][0].strip() in header_whitelist:
                             row.append(data[k][1].strip())
 
                         elif data[k][0].strip() == "Address":
