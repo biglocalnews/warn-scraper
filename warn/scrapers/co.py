@@ -124,6 +124,7 @@ def scrape(
         "Total number of employees at the location": "at_the_location",
         "Sector 33 (6414) Guided Missle & Space Vehicle": "naics",
         "@dropdown": "dropdown",
+        "Received": "received_date",
     }
     standardized_data = []
     for row in cleaned_data:
