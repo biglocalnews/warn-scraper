@@ -77,9 +77,9 @@ def scrape(
                     elif ((data[k][0] is None) and (k != 0)) or (
                         data[k][0] == "None" and k != 0
                     ):
-                        for p in range(1, len(data[k])):
-                            if data[k][p] is not None:
-                                company = company + ", " + data[k][p].strip()
+                        for company_names in data[k]:
+                            if company_names is not None:
+                                company = company + ", " + company_names.strip()
 
                 final_data.append(row)
 
