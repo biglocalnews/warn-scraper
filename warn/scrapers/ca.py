@@ -186,6 +186,7 @@ def _extract_pdf_data(pdf_path):
         "No. Of Employees": "num_employees",
         "Notice\nDate": "notice_date",
         "Notice Date": "notice_date",
+        "NoticeDate": "notice_date",
         "Received\nDate": "received_date",
         "Received \nDate": "received_date",
         "Received Date": "received_date",
