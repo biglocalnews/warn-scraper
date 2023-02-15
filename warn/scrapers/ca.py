@@ -191,6 +191,7 @@ def _extract_pdf_data(pdf_path):
         "Received\nDate": "received_date",
         "Received \nDate": "received_date",
         "Received Date": "received_date",
+        "ReceivedDate": "received_date",
     }
     data = []
     logger.debug(f"Opening {pdf_path} for PDF parsing")
