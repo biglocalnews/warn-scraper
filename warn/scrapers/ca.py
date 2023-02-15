@@ -179,6 +179,7 @@ def _extract_pdf_data(pdf_path):
         "Effective \nDate": "effective_date",
         "Effective  \nDate": "effective_date",
         "Effective Date": "effective_date",
+        "EffectiveDate": "effective_date",
         "Employees": "num_employees",
         "Layoff/Closure": "layoff_or_closure",
         "Layoff/Closure Type": "layoff_or_closure",
