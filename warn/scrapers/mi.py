@@ -93,8 +93,9 @@ def scrape(
 
 def _parse_html_table(soup):
     black_list = [
-        "TOTAL:",
+        "Number of layoffs indicated Y-T-D",
         "Number of notices received Y-T-D",
+        "TOTAL:",
         "Total Layoffs:",
         "Notes:",
         "",
