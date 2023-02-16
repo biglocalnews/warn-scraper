@@ -185,6 +185,7 @@ def _extract_pdf_data(pdf_path):
         "Layoff/Closure Type": "layoff_or_closure",
         "No. Of \nEmployees": "num_employees",
         "No. Of Employees": "num_employees",
+        "No. Of\nEmployees": "num_employees",
         "Notice\nDate": "notice_date",
         "Notice Date": "notice_date",
         "NoticeDate": "notice_date",
