@@ -136,15 +136,14 @@ def _extract_excel_data(wb_path):
         # Exit if we've reached summary row at bottom
         if first_cell == "report summary":
             break
-        # Spreadsheet contains merged cells so index
-        # positions below are not sequential
+
         data = {
             "county": row[0].value.strip(),
             "notice_date": _convert_date(row[1].value),
             "received_date": _convert_date(row[2].value),
-            "effective_date": _convert_date(row[4].value),
-            "company": row[5].value.strip(),
-            "layoff_or_closure": row[8].value.strip(),
+            "effective_date": _convert_date(row[3].value),
+            "company": row[4].value.strip(),
+            "layoff_or_closure": row[5].value.strip(),
             "num_employees": row[num_employees_index].value,
             "address": row[address_index].value.strip(),
             "source_file": str(wb_path).split("/")[-1],
