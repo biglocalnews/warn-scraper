@@ -5,8 +5,8 @@ import typing
 from pathlib import Path
 
 import requests
-from retry import retry
 from openpyxl import load_workbook
+from retry import retry
 
 logger = logging.getLogger(__name__)
 
@@ -126,7 +126,8 @@ def get_url(
     logger.debug(f"Response code: {response.status_code}")
 
     # Verify that the response is 200
-    assert response.ok
+    if not response.ok:
+        raise requests.RequestException(f"Response code {response.status_code}")
 
     # Return the response
     return response

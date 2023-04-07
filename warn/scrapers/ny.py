@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pdfplumber
+import requests
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
@@ -79,14 +81,65 @@ def _get_html_data(cache, config):
     # Loop through the rows of the table
     for tr in table.find_all("tr")[1:]:
         td_list = tr.find_all("td")
+        notice_file_name = td_list[0].a["href"].strip()
         d = dict(
             company_name=td_list[0].a.text,
-            notice_url=td_list[0].a["href"],
+            notice_url=notice_file_name,
             date_posted=td_list[1].text,
             notice_dated=td_list[2].text,
         )
+        # Crawl the indiviaual WARN notice PDFs to get addictional fields if possible
+        d.update(_get_values_from_notice(notice_file_name, cache))
         row_list.append(d)
     return row_list
+
+
+def _get_values_from_notice(notice_file_name: str, cache):
+    details = dict(
+        number_of_employees_affected=None, total_employees=None, event_number=None
+    )
+    tld = "https://dol.ny.gov"
+    # Sometimes the notice_url is a full URL, sometimes it's just a path
+    notice_url = (
+        notice_file_name if notice_file_name.startswith(tld) else tld + notice_file_name
+    )
+    file_location = f"ny/{notice_file_name}.pdf"
+    # Grab the PDF with the detailed data
+    try:
+        pdf_file = cache.download(file_location, notice_url)
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error getting NY warn notice {notice_url}: {e}")
+        return details
+    with pdfplumber.open(pdf_file) as pdf:
+        first_page = pdf.pages[0]
+        n_affected_employees_match = first_page.search(
+            r"(?<=Number Affected:)\s*[0-9,]+"
+        )
+        n_total_employees_match = first_page.search(r"(?<=Total Employees:)\s*[0-9,]+")
+        event_number_match = first_page.search(r"(?<=Event Number:)\s*[0-9-]+")
+        details["number_of_employees_affected"] = _regex_match_to_int(
+            n_affected_employees_match
+        )
+        details["total_employees"] = _regex_match_to_int(n_total_employees_match)
+        details["event_number"] = _get_first_regex_match(event_number_match)
+    return details
+
+
+def _get_first_regex_match(regex_match):
+    if _is_valid_match(regex_match):
+        return regex_match[0]["text"].strip()
+    return None
+
+
+def _regex_match_to_int(regex_match):
+    first_match = _get_first_regex_match(regex_match)
+    if first_match is not None:
+        return int(first_match.replace(",", ""))
+    return None
+
+
+def _is_valid_match(regex_match):
+    return bool(regex_match and len(regex_match) and regex_match[0])
 
 
 def _get_historical_data(cache):
