@@ -79,6 +79,16 @@ def scrape(
                 "WARN Date",
                 "Reason for Layoff",
             ]
+        elif "2019" in link.text:
+            header_list = [
+                "Company Name",
+                "Layoff Total",
+                "Workforce Local Area",
+                "WARN Date",
+                "Reason for Layoff",
+                "Occupations",
+                "Layoff Date(s)",
+            ]
         else:
             header_list = []
         cleaned_data += scrape_google_sheets(table, header_list)
