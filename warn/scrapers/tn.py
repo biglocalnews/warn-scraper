@@ -75,7 +75,10 @@ def scrape(
             value_html = item.split(":")[-1]
             value_soup = BeautifulSoup(value_html, "html5lib")
             string_list = list(value_soup.stripped_strings)
-            value = string_list[-1]
+            if len(string_list) > 0:
+                value = string_list[-1]
+            else:
+                continue
             raw_data.append(value)
 
         # If there aren't six entries it's junk
