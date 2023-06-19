@@ -31,7 +31,7 @@ def scrape(
     """
     # Get the WARN page
     url = "https://www.vec.virginia.gov/warn-notices"
-    r = utils.get_url(url)
+    r = utils.get_url(url, verify=False)
     html = r.text
 
     # Save it to the cache
@@ -44,7 +44,7 @@ def scrape(
     csv_url = f"https://www.vec.virginia.gov{csv_href}"
 
     # Download it to the cache
-    cache.download("va/source.csv", csv_url)
+    cache.download("va/source.csv", csv_url, verify=False)
 
     # Open it up as a list of rows
     csv_rows = cache.read_csv("va/source.csv")
