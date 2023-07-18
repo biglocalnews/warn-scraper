@@ -95,6 +95,22 @@ def _append_contents_to_cells_in_row_above(rows: list, index: int, row: list) ->
     return rows
 
 
+def _append_contents_to_row_from_row_above(rows: list, index: int, row: list) -> list:
+    """
+    Append the contents of preceding row to a largely empty row.
+
+    Keyword arguments:
+    index -- the index of the row
+    row -- the row to amend
+    rows -- list of rows that includes the final row to pull from
+    """
+    for column_index, cell in enumerate(row):
+        if _cell_above_exists(column_index, rows):
+            if len(cell) == 0:
+                row[column_index] = rows[len(rows) - 1][column_index]
+    return row
+
+
 def _cell_above_exists(column_index: int, rows: list) -> bool:
     """
     Return True if the cell above the current cell exists.
@@ -170,6 +186,12 @@ def _process_pdf(pdf_path):
                         output_rows = _append_contents_to_cells_in_row_above(
                             output_rows, index, row
                         )
+                    # Otherwise, if a row is mostly empty, pull data into blank cells and add current row
+                    elif _is_mostly_empty(row):
+                        row = _append_contents_to_row_from_row_above(
+                            output_rows, index, row
+                        )
+                        output_rows.append(row)
                     # Otherwise, append the row
                     else:
                         output_rows.append(row)
