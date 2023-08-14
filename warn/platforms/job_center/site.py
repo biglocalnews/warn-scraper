@@ -58,7 +58,6 @@ class Site:
             and a list of parsed data dictionaries
             ( {1: <HTML str>}, [{data}, {more data}] )
         """
-
         # Final payload here
         html_store = {}
         data = []
