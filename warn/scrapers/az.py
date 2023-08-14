@@ -4,7 +4,7 @@ from warn.platforms.job_center.utils import scrape_state
 
 from .. import utils
 
-__authors__ = ["zstumgoren", "Dilcia19"]
+__authors__ = ["zstumgoren", "Dilcia19", "stucka"]
 __tags__ = [
     "jobcenter",
 ]
@@ -32,12 +32,17 @@ def scrape(
     output_csv = data_dir / "az.csv"
     search_url = "https://www.azjobconnection.gov/search/warn_lookups"
 
+    # Use SSL certificate? Broke August 2023
+    verify = False
+
     # Date chosen based on manual research
     stop_year = 2010
 
     # Use cache for years before current and prior year
+    print(f"AZ cache status: {use_cache}")
+    print(f"AZ SSL verification: {verify}")
     scrape_state(
-        "AZ", search_url, output_csv, stop_year, cache_dir, use_cache=use_cache
+        "AZ", search_url, output_csv, stop_year, cache_dir, use_cache=use_cache, verify=verify
     )
 
     return output_csv

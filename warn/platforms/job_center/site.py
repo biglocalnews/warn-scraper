@@ -30,13 +30,16 @@ class Site:
         state (str): State postal code
         url (str): Search URL for the site (should end in '/warn_lookups')
         cache_dir (str): Cache directory
+        verify (boolean, default True): SSL certificate verification
     """
 
-    def __init__(self, state, url, cache_dir):
+    def __init__(self, state, url, cache_dir, verify=True):
         """Initialize a new instance."""
         self.state = state.upper()
         self.url = url
         self.cache = Cache(cache_dir)
+        self.verify = verify
+        print(f"Site init SSL verification status: {self.verify}")
 
     def scrape(self, start_date=None, end_date=None, detail_pages=True, use_cache=True):
         """
@@ -55,6 +58,7 @@ class Site:
             and a list of parsed data dictionaries
             ( {1: <HTML str>}, [{data}, {more data}] )
         """
+
         # Final payload here
         html_store = {}
         data = []
@@ -110,7 +114,7 @@ class Site:
             return self.cache.fetch(url, params)
         else:
             logger.debug("Pulling from the web")
-            response = requests.get(url, params=params)
+            response = requests.get(url, params=params, verify=self.verify)
             logger.debug(f"Response code: {response.status_code}")
             html = response.text
             self.cache.save(url, params, html)

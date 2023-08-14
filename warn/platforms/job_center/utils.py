@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def scrape_state(
-    state_postal, search_url, output_csv, stop_year, cache_dir, use_cache=True
+    state_postal, search_url, output_csv, stop_year, cache_dir, use_cache=True, verify=True
 ):
     """Date-based scraper for Job Center states.
 
@@ -29,6 +29,7 @@ def scrape_state(
         stop_year (int): First year that data is available for state (requires manaul research)
         cache_dir (str): The root directory for WARN's cache files (e.g. ~/.warn-scraper/cache)
         use_cache (boolean, default True): Whether to use cached files for older years
+        verify (boolean, default True): Use SSL certificate verifcation
 
     Returns:
         Full path to exported csv (e.g. ~/.warn-scraper/exports/ks.csv)
@@ -41,7 +42,8 @@ def scrape_state(
 
     # Set up scraper instance
     state_cache_dir = cache_dir / state_postal.lower()
-    site = JobCenterSite(state_postal.upper(), search_url, cache_dir=state_cache_dir)
+    print(f"scrape_state verify: {verify}")
+    site = JobCenterSite(state_postal.upper(), search_url, cache_dir=state_cache_dir, verify=verify)
 
     # Date-based searches produce search result pages that appear to have certain
     # records duplicated over paged results. We'll initially write all data to a raw
@@ -66,16 +68,16 @@ def scrape_state(
     # Execute the scrape in two batches
     # 1. Current and prior year. Always scrape fresh (i.e. never use cached files)
     #    in case records have been updated.
-    _scrape_years(site, raw_csv, headers, no_cache_years, use_cache=False)
+    _scrape_years(site, raw_csv, headers, no_cache_years, use_cache=False, verify=verify)
     # 2. Years before current & prior, going back to stop_year.
     #    We should generally use cached files for these older years,
     #    since data is less likely to be updated.
-    _scrape_years(site, raw_csv, headers, yearly_dates, use_cache=use_cache)
+    _scrape_years(site, raw_csv, headers, yearly_dates, use_cache=use_cache, verify=verify)
     _dedupe(raw_csv, output_csv)
     return output_csv
 
 
-def _scrape_years(site, output_csv, headers, start_end_dates, use_cache=True):
+def _scrape_years(site, output_csv, headers, start_end_dates, use_cache=True, verify=True):
     """Loop through years of data and write out to CSV."""
     # NOTE: Scraping for Jan 1 - Dec 31 for current year works
     # throughout the year. Additionally, it allows us to avoid
