@@ -42,7 +42,13 @@ def scrape(
     print(f"AZ cache status: {use_cache}")
     print(f"AZ SSL verification: {verify}")
     scrape_state(
-        "AZ", search_url, output_csv, stop_year, cache_dir, use_cache=use_cache, verify=verify
+        "AZ",
+        search_url,
+        output_csv,
+        stop_year,
+        cache_dir,
+        use_cache=use_cache,
+        verify=verify,
     )
 
     return output_csv
