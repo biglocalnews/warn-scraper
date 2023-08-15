@@ -1,6 +1,8 @@
+import json
 import logging
 import re
 from datetime import datetime
+from html import unescape as htmlunescape
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -8,7 +10,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire", "stucka"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Wisconsin Department of Workforce Development",
@@ -46,7 +48,9 @@ def scrape(
     )
     html = r.text
     cache.write(f"wi/{current_year}.html", html)
-    html_list = [html,]
+    html_list = [
+        html,
+    ]
 
     # Set the date range we're going to scrape
     year_range = list(range(2016, current_year + 1))
@@ -71,6 +75,13 @@ def scrape(
         # Add to the list
         html_list.append(html)
 
+    # Get the JSON data used in newer pages
+    jsonurl = "https://sheets.googleapis.com/v4/spreadsheets/1cyZiHZcepBI7ShB3dMcRprUFRG24lbwEnEDRBMhAqsA/values/Originals?key=AIzaSyBF5bsJ9oCetBmqXL5LQII4G639YaKritw"
+    cache_key = "wi/2020.json"
+    r = utils.get_url(jsonurl)
+    myjson = r.json()
+    cache.write(cache_key, json.dumps(myjson))
+
     header = [
         "Company",
         "City",
@@ -79,10 +90,12 @@ def scrape(
         "Original Notice Type / Update Type",
         "Layoff Begin Date",
         "NAICS Description",
-        "County"
-        "Workforce Development Area"
+        "County" "Workforce Development Area",
     ]
-    output_rows = [header,]
+    output_rows = [
+        header,
+    ]
+    # print(html_list)
     for html in html_list:
         # Parse the HTML
         soup = BeautifulSoup(html, "html5lib")
@@ -110,6 +123,15 @@ def scrape(
 
                 # Tack what we've got onto the pile
                 output_rows.append(cell_list)
+                # print(cell_list)
+
+    # Extract from JSON feed
+    # Values match up in the order we want in entries 3 to 11. Sometimes there's a 12 as an edit flag we don't care about.
+    for entry in myjson["values"]:
+        line = entry[3:12]
+        for i in [0, 1, 6, 7, 8]:
+            line[i] = htmlunescape(line[i])  # Data includes some &amp; sort of stuff
+        output_rows.append(line)
 
     # Set the export path
     data_path = data_dir / "wi.csv"
