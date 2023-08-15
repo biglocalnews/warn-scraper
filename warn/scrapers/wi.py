@@ -131,7 +131,8 @@ def scrape(
         line = entry[3:12]
         for i in [0, 1, 6, 7, 8]:
             line[i] = htmlunescape(line[i])  # Data includes some &amp; sort of stuff
-        output_rows.append(line)
+        if line[2] != "AffectedWorkers":  # Skip header row
+            output_rows.append(line)
 
     # Set the export path
     data_path = data_dir / "wi.csv"
