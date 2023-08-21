@@ -54,8 +54,10 @@ def scrape(
                     if not data[k][0]:
                         rowkey = None
                     else:
-                        rowkey = data[k][0].strip()
-                    
+                        rowkey = data[k][0]
+                        if rowkey:
+                            rowkey = rowkey.strip()
+
                     if rowkey:
                         header_whitelist = [
                             "Contact Information",
