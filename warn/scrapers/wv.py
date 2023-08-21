@@ -51,14 +51,7 @@ def scrape(
                 companydone = False
                 row = []
                 for k in range(len(data)):
-                    if not data[k][0]:
-                        rowkey = None
-                    else:
-                        rowkey = data[k][0]
-                        if rowkey:
-                            rowkey = rowkey.strip()
-
-                    if rowkey:
+                    if data[k][0] is not None:
                         header_whitelist = [
                             "Contact Information",
                             "Region",
@@ -69,19 +62,21 @@ def scrape(
                             "Number Affected",
                         ]
 
-                        if rowkey in header_whitelist:
+                        if data[k][0].strip() in header_whitelist:
                             row.append(data[k][1].strip())
 
-                        elif rowkey == "Address":
+                        elif data[k][0].strip() == "Address":
                             if not companydone:
                                 row.append(company)
                                 companydone = True
                             row.append(data[k][1].strip())
 
-                        elif rowkey == "Company":
+                        elif data[k][0].strip() == "Company":
                             company = company + data[k][1].strip()
 
-                    elif ((not rowkey) and (k != 0)):
+                    elif ((data[k][0] is None) and (k != 0)) or (
+                        data[k][0] == "None" and k != 0
+                    ):
                         for company_names in data[k]:
                             if company_names is not None:
                                 company = company + ", " + company_names.strip()
