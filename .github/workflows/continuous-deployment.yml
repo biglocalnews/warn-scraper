@@ -98,7 +98,7 @@ jobs:
 
       - id: save
         name: Save artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: docs-${{ github.run_number }}
           path: ./docs
@@ -176,7 +176,7 @@ jobs:
 
       - id: save
         name: Save artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
@@ -196,7 +196,7 @@ jobs:
 
       - id: fetch
         name: Fetch artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
@@ -210,7 +210,7 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
           verbose: true
           verify_metadata: false
 
@@ -228,7 +228,7 @@ jobs:
 
       - id: fetch
         name: Fetch artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
