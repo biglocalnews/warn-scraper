@@ -70,7 +70,7 @@ def scrape(
 
             # Waiting on confirmation for error handling workflow from Serdar and Eric.
             # Should some of this be in the transformer, instead?
-            except:
+            except ValueError:
                 if "*" in dates[i]:
                     logger.debug(
                         f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
