@@ -33,7 +33,7 @@ def scrape(
     search_url = "https://www.azjobconnection.gov/search/warn_lookups"
 
     # Use SSL certificate? Broke August 2023
-    verify = False
+    verify = True
 
     # Date chosen based on manual research
     stop_year = 2010
