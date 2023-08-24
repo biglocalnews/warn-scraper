@@ -1,17 +1,20 @@
+import logging
 import re
 from pathlib import Path
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from .. import utils
 
-__authors__ = ["chriszs, esagara, Ash1R"]
+__authors__ = ["chriszs, esagara, Ash1R", "stucka"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Georgia Department of Labor",
     "url": "https://www.dol.state.ga.us/public/es/warn/searchwarns/list",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -47,6 +50,11 @@ def scrape(
     match = re.search(r'"nonce":"([^"]+)"', script)
     if match:
         nonce = match.group(1)
+        logger.debug(f"Nonce value found: {nonce}")
+    else:
+        logger.debug(
+            "Nonce value not parsed from page; scrape will likely break momentarily."
+        )
 
     payload = {
         "draw": 1,
@@ -112,6 +120,7 @@ def scrape(
     pdf_headers = ["company", "date", "# affected", "url"]
     final = [pdf_headers]
     data = response.json()["data"]
+    logger.debug(f"{len(data):,} data entries found")
     for listing in data:
         row = []
         row.append(listing[1])
