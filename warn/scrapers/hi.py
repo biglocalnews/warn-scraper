@@ -4,9 +4,6 @@ import logging
 
 from bs4 import BeautifulSoup
 
-# from dateutil.parser import parse
-import datetime
-
 from .. import utils
 
 __authors__ = ["Ash1R", "stucka"]
