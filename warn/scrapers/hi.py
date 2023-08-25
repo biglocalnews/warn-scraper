@@ -1,6 +1,6 @@
 import datetime
-from pathlib import Path
 import logging
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
@@ -40,7 +40,7 @@ def scrape(
 
     headers = ["Company", "Date", "PDF url"]
     data = [headers]
-    lastdateseen = "2099-12-31"
+    # lastdateseen = "2099-12-31"
 
     for subpageurl in reversed(subpageurls):
         # Conditionally here, we want to check and see if we have the old cached files, or if the year is current or previous.
@@ -63,18 +63,19 @@ def scrape(
                     tempdate, "%B %d, %Y"
                 ).strftime("%Y-%m-%d")
                 dates[i] = parsed_date
-                lastdateseen = parsed_date
+            #    lastdateseen = parsed_date
 
-            # Waiting on confirmation for error handling workflow from Serdar and Eric.
-            # Should some of this be in the transformer, instead?
+            # Disabling amendment automation to shift fixes into warn-transformer instead.
+            # If this needs to come back, uncomment the lastseendate references
+            # then rebuild the below section as an else
             except ValueError:
-                if "*" in dates[i]:
-                    logger.debug(
-                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
-                    )
-                    dates[i] = lastdateseen
-                else:
-                    logger.debug(f"Date error: {dates[i]}, leaving intact")
+                logger.debug(f"Date error: {dates[i]}, leaving intact")
+        #                if "*" in dates[i]:
+        #                    logger.debug(
+        #                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
+        #                    )
+        #                    dates[i] = lastdateseen
+        #                else:
 
         for i in range(len(tags)):
             row = []
