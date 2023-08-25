@@ -68,12 +68,12 @@ def scrape(
             # Waiting on confirmation for error handling workflow from Serdar and Eric.
             # Should some of this be in the transformer, instead?
             except ValueError:
-                if "*" in dates[i]:
-                    logger.debug(
-                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
-                    )
-                    dates[i] = lastdateseen
-                else:
+#                if "*" in dates[i]:
+#                    logger.debug(
+#                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
+#                    )
+#                    dates[i] = lastdateseen
+#                else:
                     logger.debug(f"Date error: {dates[i]}, leaving intact")
 
         for i in range(len(tags)):
