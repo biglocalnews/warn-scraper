@@ -14,6 +14,7 @@ __source__ = {
     "url": "https://www.dli.pa.gov/Individuals/Workforce-Development/warn/notices/Pages/default.aspx",
 }
 
+
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
