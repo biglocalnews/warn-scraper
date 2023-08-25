@@ -9,7 +9,10 @@ from ..cache import Cache
 
 __authors__ = ["chriszs, Ash1R"]
 __tags__ = ["html"]
-
+__source__ = {
+    "name": "Pennsylvania Department of Labor & Industry",
+    "url": "https://www.dli.pa.gov/Individuals/Workforce-Development/warn/notices/Pages/default.aspx",
+}
 
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
