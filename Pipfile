@@ -24,6 +24,8 @@ types-requests = "*"
 mypy = "*"
 typing-extensions = "*"
 types-retry = "*"
+types-beautifulsoup4 = "*"
+types-openpyxl = "*"
 
 [packages]
 bs4 = "*"
