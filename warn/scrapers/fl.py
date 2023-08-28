@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "stucka"]
 __tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Florida Department of Economic Opportunity",
@@ -57,14 +57,21 @@ def scrape(
     response = requests.get(url, headers=headers, verify=False)
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, "html.parser")
-    # find & visit each year's WARN page
-    base_url = "http://reactwarn.floridajobs.org/WarnList/"
-    links = soup.find_all("a", href=re.compile(base_url))
-    href_lookup = {_extract_year(link.text): link.get("href") for link in links}
+    pageholder = soup.select("div.content")[0]
+    pagesection = pageholder.select("div.sfContentBlock")[0]
+    href_lookup = {}
+    for atag in pagesection.find_all("a"):
+        href = atag["href"]
+        tagyear = href[-4:]
+        href_lookup[tagyear] = href
+
+    # logger.debug(pagesection)
+
+    base_url = "https://reactwarn.floridajobs.org/WarnList/"
 
     # Loop through years and add any missing to the lookup
     most_recent_year = int(list(href_lookup.keys())[0])
-    earliest_year = 2015  # We expect files to be available for at least 2015
+    earliest_year = 2015  # We expected files to be available for at least 2015
     for year in range(earliest_year, most_recent_year):
         if str(year) not in href_lookup:
             href_lookup[str(year)] = f"{base_url}viewPreviousYearsPDF?year={year}"
