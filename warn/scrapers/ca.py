@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "stucka"]
 __tags__ = ["html", "pdf", "excel"]
 __source__ = {
     "name": "California Employment Development Department",
@@ -57,7 +57,6 @@ def scrape(
 
         # If it's a WARN link ...
         if re.search(r"warn[-_]?report", href_url, re.I):
-
             # Build it up
             if href_url.startswith("/"):
                 full_url = f"https://edd.ca.gov{href_url}"
@@ -109,8 +108,15 @@ def _extract_excel_data(wb_path):
     """Parse data from the provided Excel file."""
     logger.debug(f"Reading in {wb_path}")
     wb = load_workbook(filename=wb_path)
-    # Get the only worksheet
-    ws = wb.worksheets[0]
+    targetsheet = "Detailed WARN Report "
+    if targetsheet in wb.sheetnames:
+        ws = wb[targetsheet]
+        logger.debug(f"Using worksheet '{targetsheet}'")
+    else:
+        ws = wb.worksheets[0]
+        logger.debug(
+            f"Using first worksheet; sheet {targetsheet} not found, but maybe look for them to remove the space"
+        )
     rows = [row for row in ws.rows]
     # Throw away initial rows until we reach first data row
     while True:
