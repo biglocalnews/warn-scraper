@@ -96,6 +96,7 @@ def _parse_html_table(soup):
         "Number of layoffs indicated Y-T-D",
         "Number of notices received Y-T-D",
         "TOTAL:",
+        "TOTALS:",
         "Total Layoffs:",
         "Notes:",
         "",
