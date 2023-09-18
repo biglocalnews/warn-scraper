@@ -190,7 +190,6 @@ def scrape(
     with open(historicalfilename, "r", encoding="utf-8") as infile:
         reader = list(csv.DictReader(infile))
         logger.debug(f"Found {len(reader):,} historical records.")
-        appends = 0
         for row in reader:
             line = {}
             for item in headermatcher:
