@@ -7,7 +7,7 @@ import requests
 
 from .. import utils
 
-__authors__ = ["chriszs, esagara, Ash1R", "stucka"]
+__authors__ = ["chriszs", "esagara", "Ash1R", "stucka"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Georgia Department of Labor",
