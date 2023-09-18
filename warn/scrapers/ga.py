@@ -1,9 +1,11 @@
+import csv
 import logging
 import re
+from glob import glob
 from pathlib import Path
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 from .. import utils
 
@@ -39,7 +41,7 @@ def scrape(
 
     response = utils.get_url(base_url, headers=headers)
     response.raise_for_status()
-    soup = BeautifulSoup(response.text)
+    soup = BeautifulSoup(response.text, features="html5lib")
 
     script = str(
         soup.find(
@@ -102,7 +104,7 @@ def scrape(
         ],
         "order": [{"column": 0, "dir": "asc"}],
         "start": 0,
-        "length": 25,
+        "length": -1,
         "search": {
             "value": None,
             "regex": False,
@@ -117,19 +119,107 @@ def scrape(
         "shortcode_atts": {"id": 77460, "class": None, "detail": None},
     }
     response = requests.post(api_url, data=payload, headers=headers)
-    pdf_headers = ["company", "date", "# affected", "url"]
-    final = [pdf_headers]
+
+    # Use JSON as an index to get other data files
     data = response.json()["data"]
-    logger.debug(f"{len(data):,} data entries found")
+    logger.debug(f"{len(data):,} records from newer dataset in index.")
+
+    # Download detailed data if not already cached
     for listing in data:
-        row = []
-        row.append(listing[1])
-        row.append(listing[2])
-        row.append(listing[3])
-        row.append(BeautifulSoup(listing[0]).text)
-        final.append(row)
+        filehref = BeautifulSoup(listing[0], features="html5lib")("a")[0]["href"]
+        fileid = BeautifulSoup(listing[0], features="html5lib")("a")[0].contents[0]
+        targetfilename = cache_dir / ("ga/" + fileid + ".format3")
+        utils.fetch_if_not_cached(targetfilename, filehref)
+
+    # Parse detailed data
+    masterlist = []
+    for filename in glob(f"{cache_dir}/ga/*.format3"):
+        with open(filename, "r", encoding="utf-8") as infile:
+            html = infile.read()
+        tableholder = BeautifulSoup(html, features="html5lib").find(
+            "table", {"class": "gv-table-view-content"}
+        )
+        lastrowname = "Placeholder"
+        line = {}
+        for row in tableholder.find_all("tr")[1:]:  # Skip header row
+            if (
+                row.find_all("table")
+                or not row.find_all("th")
+                or not row.find_all("td")
+            ):  # Then it's a little sideshow and we don't care.
+                pass
+            else:
+                rowname = row.find("th").text
+                if not rowname:
+                    rowname = lastrowname + "."
+                lastrowname = rowname
+                if (
+                    "Email" not in rowname
+                    and "Submitter Information" not in rowname
+                    and "Acknowledgement" not in rowname
+                ):
+                    rowcontent = row.find("td").text
+                    if "Location Address" in rowname or rowname == "Company Address":
+                        rowguts = (
+                            str(row.find("td"))
+                            .split("<br/><a")[0]
+                            .replace("<td>", "")
+                            .replace("<br/>", ", ")
+                        )
+                        rowcontent = rowguts
+                    line[rowname] = rowcontent
+        masterlist.append(line)
+
+    headermatcher = {
+        "ID": "GA WARN ID",
+        "Company Name": "Company Name",
+        "City": "First Location Address",
+        "ZIP": "Zip Code",
+        "County": "County",
+        "Est. Impact": "Total Number of Affected Employees",
+        "LWDA": "LWDA",  # Not used in newer format
+        "Separation Date": "First Date of Separation",
+    }
+
+    # Get and process historical data
+    historicalfilename = cache_dir / ("ga/ga_historical.csv")
+    filehref = (
+        "https://storage.googleapis.com/bln-data-public/warn-layoffs/ga_historical.csv"
+    )
+    utils.fetch_if_not_cached(historicalfilename, filehref)
+    with open(historicalfilename, "r", encoding="utf-8") as infile:
+        reader = list(csv.DictReader(infile))
+        logger.debug(f"Found {len(reader):,} historical records.")
+        appends = 0
+        for row in reader:
+            line = {}
+            for item in headermatcher:
+                line[headermatcher[item]] = row[item]
+            masterlist.append(line)
+    logger.debug(f"{len(masterlist):,} records now included.")
+
+    masterheaders = []
+    for row in masterlist:
+        for key in list(row.keys()):
+            if key not in masterheaders:
+                masterheaders.append(key)
+
     output_csv = data_dir / "ga.csv"
-    utils.write_rows_to_csv(output_csv, final)
+
+    # This utils writer function presumes every row has the same format, and ... they don't. So let's standardize.
+    for i, row in enumerate(masterlist):
+        line = {}
+        for item in masterheaders:
+            if item in row:
+                line[item] = row[item]
+            else:
+                line[item] = None
+        masterlist[i] = line
+
+    utils.write_dict_rows_to_csv(
+        Path(output_csv), masterheaders, masterlist, mode="w", extrasaction="raise"
+    )
+
     return output_csv
 
 
