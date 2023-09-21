@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from .. import utils
 
 __authors__ = ["Ash1R", "stucka"]
-__tags__ = ["html", "pdf"]
+__tags__ = ["html"]
 __source__ = {
     "name": "Workforce Development Hawaii",
     "url": "https://labor.hawaii.gov/wdc/real-time-warn-updates/",
