@@ -1,6 +1,6 @@
 import datetime
-from pathlib import Path
 import logging
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
@@ -29,7 +29,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     firstpage = utils.get_url("https://labor.hawaii.gov/wdc/real-time-warn-updates/")
-    soup = BeautifulSoup(firstpage.text)
+    soup = BeautifulSoup(firstpage.text, features="html5lib")
     pagesection = soup.select("div.primary-content")[0]
     subpageurls = []
     for atag in pagesection.find_all("a"):
@@ -38,9 +38,9 @@ def scrape(
             href = href[:-1]
         subpageurls.append(href)
 
-    headers = ["Company", "Date", "PDF url"]
+    headers = ["Company", "Date", "PDF url", "location", "jobs"]
     data = [headers]
-    lastdateseen = "2099-12-31"
+    # lastdateseen = "2099-12-31"
 
     for subpageurl in reversed(subpageurls):
         # Conditionally here, we want to check and see if we have the old cached files, or if the year is current or previous.
@@ -49,7 +49,7 @@ def scrape(
 
         logger.debug(f"Parsing page {subpageurl}")
         page = utils.get_url(subpageurl)
-        soup = BeautifulSoup(page.text)
+        soup = BeautifulSoup(page.text, features="html5lib")
         pageyear = subpageurl.split("/")[-1][:4]
         tags = soup.select("p a[href*=pdf]")
         p_tags = [i.parent.get_text().replace("\xa0", " ").split("\n") for i in tags]
@@ -63,18 +63,19 @@ def scrape(
                     tempdate, "%B %d, %Y"
                 ).strftime("%Y-%m-%d")
                 dates[i] = parsed_date
-                lastdateseen = parsed_date
+            #    lastdateseen = parsed_date
 
-            # Waiting on confirmation for error handling workflow from Serdar and Eric.
-            # Should some of this be in the transformer, instead?
+            # Disabling amendment automation to shift fixes into warn-transformer instead.
+            # If this needs to come back, uncomment the lastseendate references
+            # then rebuild the below section as an else
             except ValueError:
-                if "*" in dates[i]:
-                    logger.debug(
-                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
-                    )
-                    dates[i] = lastdateseen
-                else:
-                    logger.debug(f"Date error: {dates[i]}, leaving intact")
+                logger.debug(f"Date error: {dates[i]}, leaving intact")
+        #                if "*" in dates[i]:
+        #                    logger.debug(
+        #                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
+        #                    )
+        #                    dates[i] = lastdateseen
+        #                else:
 
         for i in range(len(tags)):
             row = []
@@ -84,6 +85,8 @@ def scrape(
             row.append(dates[i])
 
             row.append(url)
+            row.append(None)  # location
+            row.append(None)  # jobs
             data.append(row)
 
     output_csv = data_dir / "hi.csv"
