@@ -79,11 +79,11 @@ def scrape(
     logger.debug(f"Found latest data's URL at {excelurl}")
     if not excelurl:
         logger.error("No URL could be found for the newest spreadsheet.")
-    latest_excel_path = str(cache_dir) + "/or/latest.xlsx"
-    logger.debug(latest_excel_path)
+    latest_excel_path = "or/latest.xlsx"
+    logger.debug(f"Trying to save to, we hope, {cache_dir/latest_excel_path}")
     cache.download(latest_excel_path, excelurl)
 
-    workbook = load_workbook(filename=latest_excel_path)
+    workbook = load_workbook(filename=cache_dir/latest_excel_path)
     worksheet = workbook.worksheets[0]
 
     masterlist: list = []
