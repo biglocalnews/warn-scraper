@@ -3,10 +3,11 @@ import logging
 import os
 import typing
 from pathlib import Path
+from time import sleep
 
 import requests
-from retry import retry
 from openpyxl import load_workbook
+from retry import retry
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,27 @@ def create_directory(path: Path, is_file: bool = False):
     # If not, lets make it
     logger.debug(f"Creating directory at {directory}")
     directory.mkdir(parents=True)
+
+
+def fetch_if_not_cached(filename, url, **kwargs):
+    """Download files if they're not already saved.
+
+    Args:
+        filename: The full filename for the file
+        url: The URL from which the file may be downloaded.
+    Notes: Should this even be in utils vs. cache? Should it exist?
+    """
+    create_directory(Path(filename), is_file=True)
+    if not os.path.exists(filename):
+        logger.debug(f"Fetching {filename} from {url}")
+        response = requests.get(url, **kwargs)
+        if not response.ok:
+            logger.error(f"Failed to fetch {url} to {filename}")
+        else:
+            with open(filename, "wb") as outfile:
+                outfile.write(response.content)
+        sleep(2)  # Pause between requests
+    return
 
 
 def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
