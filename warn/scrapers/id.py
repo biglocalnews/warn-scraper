@@ -111,9 +111,8 @@ def _clean_table(rows, page_index) -> list:
 
 def filter_garbage_rows(incoming: list):
     """
-    Verify a sufficient number of cells exist. Which ... probably should be happening in these other functions, already, ...
-    but they're not. Broke September 2023, when some PDF pages had just a fragment of a column.
-
+    Return only rows with a minimum number of elements.
+    
     Arguments: List of lists
 
     Returns: List of lists that have a minimum number of elements.
