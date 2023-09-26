@@ -112,7 +112,7 @@ def _clean_table(rows, page_index) -> list:
 def filter_garbage_rows(incoming: list):
     """
     Return only rows with a minimum number of elements.
-    
+
     Arguments: List of lists
 
     Returns: List of lists that have a minimum number of elements.
