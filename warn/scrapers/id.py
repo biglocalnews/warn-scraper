@@ -8,7 +8,7 @@ import pdfplumber
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["chriszs"]
+__authors__ = ["chriszs", "stucka"]
 __tags__ = ["pdf"]
 __source__ = {
     "name": "Idaho Department of Labor",
@@ -47,7 +47,7 @@ def scrape(
     cache = Cache(cache_dir)
     state_code = "id"
     cache_key = f"{state_code}/{file_name}"
-    pdf_file = cache.download(cache_key, url, verify=False)
+    pdf_file = cache.download(cache_key, url, verify=True)
 
     # Loop through the PDF pages and scrape out the data
     output_rows: list = []
@@ -58,6 +58,7 @@ def scrape(
 
     # Write out the data to a CSV
     data_path = data_dir / f"{state_code}.csv"
+    output_rows = filter_garbage_rows(output_rows)
     utils.write_rows_to_csv(data_path, output_rows)
 
     # Return the path to the CSV
@@ -96,12 +97,36 @@ def _clean_table(rows, page_index) -> list:
             output_row.append(clean_text)
 
         output_rows.append(output_row)
+    #        if len(output_row) >= 3:
+    #            output_rows.append(output_row)
+    #        else:
+    #            logger.debug(f"Dropping faulty row with {len(output_row)} elements: {output_row}")
 
     # Only include the header on the first page
     if page_index != 0:
         return output_rows[1:]
 
     return output_rows
+
+
+def filter_garbage_rows(incoming: list):
+    """
+    Verify a sufficient number of cells exist. Which ... probably should be happening in these other functions, already, ...
+    but they're not. Broke September 2023, when some PDF pages had just a fragment of a column.
+    """
+    badrows: int = 0
+    outgoing: list = []
+    for row in incoming:
+        if len(row) >= 4:
+            outgoing.append(row)
+        else:
+            badrows += 1
+    if badrows == 0:
+        logger.debug("No bad rows found.")
+    logger.debug(
+        f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
+    )
+    return outgoing
 
 
 def _is_empty(text: str) -> bool:
