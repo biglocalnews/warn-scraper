@@ -113,6 +113,10 @@ def filter_garbage_rows(incoming: list):
     """
     Verify a sufficient number of cells exist. Which ... probably should be happening in these other functions, already, ...
     but they're not. Broke September 2023, when some PDF pages had just a fragment of a column.
+
+    Arguments: List of lists
+
+    Returns: List of lists that have a minimum number of elements.
     """
     badrows: int = 0
     outgoing: list = []
