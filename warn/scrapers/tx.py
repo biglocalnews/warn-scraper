@@ -12,7 +12,7 @@ __authors__ = ["Dilcia19", "ydoc5212"]
 __tags__ = ["html", "excel", "historical"]
 __source__ = {
     "name": "Texas Workforce Commission",
-    "url": "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices",
+    "url": "https://www.twc.texas.gov/data-reports/warn-notice",
 }
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def scrape(
     cache = Cache(cache_dir)
 
     # Get the root URL
-    url = "https://www.twc.texas.gov/businesses/worker-adjustment-and-retraining-notification-warn-notices#warnNotices"
+    url = "https://www.twc.texas.gov/data-reports/warn-notice"
     page = utils.get_url(url)
     html = page.text
 
@@ -44,7 +44,8 @@ def scrape(
 
     # Get all the Excel links
     soup = BeautifulSoup(page.text, "html5lib")
-    link_list = soup.find_all("a", href=re.compile("^/files/news/warn-act-listings-"))
+    link_list = soup.find_all("a", href=re.compile("^/sites/default/files/oei/docs/warn-act-listings-"))
+    logger.debug(f"{len(link_list):,} spreadsheet links found")
 
     # Clean up the links and filter 'em down
     href_list = []
