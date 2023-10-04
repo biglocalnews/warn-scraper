@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire"]
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire", "stucka"]
 __tags__ = ["html", "excel"]
 __source__ = {
     "name": "Iowa Workforce Development Department",
-    "url": "https://www.iowaworkforcedevelopment.gov/worker-adjustment-and-retraining-notification-act",
+    "url": "https://workforce.iowa.gov/employers/business-resources/warn",
 }
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Go to the page
-    url = "https://www.iowaworkforcedevelopment.gov/worker-adjustment-and-retraining-notification-act"
+    url = "https://workforce.iowa.gov/employers/business-resources/warn"
     r = utils.get_url(url)
     html = r.text
 
@@ -40,9 +40,11 @@ def scrape(
 
     # Parse out the Excel link
     soup = BeautifulSoup(html, "html.parser")
-    excel_url = soup.find("a", {"title": "WARN Log Excel File"})["href"]
-    if not excel_url.startswith("http"):
-        excel_url = "https://www.iowaworkforcedevelopment.gov" + excel_url
+
+    link_list = soup.find_all("a")
+    for link in link_list:
+        if "WARN Log Excel File" in link.text.strip():
+            excel_url = "https://workforce.iowa.gov" + link.get("href")
 
     # Download the Excel file
     excel_path = cache.download("ia/source.xlsx", excel_url)
@@ -51,7 +53,7 @@ def scrape(
     row_list = utils.parse_excel(excel_path)
 
     # Get historic file
-    historic_url = "https://www.iowaworkforcedevelopment.gov/sites/search.iowaworkforcedevelopment.gov/files/documents/2018/WARN_20180503.xlsx"
+    historic_url = "https://storage.googleapis.com/bln-data-public/warn-layoffs/ia_historical_2018.xlsx"
     historic_excel_path = cache.download("ia/historic.xlsx", historic_url)
 
     # Parse it, minus the header
