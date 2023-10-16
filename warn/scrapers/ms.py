@@ -1,8 +1,11 @@
+import logging
+import re
+from glob import glob
+from importlib import reload
+from pathlib import Path
+
 import pdfplumber
 from bs4 import BeautifulSoup
-
-from pathlib import Path
-import logging
 
 from .. import utils
 from ..cache import Cache
@@ -14,8 +17,21 @@ __source__ = {
     "url": "https://mdes.ms.gov/information-center/warn-information/",
 }
 
-
+reload(logging)
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s:%(message)s",
+    level=logging.DEBUG,
+    datefmt="%I:%M:%S",
+)
 logger = logging.getLogger(__name__)
+
+
+def is_not_bad_rect(obj):
+    """Filter out bad objects from PDFs."""
+    if obj["object_type"] == "rect":
+        return obj["width"] < 2 or obj["height"] < 2
+    else:
+        return True
 
 
 def clean_text(blob):
@@ -25,11 +41,56 @@ def clean_text(blob):
         .replace("\n", " ")
         .replace("   ", " ")
         .replace("  ", " ")
-        .replace("–", "--")       # Weird dashes coming through NAICS fields
+        .replace("–", "--")  # Weird dashes coming through NAICS fields
         .replace("–", "--")
+        .replace("’", "'")
+        .replace("Company Name (City) (County) (Zip)", "")
         .strip()
     )
     return blob
+
+
+def nuke_bad_fields(incoming: list, extraignores: list = []):
+    """Given a list of lists, identify empty fields/columns and delete them.
+
+    Arguments:
+        List of lists,
+        Optional: List of items to ignore besides "" and None
+    Returns:
+        List of lists
+        List of fields purged
+        List of data items purged
+    """
+    if not incoming:
+        return (None, None, None)
+    totalignores = ["", None]
+    totalignores.extend(extraignores)
+    # Need to check if table is null, doesn't contain lists of lists, whatever
+    badfields = []
+    for field in incoming[0]:
+        badfields.append(True)
+    for rowindex, row in enumerate(incoming):
+        if len(row) != len(badfields):
+            print(
+                f"Irregular counts of fields. Table not standardized. Aborting from row {rowindex}."
+            )
+            break
+        else:
+            for fieldindex, item in enumerate(row):
+                if item not in totalignores:
+                    badfields[fieldindex] = False
+    badfieldtally = []
+    for badfieldindex, badfield in enumerate(badfields):
+        if badfield:
+            badfieldtally.append(badfieldindex)
+    badfieldtally = list(reversed(badfieldtally))
+    trasheditems = []
+    if len(badfieldtally) > 0:
+        # print(f"Attempting to delete {len(badfieldtally):,} fields at {badfieldtally}")
+        for rowindex in range(0, len(incoming)):
+            for badfield in badfieldtally:
+                trasheditems.append(incoming[rowindex].pop(badfield))
+    return (incoming, badfieldtally, trasheditems)
 
 
 def scrape(
@@ -114,9 +175,9 @@ def scrape(
         href = link["href"]
         if "map" not in href.lower():
             # HEY!!!!!!!!!!!!!!!!!!!!!!!! if href not in archived_pdfs:
-                links.append(f"https://mdes.ms.gov{href}")
+            links.append(f"https://mdes.ms.gov{href}")
     links = [
-        f"https://mdes.ms.gov/{link['href']}"
+        f"https://mdes.ms.gov{link['href']}"
         for link in all_pdf_links
         if "map" not in link["href"]
     ]
@@ -125,16 +186,20 @@ def scrape(
     # We want to make sure we have all the needed PDF files -- a copy of all the old ones.
     # But also want to grab the two latest PDFs to make sure we didn't miss anything new.
     for linkindex, link in enumerate(links):
-        cache_key = link.split("/")[-2] + link.split("/")[-1]
-        if cache.exists(cache_key) and linkindex > 1:
+        cache_key = "ms/" + link.split("/")[-2] + "_" + link.split("/")[-1]
+        if cache.exists(cache_key) and linkindex >= 2:
             pdf_file = cache_dir / cache_key
         else:
             pdf_file = cache.download(cache_key, link)
         pdf_list.append(pdf_file)
 
+    # HEY! Should pull from glob here.
+    localfiles = glob(str(cache_dir) + "/ms/*.pdf")    
+
     logger.debug(f"Planning to process {len(pdf_list):,} PDFs.")
 
-    headers = [
+    extraheadersperrow = 4  # affected, countyish, file, page
+    dict_headers = [
         "Date",
         "Company City (County) Zip",
         "Workforce Area",
@@ -144,19 +209,50 @@ def scrape(
         "Date of Action",
         "Comments",
         "Affected",
+        "Countyish",
+        "File",
+        "Page",
     ]
+    rowwidth = len(dict_headers) - extraheadersperrow
+    affectedindex = 5  # Column where the jobs/affected are found
+    locationindex = 1  # Column with location
+    locationfinder = re.compile(r"\((.*?)\)", flags=re.MULTILINE)
+    table_settings = {
+        "snap_x_tolerance": 3,
+    }
 
+    badpairs = 0
     final_data = []
-    for file in pdf_list:
+
+    for file in localfiles:
         with pdfplumber.open(file) as pdf:
             for page in pdf.pages:
-                text = page.extract_tables()
+                # Filter out pages with extra useless rectangles here
+                text = page.filter(is_not_bad_rect).extract_tables(
+                    table_settings=table_settings
+                )
+
+                # Filter out pages with empty column/field. Only one file from 2020 really fits here.
+                for tableindex, localtable in enumerate(text):
+                    if localtable:
+                        localtable, fieldspurged, dataitemspurged = nuke_bad_fields(
+                            localtable
+                        )
+                        if fieldspurged != []:
+                            logger.debug(f"From file {file}, purged fields {fieldspurged} of contents {dataitemspurged}")
+                        text[tableindex] = localtable
                 if not text:
                     continue
                 for i in range(len(text)):
-                    if len(text[i][0][0]) > 1 and ("date" in text[i][0][0].lower()):
+                    if (
+                        text[i][0][0]
+                        and len(text[i][0][0]) > 1
+                        and ("date" in text[i][0][0].lower())
+                    ):
                         notices = text[i]
                         break
+
+                # Check for signs this is the summary at the end of the PDF, which can be skipped.
                 startrow = 0
                 end_table = False
                 while notices[startrow][0] is None or "/" not in notices[startrow][0]:
@@ -166,33 +262,49 @@ def scrape(
                         break
                 if end_table:
                     continue
+                # Start processing good data, which is broken into pairs of rows.
                 for row in range(startrow, len(notices) - 1, 2):
-                    final = []
-
-                    if notices[row][0] is None or "/" not in notices[row][0]:
+                    line = {}
+                    for item in dict_headers:
+                        line[item] = None
+                    # Check that row has the correct length.
+                    if (
+                        len(notices[row]) != rowwidth
+                        or len(notices[row + 1]) != rowwidth
+                    ):
+                        badpairs += 1
+                        logger.debug(
+                            f"Row width miscount in {file}:\r\n  1 ({len(notices[row])}): {notices[row]}\r\n  2 ({len(notices[row+1])}): {notices[row+1]}"
+                        )
+                    elif notices[row][0] is None or "/" not in notices[row][0]:
                         continue
-
-                    for n in notices[row]:
-                        if n is not None:
-                            final.append(clean_text(n))
-
-                    for n in notices[row + 1]:
-                        if n is not None:
-                            final.append(clean_text(n))
-                    while len(final) != 9:
-                        if "" in final:
-                            final.remove("")
-                        else:
-                            break
-
-                    final_data.append(final)
+                    else:
+                        for columnindex, item in enumerate(dict_headers[:rowwidth]):
+                            cell = notices[row][columnindex]
+                            if cell:  # If we get a None, we don't do anything else.
+                                line[item] = clean_text(cell)
+                        affected = notices[row + 1][affectedindex]
+                        if affected:
+                            line["Affected"] = clean_text(affected)
+                        locationholder = notices[row][locationindex]
+                        parentheses = locationfinder.findall(locationholder)
+                        if parentheses:
+                            line["Countyish"] = parentheses[-1]
+                    line["File"] = file.replace("\\", "/").split("/")[-1]      # Give just the filename, not a path
+                    line["Page"] = page
+                    final_data.append(line)
+    logger.debug(
+        f"Done processing PDFs. Found {badpairs:,} bad pairs of data with wrong column counts."
+    )
+    logger.debug(f"{len(final_data):,} rows found.")
 
     # Set the path to the final CSV
-    # We should always use the lower-case state postal code, like nj.csv
     output_csv = data_dir / "ms.csv"
-    cleaned_data = [headers] + final_data
+
     # Write out the rows to the export directory
-    utils.write_rows_to_csv(output_csv, cleaned_data)
+    utils.write_dict_rows_to_csv(
+        output_csv, dict_headers, final_data, mode="w", extrasaction="raise"
+    )
 
     # Return the path to the final CSV
     return output_csv
