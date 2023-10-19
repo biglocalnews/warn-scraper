@@ -1,10 +1,12 @@
+import csv
 import logging
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
 from .. import utils
-from ..cache import Cache
+
+# from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19"]
 __tags__ = ["html"]
@@ -30,13 +32,14 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Open the cache
-    cache = Cache(cache_dir)
+    #    cache = Cache(cache_dir)
 
     # Get the HTML
     url = "https://jobs.utah.gov/employer/business/warnnotices.html"
     r = utils.get_url(url)
     html = r.text
-    cache.write("ut/source.html", html)
+    # No need to cache this, and cache.write doesn't explicitly use utf-8, which crashes Windows.
+    # cache.write("ut/source.html", html)
 
     # Parse table
     soup = BeautifulSoup(html, "html.parser")
@@ -49,7 +52,12 @@ def scrape(
 
     # Write out
     data_path = data_dir / "ut.csv"
-    utils.write_rows_to_csv(data_path, row_list)
+    utils.create_directory(data_path, is_file=True)
+    logger.debug(f"Writing {len(row_list)} rows to {data_path}")
+    # The utils.write_rows_to_csv function doesn't explicitly use utf-8, so it crashes Windows.
+    with open(data_path, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerows(row_list)
 
     # Return the path to the CSV
     return data_path
