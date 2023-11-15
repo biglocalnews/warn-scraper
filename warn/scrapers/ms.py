@@ -3,6 +3,7 @@ import re
 from glob import glob
 from importlib import reload
 from pathlib import Path
+import datetime
 
 import pdfplumber
 from bs4 import BeautifulSoup
@@ -198,7 +199,7 @@ def scrape(
 
     logger.debug(f"Planning to process {len(pdf_list):,} PDFs.")
 
-    extraheadersperrow = 4  # affected, countyish, file, page
+    extraheadersperrow = 6  # affected, countyish, file, page, sort_date, original_order
     dict_headers = [
         "Date",
         "Company City (County) Zip",
@@ -212,6 +213,8 @@ def scrape(
         "Countyish",
         "File",
         "Page",
+        "sort_date",
+        "original_order",
     ]
     rowwidth = len(dict_headers) - extraheadersperrow
     affectedindex = 5  # Column where the jobs/affected are found
@@ -297,6 +300,20 @@ def scrape(
         f"Done processing PDFs. Found {badpairs:,} bad pairs of data with wrong column counts."
     )
     logger.debug(f"{len(final_data):,} rows found.")
+
+    for i, row in enumerate(final_data):
+        localdate = row['Date']
+        try:
+            localdateobj = datetime.datetime.strptime(row['Date'], "%m/%d/%y")
+        except Exception:
+            try:
+                localdateobj = datetime.datetime.strptime(row['Date'], "%m/%d/%Y")
+            except Exception:
+                localdateobj = datetime.datetime(2050, 12, 31)
+        final_data[i]["sort_date"] = localdateobj.strftime("%Y-%m-%d")
+        final_data[i]["original_order"] = i
+
+    final_data = sorted(final_data, key=lambda x: x["sort_date"], reverse=True) 
 
     # Set the path to the final CSV
     output_csv = data_dir / "ms.csv"
