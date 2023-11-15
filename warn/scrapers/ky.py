@@ -1,7 +1,9 @@
+import csv
+import logging
 import typing
 from pathlib import Path
 
-import xlrd
+import requests
 from openpyxl import load_workbook
 
 from .. import utils
@@ -9,6 +11,7 @@ from ..cache import Cache
 
 __authors__ = [
     "palewire",
+    "stucka",
 ]
 __tags__ = [
     "excel",
@@ -17,6 +20,8 @@ __source__ = {
     "name": "Kentucky Career Center",
     "url": "https://kcc.ky.gov/employer/Pages/Business-Downsizing-Assistance---WARN.aspx",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -37,72 +42,78 @@ def scrape(
     """
     # Get the latest workbook
     cache = Cache(cache_dir)
-    latest_url = "https://kcc.ky.gov/WARN%20notices/WARN%20NOTICES%202022/WARN%20Notice%20Report%2001262022.xls"
-    latest_path = cache.download("ky/latest.xls", latest_url)
+    hostpage = "https://kcc.ky.gov/Pages/News.aspx"
+    baseurl = "https://kcc.ky.gov"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
+    }
+    r = requests.get(hostpage, headers=headers)
+    html = r.text
+    subpage = html.split("WARN Notices by Year</h4")[-1]
+    # mypy and BeautifulSoup are not cooperating. So ... extract the URL in a dumb way.
+    fragment = subpage.split('href="')[1].split('"')[0]
+    latest_url = f"{baseurl}{fragment}"
+
+    # latest_url = "https://kcc.ky.gov/WARN%20notices/WARN%20NOTICES%202022/WARN%20Notice%20Report%2001262022.xls"
+    latest_path = cache.download("ky/latest.xlsx", latest_url)
 
     # Open it up
-    latest_workbook = xlrd.open_workbook(latest_path)
+    workbook = load_workbook(filename=latest_path)
 
-    # Loop through the worksheets
-    dict_list = []
-    for sheet in latest_workbook.sheet_names():
-        # Get the data as a list of lists
-        worksheet = latest_workbook.sheet_by_name(sheet)
-        sheet_list = []
-        num_cols = worksheet.ncols
-        for row_idx in range(0, worksheet.nrows):
-            row = []
-            for col_idx in range(0, num_cols):
-                cell_obj = worksheet.cell(row_idx, col_idx)
-                cell_type = worksheet.cell_type(row_idx, col_idx)
-                # Carve out hack for the 2017 tab, which has the jobs as a date instead of an int
-                if sheet == "2017" and col_idx == 5:
-                    value = cell_obj.value
-                # For all the rest of the dates
-                elif cell_type == xlrd.XL_CELL_DATE:
-                    value = xlrd.xldate.xldate_as_datetime(
-                        cell_obj.value, latest_workbook.datemode
-                    )
-                # and then the rest of it
-                else:
-                    value = cell_obj.value
-                row.append(value)
-            sheet_list.append(row)
+    dirty_list: list = []
+    for sheet in workbook.worksheets:
+        localrows = parse_xlsx(sheet)
+        dirty_list.extend(localrows)
 
-        # Convert to list of dicts
-        headers = sheet_list[0]
-        for row in sheet_list[1:]:
-            d = {}
-            for x, value in enumerate(row):
-                d[headers[x]] = value
-            dict_list.append(d)
+    headers = dirty_list[0]
+    row_list = []
+    for rowindex, row in enumerate(dirty_list):
+        if (
+            row != headers
+        ):  # Filter out headers, but also double-check when headers may change
+            if row[0] == "Date Received":
+                logger.debug(
+                    f"Dropping dirty row that doesn't quite match headers in row {rowindex}"
+                )
+                logger.debug(f"Want: {headers}")
+                logger.debug(f"Got : {row}")
+            else:
+                line = {}
+                for i, fieldname in enumerate(headers):
+                    line[fieldname] = row[i]
+                row_list.append(line)
+    # dirty_list = None
+    logger.debug(
+        f"Successfully merged {len(row_list)-1:,} records from new spreadsheet."
+    )
 
-    # Same thing for the archived file
-    archive_url = "https://kcc.ky.gov/WARN%20notices/2017%20WARN%20docs/Kentucky%20%20WARN%20Report%20-Tracking%20Form%20%281998-2016%29.xlsx"
-    archive_path = cache.download("ky/archive.xlsx", archive_url)
+    # Need to double-check this archived file code, and make sure headers match
 
-    # Open it up
-    archive_workbook = load_workbook(filename=archive_path)
+    archive_url = "https://storage.googleapis.com/bln-data-public/warn-layoffs/ky-historical-normalized.csv"
 
-    # Loop through the worksheets
-    for sheet in archive_workbook.worksheets:
-        # Get the data as a list of lists
-        sheet_list = parse_xlsx(sheet)
+    logger.debug("Getting KY historical data")
+    r = requests.get(archive_url)
 
-        # Convert to list of dicts
-        headers = sheet_list[0]
-        for row in sheet_list[1:]:
-            d = {}
-            for i, value in enumerate(row):
-                d[headers[i]] = value
-            dict_list.append(d)
+    reader = list(csv.reader(r.text.splitlines()))
+
+    headerlength = len(headers)
+
+    assert reader[0][:headerlength] == headers
+    logger.debug(
+        f"Historical data matches current headers. Merging {len(reader)-1:,} records."
+    )
+
+    for row in reader[1:]:  # Skip header row
+        line = {}
+        for i, item in enumerate(headers):
+            line[item] = row[
+                i
+            ]  # Make this a list of dictionaries to match earlier input
+        row_list.append(line)
 
     # Write out the results
     data_path = data_dir / "ky.csv"
-    all_headers = list({value for dic in dict_list for value in dic.keys()})
-    utils.write_dict_rows_to_csv(
-        data_path, all_headers, dict_list, extrasaction="ignore"
-    )
+    utils.write_dict_rows_to_csv(data_path, headers, row_list, extrasaction="ignore")
 
     # Pass it out
     return data_path
