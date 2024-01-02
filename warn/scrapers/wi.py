@@ -67,7 +67,7 @@ def scrape(
         if cache.exists(cache_key) and year < current_year - 1:
             html = cache.read(cache_key)
         else:
-            url = f"https://dwd.wisconsin.gov/dislocatedworker/warn/{year}/default.htm"
+            url = f"https://dwd.wisconsin.gov/dislocatedworker/warn/default.htm?year={year}"
             r = utils.get_url(url)
             html = r.text
             cache.write(cache_key, html)
