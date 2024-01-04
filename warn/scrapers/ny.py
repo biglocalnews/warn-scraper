@@ -1,14 +1,16 @@
 import logging
+import re
 from pathlib import Path
 
+import pdfplumber
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire"]
-__tags__ = ["historical", "excel"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire", "jsvine"]
+__tags__ = ["historical", "excel", "pdf"]
 __source__ = {
     "name": "New York Department of Labor",
     "url": "https://dol.ny.gov/warn-notices",
@@ -47,12 +49,19 @@ def scrape(
     # Get the historical static data file
     excel_row_list = _get_historical_data(cache)
 
+    # Get data from the historical PDFs
+    pdf_row_list = _get_historical_pdf_data(cache)
+
     # Set the export path
     data_path = data_dir / "ny.csv"
 
     # Combine and write out the file
-    fieldnames = list(html_row_list[0].keys()) + list(excel_row_list[0].keys())
-    row_list = html_row_list + excel_row_list
+    fieldnames = (
+        list(html_row_list[0].keys())
+        + list(excel_row_list[0].keys())
+        + list(pdf_row_list[0].keys())
+    )
+    row_list = html_row_list + excel_row_list + pdf_row_list
     utils.write_dict_rows_to_csv(
         data_path,
         fieldnames,
@@ -124,6 +133,59 @@ def _get_historical_data(cache):
 
     # Return the list of dicts
     return dict_list
+
+
+def _get_historical_pdf_data(cache):
+    # See https://github.com/biglocalnews/warn-scraper/issues/476
+    urls = (
+        "https://github.com/biglocalnews/warn-scraper/files/8400324/FL-22-0165.Records.for.Release_Part1.pdf",
+        "https://github.com/biglocalnews/warn-scraper/files/8400325/FL-22-0165.Records.for.Release_Part2.pdf",
+        "https://github.com/biglocalnews/warn-scraper/files/8400326/FL-22-0165.Records.for.Release_Part3.pdf",
+    )
+
+    # Fetch the given file from its URL or the cache, return the local path
+    def get_file(url):
+        filename = url.split("/")[-1]
+        cache_key = f"ny/{filename}"
+        if cache.exists(cache_key):
+            logger.debug(f"Fetching {filename} from cache")
+            return cache.path / cache_key
+        else:
+            logger.debug(f"Downloading {filename}")
+            return cache.download(cache_key, url)
+
+    # Normalize the whitespace (esp. newlines) in a list of strings
+    def clean_row(strings):
+        return [re.sub(r"\s+", " ", s) for s in strings]
+
+    # For each row of the main table on each page, yield a header:value dict
+    def gen_rows_from_pdf(pdf):
+        logger.debug(f"Parsing {pdf.stream.name.split('/')[-1]} …")
+        for page in pdf.pages:
+            logger.debug(f"Page {page.page_number}")
+
+            # In a few instances, the *literal* whitespace characters in the
+            # PDF cause unwanted effects.. Removing them, and instead relying
+            # only on character positions, produces slightly better output.
+            # (E.g., "St. Lawrence" instead of "S t.  Lawrence".) Not entirely
+            # necessary, though.
+            prepared = page.filter(lambda obj: obj.get("text") != " ")
+
+            table = prepared.extract_table({"text_x_tolerance": 1})
+            table_clean = list(map(clean_row, table))
+
+            # Let's make sure we have the table we expect
+            assert table_clean[0][0] == "Company"
+
+            for row in table_clean[1:]:
+                yield dict(zip(table_clean[0], row))
+
+    def parse(path):
+        with pdfplumber.open(path) as pdf:
+            return list(gen_rows_from_pdf(pdf))
+
+    paths = list(map(get_file, urls))
+    return [y for x in map(parse, paths) for y in x]
 
 
 if __name__ == "__main__":
