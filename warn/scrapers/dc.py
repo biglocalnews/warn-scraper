@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
+import requests
 
 from .. import utils
 from ..cache import Cache
@@ -38,13 +39,22 @@ def scrape(
     # Get the root page
     today = datetime.today()
     current_year = today.year
-    url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
+    targetfile = f"dc/{current_year}.html"
+    if not cache.exists(targetfile):    # Check if we have an entry for the latest year
+        url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
+        r = requests.head(url)
+        if not r.ok:
+            logger.debug(f"Still no data found for {current_year}. Falling back.")
+            current_year = today.year - 1
+            targetfile = f"dc/{current_year}.html"
+            url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
+    
     r = utils.get_url(url)
     r.encoding = "utf-8"
     root_html = r.text
 
     # Save it to the cache
-    cache.write(f"dc/{current_year}.html", root_html)
+    cache.write(targetfile, root_html)
 
     # Parse the list of links
     soup = BeautifulSoup(root_html, "html5lib")
