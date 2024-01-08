@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
+import requests
 
 from .. import utils
 from ..cache import Cache
@@ -40,8 +41,20 @@ def scrape(
     # We start in 2015
     current_year = datetime.now().year
 
-    # Get the full range of years
-    year_range = range(2015, current_year + 1)
+    if cache.exists(f"ct/{current_year}.html"):
+        # Get the full range of years
+        year_range = range(2015, current_year + 1)
+    else:
+        url = f"https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warn{current_year}.htm"
+        r = requests.head(url)
+        if r.ok:
+            logger.debug(f"Found first entry for {current_year}")
+            year_range = range(2015, current_year + 1)
+        else:
+            logger.debug(
+                f"No data for {current_year} found at {url}. Dropping back a year."
+            )
+            year_range = range(2015, current_year + 0)
 
     output_rows = []
     for year in year_range:
@@ -100,7 +113,6 @@ def _scrape_table(table) -> list:
     row_list = []
     # loop over table to process each row, skipping the header
     for table_row in table[0].find_all("tr")[1:]:
-
         # Get all the cells
         table_cells = table_row.find_all("td")
 
