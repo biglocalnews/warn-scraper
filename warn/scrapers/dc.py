@@ -40,7 +40,7 @@ def scrape(
     today = datetime.today()
     current_year = today.year
     targetfile = f"dc/{current_year}.html"
-    if not cache.exists(targetfile):    # Check if we have an entry for the latest year
+    if not cache.exists(targetfile):  # Check if we have an entry for the latest year
         url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
         r = requests.head(url)
         if not r.ok:
@@ -48,7 +48,7 @@ def scrape(
             current_year = today.year - 1
             targetfile = f"dc/{current_year}.html"
             url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
-    
+
     r = utils.get_url(url)
     r.encoding = "utf-8"
     root_html = r.text
@@ -80,7 +80,6 @@ def scrape(
         root_html,
     ]
     for href in link_lookup.values():
-
         # Request the HTML
         r = utils.get_url(href)
         r.encoding = "utf-8"
