@@ -29,8 +29,8 @@ def scrape(
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
     Returns: the Path where the file is written
     """
-    cacheprefix = "https://webcache.googleusercontent.com/search?q=cache%3A"
-    
+    cacheprefix = "https://webcache.googleusercontent.com/search?q=cache%3A"    # Use Google Cache, per #600
+
     firstpage = utils.get_url(cacheprefix + quote("https://labor.hawaii.gov/wdc/real-time-warn-updates/"))
     soup = BeautifulSoup(firstpage.text, features="html5lib")
     pagesection = soup.select("div.primary-content")[0]
