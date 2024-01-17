@@ -1,13 +1,14 @@
 import datetime
 import logging
 from pathlib import Path
+from urllib.parse import quote
 
 from bs4 import BeautifulSoup
 
 from .. import utils
 
 __authors__ = ["Ash1R", "stucka"]
-__tags__ = ["html"]
+__tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Workforce Development Hawaii",
     "url": "https://labor.hawaii.gov/wdc/real-time-warn-updates/",
@@ -28,15 +29,17 @@ def scrape(
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
     Returns: the Path where the file is written
     """
-    firstpage = utils.get_url("https://labor.hawaii.gov/wdc/real-time-warn-updates/")
+    cacheprefix = "https://webcache.googleusercontent.com/search?q=cache%3A"
+    
+    firstpage = utils.get_url(cacheprefix + quote("https://labor.hawaii.gov/wdc/real-time-warn-updates/"))
     soup = BeautifulSoup(firstpage.text, features="html5lib")
     pagesection = soup.select("div.primary-content")[0]
     subpageurls = []
     for atag in pagesection.find_all("a"):
         href = atag["href"]
         if href.endswith("/"):
-            href = href[:-1]
-        subpageurls.append(href)
+            href = href         # [:-1]
+        subpageurls.append(cacheprefix + quote(href))
 
     headers = ["Company", "Date", "PDF url", "location", "jobs"]
     data = [headers]
@@ -85,8 +88,8 @@ def scrape(
             row.append(dates[i])
 
             row.append(url)
-            row.append(None)  # location
-            row.append(None)  # jobs
+            row.append(None)     # location
+            row.append(None)     # jobs
             data.append(row)
 
     output_csv = data_dir / "hi.csv"
