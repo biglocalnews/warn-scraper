@@ -1,13 +1,15 @@
 import datetime
 import logging
 from pathlib import Path
+from time import sleep
+from urllib.parse import quote
 
 from bs4 import BeautifulSoup
 
 from .. import utils
 
 __authors__ = ["Ash1R", "stucka"]
-__tags__ = ["html"]
+__tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Workforce Development Hawaii",
     "url": "https://labor.hawaii.gov/wdc/real-time-warn-updates/",
@@ -28,21 +30,34 @@ def scrape(
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
     Returns: the Path where the file is written
     """
-    firstpage = utils.get_url("https://labor.hawaii.gov/wdc/real-time-warn-updates/")
+    # Google Cache is a backup if the state re-implements its JS-enabled browser equivalent
+    usegooglecache = False
+    cacheprefix = "https://webcache.googleusercontent.com/search?q=cache%3A"
+
+    firstpageurl = "https://labor.hawaii.gov/wdc/real-time-warn-updates/"
+    if usegooglecache:
+        firstpageurl = cacheprefix + quote(firstpageurl)
+
+    firstpage = utils.get_url(firstpageurl)
     soup = BeautifulSoup(firstpage.text, features="html5lib")
     pagesection = soup.select("div.primary-content")[0]
     subpageurls = []
     for atag in pagesection.find_all("a"):
         href = atag["href"]
         if href.endswith("/"):
-            href = href[:-1]
-        subpageurls.append(href)
+            href = href  # [:-1]
+        subpageurl = href
+        if usegooglecache:
+            subpageurl = cacheprefix + quote(subpageurl)
+        subpageurls.append(subpageurl)
 
+    masterlist = []
     headers = ["Company", "Date", "PDF url", "location", "jobs"]
-    data = [headers]
+    #    data = [headers]
     # lastdateseen = "2099-12-31"
 
     for subpageurl in reversed(subpageurls):
+        sleep(2)
         # Conditionally here, we want to check and see if we have the old cached files, or if the year is current or previous.
         # Only need to download if it's current or previous year.
         # But do we care enough to implement right now?
@@ -50,47 +65,67 @@ def scrape(
         logger.debug(f"Parsing page {subpageurl}")
         page = utils.get_url(subpageurl)
         soup = BeautifulSoup(page.text, features="html5lib")
+        if subpageurl.endswith("/"):
+            subpageurl = subpageurl[:-1]  # Trim off the final slash, if there is one
         pageyear = subpageurl.split("/")[-1][:4]
-        tags = soup.select("p a[href*=pdf]")
-        p_tags = [i.parent.get_text().replace("\xa0", " ").split("\n") for i in tags]
-        clean_p_tags = [j for i in p_tags for j in i]
 
-        dates = [k.split("–")[0].strip() for k in clean_p_tags]
-        for i in range(len(dates)):
+        # There are at least two formats for Hawaii. In some years, each individual layoff is in a paragraph tag.
+        # In others, all the layoffs are grouped under a single paragraph tag, separated by <br>
+        # BeautifulSoup converts that to a <br/>.
+        # But the call to parent also repeats a bunch of entries, so we need to ensure they're not.
+        # So in more recent years, finding the parent of the "p a" there find essentially the row of data.
+        # In the older years, the parent is ... all the rows of data, which gets repeated.
+        # So take each chunk of data, find the parent, do some quality checks, clean up the text,
+        # don't engage with duplicates.
+
+        selection = soup.select("p a[href*=pdf]")
+        rows = []
+        for child in selection:
+            parent = child.parent
+            for subitem in parent.prettify().split("<br/>"):
+                if len(subitem.strip()) > 5 and ".pdf" in subitem:
+                    subitem = subitem.replace("\xa0", " ").replace("\n", "").strip()
+                    row = BeautifulSoup(subitem, features="html5lib")
+                    if row not in rows:
+                        rows.append(row)
+
+        for row in rows:
+            line: dict = {}
+            for item in headers:
+                line[item] = None
+            graftext = row.get_text().strip()
+            tempdate = graftext
+
+            # Check to see if it's not an amendment, doesn't have 3/17/2022 date format
+            # Most dates should be like "March 17, 2022"
+            if pageyear in tempdate and f"/{pageyear}" not in tempdate:
+                try:
+                    tempdate = (
+                        graftext.strip().split(pageyear)[0].strip() + f" {pageyear}"
+                    )
+                except ValueError:
+                    print(f"Date conversion failed on row: {row}")
+
+            line["Date"] = tempdate
+
             try:
-                tempdate = dates[i].split(pageyear)[0].strip() + f" {pageyear}"
                 parsed_date = datetime.datetime.strptime(
                     tempdate, "%B %d, %Y"
                 ).strftime("%Y-%m-%d")
-                dates[i] = parsed_date
-            #    lastdateseen = parsed_date
-
-            # Disabling amendment automation to shift fixes into warn-transformer instead.
-            # If this needs to come back, uncomment the lastseendate references
-            # then rebuild the below section as an else
+                line["Date"] = parsed_date
             except ValueError:
-                logger.debug(f"Date error: {dates[i]}, leaving intact")
-        #                if "*" in dates[i]:
-        #                    logger.debug(
-        #                        f"Date error: {dates[i]} as apparent amendment; saving as {lastdateseen}"
-        #                    )
-        #                    dates[i] = lastdateseen
-        #                else:
+                logger.debug(f"Date error: '{tempdate}',  leaving intact")
 
-        for i in range(len(tags)):
-            row = []
-            url = tags[i].get("href")
-            row.append(tags[i].get_text())
+            line["PDF url"] = row.select("a")[0].get("href")
+            line["Company"] = row.select("a")[0].get_text().strip()
+            masterlist.append(line)
 
-            row.append(dates[i])
-
-            row.append(url)
-            row.append(None)  # location
-            row.append(None)  # jobs
-            data.append(row)
-
+    if len(masterlist) == 0:
+        logger.error(
+            "No data scraped -- anti-scraping mechanism may be back in play -- try Google Cache?"
+        )
     output_csv = data_dir / "hi.csv"
-    utils.write_rows_to_csv(output_csv, data)
+    utils.write_dict_rows_to_csv(output_csv, headers, masterlist)
     return output_csv
 
 
