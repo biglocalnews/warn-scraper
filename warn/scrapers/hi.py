@@ -90,7 +90,7 @@ def scrape(
                         rows.append(row)
 
         for row in rows:
-            line: Dict = {}
+            line: dict = {}
             for item in headers:
                 line[item] = None
             graftext = row.get_text().strip()
