@@ -30,7 +30,6 @@ def scrape(
     cache_dir -- the Path where results can be cached (default WARN_CACHE_DIR)
     Returns: the Path where the file is written
     """
-
     # Google Cache is a backup if the state re-implements its JS-enabled browser equivalent
     usegooglecache = False
     cacheprefix = "https://webcache.googleusercontent.com/search?q=cache%3A"
@@ -90,8 +89,8 @@ def scrape(
                     if row not in rows:
                         rows.append(row)
 
-        for rowindex, row in enumerate(rows):
-            line = {}
+        for row in rows:
+            line: Dict = {}
             for item in headers:
                 line[item] = None
             graftext = row.get_text().strip()
