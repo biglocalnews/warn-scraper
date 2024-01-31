@@ -49,6 +49,8 @@ def scrape(
 
     # Download them all
     html_list = []
+    html_list.append(html)     # Save the source HTML for parsing also
+
     for href in href_list:
 
         # Request the HTML
