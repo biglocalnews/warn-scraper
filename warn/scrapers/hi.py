@@ -118,6 +118,10 @@ def scrape(
 
             line["PDF url"] = row.select("a")[0].get("href")
             line["Company"] = row.select("a")[0].get_text().strip()
+
+            # Before 2024, the a href contained the company name. In 2024, it's the date.
+            if line["Company"] == tempdate:
+                line["Company"] = row.get_text().strip().replace(tempdate, '').replace('–', '').strip()
             masterlist.append(line)
 
     if len(masterlist) == 0:
