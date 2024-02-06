@@ -98,7 +98,7 @@ jobs:
 
       - id: save
         name: Save artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs-${{ github.run_number }}
           path: ./docs
@@ -176,7 +176,7 @@ jobs:
 
       - id: save
         name: Save artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
@@ -196,7 +196,7 @@ jobs:
 
       - id: fetch
         name: Fetch artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
@@ -228,7 +228,7 @@ jobs:
 
       - id: fetch
         name: Fetch artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: test-release-${{ github.run_number }}
           path: ./dist
