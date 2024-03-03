@@ -135,6 +135,7 @@ def scrape(
         "Sector 33 (6414) Guided Missle & Space Vehicle": "naics",
         "@dropdown": "dropdown",
         "Received": "received_date",
+        "Notes": "notes",
     }
     standardized_data = []
     for row in cleaned_data:
