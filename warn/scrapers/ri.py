@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import typing
 
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
@@ -7,7 +8,7 @@ from openpyxl import load_workbook
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "chriszs"]
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "chriszs", "stucka"]
 __tags__ = ["excel"]
 __source__ = {
     "name": "Rhode Island Department of Labor and Training",
@@ -56,19 +57,78 @@ def scrape(
             # Open it up
             workbook = load_workbook(filename=excel_path)
 
-            # Get the first sheet
-            worksheet = workbook.worksheets[0]
+            dirty_list: list = []
+            for sheet in workbook.worksheets:
+                localrows = parse_xlsx(sheet)
+                dirty_list.extend(localrows)
 
-            for r in list(worksheet.rows)[3:]:
-                column = [cell.value for cell in r]
-                row_list.append(column)
+            headers = dirty_list[1]  # Skip false header at position 0
+            headers[2] = (
+                headers[2]
+                .replace("Company Name ", "Company Name")
+                .replace(
+                    "Company Name (* Denotes Covid 19 Related WARN)", "Company Name"
+                )
+            )
+            row_list = []
+            for rowindex, row in enumerate(dirty_list):
+                if (
+                    row != headers
+                ):  # Filter out headers, but also double-check when headers may change
+                    if row[0] and row[0] == "Rhode Island WARN Report":
+                        continue
+                    elif not row[2]:
+                        logger.debug(f"Missing data for company name in row: {row}")
+                    elif "Company Name" in row[2]:
+                        logger.debug(
+                            f"Dropping dirty row that doesn't quite match headers in row {rowindex}"
+                        )
+                        logger.debug(f"Want: {headers}")
+                        logger.debug(f"Got : {row}")
+                    else:
+                        line = {}
+                        for i, fieldname in enumerate(headers):
+                            line[fieldname] = row[i]
+                        row_list.append(line)
+            # dirty_list = None
+            logger.debug(
+                f"Successfully merged {len(row_list)-1:,} records from new spreadsheet."
+            )
 
     # Write out
     data_path = data_dir / "ri.csv"
-    utils.write_rows_to_csv(data_path, row_list)
+    utils.write_dict_rows_to_csv(data_path, headers, row_list, extrasaction="ignore")
 
     # Return the path to the CSV
     return data_path
+
+
+def parse_xlsx(worksheet) -> typing.List[typing.List]:
+    """Parse the Excel xlsx file at the provided path.
+
+    Args:
+        worksheet: An openpyxl worksheet ready to parse
+
+    Returns: List of values ready to write.
+    """
+    # Convert the sheet to a list of lists
+    row_list = []
+    for r in worksheet.rows:
+        # Parse cells
+        cell_list = [cell.value for cell in r]
+
+        # Skip empty rows
+        try:
+            # A list with only empty cells will throw an error
+            next(c for c in cell_list if c)
+        except StopIteration:
+            continue
+
+        # Add to the master list
+        row_list.append(cell_list)
+
+    # Pass it back
+    return row_list
 
 
 if __name__ == "__main__":
