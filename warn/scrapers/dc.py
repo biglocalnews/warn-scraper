@@ -5,12 +5,11 @@ from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
-import requests
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "stucka"]
 __tags__ = ["html"]
 __source__ = {
     "name": "District of Columbia Department of Employment Services",
@@ -39,22 +38,23 @@ def scrape(
     # Get the root page
     today = datetime.today()
     current_year = today.year
-    targetfile = f"dc/{current_year}.html"
-    if not cache.exists(targetfile):  # Check if we have an entry for the latest year
-        url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
-        r = requests.head(url)
-        if not r.ok:
-            logger.debug(f"Still no data found for {current_year}. Falling back.")
-            current_year = today.year - 1
-            targetfile = f"dc/{current_year}.html"
-            url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
 
-    r = utils.get_url(url)
-    r.encoding = "utf-8"
-    root_html = r.text
+    targetfile = f"dc/{current_year}.html"
+    url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
+    success, content = utils.save_if_good_url(targetfile, url)
+
+    if not success:  # If we don't have a file for a new year
+        targetfile = f"dc/{current_year - 1}.html"
+        url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year - 1}"
+        success, content = utils.save_if_good_url(targetfile, url)
+
+    root_html = content
+    #    r = utils.get_url(url)
+    #    r.encoding = "utf-8"
+    #    root_html = r.text
 
     # Save it to the cache
-    cache.write(targetfile, root_html)
+    #    cache.write(targetfile, root_html)
 
     # Parse the list of links
     soup = BeautifulSoup(root_html, "html5lib")

@@ -6,8 +6,8 @@ from pathlib import Path
 from time import sleep
 
 import requests
-from retry import retry
 from openpyxl import load_workbook
+from retry import retry
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +68,30 @@ def fetch_if_not_cached(filename, url, **kwargs):
                 outfile.write(response.content)
         sleep(2)  # Pause between requests
     return
+
+
+def save_if_good_url(filename, url, **kwargs):
+    """Save a file if given a responsive URL.
+
+    Args:
+        filename: The full filename for the file
+        url: The URL from which the file may be downloaded.
+    Notes: Should this even be in utils vs. cache? Should it exist?
+    """
+    create_directory(Path(filename), is_file=True)
+    response = requests.get(url, **kwargs)
+    if not response.ok:
+        logger.error(f"URL {url} fetch failed with {response.status_code}")
+        logger.error(f"Not saving to {filename}. Is a new year's URL not started?")
+        success_flag = False
+        content = False
+    else:
+        with open(filename, "wb") as outfile:
+            outfile.write(response.content)
+            success_flag = True
+            content = response.content
+    sleep(2)  # Pause between requests
+    return success_flag, content
 
 
 def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
