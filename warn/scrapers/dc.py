@@ -39,12 +39,12 @@ def scrape(
     today = datetime.today()
     current_year = today.year
 
-    targetfile = f"dc/{current_year}.html"
+    targetfile = cache_dir / f"dc/{current_year}.html"
     url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year}"
     success, content = utils.save_if_good_url(targetfile, url)
 
     if not success:  # If we don't have a file for a new year
-        targetfile = f"dc/{current_year - 1}.html"
+        targetfile = cache_dir / f"dc/{current_year - 1}.html"
         url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year - 1}"
         success, content = utils.save_if_good_url(targetfile, url)
 
