@@ -47,8 +47,6 @@ def scrape(
     soup = BeautifulSoup(html, "html.parser")
     links = soup.find_all("a")
 
-    row_list = []
-
     for link in links:
         if "WARN Report" in link.text:
             excel_url = f"{base_url}{link.get('href')}"
