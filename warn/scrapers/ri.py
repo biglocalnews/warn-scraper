@@ -70,7 +70,7 @@ def scrape(
                     "Company Name (* Denotes Covid 19 Related WARN)", "Company Name"
                 )
             )
-            row_list = []
+            row_list: list = []
             for rowindex, row in enumerate(dirty_list):
                 if (
                     row != headers
