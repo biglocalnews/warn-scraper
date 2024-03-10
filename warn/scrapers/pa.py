@@ -46,8 +46,8 @@ def scrape(
         url = f"{base_url}{link.get('href')}"
         cache_key = f"{state_code}/{os.path.basename(url).replace('.aspx', '')}.html"
 
-        page = utils.get_url(url)
-        html = page.text
+        utils.fetch_if_not_cached(cache.path / cache_key, url)
+        html = cache.read(cache_key)
         cache.write(cache_key, html)
 
         # Scrape out the table
@@ -59,7 +59,8 @@ def scrape(
     # Write out the results
     data_path = data_dir / f"{state_code}.csv"
 
-    cleaned_data = [
+    utils.write_dict_rows_to_csv(
+        data_path,
         [
             "COMPANY",
             "LOCATION",
@@ -67,37 +68,9 @@ def scrape(
             "# AFFECTED",
             "EFFECTIVE DATE",
             "CLOSURE OR LAYOFF",
-        ]
-    ]
-    for row in output_rows:
-        final_row = []
-        dates_started = False
-        date = ""
-        date_added = False
-        for column in row:
-            if (
-                "phase" in column.lower()
-                or "effective" in column.lower()
-                or "ending" in column.lower()
-            ):
-                date = date + row[column] + " "
-                dates_started = True
-            elif dates_started:
-                # we've reached the end of the date columns we're consolidating, append the date field
-                final_row.append(date.strip())
-                final_row.append(row[column])
-                date_added = True
-            else:
-                final_row.append(row[column])
-                continue
-        if not date_added:
-            final_row.insert(-1, date.strip())
-        if len(final_row) == 5:
-            # re-order fields to flip the last two
-            final_row[-1], final_row[-2] = final_row[-2], final_row[-1]
-        cleaned_data.append(final_row)
-
-    utils.write_rows_to_csv(data_path, cleaned_data)
+        ],
+        output_rows,
+    )
 
     # Return the path to the CSV
     return data_path
@@ -125,6 +98,7 @@ def _parse_table(html, include_headers=True):
         cell_html = str(cell)
         lines = re.split(r"\<[\/]{0,1}(?:div|br|p)[^\>]*\>|\n", cell_html)
 
+        name = None
         for line in lines:
             clean_text = _clean_text(
                 re.sub(r"\<[^>]*\>|\xa0", " ", line).replace("&amp;", "&")
@@ -142,9 +116,16 @@ def _parse_table(html, include_headers=True):
             )
             is_empty = len(clean_text) == 0
 
-            name = None
-            value = None
-            if is_field:
+            if bool(
+                re.search(
+                    r"^([1-9A-Z]+ PHASE|PHASE [1-9]|ENDING|1ST|2ND|3RD|[1-9]+TH)\:",
+                    clean_text,
+                    re.I,
+                )
+            ):
+                name = "EFFECTIVE DATE"
+                value = clean_text
+            elif is_field:
                 seen_fields = True
                 parts = clean_text.split(":", 1)
                 name = parts[0].upper()
@@ -158,6 +139,7 @@ def _parse_table(html, include_headers=True):
                 elif "COUNTIES" in name:
                     name = "COUNTY"
                 elif "MULTIPLE STATE EMPLOYER" in name:
+                    name = None
                     continue
                 elif "LOCATION" in name:
                     name = "LOCATION"
@@ -173,12 +155,12 @@ def _parse_table(html, include_headers=True):
                     seen_fields = False
                 name = "COMPANY"
                 value = clean_text
-            elif clean_text.startswith("Phase "):
-                name = "EFFECTIVE DATE"
-                value = clean_text
             elif not is_empty:
                 name = "LOCATION"
                 value = clean_text
+            else:
+                name = None
+                value = None
 
             if name and value:
                 if name not in row:
