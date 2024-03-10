@@ -75,7 +75,11 @@ def scrape(
         date = ""
         date_added = False
         for column in row:
-            if "phase" in column.lower() or "effective" in column.lower():
+            if (
+                "phase" in column.lower()
+                or "effective" in column.lower()
+                or "ending" in column.lower()
+            ):
                 date = date + row[column] + " "
                 dates_started = True
             elif dates_started:
@@ -142,7 +146,7 @@ def _parse_table(html, include_headers=True):
             value = None
             if is_field:
                 seen_fields = True
-                parts = clean_text.split(":")
+                parts = clean_text.split(":", 1)
                 name = parts[0].upper()
 
                 if "DATE" in name:
