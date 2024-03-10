@@ -69,31 +69,29 @@ def scrape(
             "CLOSURE OR LAYOFF",
         ]
     ]
-    print(output_rows)
-    for i in output_rows:
-        final = []
-        datesstart = False
+    for row in output_rows:
+        final_row = []
+        dates_started = False
         date = ""
-        dateadded = False
-        for r in i:
-            if "phase" in r.lower() or "effective" in r.lower():
-                date = date + i[r] + " "
-                datesstart = True
-
+        date_added = False
+        for column in row:
+            if "phase" in column.lower() or "effective" in column.lower():
+                date = date + row[column] + " "
+                dates_started = True
+            elif dates_started:
+                # we've reached the end of the date columns we're consolidating, append the date field
+                final_row.append(date.strip())
+                final_row.append(row[column])
+                date_added = True
             else:
-                if datesstart:
-                    final.append(date)
-                    final.append(i[r])
-                    dateadded = True
-
-                else:
-                    final.append(i[r])
-                    continue
-        if not dateadded:
-            final.insert(-1, date)
-        if len(final) == 5:
-            final[-1], final[-2] = final[-2], final[-1]
-        cleaned_data.append(final)
+                final_row.append(row[column])
+                continue
+        if not date_added:
+            final_row.insert(-1, date.strip())
+        if len(final_row) == 5:
+            # re-order fields to flip the last two
+            final_row[-1], final_row[-2] = final_row[-2], final_row[-1]
+        cleaned_data.append(final_row)
 
     utils.write_rows_to_csv(data_path, cleaned_data)
 
