@@ -34,7 +34,7 @@ def scrape(
     cache = Cache(cache_dir)
 
     # Get the page
-    url = "http://www.dllr.state.md.us/employment/warn.shtml"
+    url = "https://www.dllr.state.md.us/employment/warn.shtml"
     r = utils.get_url(url)
     r.encoding = "utf-8"
     html = r.text
@@ -49,12 +49,11 @@ def scrape(
 
     # Download them all
     html_list = []
-    html_list.append(html)     # Save the source HTML for parsing also
+    html_list.append(html)  # Save the source HTML for parsing also
 
     for href in href_list:
-
         # Request the HTML
-        url = f"http://www.dllr.state.md.us/employment/{href}"
+        url = f"https://www.dllr.state.md.us/employment/{href}"
         r = utils.get_url(url)
         r.encoding = "utf-8"
         html = r.text
