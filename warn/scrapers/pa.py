@@ -42,13 +42,17 @@ def scrape(
 
     output_rows = []
 
-    for link in links:
+    for linkindex, link in enumerate(links):
         url = f"{base_url}{link.get('href')}"
         cache_key = f"{state_code}/{os.path.basename(url).replace('.aspx', '')}.html"
 
-        utils.fetch_if_not_cached(cache.path / cache_key, url)
-        html = cache.read(cache_key)
-        cache.write(cache_key, html)
+        if linkindex <= 2:     # If it's a newish month, we should rescrape each time
+            page = utils.get_url(url)
+            html = page.text
+            cache.write(cache_key, html)
+        else:       # if it's an older month, we just need to fill the cache once
+            utils.fetch_if_not_cached(cache.path / cache_key, url)
+            html = cache.read(cache_key)
 
         # Scrape out the table
         new_rows = _parse_table(html)
