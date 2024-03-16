@@ -48,7 +48,6 @@ def scrape(
     # Download them all
     html_list = []
     for year in year_range:
-
         # Set the URL, with a hack for 2020 and 2022
         url = f"https://jobs.mo.gov/warn/{year}"
 

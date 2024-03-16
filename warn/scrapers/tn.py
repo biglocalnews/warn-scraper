@@ -64,7 +64,6 @@ def scrape(
 
     # Loop through them all, skipping the first item, which is a header
     for data in data_list[1:]:
-
         # splitting the data on its delimiter
         items = str(data).split("|")
 
@@ -109,10 +108,8 @@ def scrape(
 
     # Open the PDF
     with pdfplumber.open(pdf_file) as pdf:
-
         # Loop through all the pages
         for i, my_page in enumerate(pdf.pages):
-
             # Sll even pages have data, odd pages don't have the data
             if i % 2 != 0:
                 continue
@@ -135,7 +132,6 @@ def scrape(
 
             # Loop through all the rows ...
             for row in row_list:
-
                 # Skip remove redundant headers
                 if row[0] in pdf_header_blacklist:
                     continue

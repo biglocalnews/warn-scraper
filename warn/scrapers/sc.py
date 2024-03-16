@@ -89,10 +89,8 @@ def scrape(
 
         # Open the PDF
         with pdfplumber.open(pdf_path) as pdf:
-
             # Loop through the pages
             for page in pdf.pages:
-
                 # Pull out the table
                 row_list = page.extract_table()
 
@@ -110,7 +108,6 @@ def scrape(
 
                 # Loop through each row in the table
                 for row in real_rows:
-
                     # Clean values
                     cell_list = [_clean_cell(c) for c in row if _clean_cell(c)]
 

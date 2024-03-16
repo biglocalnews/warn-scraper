@@ -42,7 +42,6 @@ def scrape(
     for ws in wb.worksheets:
         logger.debug(f"Parsing {ws}")
         for i, row in enumerate(ws.rows):
-
             # Skip header
             if i == 0:
                 continue
