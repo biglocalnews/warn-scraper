@@ -40,7 +40,7 @@ def scrape(
 
     firstpage = utils.get_url(firstpageurl)
     soup = BeautifulSoup(firstpage.text, features="html5lib")
-    pagesection = soup.select("div.primary-content")[0]
+    pagesection = soup.select("div#container_main")[0]
     subpageurls = []
     for atag in pagesection.find_all("a"):
         href = atag["href"]
@@ -121,7 +121,13 @@ def scrape(
 
             # Before 2024, the a href contained the company name. In 2024, it's the date.
             if line["Company"] == tempdate:
-                line["Company"] = row.get_text().strip().replace(tempdate, '').replace('–', '').strip()
+                line["Company"] = (
+                    row.get_text()
+                    .strip()
+                    .replace(tempdate, "")
+                    .replace("–", "")
+                    .strip()
+                )
             masterlist.append(line)
 
     if len(masterlist) == 0:
