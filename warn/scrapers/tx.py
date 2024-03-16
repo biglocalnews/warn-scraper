@@ -44,7 +44,9 @@ def scrape(
 
     # Get all the Excel links
     soup = BeautifulSoup(page.text, "html5lib")
-    link_list = soup.find_all("a", href=re.compile("^/sites/default/files/oei/docs/warn-act-listings-"))
+    link_list = soup.find_all(
+        "a", href=re.compile("^/sites/default/files/oei/docs/warn-act-listings-")
+    )
     logger.debug(f"{len(link_list):,} spreadsheet links found")
 
     # Clean up the links and filter 'em down
@@ -60,7 +62,6 @@ def scrape(
     # Loop through the links we want to download
     row_list = []
     for ihref, href in enumerate(href_list):
-
         # get each url from the HTML links we found
         data_url = f"https://www.twc.texas.gov{href}"
 
@@ -77,7 +78,6 @@ def scrape(
 
         # Convert the sheet to a list of lists
         for irow, row in enumerate(worksheet.rows):
-
             # Skip headers after the first workbook
             if ihref > 0 and irow == 0:
                 continue

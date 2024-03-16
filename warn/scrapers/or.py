@@ -73,9 +73,7 @@ def scrape(
     r = requests.post(starturl, cookies=cookies, data=payload, headers=requestheaders)
 
     dlsoup = BeautifulSoup(r.content, features="html5lib")
-    excelurl = (
-        baseurl + dlsoup.find("a", {"target": "_blank", "class": "btn-primary"})["href"]
-    )
+    excelurl = baseurl + dlsoup.find("a", {"class": "btn-primary"})["href"]
     logger.debug(f"Found latest data's URL at {excelurl}")
     if not excelurl:
         logger.error("No URL could be found for the newest spreadsheet.")
@@ -83,7 +81,7 @@ def scrape(
     logger.debug(f"Trying to save to, we hope, {cache_dir/latest_excel_path}")
     cache.download(latest_excel_path, excelurl)
 
-    workbook = load_workbook(filename=cache_dir/latest_excel_path)
+    workbook = load_workbook(filename=cache_dir / latest_excel_path)
     worksheet = workbook.worksheets[0]
 
     masterlist: list = []
