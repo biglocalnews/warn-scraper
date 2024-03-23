@@ -79,7 +79,7 @@ def scrape(
     dlsoup = BeautifulSoup(r.content, features="html5lib")
     excellink = dlsoup.find("a", {"class": "btn-primary"})
     if isinstance(excellink, Tag):
-        excelurl = baseurl + excellink["href"][0]
+        excelurl = baseurl + str(excellink["href"])
     else:
         raise ValueError("Could not find Excel link")
     logger.debug(f"Found latest data's URL at {excelurl}")
