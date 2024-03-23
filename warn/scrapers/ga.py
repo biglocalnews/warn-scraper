@@ -5,7 +5,7 @@ from glob import glob
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from .. import utils
 
@@ -134,14 +134,18 @@ def scrape(
     # Parse detailed data
     masterlist = []
     for filename in glob(f"{cache_dir}/ga/*.format3"):
-        with open(filename, "r", encoding="utf-8") as infile:
+        with open(filename, encoding="utf-8") as infile:
             html = infile.read()
         tableholder = BeautifulSoup(html, features="html5lib").find(
             "table", {"class": "gv-table-view-content"}
         )
         lastrowname = "Placeholder"
         line = {}
-        for row in tableholder.find_all("tr")[1:]:  # Skip header row
+        if isinstance(tableholder, Tag):
+            rows = tableholder.find_all("tr")
+        else:
+            raise ValueError("Could not find table")
+        for row in rows[1:]:  # Skip header row
             if (
                 row.find_all("table")
                 or not row.find_all("th")
@@ -187,7 +191,7 @@ def scrape(
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/ga_historical.csv"
     )
     utils.fetch_if_not_cached(historicalfilename, filehref)
-    with open(historicalfilename, "r", encoding="utf-8") as infile:
+    with open(historicalfilename, encoding="utf-8") as infile:
         reader = list(csv.DictReader(infile))
         logger.debug(f"Found {len(reader):,} historical records.")
         for row in reader:

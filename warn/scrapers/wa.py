@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from .. import utils
 from ..cache import Cache
@@ -66,16 +66,19 @@ def scrape(
         while True:
             try:
                 # Post for the next page
-                formdata = {
-                    "__EVENTTARGET": "ucPSW$gvMain",
-                    "__EVENTARGUMENT": f"Page${page}",
-                    "__VIEWSTATE": soup_content.find(
-                        "input", attrs={"name": "__VIEWSTATE"}
-                    )["value"],
-                    "__EVENTVALIDATION": soup_content.find(
-                        "input", attrs={"name": "__EVENTVALIDATION"}
-                    )["value"],
-                }
+                view_state = soup_content.find("input", attrs={"name": "__VIEWSTATE"})
+                event_validation = soup_content.find(
+                    "input", attrs={"name": "__EVENTVALIDATION"}
+                )
+                if isinstance(view_state, Tag) and isinstance(event_validation, Tag):
+                    formdata = {
+                        "__EVENTTARGET": "ucPSW$gvMain",
+                        "__EVENTARGUMENT": f"Page${page}",
+                        "__VIEWSTATE": view_state["value"],
+                        "__EVENTVALIDATION": event_validation["value"],
+                    }
+                else:
+                    raise ValueError("Could not find view state or event validation")
                 next = session.post(url, data=formdata)
                 logger.debug(f"Page status is {next.status_code} for {url}")
 

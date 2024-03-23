@@ -82,12 +82,13 @@ def scrape(
         rows = []
         for child in selection:
             parent = child.parent
-            for subitem in parent.prettify().split("<br/>"):
-                if len(subitem.strip()) > 5 and ".pdf" in subitem:
-                    subitem = subitem.replace("\xa0", " ").replace("\n", "").strip()
-                    row = BeautifulSoup(subitem, features="html5lib")
-                    if row not in rows:
-                        rows.append(row)
+            if parent is not None:
+                for subitem in parent.prettify().split("<br/>"):
+                    if len(subitem.strip()) > 5 and ".pdf" in subitem:
+                        subitem = subitem.replace("\xa0", " ").replace("\n", "").strip()
+                        row = BeautifulSoup(subitem, features="html5lib")
+                        if row not in rows:
+                            rows.append(row)
 
         for row in rows:
             line: dict = {}

@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from .. import utils
 from ..cache import Cache
@@ -43,12 +43,18 @@ def scrape(
     soup = BeautifulSoup(html, "html5lib")
 
     # Get the link to the Google Sheet that's on the page
-    current_link = soup.find(class_="region-content").find("a", class_="btn-dark-blue")[
-        "href"
-    ]
+    content_region = soup.find(class_="region-content")
+    if isinstance(content_region, Tag):
+        current_link = content_region.find("a", class_="btn-dark-blue")
+    else:
+        raise ValueError("Could not find content region")
+    if isinstance(current_link, Tag):
+        current_href = current_link["href"]
+    else:
+        raise ValueError("Could not find Google Sheet link")
 
     # Open the Google Sheet
-    current_page = utils.get_url(current_link)
+    current_page = utils.get_url(current_href)
     current_html = current_page.text
 
     # Parse the Google Sheet
@@ -57,7 +63,11 @@ def scrape(
     cleaned_data = scrape_google_sheets(table)
 
     # Goes through the accordion links to get past data
-    accordion_list = soup.find(class_="region-content").find_all("dl")
+    content_region = soup.find(class_="region-content")
+    if isinstance(content_region, Tag):
+        accordion_list = content_region.find_all("dl")
+    else:
+        raise ValueError("Could not find content region")
 
     # Make sure there's only one
     assert len(accordion_list) == 1

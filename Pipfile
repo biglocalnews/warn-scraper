@@ -24,9 +24,17 @@ types-requests = "*"
 mypy = "*"
 typing-extensions = "*"
 types-retry = "*"
+types-beautifulsoup4 = "*"
+types-openpyxl = "*"
+# pinned last known versions to support Sphinx 4
+sphinxcontrib-applehelp = "1.0.4"
+sphinxcontrib-devhelp = "1.0.2"
+sphinxcontrib-htmlhelp = "2.0.1"
+sphinxcontrib-qthelp = "1.0.3"
+sphinxcontrib-serializinghtml = "1.1.5"
 
 [packages]
-bs4 = "*"
+beautifulsoup4 = "*"
 html5lib = "*"
 requests = "*"
 openpyxl = "*"
@@ -35,9 +43,10 @@ tenacity = "*"
 click = "*"
 xlrd = "*"
 retry = "*"
+urllib3 = "1.26.18" # pegged to avoid test issue
 
 [requires]
 python_version = "3.9"
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
