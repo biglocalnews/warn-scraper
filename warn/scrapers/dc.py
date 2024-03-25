@@ -71,9 +71,9 @@ def scrape(
     # from 2017 instead.
     if link_lookup.get("2014") == link_lookup.get("2018"):
         logger.warning("2014 link is the same as 2018 link, using archived 2014")
-        link_lookup[
-            "2014"
-        ] = "https://web.archive.org/web/20170210010137/http://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
+        link_lookup["2014"] = (
+            "https://web.archive.org/web/20170210010137/http://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
+        )
 
     # Download them all
     html_list = [
