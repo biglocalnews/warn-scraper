@@ -17,7 +17,7 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly", "stucka"]
 __tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Florida Department of Economic Opportunity",
-    "url": "http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices",
+    "url": "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices",
 }
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ def scrape(
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
     }
-    url = "http://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
+    url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
     response = requests.get(url, headers=headers, verify=False)
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, "html.parser")
@@ -138,7 +138,7 @@ def _scrape_html(cache, url, headers, page=1):
         )  # find link to next page, if exists
         # recursively scrape until we have a list of all the pages' html
         if nextPageLink:
-            url = "http://reactwarn.floridajobs.org" + nextPageLink.get(
+            url = "https://reactwarn.floridajobs.org" + nextPageLink.get(
                 "href"
             )  # /WarnList/Records?year=XXXX&page=X
             # recursively make list of all the next pages' html
