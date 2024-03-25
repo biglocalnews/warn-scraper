@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from openpyxl import load_workbook
 
 from .. import utils
@@ -45,7 +45,11 @@ def scrape(
 
     # Looking for something like <input name="__RequestVerificationToken" type="hidden" value="GYlfHSHzATg5x9TZgIe...
     tokenname = "__RequestVerificationToken"
-    tokenvalue = soup.find("input", {"name": tokenname})["value"]
+    tokeninput = soup.find("input", {"name": tokenname})
+    if isinstance(tokeninput, Tag):
+        tokenvalue = tokeninput["value"]
+    else:
+        raise ValueError("Could not find token input")
 
     payload = {
         tokenname: tokenvalue,
@@ -73,7 +77,11 @@ def scrape(
     r = requests.post(starturl, cookies=cookies, data=payload, headers=requestheaders)
 
     dlsoup = BeautifulSoup(r.content, features="html5lib")
-    excelurl = baseurl + dlsoup.find("a", {"class": "btn-primary"})["href"]
+    excellink = dlsoup.find("a", {"class": "btn-primary"})
+    if isinstance(excellink, Tag):
+        excelurl = baseurl + str(excellink["href"])
+    else:
+        raise ValueError("Could not find Excel link")
     logger.debug(f"Found latest data's URL at {excelurl}")
     if not excelurl:
         logger.error("No URL could be found for the newest spreadsheet.")
@@ -95,8 +103,8 @@ def scrape(
         for i, item in enumerate(headers):
             line[item] = list(row)[i].value
         if (
-            len(line[headers[0]]) + len(line[headers[1]])
-        ) != 0:  # Filter out blank rows
+            len(str(line[headers[0]])) + len(str(line[headers[1]])) != 0
+        ):  # Filter out blank rows
             masterlist.append(line)
     historicalurl = (
         "https://storage.googleapis.com/bln-data-public/warn-layoffs/or_historical.xlsx"
@@ -125,7 +133,7 @@ def scrape(
         for i, item in enumerate(headers):
             line[item] = list(row)[i].value
         if (
-            len(line[headers[0]]) + len(line[headers[1]])
+            len(str(line[headers[0]])) + len(str(line[headers[1]]))
         ) != 0:  # Filter out blank rows
             if line in masterlist:
                 duplicated_rows += 1

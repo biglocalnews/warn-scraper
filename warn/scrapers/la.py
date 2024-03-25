@@ -158,7 +158,7 @@ def _is_mostly_empty(row: list) -> bool:
     return len(list(filter(pdfplumber.utils.extract_text, row))) <= 2
 
 
-def _process_pdf(pdf_path):
+def _process_pdf(pdf_path) -> list:
     """
     Process a PDF file.
 
@@ -174,27 +174,27 @@ def _process_pdf(pdf_path):
             for table in page.debug_tablefinder().tables:
                 for index, row in enumerate(table.rows):
                     cells = row.cells
-                    row = [_extract_cell_chars(page, cell) for cell in cells]
+                    cells = [_extract_cell_chars(page, cell) for cell in cells]
 
                     # If the first row in a table is mostly empty,
                     # append its contents to the previous row
                     if (
                         _is_first(index)
-                        and _is_mostly_empty(row)
+                        and _is_mostly_empty(cells)
                         and _has_rows(output_rows)
                     ):
                         output_rows = _append_contents_to_cells_in_row_above(
-                            output_rows, index, row
+                            output_rows, index, cells
                         )
                     # Otherwise, if a row is mostly empty, pull data into blank cells and add current row
-                    elif _is_mostly_empty(row):
-                        row = _append_contents_to_row_from_row_above(
-                            output_rows, index, row
+                    elif _is_mostly_empty(cells):
+                        cells = _append_contents_to_row_from_row_above(
+                            output_rows, index, cells
                         )
-                        output_rows.append(row)
+                        output_rows.append(cells)
                     # Otherwise, append the row
                     else:
-                        output_rows.append(row)
+                        output_rows.append(cells)
 
     return _clean_rows(output_rows)
 

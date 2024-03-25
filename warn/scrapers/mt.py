@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from openpyxl import load_workbook
 
 from .. import utils
@@ -38,7 +38,11 @@ def scrape(
 
     # Parse out the Excel link
     soup = BeautifulSoup(html, "html.parser")
-    links = soup.find(id="boardPage").find_all("a")
+    board_page = soup.find(id="boardPage")
+    if isinstance(board_page, Tag):
+        links = board_page.find_all("a")
+    else:
+        raise ValueError("Could not find board page")
     excel_name = [
         link.attrs["href"]
         for link in links

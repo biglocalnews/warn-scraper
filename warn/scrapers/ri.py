@@ -1,6 +1,6 @@
 import logging
-from pathlib import Path
 import typing
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook

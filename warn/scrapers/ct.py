@@ -2,8 +2,8 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache

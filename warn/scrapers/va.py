@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from .. import utils
 from ..cache import Cache
@@ -40,7 +40,11 @@ def scrape(
 
     # Parse out the CSV download link
     soup = BeautifulSoup(html, "html.parser")
-    csv_href = soup.find("a", text="Download")["href"]
+    csv_link = soup.find("a", text="Download")
+    if isinstance(csv_link, Tag):
+        csv_href = csv_link["href"]
+    else:
+        raise ValueError("Could not find CSV link")
     csv_url = f"https://www.vec.virginia.gov{csv_href}"
 
     # Download it to the cache

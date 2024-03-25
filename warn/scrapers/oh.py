@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from .. import utils
 
@@ -44,11 +44,14 @@ def scrape(
     r = requests.get(latesturl, headers=headers)
     soup = BeautifulSoup(r.content)
     logger.debug("Attempting to get JSON data from Ohio file")
-    mydiv = soup.find("div", {"id": "js-placeholder-json-data"})
-    mydata = json.loads(mydiv.decode_contents().strip())["data"]
-    rawheaders = mydata[1]
+    data_div = soup.find("div", {"id": "js-placeholder-json-data"})
+    if isinstance(data_div, Tag):
+        data = json.loads(data_div.decode_contents().strip())["data"]
+    else:
+        raise ValueError("Could not find JSON data div")
+    rawheaders = data[1]
     masterlist = []
-    for row in mydata[2:]:
+    for row in data[2:]:
         if len(row) == len(rawheaders):
             line = {}
             for i, item in enumerate(rawheaders):
