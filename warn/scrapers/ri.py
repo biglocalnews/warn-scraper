@@ -37,7 +37,7 @@ def scrape(
     state_code = "ri"
 
     # Get the HTML
-    base_url = "https://dlt.ri.gov/"
+    base_url = "https://dlt.ri.gov"
     url = f"{base_url}/employers/worker-adjustment-and-retraining-notification-warn"
     r = utils.get_url(url)
     html = r.text
