@@ -44,7 +44,6 @@ def scrape(
         stop_year,
         cache_dir,
         use_cache=use_cache,
-        verify=False,
     )
 
     # Return the resulting CSV file path
