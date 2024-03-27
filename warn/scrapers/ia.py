@@ -10,7 +10,7 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly", "palewire", "stucka"]
 __tags__ = ["html", "excel"]
 __source__ = {
     "name": "Iowa Workforce Development Department",
-    "url": "https://workforce.iowa.gov/employers/business-resources/warn",
+    "url": "https://workforce.iowa.gov/employers/resources/warn",
 }
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Go to the page
-    url = "https://workforce.iowa.gov/employers/business-resources/warn"
+    url = "https://workforce.iowa.gov/employers/resources/warn"
     r = utils.get_url(url)
     html = r.text
 
