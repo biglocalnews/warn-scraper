@@ -49,12 +49,6 @@ def scrape(
         success, content = utils.save_if_good_url(targetfile, url)
 
     root_html = content
-    #    r = utils.get_url(url)
-    #    r.encoding = "utf-8"
-    #    root_html = r.text
-
-    # Save it to the cache
-    #    cache.write(targetfile, root_html)
 
     # Parse the list of links
     soup = BeautifulSoup(root_html, "html5lib")
@@ -64,16 +58,6 @@ def scrape(
     # Grab all the links
     link_table = table_list[0]
     link_lookup = {_extract_year(a.string): a["href"] for a in link_table.find_all("a")}
-
-    # As documented in #238, the page for 2014 is missing. We're
-    # testing whether the URL for the 2019 page is the same as the
-    # the 2014 link currently points to and scraping an archived copy
-    # from 2017 instead.
-    if link_lookup.get("2014") == link_lookup.get("2018"):
-        logger.warning("2014 link is the same as 2018 link, using archived 2014")
-        link_lookup["2014"] = (
-            "https://web.archive.org/web/20170210010137/http://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-closure%202014"
-        )
 
     # Download them all
     html_list = [
