@@ -32,7 +32,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Create the URL of the source PDF
-    base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
+    base_url = "https://www.labor.idaho.gov/wp-content/uploads/publications/"
     file_name = "WARNNotice.pdf"
     # There's a numeric parameter called v on this PDF URL that updates
     # from time to time. Suspect this is a cache-buster. We're using a
