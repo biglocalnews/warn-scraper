@@ -39,11 +39,11 @@ def scrape(
     Returns: the Path where the file is written
     """
     cache = Cache(cache_dir)
-    base_url = "https://edd.ca.gov/Jobs_and_Training"
+    base_url = "https://edd.ca.gov/en/Jobs_and_Training"
 
     # Get the page with the link list
     logger.debug("Scraping list of data files")
-    list_url = f"{base_url}/Layoff_Services_WARN.htm"
+    list_url = f"{base_url}/Layoff_Services_WARN"
     list_page = utils.get_url(list_url)
     list_html = list_page.text
     cache.write("ca/list.html", list_html)
