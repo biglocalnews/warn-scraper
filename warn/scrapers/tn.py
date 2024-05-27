@@ -1,14 +1,14 @@
+import csv
 import typing
 from pathlib import Path
 
-import pdfplumber
 from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["anikasikka"]
-__tags__ = ["html", "pdf"]
+__authors__ = ["anikasikka", "stucka"]
+__tags__ = ["html"]
 __source__ = {
     "name": "Tennessee Department of Labor and Workforce Development",
     "url": "https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html",
@@ -37,13 +37,11 @@ def scrape(
     )
     html = page.text
     cache.write("tn/source.html", html)
+    soup = BeautifulSoup(html, "html5lib")
+    tables = soup.find_all(attrs={"class": "tn-datatable"})
+    rows = BeautifulSoup(str(tables), "html5lib").find_all("tr")
 
-    # Grab the PDF with the archived historial data
-    pdf_url = "https://www.tn.gov/content/dam/tn/workforce/documents/majorpublications/reports/WarnReportByMonth.pdf"
-    pdf_file = cache.download("tn/pdffile.pdf", pdf_url)
-
-    # Set the headers we'll use for both sources
-    tn_headers = [
+    dataheaders: typing.List = [
         "Notice Date",
         "Effective Date",
         "Received Date",
@@ -53,102 +51,42 @@ def scrape(
         "No. Of Employees",
         "Layoff/Closure",
         "Notice ID",
-    ]
-    cleaned_data: typing.List[typing.Any] = [tn_headers]
-
-    # Parse the latest HTML file and convert to a list of rows, with a header in the first row.
-    soup = BeautifulSoup(html, "html5lib")
-
-    # Grab all the list items on the page
-    data_list = soup.find_all("p")
-
-    # Loop through them all, skipping the first item, which is a header
-    for data in data_list[1:]:
-        # splitting the data on its delimiter
-        items = str(data).split("|")
-
-        # making sure that the last item in the list is the data value of interest
-        # splitting based on last character of each text-html data sequence
-        raw_data = []
-        for item in items:
-            value_html = item.split(":")[-1]
-            value_soup = BeautifulSoup(value_html, "html5lib")
-            string_list = list(value_soup.stripped_strings)
-            if len(string_list) > 0:
-                value = string_list[-1]
-            else:
-                continue
-            raw_data.append(value)
-
-        # If there aren't six entries it's junk
-        if len(raw_data) != 6:
-            continue
-
-        # Pluck out the values we want
-        nice_data = [
-            raw_data[0],  # Notice Date
-            raw_data[4],  # Effective Date
-            "",  # Received Date
-            raw_data[1],  # Company
-            "",  # City
-            raw_data[2],  # County
-            raw_data[3],  # Number of employees
-            "",  # Layoff/Closure
-            raw_data[5],  # Notice ID
-        ]
-
-        # Add them to the master list
-        cleaned_data.append(nice_data)
-
-    # The PDF header blacklist of rows to toss
-    pdf_header_blacklist = [
-        "Notice Date",
-        "Total",
+        # "Notice URL",
     ]
 
-    # Open the PDF
-    with pdfplumber.open(pdf_file) as pdf:
-        # Loop through all the pages
-        for i, my_page in enumerate(pdf.pages):
-            # Sll even pages have data, odd pages don't have the data
-            if i % 2 != 0:
-                continue
+    staginglist: typing.List = []
+    for row in reversed(rows):
+        cells = row.find_all("td")
+        if len(cells) == 6:  # Filter for potentially valid rows
+            line: typing.Dict = {}
+            for item in dataheaders:  # Build an ordered dictionary with null values
+                line[item] = None
+            line["Notice Date"] = cells[0].text.strip()
+            line["Effective Date"] = cells[4].text.strip()
+            line["Company"] = cells[1].text.strip()
+            line["County"] = cells[2].text.strip()
+            line["No. Of Employees"] = cells[3].text.strip()
+            line["Notice ID"] = cells[5].text.strip()
+            # line['Notice URL'] = cells[1].find("a")['href']
+            staginglist.append(line)
 
-            # Pull out the table and loop through the rows
-            table = my_page.extract_table()
-            if not table:
-                continue
+    # Bring in historical data
+    historical_file = cache_dir / "tn/tn_historical.csv"
+    historical_url = (
+        "https://storage.googleapis.com/bln-data-public/warn-layoffs/tn_historical.csv"
+    )
+    utils.fetch_if_not_cached(historical_file, historical_url)
+    historical_str = cache.read("tn/tn_historical.csv")
 
-            # Cut empty rows
-            row_list = [r for r in table if any(r)]
-            if not row_list:
-                continue
+    historicallist = list(csv.DictReader(historical_str.splitlines()))
 
-            # If this is a summary table, skip it
-            first_cell = row_list[0][0]
-            assert first_cell
-            if first_cell.lower().strip() == "summary by month":
-                continue
+    # Combine fresh and historical
+    staginglist.extend(historicallist)
 
-            # Loop through all the rows ...
-            for row in row_list:
-                # Skip remove redundant headers
-                if row[0] in pdf_header_blacklist:
-                    continue
-
-                # Toss in an empty Notice ID since it isn't in the PDF
-                row.append("")
-
-                # Add the data to our output
-                cleaned_data.append(row)
-
-    # Set the path to the final CSV
     output_csv = data_dir / "tn.csv"
 
-    # Write out the rows to the export directory
-    utils.write_rows_to_csv(output_csv, cleaned_data)
+    utils.write_dict_rows_to_csv(output_csv, dataheaders, staginglist)
 
-    # Return the path to the final CSV
     return output_csv
 
 
