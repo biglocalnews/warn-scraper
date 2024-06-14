@@ -1,13 +1,9 @@
 import datetime
 import logging
 import re
-from os.path import exists
 from pathlib import Path
 
 import pdfplumber
-import requests
-import tenacity
-import urllib3
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -54,7 +50,7 @@ def scrape(
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
     }
     url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
-    response = requests.get(url, headers=headers, verify=False)
+    response = utils.get_url(url, headers=headers)
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, "html.parser")
     pageholder = soup.select("div.content")[0]
@@ -95,13 +91,7 @@ def scrape(
 
 # scrapes each html page for the current year
 # returns a list of the year's html pages
-# note: no max amount of retries (recursive scraping)
-@tenacity.retry(
-    wait=tenacity.wait_exponential(),
-    retry=tenacity.retry_if_exception_type(requests.HTTPError),
-)
 def _scrape_html(cache, url, headers, page=1):
-    urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
     year = _extract_year(url)
     html_cache_key = f"fl/{year}_page_{page}.html"
@@ -121,7 +111,7 @@ def _scrape_html(cache, url, headers, page=1):
             raise FileNotFoundError
     except FileNotFoundError:
         # scrape & cache html
-        response = requests.get(url, headers=headers, verify=False)
+        response = utils.get_url(url, headers=headers)
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         page_text = response.text
@@ -168,29 +158,16 @@ def _html_to_rows(page_text):
 
 
 # download and scrape pdf
-@tenacity.retry(
-    wait=tenacity.wait_exponential(),
-    retry=tenacity.retry_if_exception_type(requests.HTTPError),
-)
 def _scrape_pdf(cache, cache_dir, url, headers):
-    # sidestep SSL error
-    urllib3.disable_warnings()
     # extract year from URL
     year = _extract_year(url)
     pdf_cache_key = f"fl/{year}.pdf"
-    download = ""
+    pdf_path = cache_dir / pdf_cache_key
     # download pdf if not in the cache
-    if not exists(pdf_cache_key):
-        response = requests.get(url, headers=headers, verify=False)
-        logger.debug(f"Request status is {response.status_code} for {url}")
-        response.raise_for_status()
-        # download & cache pdf
-        download = response.content
-        with open(f"{cache_dir}/{pdf_cache_key}", "wb") as f:
-            f.write(download)
-        logger.debug(f"Successfully scraped PDF from {url} to cache: {pdf_cache_key}")
+    if not cache.exists(pdf_cache_key):
+        cache.download(pdf_cache_key, url, headers=headers)
     # scrape tables from PDF
-    with pdfplumber.open(f"{cache_dir}/{pdf_cache_key}") as pdf:
+    with pdfplumber.open(pdf_path) as pdf:
         pages = pdf.pages
         output_rows = []
         for page_num, page in enumerate(pages):
