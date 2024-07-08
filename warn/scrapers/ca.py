@@ -224,20 +224,25 @@ def _extract_pdf_data(pdf_path):
             if "summary" in first_cell:
                 continue
             for row in rows:
-                data_row = {}
-                for i, value in enumerate(row):
-                    this_raw_header = raw_header[i]
-                    this_clean_header = header_crosswalk[this_raw_header]
-                    data_row[this_clean_header] = value
-                # Data clean-ups
-                data_row.update(
-                    {
-                        "effective_date": data_row["effective_date"].replace(" ", ""),
-                        "received_date": data_row["received_date"].replace(" ", ""),
-                        "source_file": str(pdf_path).split("/")[-1],
-                    }
-                )
-                data.append(data_row)
+                # Summary rows have an extra field, and the above code does not
+                # block the summary table from being parsed if it jumps onto another page.
+                if len(row) != len(raw_header) + 1:
+                    data_row = {}
+                    for i, value in enumerate(row):
+                        this_raw_header = raw_header[i]
+                        this_clean_header = header_crosswalk[this_raw_header]
+                        data_row[this_clean_header] = value
+                    # Data clean-ups
+                    data_row.update(
+                        {
+                            "effective_date": data_row["effective_date"].replace(
+                                " ", ""
+                            ),
+                            "received_date": data_row["received_date"].replace(" ", ""),
+                            "source_file": str(pdf_path).split("/")[-1],
+                        }
+                    )
+                    data.append(data_row)
     return data
 
 
