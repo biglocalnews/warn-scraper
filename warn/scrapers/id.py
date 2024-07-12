@@ -12,7 +12,7 @@ __authors__ = ["chriszs", "stucka"]
 __tags__ = ["pdf"]
 __source__ = {
     "name": "Idaho Department of Labor",
-    "url": "https://www.labor.idaho.gov/dnn/Businesses/Layoff-Assistance#2",
+    "url": "https://www.labor.idaho.gov/warnnotice/",
 }
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Create the URL of the source PDF
-    base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
+    base_url = "https://www.labor.idaho.gov/warnnotice/"
     file_name = "WARNNotice.pdf"
     # There's a numeric parameter called v on this PDF URL that updates
     # from time to time. Suspect this is a cache-buster. We're using a
@@ -40,10 +40,8 @@ def scrape(
     min_cache_buster = 0
     max_cache_buster = 10000000000
     cache_buster = random.randrange(min_cache_buster, max_cache_buster)
-    url = f"{base_url}{file_name}?v={cache_buster}"
+    url = f"{base_url}?v={cache_buster}"
 
-    # Download the PDF with verify=False because
-    # there's a persistent cert error we're working around.
     cache = Cache(cache_dir)
     state_code = "id"
     cache_key = f"{state_code}/{file_name}"
@@ -126,9 +124,9 @@ def filter_garbage_rows(incoming: list):
             badrows += 1
     if badrows == 0:
         logger.debug("No bad rows found.")
-    logger.debug(
-        f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
-    )
+        logger.debug(
+            f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
+        )
     return outgoing
 
 
