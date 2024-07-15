@@ -11,7 +11,7 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html"]
 __source__ = {
     "name": "Maryland Department of Labor",
-    "url": "http://www.dllr.state.md.us/employment/warn.shtml",
+    "url": "https://www.dllr.state.md.us/employment/warn.shtml",
 }
 
 logger = logging.getLogger(__name__)
