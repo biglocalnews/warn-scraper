@@ -4,6 +4,8 @@ import re
 from pathlib import Path
 
 import pdfplumber
+import requests
+from bs4 import BeautifulSoup
 
 from .. import utils
 from ..cache import Cache
@@ -12,7 +14,7 @@ __authors__ = ["chriszs", "stucka"]
 __tags__ = ["pdf"]
 __source__ = {
     "name": "Idaho Department of Labor",
-    "url": "https://www.labor.idaho.gov/dnn/Businesses/Layoff-Assistance#2",
+    "url": "https://www.labor.idaho.gov/businesss/layoff-assistance/",
 }
 
 logger = logging.getLogger(__name__)
@@ -32,7 +34,8 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Create the URL of the source PDF
-    base_url = "https://www.labor.idaho.gov/dnn/Portals/0/Publications/"
+    base_url = "https://www.labor.idaho.gov"
+    start_url = "https://www.labor.idaho.gov/businesss/layoff-assistance/"
     file_name = "WARNNotice.pdf"
     # There's a numeric parameter called v on this PDF URL that updates
     # from time to time. Suspect this is a cache-buster. We're using a
@@ -40,14 +43,23 @@ def scrape(
     min_cache_buster = 0
     max_cache_buster = 10000000000
     cache_buster = random.randrange(min_cache_buster, max_cache_buster)
-    url = f"{base_url}{file_name}?v={cache_buster}"
+    page_url = f"{start_url}?v={cache_buster}"
 
-    # Download the PDF with verify=False because
-    # there's a persistent cert error we're working around.
     cache = Cache(cache_dir)
     state_code = "id"
+    logger.debug(f"Trying to fetch page at {page_url}")
+    r = requests.get(page_url)
+
+    # Start finding the link before "Who to contact"
+    html = r.text
+    localizedhtml = html.split("<h2>Who to contact")[0]
+    soup = BeautifulSoup(localizedhtml, features="lxml")
+    last_url = soup.find_all("a")[-1]["href"]
+    pdf_url = f"{base_url}{last_url}"
+
+    logger.debug(f"Trying to fetch PDF at {pdf_url}")
     cache_key = f"{state_code}/{file_name}"
-    pdf_file = cache.download(cache_key, url, verify=True)
+    pdf_file = cache.download(cache_key, pdf_url, verify=True)
 
     # Loop through the PDF pages and scrape out the data
     output_rows: list = []
@@ -126,9 +138,10 @@ def filter_garbage_rows(incoming: list):
             badrows += 1
     if badrows == 0:
         logger.debug("No bad rows found.")
-    logger.debug(
-        f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
-    )
+    else:
+        logger.debug(
+            f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
+        )
     return outgoing
 
 
