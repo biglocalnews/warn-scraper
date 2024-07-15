@@ -28,8 +28,8 @@ def scrape(
     Returns: the Path where the file is written
     """
     # Get the URL
-    url = "http://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
-    r = utils.get_url(url, verify=False)
+    url = "https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page"
+    r = utils.get_url(url, verify=True)
     html = r.text
 
     # Save it to the cache
@@ -50,10 +50,10 @@ def scrape(
             "xlsx"
         )  # URL will look like: ="../../_docs/wioa/warn-9-1-21.xlsx"
     ][0].split("/")[-1]
-    excel_url = f"http://wsd.dli.mt.gov/_docs/wioa/{excel_name}"
+    excel_url = f"https://wsd.dli.mt.gov/_docs/wioa/{excel_name}"
 
     # Download the Excel file
-    excel_path = cache.download("mt/source.xlsx", excel_url, verify=False)
+    excel_path = cache.download("mt/source.xlsx", excel_url, verify=True)
 
     # Open it up
     workbook = load_workbook(filename=excel_path)
