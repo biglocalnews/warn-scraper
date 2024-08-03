@@ -138,23 +138,24 @@ def _extract_excel_data(wb_path):
     # Loop through all the rows
     payload = []
     for row in rows:
-        first_cell = row[0].value.strip().lower()
-        # Exit if we've reached summary row at bottom
-        if first_cell == "report summary":
-            break
+        if row[0].value:
+            first_cell = row[0].value.strip().lower()
+            # Exit if we've reached summary row at bottom
+            if first_cell == "report summary":
+                break
 
-        data = {
-            "county": row[0].value.strip(),
-            "notice_date": _convert_date(row[1].value),
-            "received_date": _convert_date(row[2].value),
-            "effective_date": _convert_date(row[3].value),
-            "company": row[4].value.strip(),
-            "layoff_or_closure": row[5].value.strip(),
-            "num_employees": row[num_employees_index].value,
-            "address": row[address_index].value.strip(),
-            "source_file": str(wb_path).split("/")[-1],
-        }
-        payload.append(data)
+            data = {
+                "county": row[0].value.strip(),
+                "notice_date": _convert_date(row[1].value),
+                "received_date": _convert_date(row[2].value),
+                "effective_date": _convert_date(row[3].value),
+                "company": row[4].value.strip(),
+                "layoff_or_closure": row[5].value.strip(),
+                "num_employees": row[num_employees_index].value,
+                "address": row[address_index].value.strip(),
+                "source_file": str(wb_path).split("/")[-1],
+            }
+            payload.append(data)
     return payload
 
 
