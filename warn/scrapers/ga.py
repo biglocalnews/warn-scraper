@@ -129,7 +129,7 @@ def scrape(
         filehref = BeautifulSoup(listing[0], features="html5lib")("a")[0]["href"]
         fileid = BeautifulSoup(listing[0], features="html5lib")("a")[0].contents[0]
         targetfilename = cache_dir / ("ga/" + fileid + ".format3")
-        utils.fetch_if_not_cached(targetfilename, filehref)
+        utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
 
     # Parse detailed data
     masterlist = []
