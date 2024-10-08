@@ -61,6 +61,7 @@ def scrape(
                 dirty_list.extend(localrows)
 
             headers = dirty_list[1]  # Skip false header at position 0
+            headers = [x for x in headers if x is not None]
             headers[2] = (
                 headers[2]
                 .replace("Company Name ", "Company Name")
@@ -85,9 +86,14 @@ def scrape(
                         logger.debug(f"Got : {row}")
                     else:
                         line = {}
-                        for i, fieldname in enumerate(headers):
-                            line[fieldname] = row[i]
-                        row_list.append(line)
+                        if len(headers) > len(row):
+                            logger.debug(
+                                f"{len(row)} items found, vs. expected {len(headers)}. Dropping row: {row}"
+                            )
+                        else:
+                            for i, fieldname in enumerate(headers):
+                                line[fieldname] = row[i]
+                            row_list.append(line)
             # dirty_list = None
             logger.debug(
                 f"Successfully merged {len(row_list)-1:,} records from new spreadsheet."
