@@ -1,6 +1,7 @@
 import logging
 import re
 from pathlib import Path
+from time import sleep
 
 from bs4 import BeautifulSoup
 
@@ -15,6 +16,8 @@ __source__ = {
 }
 
 logger = logging.getLogger(__name__)
+
+naptime = 3
 
 
 def scrape(
@@ -42,6 +45,8 @@ def scrape(
     # Save it to the cache
     cache.write("md/source.html", html)
 
+    sleep(naptime)  # Try to stop blocked connections by being less aggressive
+
     # Parse the list of links
     soup = BeautifulSoup(html, "html.parser")
     a_list = soup.find_all("a", {"class": "sub"})
@@ -60,6 +65,8 @@ def scrape(
 
         # Save it to the cache
         cache.write(f"md/{href}.html", html)
+
+        sleep(naptime)  # Try to stop blocked connections by being less aggressive
 
         # Add it to the list
         html_list.append(html)
