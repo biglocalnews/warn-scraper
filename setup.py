@@ -128,7 +128,7 @@ setup(
     """,
     install_requires=[
         "click",
-        "bs4",
+        "beautifulsoup4",
         "html5lib",
         "pdfplumber",
         "requests",
