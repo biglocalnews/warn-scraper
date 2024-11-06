@@ -31,12 +31,14 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    ssl_verify = False  # Problems with certificates in November 2024
+
     # Set up the cache
     cache = Cache(cache_dir)
 
     # Get the root URL
     url = "https://www.twc.texas.gov/data-reports/warn-notice"
-    page = utils.get_url(url)
+    page = utils.get_url(url, verify=ssl_verify)
     html = page.text
 
     # Cache it
@@ -68,7 +70,7 @@ def scrape(
         # download the excel file
         year = _get_year(href)
         ext = _get_ext(href)
-        excel_path = cache.download(f"tx/{year}{ext}", data_url)
+        excel_path = cache.download(f"tx/{year}{ext}", data_url, verify=ssl_verify)
 
         # Open it up
         workbook = load_workbook(filename=excel_path)
