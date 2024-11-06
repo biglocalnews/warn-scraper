@@ -36,9 +36,13 @@ def scrape(
     # Set the cache
     cache = Cache(cache_dir)
 
+    # In November 2024 Maryland began throwing out many failed connection messages. These two things helped.
+    request_headers = {"User-Agent": "BigLocalNews.org"}
+    request_verify = False
+
     # Get the page
     url = "https://www.dllr.state.md.us/employment/warn.shtml"
-    r = utils.get_url(url)
+    r = utils.get_url(url, headers=request_headers, verify=request_verify)
     r.encoding = "utf-8"
     html = r.text
 
@@ -56,17 +60,41 @@ def scrape(
     html_list = []
     html_list.append(html)  # Save the source HTML for parsing also
 
+    old_pages = [
+        "warn2023.shtml",
+        "warn2022.shtml",
+        "warn2021.shtml",
+        "warn2020.shtml",
+        "warn2019.shtml",
+        "warn2018.shtml",
+        "warn2017.shtml",
+        "warn2016.shtml",
+        "warn2015.shtml",
+        "warn2014.shtml",
+        "warn2013.shtml",
+        "warn2012.shtml",
+        "warn2011.shtml",
+        "warn2010.shtml",
+    ]
+
     for href in href_list:
         # Request the HTML
         url = f"https://www.dllr.state.md.us/employment/{href}"
-        r = utils.get_url(url)
-        r.encoding = "utf-8"
-        html = r.text
+        filename = cache_dir / f"md/{href}.html"
 
-        # Save it to the cache
-        cache.write(f"md/{href}.html", html)
+        if href not in old_pages:
+            sleep(naptime)  # Try to stop blocked connections by being less aggressive
+            r = utils.get_url(url, headers=request_headers, verify=request_verify)
+            r.encoding = "utf-8"
+            html = r.text
 
-        sleep(naptime)  # Try to stop blocked connections by being less aggressive
+            # Save it to the cache
+            cache.write(filename, html)
+        else:
+            r = utils.fetch_if_not_cached(
+                filename, url, headers=request_headers, verify=request_verify
+            )
+            html = cache.read(filename)
 
         # Add it to the list
         html_list.append(html)
