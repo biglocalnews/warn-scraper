@@ -80,7 +80,7 @@ def scrape(
     for href in href_list:
         # Request the HTML
         url = f"https://www.dllr.state.md.us/employment/{href}"
-        filename = cache_dir / f"md/{href}.html"
+        filename = f"md/{href}.html"
 
         if href not in old_pages:
             sleep(naptime)  # Try to stop blocked connections by being less aggressive
@@ -92,7 +92,10 @@ def scrape(
             cache.write(filename, html)
         else:
             r = utils.fetch_if_not_cached(
-                filename, url, headers=request_headers, verify=request_verify
+                cache_dir / filename,
+                url,
+                headers=request_headers,
+                verify=request_verify,
             )
             html = cache.read(filename)
 
