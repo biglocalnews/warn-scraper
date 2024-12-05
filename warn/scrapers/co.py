@@ -123,6 +123,7 @@ def scrape(
         "Occupations Impacted": "occupations",
         "Occupations": "occupations",
         "Select the workforce area": "workforce_area",
+        "Total CO": "jobs",
         "Total number of permanent layoffs": "permanent_job_losses",
         "Total number of temporary layoffs": "temporary_job_losses",
         "Total number of furloughs": "furloughs",

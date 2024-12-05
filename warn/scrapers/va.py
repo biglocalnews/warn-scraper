@@ -1,10 +1,11 @@
 import logging
 from pathlib import Path
 
-from bs4 import BeautifulSoup, Tag
-
 from .. import utils
 from ..cache import Cache
+
+# from bs4 import BeautifulSoup, Tag
+
 
 __authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
 __tags__ = ["html", "csv"]
@@ -29,26 +30,37 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    # This scraper initially tried to get a CSV download link that was only for the most recent entries. The scraping part of that broke.
+    # It's now hard-coded to a particular download link with parameters that should get the full thing.
+
+    # This may break again, but this revised attempt has far fewer moving parts and actually fetches the complete data set.
+    # Blame Stucka in December 2024.
+
     # Get the WARN page
-    url = "https://www.vec.virginia.gov/warn-notices"
-    r = utils.get_url(url, verify=False)
-    html = r.text
+    # url = "https://www.vec.virginia.gov/warn-notices"
+    # url = "https://vec.virginia.gov/warn-notices?field_notice_date_value%5Bmin%5D%5Bdate%5D=1%2F1%2F1990&field_notice_date_value%5Bmax%5D%5Bdate%5D=&field_region_warn_tid=All"
+    # r = utils.get_url(url, verify=True)
+    # html = r.text
 
     # Save it to the cache
     cache = Cache(cache_dir)
-    cache.write("va/source.html", html)
+    # cache.write("va/source.html", html)
 
     # Parse out the CSV download link
-    soup = BeautifulSoup(html, "html.parser")
-    csv_link = soup.find("a", text="Download")
-    if isinstance(csv_link, Tag):
-        csv_href = csv_link["href"]
-    else:
-        raise ValueError("Could not find CSV link")
-    csv_url = f"https://www.vec.virginia.gov{csv_href}"
+    # soup = BeautifulSoup(html, "html.parser")
+    # csv_link = soup.find("a", text="Download")
+    # if isinstance(csv_link, Tag):
+    #     csv_href = csv_link["href"]
+    # else:
+    #     raise ValueError("Could not find CSV link")
+
+    # csv_href = "/warn-notices-csv.csv?"
+    # csv_url = f"https://www.vec.virginia.gov{csv_href}"
+
+    csv_url = "https://vec.virginia.gov/warn-notices-csv.csv?field_notice_date_value%5Bmin%5D%5Bdate%5D=1%2F1%2F1990&field_notice_date_value%5Bmax%5D%5Bdate%5D=&field_region_warn_tid=All"
 
     # Download it to the cache
-    cache.download("va/source.csv", csv_url, verify=False)
+    cache.download("va/source.csv", csv_url, verify=True)
 
     # Open it up as a list of rows
     csv_rows = cache.read_csv("va/source.csv")
