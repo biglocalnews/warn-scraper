@@ -1,13 +1,19 @@
 import logging
+import os
+from glob import glob
 from pathlib import Path
+from shutil import copyfile
+from time import sleep
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 from .. import utils
 from ..cache import Cache
 
-# from bs4 import BeautifulSoup, Tag
-
-
-__authors__ = ["zstumgoren", "Dilcia19", "shallotly"]
+__authors__ = ["zstumgoren", "Dilcia19", "shallotly", "stucka"]
 __tags__ = ["html", "csv"]
 __source__ = {
     "name": "Virginia Employment Commission",
@@ -35,32 +41,49 @@ def scrape(
 
     # This may break again, but this revised attempt has far fewer moving parts and actually fetches the complete data set.
     # Blame Stucka in December 2024.
+    # And it broke again in December 2024, but not even Stucka will blame Stucka for this mess.
 
-    # Get the WARN page
-    # url = "https://www.vec.virginia.gov/warn-notices"
-    # url = "https://vec.virginia.gov/warn-notices?field_notice_date_value%5Bmin%5D%5Bdate%5D=1%2F1%2F1990&field_notice_date_value%5Bmax%5D%5Bdate%5D=&field_region_warn_tid=All"
-    # r = utils.get_url(url, verify=True)
-    # html = r.text
-
-    # Save it to the cache
     cache = Cache(cache_dir)
-    # cache.write("va/source.html", html)
+    #     csv_url = "https://vec.virginia.gov/warn-notices-csv.csv?field_notice_date_value%5Bmin%5D%5Bdate%5D=1%2F1%2F1990&field_notice_date_value%5Bmax%5D%5Bdate%5D=&field_region_warn_tid=All"
 
-    # Parse out the CSV download link
-    # soup = BeautifulSoup(html, "html.parser")
-    # csv_link = soup.find("a", text="Download")
-    # if isinstance(csv_link, Tag):
-    #     csv_href = csv_link["href"]
-    # else:
-    #     raise ValueError("Could not find CSV link")
+    csv_url = "https://vec.virginia.gov/warn-notices-csv.csv"
 
-    # csv_href = "/warn-notices-csv.csv?"
-    # csv_url = f"https://www.vec.virginia.gov{csv_href}"
+    # driver = webdriver.Chrome(options=chromeoptionsholder, service=Service(ChromeDriverManager().install()))
+    logger.debug("Attempting to launch Chrome")
+    chromeoptionsholder = ChromeOptions()
+    chrome_install = ChromeDriverManager().install()
+    folder = os.path.dirname(chrome_install)
+    chromedriver_path = os.path.join(folder, "chromedriver.exe")
+    service = ChromeService(chromedriver_path)
+    driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+    logger.debug(f"Attempting to fetch {csv_url}")
+    driver.get(csv_url)
 
-    csv_url = "https://vec.virginia.gov/warn-notices-csv.csv?field_notice_date_value%5Bmin%5D%5Bdate%5D=1%2F1%2F1990&field_notice_date_value%5Bmax%5D%5Bdate%5D=&field_region_warn_tid=All"
+    sleep(25)
+
+    logger.debug(driver.page_source)
+
+    # get the user download folder (dynamic so will work on any machine)
+    downLoadFolder = os.path.join(os.getenv("USERPROFILE"), "Downloads")  # type: ignore
+    # get the list of files
+    list_of_files = glob(downLoadFolder + "/*.csv")
+    # get the latest file name
+    latest_file = max(list_of_files, key=os.path.getctime)
+    # print the latest file name
+    logger.debug(f"CSV saved to {latest_file}")
+
+    target_filename = cache_dir / "va" / "source.csv"
+
+    utils.create_directory(path=cache_dir / "va", is_file=False)
+
+    logger.debug(f"Saving file to {target_filename}")
+
+    copyfile(latest_file, target_filename)
+
+    driver.quit()
 
     # Download it to the cache
-    cache.download("va/source.csv", csv_url, verify=True)
+    # cache.download("va/source.csv", csv_url, verify=True)
 
     # Open it up as a list of rows
     csv_rows = cache.read_csv("va/source.csv")

@@ -86,7 +86,7 @@ def save_if_good_url(filename, url, **kwargs):
         success_flag = False
         content = False
     else:
-        with open(filename, "wb") as outfile:
+        with open(filename, "wb", encoding="utf-8") as outfile:
             outfile.write(response.content)
             success_flag = True
             content = response.content
@@ -104,7 +104,7 @@ def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
     """
     create_directory(output_path, is_file=True)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
-    with open(output_path, mode, newline="") as f:
+    with open(output_path, mode, newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerows(rows)
 
