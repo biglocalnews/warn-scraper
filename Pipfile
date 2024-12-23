@@ -45,6 +45,8 @@ click = "*"
 xlrd = "*"
 retry = "*"
 urllib3 = "1.26.18" # pegged to avoid test issue
+selenium = "*"
+webdriver-manager = "*"
 
 [requires]
 python_version = "3.9"
