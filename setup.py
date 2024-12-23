@@ -133,6 +133,7 @@ setup(
         "pdfplumber",
         "requests",
         "openpyxl",
+        "pyopenssl",
         "retry",
         "selenium",
         "tenacity",
