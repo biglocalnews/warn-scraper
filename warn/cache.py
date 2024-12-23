@@ -69,7 +69,7 @@ class Cache:
         """
         path = Path(self.path, name)
         logger.debug(f"Reading CSV from cache {path}")
-        with open(path) as fh:
+        with open(path, encoding="utf-8") as fh:
             return list(csv.reader(fh))
 
     def download(
