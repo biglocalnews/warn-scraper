@@ -48,6 +48,7 @@ urllib3 = "1.26.18" # pegged to avoid test issue
 selenium = "*"
 webdriver-manager = "*"
 cryptography = "*"
+cffi = "*"
 
 [requires]
 python_version = "3.9"

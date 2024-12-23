@@ -111,6 +111,9 @@ def scrape(
     # driver = webdriver.Chrome(options=chromeoptionsholder, service=Service(ChromeDriverManager().install()))
     logger.debug("Attempting to launch Chrome")
     chromeoptionsholder = ChromeOptions()
+    chromeoptionsholder.add_argument("--no-sandbox")
+    chromeoptionsholder.add_argument("--remote-debugging-pipe")
+
     chrome_install = ChromeDriverManager().install()
 
     # Weird error with finding the driver name in Windows. Sometimes.
