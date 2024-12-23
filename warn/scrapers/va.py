@@ -112,14 +112,22 @@ def scrape(
     logger.debug("Attempting to launch Chrome")
     chromeoptionsholder = ChromeOptions()
     chrome_install = ChromeDriverManager().install()
-    folder = os.path.dirname(chrome_install)
-    chromedriver_path = os.path.join(folder, "chromedriver.exe")
-    service = ChromeService(chromedriver_path)
+
+    # Weird error with finding the driver name in Windows. Sometimes.
+    if chrome_install.endswith("THIRD_PARTY_NOTICES.chromedriver"):
+        chrome_install = chrome_install.replace(
+            "THIRD_PARTY_NOTICES.chromedriver", "chromedriver.exe"
+        )
+    logger.debug(f"Chrome install variable is {chrome_install}")
+    # folder = os.path.dirname(chrome_install)
+    # chromedriver_path = folder #  os.path.join(folder, "chromedriver.exe")
+    # service = ChromeService(chromedriver_path)
+    service = ChromeService(chrome_install)
     driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
     logger.debug(f"Attempting to fetch {csv_url}")
     driver.get(csv_url)
 
-    sleep(25)  # Give it plenty of time to evaluate Javascript
+    sleep(30)  # Give it plenty of time to evaluate Javascript
 
     download_dir = os.path.expanduser("~") + "/Downloads"
 
