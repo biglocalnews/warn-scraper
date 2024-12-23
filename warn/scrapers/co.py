@@ -157,7 +157,12 @@ def scrape(
         for key, value in row.items():
             standardized_key = header_crosswalk[key]
             row_dict[standardized_key] = value
-        standardized_data.append(row_dict)
+        if len(row_dict["company"]) < 3 and row_dict["letter"] == "Avis Budget Group":
+            row_dict["company"] = "Avis Budget Group"
+        if len(row_dict["company"]) < 3:  # or len(row_dict['naics']) <5:
+            logger.debug(f"Dropping row of questionable quality: {row_dict}")
+        else:
+            standardized_data.append(row_dict)
 
     # Set the path to the final CSV
     output_csv = data_dir / "co.csv"
