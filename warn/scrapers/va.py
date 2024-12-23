@@ -114,6 +114,7 @@ def scrape(
     chromeoptionsholder.add_argument("--no-sandbox")
     chromeoptionsholder.add_argument("--disable-dev-shm-usage")
     chromeoptionsholder.add_argument("--remote-debugging-pipe")
+    chromeoptionsholder.add_argument("--verbose")
 
     chrome_install = ChromeDriverManager().install()
 
