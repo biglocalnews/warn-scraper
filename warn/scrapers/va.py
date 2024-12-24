@@ -128,7 +128,9 @@ def scrape(
             )
     logger.debug(f"Chrome install variable is {chrome_install}")
     service = ChromeService(chrome_install)
-    driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+    driver = webdriver.Chrome(
+        options=chromeoptionsholder, service=service, service_args=["--verbose"]
+    )
     logger.debug(f"Attempting to fetch {csv_url}")
     driver.get(csv_url)
 
