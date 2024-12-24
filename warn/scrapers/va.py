@@ -116,19 +116,21 @@ def scrape(
     chromeoptionsholder.add_argument("--remote-debugging-pipe")
     chromeoptionsholder.add_argument("--verbose")
 
-    chrome_install = ChromeDriverManager().install()
+    if "CHROMEWEBDRIVER" in os.environ:
+        chrome_install = os.environ["CHROMEWEBDRIVER"]
+    else:
+        chrome_install = ChromeDriverManager().install()
 
-    # Weird error with finding the driver name in Windows. Sometimes.
-    if chrome_install.endswith("THIRD_PARTY_NOTICES.chromedriver"):
-        chrome_install = chrome_install.replace(
-            "THIRD_PARTY_NOTICES.chromedriver", "chromedriver.exe"
-        )
+        # Weird error with finding the driver name in Windows. Sometimes.
+        if chrome_install.endswith("THIRD_PARTY_NOTICES.chromedriver"):
+            chrome_install = chrome_install.replace(
+                "THIRD_PARTY_NOTICES.chromedriver", "chromedriver.exe"
+            )
     logger.debug(f"Chrome install variable is {chrome_install}")
-    # folder = os.path.dirname(chrome_install)
-    # chromedriver_path = folder #  os.path.join(folder, "chromedriver.exe")
-    # service = ChromeService(chromedriver_path)
     service = ChromeService(chrome_install)
-    driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+    driver = webdriver.Chrome(
+        options=chromeoptionsholder, service=service, service_args=["--verbose"]
+    )
     logger.debug(f"Attempting to fetch {csv_url}")
     driver.get(csv_url)
 
