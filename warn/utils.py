@@ -86,7 +86,7 @@ def save_if_good_url(filename, url, **kwargs):
         success_flag = False
         content = False
     else:
-        with open(filename, "wb", encoding="utf-8") as outfile:
+        with open(filename, "wb") as outfile:
             outfile.write(response.content)
             success_flag = True
             content = response.content
@@ -109,7 +109,9 @@ def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
         writer.writerows(rows)
 
 
-def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="raise"):
+def write_dict_rows_to_csv(
+    output_path, headers, rows, mode="w", extrasaction="raise", encoding="utf-8"
+):
     """Write the provided dictionary to the provided path as comma-separated values.
 
     Args:
@@ -121,7 +123,7 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
     """
     create_directory(output_path, is_file=True)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
-    with open(output_path, mode, newline="") as f:
+    with open(output_path, mode, newline="", encoding=encoding) as f:
         # Create the writer object
         writer = csv.DictWriter(f, fieldnames=headers, extrasaction=extrasaction)
         # If we are writing a new row ...
