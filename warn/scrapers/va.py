@@ -127,10 +127,8 @@ def scrape(
                 "THIRD_PARTY_NOTICES.chromedriver", "chromedriver.exe"
             )
     logger.debug(f"Chrome install variable is {chrome_install}")
-    service = ChromeService(chrome_install)
-    driver = webdriver.Chrome(
-        options=chromeoptionsholder, service=service, service_args=["--verbose"]
-    )
+    service = ChromeService(chrome_install, service_args=["--verbose"])
+    driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
     logger.debug(f"Attempting to fetch {csv_url}")
     driver.get(csv_url)
 
