@@ -117,7 +117,7 @@ def scrape(
     chromeoptionsholder.add_argument("--verbose")
 
     if "CHROMEWEBDRIVER" in os.environ:
-        chrome_install = os.environ["CHROMEWEBDRIVER"]
+        chrome_install = os.environ["CHROMEWEBDRIVER"] + "/chromedriver"
     else:
         chrome_install = ChromeDriverManager().install()
 
