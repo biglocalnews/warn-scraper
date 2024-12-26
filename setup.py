@@ -138,6 +138,7 @@ setup(
         "selenium",
         "tenacity",
         "xlrd",
+        "xvfbwrapper",
         "webdriver-manager",
     ],
     license="Apache 2.0 license",
