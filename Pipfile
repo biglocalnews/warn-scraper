@@ -50,6 +50,7 @@ webdriver-manager = "*"
 cryptography = "*"
 cffi = "*"
 pyopenssl = "*"
+xvfbwrapper = "*"
 
 [requires]
 python_version = "3.9"

@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import platform
 from glob import glob
 from pathlib import Path
 from shutil import copyfile
@@ -22,6 +23,16 @@ __source__ = {
 }
 
 logger = logging.getLogger(__name__)
+
+if platform.system() == "Windows":
+    message = "This scraper requires Xvfb, which does not appear to be "
+    message += "supported within Windows, even with WSL. This scraper "
+    message += "will not work for you."
+    logger.error(message)
+    quit()
+else:
+    print(f"{platform.system} found")
+    from xvfbwrapper import Xvfb
 
 
 def scrape(
@@ -127,12 +138,14 @@ def scrape(
                 "THIRD_PARTY_NOTICES.chromedriver", "chromedriver.exe"
             )
     logger.debug(f"Chrome install variable is {chrome_install}")
-    service = ChromeService(chrome_install, service_args=["--verbose"])
-    driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
-    logger.debug(f"Attempting to fetch {csv_url}")
-    driver.get(csv_url)
 
-    sleep(30)  # Give it plenty of time to evaluate Javascript
+    # Launch X Windows emulator, then launch Chrome to run with it
+    with Xvfb() as xvfb:  # noqa: F841
+        service = ChromeService(chrome_install, service_args=["--verbose"])
+        driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+        logger.debug(f"Attempting to fetch {csv_url}")
+        driver.get(csv_url)
+        sleep(30)  # Give it plenty of time to evaluate Javascript
 
     download_dir = os.path.expanduser("~") + "/Downloads"
 
