@@ -146,6 +146,7 @@ def scrape(
         logger.debug(f"Attempting to fetch {csv_url}")
         driver.get(csv_url)
         sleep(30)  # Give it plenty of time to evaluate Javascript
+        driver.quit()
 
     download_dir = os.path.expanduser("~") + "/Downloads"
 
@@ -171,8 +172,6 @@ def scrape(
     logger.debug(f"Saving file to {target_filename}")
 
     copyfile(latest_file, target_filename)
-
-    driver.quit()
 
     # Download it to the cache
     # cache.download("va/source.csv", csv_url, verify=True)
