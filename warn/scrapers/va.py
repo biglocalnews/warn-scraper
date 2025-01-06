@@ -49,7 +49,8 @@ def scrape(
     Returns: the Path where the file is written
     """
     cache = Cache(cache_dir)
-    csv_url = "https://vec.virginia.gov/warn-notices-csv.csv"
+    # csv_url = "https://vec.virginia.gov/warn-notices-csv.csv"
+    csv_url = "https://vec.virginia.gov/warn_notices.csv"
 
     """
     This scraper originally tried to parse HTML to find a CSV download link.
@@ -145,7 +146,9 @@ def scrape(
         driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
         logger.debug(f"Attempting to fetch {csv_url}")
         driver.get(csv_url)
-        sleep(30)  # Give it plenty of time to evaluate Javascript
+        sleep(45)  # Give it plenty of time to evaluate Javascript
+        driver.get(csv_url)
+        sleep(10)
         driver.quit()
 
     download_dir = os.path.expanduser("~") + "/Downloads"
@@ -154,7 +157,7 @@ def scrape(
         logger.error(f"The download directory is not {download_dir}.")
 
     # get the list of files
-    list_of_files = glob(download_dir + "/warn-notices-csv*.csv")
+    list_of_files = glob(download_dir + "/warn_notices*.csv")
     if len(list_of_files) == 0:
         logger.error(f"No matching files found in {download_dir}.")
 
