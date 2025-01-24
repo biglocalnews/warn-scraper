@@ -51,6 +51,7 @@ cryptography = "*"
 cffi = "*"
 pyopenssl = "*"
 xvfbwrapper = "*"
+stealthenium = "*"
 
 [requires]
 python_version = "3.9"
