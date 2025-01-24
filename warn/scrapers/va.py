@@ -2,14 +2,19 @@ import datetime
 import logging
 import os
 import platform
+
+# import subprocess
 from glob import glob
 from pathlib import Path
+from random import random
 from shutil import copyfile
 from time import sleep
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from stealthenium import stealth
 from webdriver_manager.chrome import ChromeDriverManager
 
 from .. import utils
@@ -50,6 +55,7 @@ def scrape(
     """
     cache = Cache(cache_dir)
     # csv_url = "https://vec.virginia.gov/warn-notices-csv.csv"
+    start_page = "https://www.virginiaworks.gov/warn-notices/"
     csv_url = "https://vec.virginia.gov/warn_notices.csv"
 
     """
@@ -118,6 +124,10 @@ def scrape(
     So, yes, this is a weird implementation. It's a terrible model. It's
     even got a hard-coded wait. At least as of late December 2024, however,
     it does work. ... in late December 2024.
+
+    And then it broke in early January 2025! But it's not an IP block.
+    They may have started blocking direct calls to the CSV. Code patched
+    in late January 2025 to use the Download button.
     """
 
     # driver = webdriver.Chrome(options=chromeoptionsholder, service=Service(ChromeDriverManager().install()))
@@ -127,6 +137,12 @@ def scrape(
     chromeoptionsholder.add_argument("--disable-dev-shm-usage")
     chromeoptionsholder.add_argument("--remote-debugging-pipe")
     chromeoptionsholder.add_argument("--verbose")
+    chromeoptionsholder.add_argument("start-maximized")
+    chromeoptionsholder.add_experimental_option(
+        "excludeSwitches", ["enable-automation"]
+    )
+    chromeoptionsholder.add_experimental_option("useAutomationExtension", False)
+    chromeoptionsholder.add_argument("--disable-blink-features=AutomationControlled")
 
     if "CHROMEWEBDRIVER" in os.environ:
         chrome_install = os.environ["CHROMEWEBDRIVER"] + "/chromedriver"
@@ -140,15 +156,49 @@ def scrape(
             )
     logger.debug(f"Chrome install variable is {chrome_install}")
 
+    # Hack on chromedriver itself, to try to be sneakier
+    # So many bad ideas coming together here
+    # perlstr = f"perl -pi -e 's/cdc_/ugh_/g' {chrome_install}"
+    # logger.debug(perlstr)
+    # process = subprocess.run(perlstr.split(), capture_output=True, text=True)
+    # logger.debug(f"process stdout: {process.stdout}")
+    # logger.debug(f"process stderr: {process.stderr}")
+
     # Launch X Windows emulator, then launch Chrome to run with it
     with Xvfb() as xvfb:  # noqa: F841
         service = ChromeService(chrome_install, service_args=["--verbose"])
+        # driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+        # driver = webdriver.Remote(options=chromeoptionsholder, service=service)
+        # capabilities = DesiredCapabilities.CHROME.copy()
+        # driver = webdriver.Remote(options=chromeoptionsholder, desired_capapabilities=capabilities, command_executor="http://localhost:4444/wd/hub")
+        # driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+        service = ChromeService(chrome_install, service_args=["--verbose"], port=5600)
         driver = webdriver.Chrome(options=chromeoptionsholder, service=service)
+        driver.command_executor._url = "http://localhost:5600"
+        # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
+        stealth(
+            driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+        )
+
+        logger.debug(f"Attempting to fetch {start_page}")
+        driver.get(start_page)
+        sleep((4 * random()) + 3)
+        driver.find_element(By.ID, "warn-notice-well").find_element(
+            By.PARTIAL_LINK_TEXT, "Download"
+        ).click()
+
         logger.debug(f"Attempting to fetch {csv_url}")
-        driver.get(csv_url)
+        # driver.get(csv_url)
         sleep(45)  # Give it plenty of time to evaluate Javascript
-        driver.get(csv_url)
-        sleep(10)
+        # driver.get(csv_url)
+        # sleep(10)
         driver.quit()
 
     download_dir = os.path.expanduser("~") + "/Downloads"
