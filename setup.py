@@ -136,6 +136,7 @@ setup(
         "pyopenssl",
         "retry",
         "selenium",
+        "stealthenium",
         "tenacity",
         "xlrd",
         "xvfbwrapper",
