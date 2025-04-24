@@ -134,7 +134,7 @@ setup(
         "requests",
         "openpyxl",
         "pyopenssl",
-        "retry",
+        "retry2",
         "selenium",
         "stealthenium",
         "tenacity",
