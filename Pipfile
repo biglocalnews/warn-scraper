@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pytest = "*"
 pytest-vcr = "*"
 black = "*"
 twine = "*"
@@ -32,6 +31,7 @@ sphinxcontrib-qthelp = "1.0.3"
 sphinxcontrib-serializinghtml = "1.1.5"
 setuptools = "*"
 jinja2 = "*"
+pytest = "==8.3.5"
 
 [packages]
 beautifulsoup4 = "*"
