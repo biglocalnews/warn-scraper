@@ -105,6 +105,7 @@ def scrape(
 
     # Clean up the headers
     header_crosswalk = {
+        "5": "company",
         "Company Name": "company",
         "Company": "company",
         "WARN Date": "notice_date",
