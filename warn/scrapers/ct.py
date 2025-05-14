@@ -70,7 +70,9 @@ def scrape(
 
         # Parse out the table
         soup = BeautifulSoup(html, "html.parser")
-        if year == 2016:
+        if year >= 2025:
+            table = soup.find_all("table", "style30")
+        elif year == 2016:
             table = soup.find_all("table", "style15")
         else:
             table = soup.find_all("table", "MsoNormalTable")
