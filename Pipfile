@@ -52,7 +52,7 @@ urllib3 = "==1.26.20"
 cryptography = "*"
 bln = "==2.3.11"
 retry2 = "*"
-setuptools = "==71.1.0"
+setuptools = "==78.1.1"
 
 [requires]
 python_version = "3.9"
