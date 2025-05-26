@@ -1,14 +1,15 @@
 import logging
 from pathlib import Path
 
-from bs4 import BeautifulSoup
-from openpyxl import load_workbook
-
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire"]
-__tags__ = ["historical", "excel"]
+# from bs4 import BeautifulSoup
+# from openpyxl import load_workbook
+
+
+__authors__ = ["zstumgoren", "Dilcia19", "ydoc5212", "palewire", "stucka"]
+__tags__ = ["historical", "excel", "html"]
 __source__ = {
     "name": "New York Department of Labor",
     "url": "https://dol.ny.gov/warn-notices",
@@ -32,98 +33,32 @@ def scrape(
     """
     cache = Cache(cache_dir)
 
-    # Get the latest HTML page
-    url_list = [
-        dict(year=2023, url="https://dol.ny.gov/warn-notices"),
-        dict(year=2022, url="https://dol.ny.gov/2022-warn-notices"),
-        dict(year=2021, url="https://dol.ny.gov/warn-notices-2021"),
-    ]
+    """
+    In 2025 New York shifte from a collection of Excel and HTML to something in Tableau. Tableau notes:
+    Find a new landing page for a data page, now done in Tableau: https://dol.ny.gov/warn-dashboard
+    Scroll down and there's a "View in Tableau Public" I don't remember clicking
+    Opens in new tab at https://public.tableau.com/app/profile/kylee.teague2482/viz/WorkerAdjustmentRetrainingNotificationWARN/WARN
+    Append .csv to the end of that URL:
+    https://public.tableau.com/app/profile/kylee.teague2482/viz/WorkerAdjustmentRetrainingNotificationWARN/WARN.csv
+    Try it in requests, no good. Try it in browser again. File downloads. Find it in the downloads section of the browser. Right-click, copy download link, try that in requests and ... it worked?
+    """
 
-    # Loop through the urls and get the stuff
-    html_row_list = []
-    for config in url_list:
-        html_row_list += _get_html_data(cache, config)
+    url = "https://public.tableau.com/views/WorkerAdjustmentRetrainingNotificationWARN/WARN.csv?%3Adisplay_static_image=y&%3AbootstrapWhenNotified=true&%3Aembed=true&%3Alanguage=en-US&:embed=y&:showVizHome=n&:apiID=host0#navType=0&navSrc=Parse"
 
-    # Get the historical static data file
-    excel_row_list = _get_historical_data(cache)
+    csv_file = "ny/tableau.csv"
+
+    cache.download(csv_file, url)
+
+    mydata = cache.read_csv(csv_file)
 
     # Set the export path
     data_path = data_dir / "ny.csv"
 
     # Combine and write out the file
-    fieldnames = list(html_row_list[0].keys()) + list(excel_row_list[0].keys())
-    row_list = html_row_list + excel_row_list
-    utils.write_dict_rows_to_csv(
-        data_path,
-        fieldnames,
-        row_list,
-        extrasaction="ignore",
-    )
+    utils.write_rows_to_csv(data_path, mydata)
 
     # Return the path to the file
     return data_path
-
-
-def _get_html_data(cache, config):
-    r = utils.get_url(config["url"])
-    html = r.text
-
-    # Save it to the cache
-    cache.write(f"ny/{config['year']}.html", html)
-
-    # Parse the HTML and grab our table
-    soup = BeautifulSoup(html, "html.parser")
-    table = soup.find("div", class_="landing-paragraphs").find("table")
-
-    row_list = []
-    # Loop through the rows of the table
-    for tr in table.find_all("tr")[1:]:
-        td_list = tr.find_all("td")
-        d = dict(
-            company_name=td_list[0].a.text,
-            notice_url=td_list[0].a["href"],
-            date_posted=td_list[1].text,
-            notice_dated=td_list[2].text,
-        )
-        row_list.append(d)
-    return row_list
-
-
-def _get_historical_data(cache):
-    # Request the page and save it to the cache
-    url = (
-        "https://storage.googleapis.com/bln-data-public/warn-layoffs/ny_historical.xlsx"
-    )
-
-    excel_path = cache.download("ny/source.xlsx", url)
-
-    # Open it up
-    workbook = load_workbook(filename=excel_path)
-
-    # Get the first sheet
-    worksheet = workbook.worksheets[0]
-
-    # Convert the sheet to a list of lists
-    row_list = []
-    for r in worksheet.rows:
-        column = [cell.value for cell in r]
-        row_list.append(column)
-
-    # Transform this into a list of dictionaries with headers as keys
-    header_list = row_list.pop(0)
-    dict_list = []
-    for row in row_list:
-        d = {}
-        for i, cell in enumerate(row):
-            key = header_list[i]
-            # Skip any columns where the header is null
-            if key is None:
-                continue
-            d[key] = cell
-        dict_list.append(d)
-
-    # Return the list of dicts
-    return dict_list
 
 
 if __name__ == "__main__":
