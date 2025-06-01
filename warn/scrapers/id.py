@@ -55,7 +55,10 @@ def scrape(
     localizedhtml = html.split("<h2>Who to contact")[0]
     soup = BeautifulSoup(localizedhtml, features="html5lib")
     last_url = soup.find_all("a")[-1]["href"]
-    pdf_url = f"{base_url}{last_url}"
+    if "https" in last_url:
+        pdf_url = last_url
+    else:
+        pdf_url = f"{base_url}{last_url}"
 
     logger.debug(f"Trying to fetch PDF at {pdf_url}")
     cache_key = f"{state_code}/{file_name}"
