@@ -69,6 +69,11 @@ def scrape(
     with pdfplumber.open(pdf_file) as pdf:
         for index, page in enumerate(pdf.pages):
             rows = page.extract_table()
+            if rows[0][0] in ["Date of\nLetter", "Date of Letter"] and index > 1:
+                rows = rows[
+                    1:
+                ]  # Drop inside header rows that _clean_table will mangle if merged cells span pages
+            # logger.debug(f"\n\nRows for page {page}: {rows}")
             output_rows += _clean_table(rows, index)
 
     # Write out the data to a CSV
@@ -118,8 +123,9 @@ def _clean_table(rows, page_index) -> list:
     #            logger.debug(f"Dropping faulty row with {len(output_row)} elements: {output_row}")
 
     # Only include the header on the first page
-    if page_index != 0:
-        return output_rows[1:]
+    # No, this needed to be filtered earlier
+    # if page_index != 0:
+    #    return output_rows[1:]
 
     return output_rows
 
@@ -132,18 +138,26 @@ def filter_garbage_rows(incoming: list):
 
     Returns: List of lists that have a minimum number of elements.
     """
-    badrows: int = 0
+    shortrows: int = 0
+    mixedrows: int = 0
     outgoing: list = []
-    for row in incoming:
-        if len(row) >= 4:
+    for rowindex, row in enumerate(incoming):
+        error = False
+        if len(row) < 5:
+            error = True
+            logger.debug(f"Dropping short row: {row}")
+            shortrows += 1
+        if row[0] == "Date of Letter" and rowindex != 0:  # Keep the header row
+            error = True
+            logger.debug(f"Dropping partial row: {row}")
+            mixedrows += 1
+        if not error:
             outgoing.append(row)
-        else:
-            badrows += 1
-    if badrows == 0:
+    if shortrows == 0 and mixedrows == 0:
         logger.debug("No bad rows found.")
     else:
         logger.debug(
-            f"!!!!! {badrows:,} bad rows dropped from the data set with insufficient number of fields."
+            f"!!!! Dropped {shortrows} rows with insufficient number of fields, and dropped {mixedrows} rows scrambled with header info"
         )
     return outgoing
 
