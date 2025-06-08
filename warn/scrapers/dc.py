@@ -48,7 +48,9 @@ def scrape(
         url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year - 1}"
         success, content = utils.save_if_good_url(targetfile, url)
 
-    root_html = cache.read(targetfile)  # Explicitly re-read as text for regex to work
+    root_html = cache.read(
+        "/".join(str(targetfile).split("/")[-2:])
+    )  # Explicitly re-read as text for regex to work
 
     # A June 2025 entry includes a weird table inside a table cell.
     # This is an ugly patch.
