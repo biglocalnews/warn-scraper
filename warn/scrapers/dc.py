@@ -85,6 +85,11 @@ def scrape(
         r.encoding = "utf-8"
         html = r.text
 
+        # A June 2025 entry includes a weird table inside a table cell.
+        # This is an ugly patch.
+        weirdtable = r"(\s+<table>\s+<tbody>\s+<tr>\s+<td>)(.*?)(</td>\s+</tr>\s+</tbody>\s+</table>\s+)"
+        html = re.sub(weirdtable, r"\2", html)
+
         # Save it to the cache
         cache_key = uuid.uuid5(uuid.NAMESPACE_URL, href)
         cache.write(f"dc/{cache_key}.html", html)
