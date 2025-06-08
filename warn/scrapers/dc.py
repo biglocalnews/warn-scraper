@@ -48,13 +48,15 @@ def scrape(
         url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year - 1}"
         success, content = utils.save_if_good_url(targetfile, url)
 
-    root_html = content
-    #    r = utils.get_url(url)
-    #    r.encoding = "utf-8"
-    #    root_html = r.text
+    root_html = cache.read(targetfile)  # Explicitly re-read as text for regex to work
 
-    # Save it to the cache
-    #    cache.write(targetfile, root_html)
+    # A June 2025 entry includes a weird table inside a table cell.
+    # This is an ugly patch.
+    weirdtable = r"(\s+<table>\s+<tbody>\s+<tr>\s+<td>)(.*)(</td>\s+</tr>\s+</tbody>\s+</table>\s+)"
+    after = re.subn(weirdtable, r"\2", root_html)  #
+    if after[1] > 0:
+        logger.debug(f"{after[1]} changes made to {url}")
+        root_html = after[0]
 
     # Parse the list of links
     soup = BeautifulSoup(root_html, "html5lib")
@@ -84,15 +86,17 @@ def scrape(
         r = utils.get_url(href)
         r.encoding = "utf-8"
         html = r.text
-
-        # A June 2025 entry includes a weird table inside a table cell.
-        # This is an ugly patch.
-        weirdtable = r"(\s+<table>\s+<tbody>\s+<tr>\s+<td>)(.*?)(</td>\s+</tr>\s+</tbody>\s+</table>\s+)"
-        html = re.sub(weirdtable, r"\2", html)
-
         # Save it to the cache
         cache_key = uuid.uuid5(uuid.NAMESPACE_URL, href)
         cache.write(f"dc/{cache_key}.html", html)
+
+        # A June 2025 entry includes a weird table inside a table cell.
+        # This is an ugly patch.
+        weirdtable = r"(\s+<table>\s+<tbody>\s+<tr>\s+<td>)(.*)(</td>\s+</tr>\s+</tbody>\s+</table>\s+)"
+        after = re.subn(weirdtable, r"\2", html)
+        if after[1] > 0:
+            logger.debug(f"{after[1]} changes made to {href}")
+            html = after[0]
 
         # Add it to the list
         html_list.append(html)
