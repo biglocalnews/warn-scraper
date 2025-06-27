@@ -158,6 +158,8 @@ def scrape(
         for key, value in row.items():
             standardized_key = header_crosswalk[key]
             row_dict[standardized_key] = value
+        if "company" not in row_dict:
+            logger.warning(f"Malformed header data: {row_dict}")
         if len(row_dict["company"]) < 3 and row_dict["letter"] == "Avis Budget Group":
             row_dict["company"] = "Avis Budget Group"
         if len(row_dict["company"]) < 3:  # or len(row_dict['naics']) <5:
@@ -196,11 +198,13 @@ def scrape_google_sheets(table, header_list=None):
         # Parse the header row into a list,
         # preserving its order in the sheet
         header_list = []
-        for cell in header_soup.find_all("td"):
+        for cellindex, cell in enumerate(header_soup.find_all("td")):
             cell_text = cell.text.strip()
             # Skip empty headers
             if cell_text:
                 header_list.append(cell_text)
+            if not cell_text and cellindex == 0:
+                header_list.append("Company Name")
 
     # Loop through all the data rows, which start
     # after the header and the little bar
