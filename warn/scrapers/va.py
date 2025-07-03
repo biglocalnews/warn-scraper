@@ -189,10 +189,20 @@ def scrape(
 
         logger.debug(f"Attempting to fetch {start_page}")
         driver.get(start_page)
-        sleep((4 * random()) + 3)
-        driver.find_element(By.ID, "warn-notice-well").find_element(
-            By.PARTIAL_LINK_TEXT, "Download"
-        ).click()
+        sleep((4 * random()) + 8)
+        # with open("va-weird.html", "w") as outfile:
+        #     outfile.write(driver.page_source)
+        # driver.find_element(By.ID, "warn-notice-well").find_element(
+        #     By.PARTIAL_LINK_TEXT, "Download"
+        # ).click()
+
+        # driver.find_element(By.PARTIAL_LINK_TEXT, "Download Full List of WARN notices").click()
+
+        # element = driver.find_element(By.CSS_SELECTOR, "#warn-notice-well a img")
+        element = driver.find_element(By.CSS_SELECTOR, "#warn-notice-well a")
+        logger.debug(f"Element found: {element.get_attribute('outerHTML')}")
+        driver.execute_script("arguments[0].click();", element)
+        # element.click()
 
         logger.debug(f"Attempting to fetch {csv_url}")
         # driver.get(csv_url)
