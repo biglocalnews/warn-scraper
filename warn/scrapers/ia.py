@@ -58,6 +58,8 @@ def scrape(
 
     # Parse it, minus the header
     row_list += utils.parse_excel(historic_excel_path, keep_header=False)
+    if "Iowa WARN Log" in row_list[0]:
+        del row_list[0]
 
     # Set the export path
     data_path = data_dir / "ia.csv"
