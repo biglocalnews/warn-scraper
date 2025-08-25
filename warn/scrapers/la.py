@@ -1,13 +1,10 @@
 import logging
 import os
 import re
-import sys
-from base64 import b64decode
 from datetime import datetime
 from pathlib import Path
 
 import pdfplumber
-import requests
 from bs4 import BeautifulSoup
 
 from .. import utils
@@ -36,14 +33,6 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    try:
-        zyte_api_key = os.environ["ZYTE_API_KEY"]
-    except KeyError:
-        logger.error(
-            "No ZYTE_API_KEY variable found in environment. Please get an API key from Zyte and export it."
-        )
-        sys.exit(1)
-
     # Fire up the cache
     cache = Cache(cache_dir)
 
@@ -54,18 +43,7 @@ def scrape(
 
     # Download the root page
     url = f"{base_url}Downloads/{file_base}.asp"
-    api_response = requests.post(
-        "https://api.zyte.com/v1/extract",
-        auth=(zyte_api_key, ""),
-        json={
-            "url": url,
-            "httpResponseBody": True,
-            "followRedirect": True,
-        },
-    )
-    html_bytes: bytes = b64decode(api_response.json()["httpResponseBody"])
-    # html = utils.get_url(url).text
-    html = html_bytes.decode("utf-8", errors="backslashreplace")
+    htmlbin, html = utils.fetch_with_zyte(url)
 
     # Save it to the cache
     cache_key = cache_dir / f"{state_code}/{file_base}.html"
@@ -82,25 +60,11 @@ def scrape(
         if "WARN Notices" in link.text:
             # Download the PDF
             pdf_url = f"{base_url}{link['href']}"
-            logger.debug(pdf_url)
-            api_response = requests.post(
-                "https://api.zyte.com/v1/extract",
-                auth=(zyte_api_key, ""),
-                json={
-                    "url": pdf_url,
-                    "httpResponseBody": True,
-                    "followRedirect": True,
-                },
-            )
-            http_response_body: bytes = b64decode(
-                api_response.json()["httpResponseBody"]
-            )
+            rawbin, rawtext = utils.fetch_with_zyte(pdf_url)
             pdf_path = cache_dir / f"{state_code}/{os.path.basename(pdf_url)}"
 
             with open(pdf_path, "wb") as fp:
-                fp.write(http_response_body)
-
-            # pdf_path = _read_or_download(cache, state_code, pdf_url)
+                fp.write(rawbin)
 
             # Process the PDF
             logger.debug(f"Attempting to parse {pdf_path}")

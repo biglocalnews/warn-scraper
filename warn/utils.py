@@ -2,6 +2,7 @@ import csv
 import logging
 import os
 import typing
+from base64 import b64decode
 from pathlib import Path
 from time import sleep
 
@@ -94,6 +95,49 @@ def save_if_good_url(filename, url, **kwargs):
     return success_flag, content
 
 
+def fetch_with_zyte(url):
+    """Use Zyte as a proxy server to retrieve data not available without it.
+
+    Args:
+        url (str): URL to retrieve
+    Returns:
+        returnbin (bin): raw binary representation of returned data object
+        returntext (str): utf-8 conversion of returned data object, e.g., HTML
+    Failures:
+        Returns (None, None) if it encounters a problem and logs an error.
+    Requires:
+        ZYTE_API_KEY to be set in environment
+    """
+    logger.debug(f"Seeking to fetch {url} with Zyte")
+    try:
+        zyte_api_key = os.environ["ZYTE_API_KEY"]
+    except KeyError:
+        logger.error(
+            "No ZYTE_API_KEY variable found in environment. Please get an API key from Zyte and export it."
+        )
+        return (None, None)
+
+    api_response = requests.post(
+        "https://api.zyte.com/v1/extract",
+        auth=(zyte_api_key, ""),
+        json={
+            "url": url,
+            "httpResponseBody": True,
+            "followRedirect": True,
+        },
+    )
+
+    if not api_response.ok:
+        logger.error(
+            f"Error downloading {url} with fetch_with_zyte. Repsonse code: {api_response.status_code}"
+        )
+        return (None, None)
+    returnbin: bytes = b64decode(api_response.json()["httpResponseBody"])
+    returntext: str = returnbin.decode("utf-8", errors="backslashreplace")
+    logger.debug("Fetched {url}")
+    return (returnbin, returntext)
+
+
 def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
     """Write the provided list to the provided path as comma-separated values.
 
@@ -109,9 +153,7 @@ def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
         writer.writerows(rows)
 
 
-def write_dict_rows_to_csv(
-    output_path, headers, rows, mode="w", extrasaction="raise", encoding="utf-8"
-):
+def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="raise"):
     """Write the provided dictionary to the provided path as comma-separated values.
 
     Args:
@@ -123,7 +165,7 @@ def write_dict_rows_to_csv(
     """
     create_directory(output_path, is_file=True)
     logger.debug(f"Writing {len(rows)} rows to {output_path}")
-    with open(output_path, mode, newline="", encoding=encoding) as f:
+    with open(output_path, mode, newline="") as f:
         # Create the writer object
         writer = csv.DictWriter(f, fieldnames=headers, extrasaction=extrasaction)
         # If we are writing a new row ...
