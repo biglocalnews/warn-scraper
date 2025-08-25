@@ -134,7 +134,7 @@ def fetch_with_zyte(url):
         return (None, None)
     returnbin: bytes = b64decode(api_response.json()["httpResponseBody"])
     returntext: str = returnbin.decode("utf-8", errors="backslashreplace")
-    logger.debug("Fetched {url}")
+    logger.debug(f"Fetched {url}")
     return (returnbin, returntext)
 
 
