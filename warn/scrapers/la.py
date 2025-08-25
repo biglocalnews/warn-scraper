@@ -43,7 +43,7 @@ def scrape(
 
     # Download the root page
     url = f"{base_url}Downloads/{file_base}.asp"
-    htmlbin, html = utils.fetch_with_zyte(url)
+    htmlbin, html = utils.get_with_zyte(url)
 
     # Save it to the cache
     cache_key = cache_dir / f"{state_code}/{file_base}.html"
@@ -60,7 +60,7 @@ def scrape(
         if "WARN Notices" in link.text:
             # Download the PDF
             pdf_url = f"{base_url}{link['href']}"
-            rawbin, rawtext = utils.fetch_with_zyte(pdf_url)
+            rawbin, rawtext = utils.get_with_zyte(pdf_url)
             pdf_path = cache_dir / f"{state_code}/{os.path.basename(pdf_url)}"
 
             with open(pdf_path, "wb") as fp:
