@@ -14,6 +14,7 @@ __source__ = {
 
 logger = logging.getLogger(__name__)
 
+
 def scrape(
     data_dir: Path = utils.WARN_DATA_DIR,
     cache_dir: Path = utils.WARN_CACHE_DIR,
@@ -64,7 +65,7 @@ def scrape(
 
     payload = "message=%7B%22actions%22%3A%5B%7B%22id%22%3A%22156%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22ConfigurableLoginAndMaintenanceMessages%22%2C%22method%22%3A%22hasDocument%22%2C%22params%22%3A%7B%7D%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%2C%7B%22id%22%3A%22157%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22ConfigurableLoginAndMaintenanceMessages%22%2C%22method%22%3A%22checkJobExpiry%22%2C%22params%22%3A%7B%7D%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%2C%7B%22id%22%3A%22158%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22ConfigurableLoginAndMaintenanceMessages%22%2C%22method%22%3A%22checkResumeExpiry%22%2C%22params%22%3A%7B%7D%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%2C%7B%22id%22%3A%22159%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22ConfigurableLoginAndMaintenanceMessages%22%2C%22method%22%3A%22checkUIRegistered%22%2C%22params%22%3A%7B%7D%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%2C%7B%22id%22%3A%22160%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22ConfigurableLoginAndMaintenanceMessages%22%2C%22method%22%3A%22getLoginMaintenanceMessage%22%2C%22params%22%3A%7B%22displayTo%22%3A%22Job%20Seekers%22%2C%22messageType%22%3A%22Portal%20Login%20Messages%22%7D%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%2C%7B%22id%22%3A%22161%3Ba%22%2C%22descriptor%22%3A%22aura%3A%2F%2FApexActionController%2FACTION%24execute%22%2C%22callingDescriptor%22%3A%22UNKNOWN%22%2C%22params%22%3A%7B%22namespace%22%3A%22%22%2C%22classname%22%3A%22OESC_JS_getWARNLayoffNotices%22%2C%22method%22%3A%22getListofLayoffAccService%22%2C%22cacheable%22%3Afalse%2C%22isContinuation%22%3Afalse%7D%7D%5D%7D&aura.context=%7B%22mode%22%3A%22PROD%22%2C%22fwuid%22%3A%22eE5UbjZPdVlRT3M0d0xtOXc5MzVOQWg5TGxiTHU3MEQ5RnBMM0VzVXc1cmcxMi42MjkxNDU2LjE2Nzc3MjE2%22%2C%22app%22%3A%22siteforce%3AcommunityApp%22%2C%22loaded%22%3A%7B%22APPLICATION%40markup%3A%2F%2Fsiteforce%3AcommunityApp%22%3A%221305_7pTC6grCTP7M16KdvDQ-Xw%22%7D%2C%22dn%22%3A%5B%5D%2C%22globals%22%3A%7B%7D%2C%22uad%22%3Atrue%7D&aura.pageURI=%2FParticipants%2Fs%2Fwarnnotices&aura.token=null"
 
-    logger.debug(f"Attempting to send hard-coded data to {posturl}") 
+    logger.debug(f"Attempting to send hard-coded data to {posturl}")
     r = requests.post(posturl, headers=headers, data=payload)
     rawdata = r.json()
 
