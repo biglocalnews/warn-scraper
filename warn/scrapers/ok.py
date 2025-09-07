@@ -93,10 +93,11 @@ def scrape(
         "Launchpad__Layoff_Closure_Type__c": "closure_type",
         "Launchpad__Notice_Date__c": "notice_date",
         "OESC_Employer_City__c": "city",
-        "OESC_Employer_Name__c": "company name",
+        "OESC_Employer_Name__c": "company_name",
         "OESC_Employer_Zip_Code__c": "zip_code",
         "RecordTypeId": "record_type_id",
         "Select_Local_Workforce_Board__c": "workforce_board",
+        "jobs-not-in-this": "jobs",
     }
 
     masterlist = []
