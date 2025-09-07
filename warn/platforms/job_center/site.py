@@ -112,7 +112,7 @@ class Site:
             logger.debug("Fetching from cache")
             return self.cache.fetch(url, params)
         else:
-            logger.debug("Pulling from the web")
+            logger.debug(f"Pulling from the web: {url} with params {params}")
             response = requests.get(url, params=params, verify=self.verify)
             logger.debug(f"Response code: {response.status_code}")
             html = response.text

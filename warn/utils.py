@@ -1,4 +1,5 @@
 import csv
+import json
 import logging
 import os
 import typing
@@ -8,7 +9,6 @@ from time import sleep
 
 import requests
 from openpyxl import load_workbook
-from requests.compat import json as complexjson  # type: ignore
 from retry import retry
 
 logger = logging.getLogger(__name__)
@@ -155,7 +155,7 @@ def post_with_zyte(url, payload):
     Requires:
         ZYTE_API_KEY to be set in environment
     """
-    logger.debug(f"Seeking to POST to {url} with Zyte")
+    logger.debug(f"Seeking to fetch {url} with Zyte")
     try:
         zyte_api_key = os.environ["ZYTE_API_KEY"]
     except KeyError:
@@ -165,11 +165,9 @@ def post_with_zyte(url, payload):
         return (None, None)
 
     if isinstance(payload, dict):
-        logger.debug(f"Raw dict: {payload}")
-        payload = complexjson.dumps(payload)
+        payload = json.dumps(payload)
 
     if isinstance(payload, str):
-        logger.debug(f"Raw string: {payload}")
         payload = b64encode(payload.encode("utf-8"))
 
     api_response = requests.post(
@@ -189,7 +187,6 @@ def post_with_zyte(url, payload):
             f"Error downloading {url} with post_with_zyte. Repsonse code: {api_response.status_code}. Reponse: {api_response.json()}"
         )
         return (None, None)
-    logger.debug(f"Response: {api_response.content}")
     returnbin: bytes = b64decode(api_response.json()["httpResponseBody"])
     returntext: str = returnbin.decode("utf-8", errors="backslashreplace")
     logger.debug(f"Fetched {url}")
@@ -212,12 +209,12 @@ def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
 
 
 def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="raise"):
-    """Write the provided dictionary to the provided path as comma-separated values.
+    """Write the provided list of dictionaries to the provided path as comma-separated values.
 
     Args:
         output_path (Path): the Path were the result will be saved
         headers (list): a list of the headers for the output file
-        rows (list): the dict to be saved
+        rows (list): the list of dictionaries to be saved
         mode (str): the mode to be used when opening the file (default 'w')
         extrasaction (str): what to do if the if a field isn't in the headers (default 'raise')
     """
