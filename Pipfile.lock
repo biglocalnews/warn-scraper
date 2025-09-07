@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "aac81610731435f6fe712525f4e5c72e3d7598da79d5a3a2f7580d7c013008a2"
+            "sha256": "b1cc4814822457ec04972c1a07991d1f983c946e8cdcfc315cbe1b6d9d84b2cd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1066,6 +1066,15 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==2.1.0"
+        },
+        "isort": {
+            "hashes": [
+                "sha256:1cb5df28dfbc742e490c5e41bad6da41b805b0a8be7bc93cd0fb2a8a890ac450",
+                "sha256:2dc5d7f65c9678d94c88dfc29161a320eec67328bc97aad576874cb4be1e9615"
+            ],
+            "index": "pypi",
+            "markers": "python_full_version >= '3.9.0'",
+            "version": "==6.0.1"
         },
         "jaraco.classes": {
             "hashes": [

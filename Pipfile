@@ -32,6 +32,7 @@ sphinxcontrib-serializinghtml = "1.1.5"
 setuptools = "*"
 jinja2 = "*"
 pytest = "==8.3.5"
+isort = "==6.0.1"
 
 [packages]
 beautifulsoup4 = "*"
