@@ -263,6 +263,13 @@ def scrape(
     for row in cleaned_data:
         row_dict = {}
         mangled = []
+
+        line = {}
+        for key in row:
+            if not key.startswith("blank_cell_"):
+                line[key] = row[key]
+        row = line
+
         for key in row:
             if (
                 key not in header_crosswalk and key not in header_garbage
@@ -321,13 +328,19 @@ def scrape_google_sheets(table, header_list=None):
         # Parse the header row into a list,
         # preserving its order in the sheet
         header_list = []
+        blanks = 0
         for cellindex, cell in enumerate(header_soup.find_all("td")):
             cell_text = cell.text.strip()
-            # Skip empty headers
+            # Handle empty header cells
             if cell_text:
                 header_list.append(cell_text)
-            if not cell_text and cellindex == 0:
+            elif not cell_text and cellindex == 0:
                 header_list.append("Company Name")
+            elif not cell_text and cellindex > 0:
+                blanks += 1
+                cell_text = f"blank_cell_{blanks}"
+                logger.debug(f"Adding {cell_text}")
+                header_list.append(cell_text)
 
     # Loop through all the data rows, which start
     # after the header and the little bar
