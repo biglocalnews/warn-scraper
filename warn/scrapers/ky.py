@@ -70,24 +70,24 @@ def scrape(
         "NAICS": "NAICS",
         "NAICS Code": "NAICS",
         "Notice Link": "notice_url",
-        "Notice Type": "notice_type",
+        "Notice Type": "source",
         "Notice URL": "notice_url",
         "Notice: Notice Number": "notice_number",
         "Number of Employees Affected": "employees",
         "Projected Date": "date_effective",
         "Region": "region",
         "Trade": "trade",
-        "Type of Employees Affected": "employees_affected",
-        "Workforce Board": "workforce_board",
+        "Type of Employees Affected": "union_affected",
+        "Workforce Board": "region",
         "address": "address",
         "comments": "comments",
         "congressional": "congressional",
         "contact": "contact",
         "industry": "industry",
-        "neg": "neg",
-        "occupations": "occupations",
+        "neg": "neg",  # Rarely seen, only in historical data, maybe all with "N"
+        "occupations": "industry",
         "source": "source",
-        "union": "union",  # Likely overlaps with trade
+        "union": "union",  # Unclear if different than types of employees affected/union_affected
     }
 
     masterlist: list = []
@@ -108,6 +108,8 @@ def scrape(
                 line: dict = {}
                 for i, fieldname in enumerate(localheaders):
                     line[fieldname] = row[i]
+                    if isinstance(row[i], str):
+                        line[fieldname] = row[i].strip()
                 masterlist.append(line)
 
     logger.debug(f"Successfully merged {len(masterlist)} records from new spreadsheet.")
@@ -133,6 +135,8 @@ def scrape(
         line: dict = {}  # type: ignore
         for i, fieldname in enumerate(localheaders):
             line[fieldname] = row[i]
+            if isinstance(row[i], str):
+                line[fieldname] = row[i].strip()
         masterlist.append(line)
     logger.debug("Historical records folded in.")
 
