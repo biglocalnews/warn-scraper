@@ -263,7 +263,8 @@ def write_disparate_dict_rows_to_csv(output_path, rows, mode="w"):
                     line[item] = row[item]
                 else:
                     line[item] = None
-            writer.writerow(line)
+            writer.writerow(list(line.values()))
+    return
 
 
 def get_all_scrapers():
