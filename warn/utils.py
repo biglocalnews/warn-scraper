@@ -232,6 +232,41 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
             writer.writerow(row)
 
 
+def write_disparate_dict_rows_to_csv(output_path, rows, mode="w"):
+    """Write the provided list of dictionaries to the provided path as comma-separated values, while determining a header.
+
+    Args:
+        output_path (Path): the Path were the result will be saved
+        rows (list): the list of dictionaries to be saved; can have disparate dict keys
+        mode (str): the mode to be used when opening the file (default 'w')
+    """
+    create_directory(output_path, is_file=True)
+    headers: set = set()  # Get all the potential header names
+    for row in rows:
+        for item in row:
+            headers.add(item)
+    headers = list(sorted(headers))
+    logger.debug(f"Found {len(headers):,} header entries in list of dicts.")
+    logger.debug(f"Writing {len(rows)} rows to {output_path}")
+    with open(output_path, mode, newline="") as outfile:
+        # Create the writer object
+        writer = csv.writer(outfile)
+        # If we are writing a new row ...
+        if mode == "w":
+            # ... drop in the headers
+            writer.writerow(headers)
+        # Loop through the dicts and write them in one by one.
+        for row in rows:
+            line = {}
+            for item in headers:
+                if item in row:
+                    line[item] = row[item]
+                else:
+                    line[item] = None
+            writer.writerow(list(line.values()))
+    return
+
+
 def get_all_scrapers():
     """Get all the states and territories that have scrapers.
 

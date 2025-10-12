@@ -60,34 +60,62 @@ def scrape(
     # Open it up
     workbook = load_workbook(filename=latest_path)
 
-    dirty_list: list = []
+    crosswalk = {
+        "Closure or Layoff?": "closure_or_layoff",
+        "Company Name": "company",
+        "Company: Company Name": "company",
+        "County": "county",
+        "Date Received": "date_received",
+        "Employees": "employees",
+        "NAICS": "NAICS",
+        "NAICS Code": "NAICS",
+        "Notice Link": "notice_url",
+        "Notice Type": "source",
+        "Notice URL": "notice_url",
+        "Notice: Notice Number": "notice_number",
+        "Number of Employees Affected": "employees",
+        "Projected Date": "date_effective",
+        "Region": "region",
+        "Trade": "trade",
+        "Type of Employees Affected": "union_affected",
+        "Workforce Board": "region",
+        "address": "address",
+        "comments": "comments",
+        "congressional": "congressional",
+        "contact": "contact",
+        "industry": "industry",
+        "neg": "neg",  # Rarely seen, only in historical data, maybe all with "N"
+        "occupations": "industry",
+        "source": "source",
+        "union": "union",  # Unclear if different than types of employees affected/union_affected
+    }
+
+    masterlist: list = []
     for sheet in workbook.worksheets:
         localrows = parse_xlsx(sheet)
-        dirty_list.extend(localrows)
 
-    headers = dirty_list[0]
-    row_list = []
-    for rowindex, row in enumerate(dirty_list):
-        if (
-            row != headers
-        ):  # Filter out headers, but also double-check when headers may change
-            if row[0] == "Date Received":
-                logger.debug(
-                    f"Dropping dirty row that doesn't quite match headers in row {rowindex}"
-                )
-                logger.debug(f"Want: {headers}")
-                logger.debug(f"Got : {row}")
+        # Traverse each tab. Assume the first line is a header. Check if the second line is bogus.
+        # Build a list of dicts.
+        localheadersraw: list = localrows[0]
+        localheaders: list = []
+        for entry in localheadersraw:
+            if entry not in crosswalk:
+                logger.error(f"Potential header {entry} not found in crosswalk.")
             else:
-                line = {}
-                for i, fieldname in enumerate(headers):
+                localheaders.append(crosswalk[entry])
+        for row in localrows[1:]:  # Skip the header row
+            if row[0] != "Date Received":  # Check for fake second header
+                line: dict = {}
+                for i, fieldname in enumerate(localheaders):
                     line[fieldname] = row[i]
-                row_list.append(line)
-    # dirty_list = None
-    logger.debug(
-        f"Successfully merged {len(row_list)-1:,} records from new spreadsheet."
-    )
+                    if isinstance(row[i], str):
+                        line[fieldname] = row[i].strip()
+                masterlist.append(line)
 
-    # Need to double-check this archived file code, and make sure headers match
+    logger.debug(f"Successfully merged {len(masterlist)} records from new spreadsheet.")
+
+    # Earlier versions of this code needed the archived data to match the new data.
+    # We can no longer expect that since October 2025 data revisions.
 
     archive_url = "https://storage.googleapis.com/bln-data-public/warn-layoffs/ky-historical-normalized.csv"
 
@@ -96,24 +124,25 @@ def scrape(
 
     reader = list(csv.reader(r.text.splitlines()))
 
-    headerlength = len(headers)
-
-    assert reader[0][:headerlength] == headers
-    logger.debug(
-        f"Historical data matches current headers. Merging {len(reader)-1:,} records."
-    )
-
+    localheadersraw = reader[0]
+    localheaders: list = []  # type: ignore
+    for entry in localheadersraw:
+        if entry not in crosswalk:
+            logger.error(f"Cannot match possible header value of {entry} to crosswalk.")
+        else:
+            localheaders.append(crosswalk[entry])
     for row in reader[1:]:  # Skip header row
-        line = {}
-        for i, item in enumerate(headers):
-            line[item] = row[
-                i
-            ]  # Make this a list of dictionaries to match earlier input
-        row_list.append(line)
+        line: dict = {}  # type: ignore
+        for i, fieldname in enumerate(localheaders):
+            line[fieldname] = row[i]
+            if isinstance(row[i], str):
+                line[fieldname] = row[i].strip()
+        masterlist.append(line)
+    logger.debug("Historical records folded in.")
 
     # Write out the results
     data_path = data_dir / "ky.csv"
-    utils.write_dict_rows_to_csv(data_path, headers, row_list, extrasaction="ignore")
+    utils.write_disparate_dict_rows_to_csv(data_path, masterlist)
 
     # Pass it out
     return data_path
