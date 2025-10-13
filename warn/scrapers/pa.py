@@ -131,6 +131,8 @@ def scrape(
                 line[crosswalk[item]] = row[item]
         masterlist.append(line)
 
+    masterlist.reverse()     # Flip into reverse chronological order
+
     # Write out the results
     data_path = data_dir / "pa.csv"
     utils.write_disparate_dict_rows_to_csv(data_path, masterlist)
