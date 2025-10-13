@@ -73,7 +73,7 @@ def scrape(
             address = blob.split("COUNT")[0].strip()
             deets = "COUNT" + "COUNT".join(blob.split("COUNT")[1:]).replace(
                 "\xa0", " "
-            ).replace("# AFFECTED", "AFFECTED")
+            ).replace("# AFFECTED", "AFFECTED").replace(u"\u2013", "--").replace(u"\u200b", "").replace(u"\u00a0", " ").replace(u"\u2039", " ")
             deets = deets.split("\n")
             line["addressfull"] = address.replace("\n", ", ")
             lastkey = None
@@ -82,7 +82,8 @@ def scrape(
                     if len(line[lastkey]) > 0:
                         line[lastkey] += " ... "
                     line[lastkey] += deet.strip()
-                elif ":" in deet and "Ending:" not in deet:
+                # elif ":" in deet and "Ending:" not in deet:
+                elif ":" in deet and not deet.upper().startswith("ENDING"):
                     key = deet.split(":")[0]
                     if key == "COUNTIES":
                         key = "COUNTY"
