@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 import logging
 from pathlib import Path
@@ -46,42 +45,60 @@ def scrape(
 
     response = utils.get_url(remoteurl)
 
+    html = response.text
+
     cache.write("pa/pa.html", response.text)
 
-    html = response.content
+    # Clean up some garbage characters
+    textfixes = {
+        "# AFFECTED": "AFFECTED",
+        "\u2013": "--",
+        "\u200b": "",
+        "\u00a0": " ",
+        "\u2039": " ",
+        "\u2019": "'",
+    }
+
+    for textfix in textfixes:
+        html = html.replace(textfix, textfixes[textfix])
 
     soup = BeautifulSoup(html, "html.parser")
 
     entries = soup.find_all("div", class_="cmp-accordion__item")
 
     masterlist = []
-    
-    logger.debug(f"Found {len(entries):,} potential entries. (There will be fewer finalists.) ")
-    
+
+    logger.debug(
+        f"Found {len(entries):,} potential entries. (There will be fewer finalists.) "
+    )
+
     for entry in entries:
         # print(str(entry))
-        if not "cmp-accordion__item" in str(
-            entry.decode_contents()     # innerHTML
+        if "cmp-accordion__item" not in str(
+            entry.decode_contents()  # innerHTML
         ):  # Find items not holding other items
             line = {}
+            # The data is poorly structured; this seems to have an error rate of less than 1%.
+            # The title's easy to get.
+            # The rest of the details ("deets" are pulled apart by splitting lines.
+            # Some have clear headers. Some without headers get folded up into the previous line.
+            # That functionality allows all the dates of multiphase layoffs to be kept together.
+
             line["Company"] = (
                 entry.find("span", class_="cmp-accordion__title").get_text().strip()
             )
             blob = entry.find("div", class_="text").get_text().strip()
-            # address = pq(pq(blob)("p")[0]).text()
-            # addressfull = ", ".join(address.split("\n"))
             address = blob.split("COUNT")[0].strip()
-            deets = "COUNT" + "COUNT".join(blob.split("COUNT")[1:]).replace(
-                "\xa0", " "
-            ).replace("# AFFECTED", "AFFECTED").replace(u"\u2013", "--").replace(u"\u200b", "").replace(u"\u00a0", " ").replace(u"\u2039", " ")
-            deets = deets.split("\n")
+
+            deets = "COUNT" + "COUNT".join(blob.split("COUNT")[1:])  # type: ignore
+            deets = deets.split("\n")  # type: ignore
             line["addressfull"] = address.replace("\n", ", ")
             lastkey = None
             for deet in deets:
                 if "PHASE" in deet.upper():
-                    if len(line[lastkey]) > 0:
-                        line[lastkey] += " ... "
-                    line[lastkey] += deet.strip()
+                    if len(line[lastkey]) > 0:  # type: ignore
+                        line[lastkey] += " ... "  # type: ignore
+                    line[lastkey] += deet.strip()  # type: ignore
                 # elif ":" in deet and "Ending:" not in deet:
                 elif ":" in deet and not deet.upper().startswith("ENDING"):
                     key = deet.split(":")[0]
@@ -91,12 +108,13 @@ def scrape(
                     line[key] = value
                     lastkey = key
                 else:  # No colon in deet and no Phase
-                    if len(line[lastkey]) > 0:
-                        line[lastkey] += " ... "
-                    line[lastkey] += deet.strip()
+                    if len(line[lastkey]) > 0:  # type: ignore
+                        line[lastkey] += " ... "  # type: ignore
+                    line[lastkey] += deet.strip()  # type: ignore
 
             masterlist.append(line)
 
+    # Now need to standardize these headers, and might as well make them meet some semblance of a standard.
     crosswalk = {
         "COUNTIES": "county",
         "COUNTY": "county",
@@ -126,12 +144,12 @@ def scrape(
         line = {}
         for item in row:
             if item not in crosswalk:
-                print(f"Failed to find a matching crosswalk term for {item}")
+                logger.error(f"Failed to find a matching crosswalk term for {item}")
             else:
                 line[crosswalk[item]] = row[item]
         masterlist.append(line)
 
-    masterlist.reverse()     # Flip into reverse chronological order
+    masterlist.reverse()  # Flip into reverse chronological order
 
     # Write out the results
     data_path = data_dir / "pa.csv"
