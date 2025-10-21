@@ -1,4 +1,6 @@
 import csv
+
+# import json
 import logging
 import re
 from glob import glob
@@ -122,18 +124,73 @@ def scrape(
 
     # Use JSON as an index to get other data files
     data = response.json()["data"]
-    logger.debug(f"{len(data):,} records from newer dataset in index.")
+    #  with open("ga-response.txt", "w") as outfile:
+    #    outfile.write(response.text)
+    logger.debug(f"{len(data):,} records from newer dataset in index, maybe")
 
     # Download detailed data if not already cached
-    for listing in data:
-        filehref = BeautifulSoup(listing[0], features="html5lib")("a")[0]["href"]
-        fileid = BeautifulSoup(listing[0], features="html5lib")("a")[0].contents[0]
+
+    mytext = response.text.replace("\\", "")
+    #     print(mytext)
+    myanchors = re.findall(r"(<a href.*?</a>)", mytext)
+    logger.debug(f"{len(myanchors):,} HTML anchor tags found")
+    for myanchor in myanchors:
+        filehref = BeautifulSoup(myanchor, features="html5lib")("a")[0]["href"]
+        fileid = BeautifulSoup(myanchor, features="html5lib")("a")[0].contents[0]
         targetfilename = cache_dir / ("ga/" + fileid + ".format3")
         utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
 
+    """Below was an attempt to work around weird structures in Georgia's dataset.
+    It increasingly looked unmaintainable in any form and the more the structure changed,
+    the weirder it got. See above for another solution.
+
+    for index, listing in enumerate(data):
+        # 10/25, GA changed from a list to a dict, so listing[0] became listing["0"]/
+        # ... mostly. Ish.
+        # OK, so there's a few data types in play in the same dataset for ... some reason.
+        # Hopefully I'm not overlooking one.
+        # Old: A list per entry. Still present.
+        # New: A dict for an entry.
+        # New: A list for an entry that also contains a list for an entry that contains a dict for an entry.
+        # New: A list for an entry that also contains a list for some garbage.
+        # DRY crashes hard into recurssion here, which would likely be awful. So ... Knuckledrag this:
+
+        if isinstance(listing, dict):
+            filehref = BeautifulSoup(listing["0"], features="html5lib")("a")[0]["href"]
+            fileid = BeautifulSoup(listing["0"], features="html5lib")("a")[0].contents[0]
+            targetfilename = cache_dir / ("ga/" + fileid + ".format3")
+            utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
+            json_items_found += 1
+        elif isinstance(listing, list):
+            filehref = BeautifulSoup(listing[0], features="html5lib")("a")[0]["href"]
+            fileid = BeautifulSoup(listing[0], features="html5lib")("a")[0].contents[0]
+            targetfilename = cache_dir / ("ga/" + fileid + ".format3")
+            utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
+            json_items_found += 1
+            for item in listing:
+                if isinstance(item, list):
+                    print("Vodka")
+                    filehref = BeautifulSoup(listing[0], features="html5lib")("a")[0]["href"]
+                    fileid = BeautifulSoup(listing[0], features="html5lib")("a")[0].contents[0]
+                    targetfilename = cache_dir / ("ga/" + fileid + ".format3")
+                    utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
+                    for thingy in item:
+                        if isinstance(thingy, dict):
+                            print("Whiskey")
+                            filehref = BeautifulSoup(thingy["0"], features="html5lib")("a")[0]["href"]
+                            fileid = BeautifulSoup(thingy["0"], features="html5lib")("a")[0].contents[0]
+                            targetfilename = cache_dir / ("ga/" + fileid + ".format3")
+                            utils.fetch_if_not_cached(targetfilename, filehref, headers=headers)
+                            json_items_found += 1
+        else:
+            print(f"Non-dict non-list data found in entry No. {index}")
+
+    logger.debug(f"{json_items_found:,} JSON items found, though there's some repetition.")
+    """  # End ignore
+
     # Parse detailed data
     masterlist = []
-    for filename in glob(f"{cache_dir}/ga/*.format3"):
+    for filename in reversed(sorted(glob(f"{cache_dir}/ga/*.format3"))):
         with open(filename, encoding="utf-8") as infile:
             html = infile.read()
         tableholder = BeautifulSoup(html, features="html5lib").find(
