@@ -96,14 +96,43 @@ def scrape(
 
         # Traverse each tab. Assume the first line is a header. Check if the second line is bogus.
         # Build a list of dicts.
-        localheadersraw: list = localrows[0]
+        # Assuming the first line is a header began failing in 10/2025.
+
+        # logger.debug(localrows)
+
+        headerrowindex = None
+        afterlastrowindex = None
+        for rowindex, localrow in enumerate(localrows):
+            rowstandin = ""
+            for item in localrow:
+                rowstandin += str(item)
+            if "Company Name" in rowstandin:
+                headerrowindex = rowindex
+            if "Total" in rowstandin and "Count" in rowstandin:
+                afterlastrowindex = rowindex
+        if not headerrowindex:
+            logger.error("Unable to find header row.")
+        if not afterlastrowindex:
+            logger.warning("Unable to find last row")
+            afterlastrowindex = len(localrows)
+        localheadersraw: list = localrows[headerrowindex]  # type: ignore
+
+        nullcount = 0
+
         localheaders: list = []
         for entry in localheadersraw:
             if entry not in crosswalk:
-                logger.error(f"Potential header {entry} not found in crosswalk.")
-            else:
+                if entry is None:
+                    nullcount += 1
+                    localheaders.append(f"null_{nullcount}")
+                else:
+                    logger.error(f"Potential header {entry} not found in crosswalk.")
+            else:  # We actually have a good header!
                 localheaders.append(crosswalk[entry])
-        for row in localrows[1:]:  # Skip the header row
+
+        for row in localrows[
+            headerrowindex + 1 : afterlastrowindex  # type: ignore
+        ]:  # Skip the header row
             if row[0] != "Date Received":  # Check for fake second header
                 line: dict = {}
                 for i, fieldname in enumerate(localheaders):
