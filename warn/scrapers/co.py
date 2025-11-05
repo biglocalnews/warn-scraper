@@ -185,6 +185,7 @@ def scrape(
         "Received": "received_date",
         "Notes": "notes",
         "12/1/25`": "company",
+        "Total Notified": "total_notified",
         # Only add new matches above here, not below here.
     }
 
