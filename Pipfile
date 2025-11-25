@@ -54,6 +54,7 @@ cryptography = "*"
 bln = "==2.3.11"
 retry2 = "*"
 setuptools = "==71.1.0"
+pyquery = "==2.0.1"
 
 [requires]
 python_version = "3.9"
