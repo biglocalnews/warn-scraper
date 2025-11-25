@@ -1,17 +1,21 @@
-import re
+import json
+import logging
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+import requests
+from pyquery import PyQuery as pq
 
 from .. import utils
 from ..cache import Cache
 
-__authors__ = ["anikasikka"]
-__tags__ = ["html", "pdf"]
+__authors__ = ["anikasikka", "stucka"]
+__tags__ = ["html", "pdf", "json"]
 __source__ = {
     "name": "Michigan Department of Technology, Management and Budget",
-    "url": "https://milmi.org/warn/",
+    "url": "https://www.michigan.gov/leo/bureaus-agencies/wd/data-public-notices/warn-notices",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def scrape(
@@ -27,101 +31,137 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    # Grabs the main page with the current year's data
-    current_page = utils.get_url("https://milmi.org/warn/")
-    current_html = current_page.text
+    # Data from before a format change on 2025-11-25 is available archived at
+    # https://storage.cloud.google.com/bln-data-public/warn-layoffs/mi-before-20251125.zip
 
-    # Grabs the WARN archive years html page with previous data
-    archive_web_page = utils.get_url("https://milmi.org/warn/archive")
-    archive_web_html = archive_web_page.text
+    # human page at https://www.michigan.gov/leo/bureaus-agencies/wd/data-public-notices/warn-notices
+    # That calls a JSON with a p=20 flag, which turns out to be pagination.
+    # So if we mess with that flag ...
+    sourcejson = "https://www.michigan.gov/leo/sxa/search/results/?s={8E97AB1D-D2D4-47F8-8CC4-3F1039C8854F}&itemid={BE81F7C2-36A8-4FDE-853C-B05B6E090055}&sig=&autoFireSearch=true&v={1FFFCC21-5151-4A2B-ABFC-F7FE4E5C9783}&p=54321&o=Created%20Date%20sort%2CDescending"
 
-    # Write the raw current year's file to the cache
-    cache = Cache(cache_dir)
-    cache.write("mi/current.html", current_html)
+    headers = {"User-Agent": "Big Local News (biglocalnews.org)"}
 
-    # Write the archived web data to the cache
-    cache = Cache(cache_dir)
-    cache.write("mi/archived.html", archive_web_html)
+    r = requests.get(sourcejson, headers=headers)
 
-    headers = [
-        "Company Name",
-        "City",
-        "Date Received",
-        "Incident Type",
-        "Number of Layoffs",
-    ]
-    cleaned_data = [headers]
+    # Save the semi-raw data
+    cache = Cache()
 
-    # Parse current year's html file
-    soup_current = BeautifulSoup(current_html, "html5lib")
-    cleaned_data += _parse_html_table(soup_current.find(class_="tablewarn"))
+    cache.write("raw/mi.json", json.dumps(r.json()))
 
-    # Parse archived web data file
-    soup_archive = BeautifulSoup(archive_web_html, "html5lib")
-    cleaned_data += _parse_html_table(soup_archive)
+    entries = r.json()["Results"]
 
-    # Parse out PDF links for downloading
-    pdf_list = []
-    for link in soup_archive.select("a[href$='.pdf']"):
-        # Grab the text
-        link_text = link.text.strip()
-        # Only keep the ones that have a four digit year in the text
-        if not re.match(r"\d{4}", link_text):
-            continue
+    translations = {
+        "Cities": "city",
+        "City": "city",
+        "Closure date": "date_close",
+        "Commencing date": "date_start",
+        "Counties": "county",
+        "County": "county",
+        "Includes the following": "includes",
+        "Layoff (permanent) - City": "city",
+        "Layoff (temporary) - City": "city",
+        "Layoff - Cities": "city",
+        "Layoff - City": "city",
+        "Layoff date": "date_start",
+        "Layoff dates": "date_start",
+        "Layoff- City": "city",
+        "Layoffs - Cities": "city",
+        "Mass Layoff/Plant Closure - City": "city",
+        "Number of jobs affected": "jobs",
+        "Number of jobs impacted": "jobs",
+        "Reduction in Hours - Cities": "city",
+        "Total number of jobs impacted": "jobs",
+        "Type of company action": "action",
+    }
 
-        # Put the URL together
-        pdf_url = f"https://milmi.org/_docs/publications/warn/warn{link_text}.pdf"
+    textfixes = {
+        "\u2013": "--",
+        "\u2014": "--",
+        "\u200b": "",
+        "\u00a0": " ",
+        "\u2039": " ",
+        "\u2019": "'",
+        "\u00e9": "e",
+    }
 
-        # Download it
-        cache_key = f"mi/{link_text}.pdf"
-        if cache.exists(cache_key):
-            pdf_file = cache_dir / cache_key
-        else:
-            pdf_file = cache.download(cache_key, pdf_url)
-        pdf_list.append(pdf_file)
+    # Data looks like it'd be nicely separated by P tags. And it was. Mostly.
+    # Some entries like the DTW North Partners have a single P tag, and then the data selements are separated only by BRs.
+    # That means there's at least three formats out there.
+    # So ... Let's start doing things by text transforms only.
 
-    # Set the path to the final CSV
-    # We should always use the lower-case state postal code, like nj.csv
+    masterlist = []
+    for entry in entries:
+        line = {}
+        gutsraw = pq(entry["Html"])("div.search-results__section-content")
+        guts = gutsraw.text()
+        for textfix in textfixes:
+            guts = guts.replace(textfix, textfixes[textfix])
+        guts = guts.splitlines()
+        line["company"] = guts[0]
+        link = pq(gutsraw)("a").attr("href")
+        if "http" not in link:
+            link = "https://www.michigan.gov" + link
+        link = link.replace("\\", "")
+        line["link"] = link
+
+        extras = None
+        for gut in guts[1:]:
+            if ":" in gut:
+                title = gut.split(":")[0]
+                content = ":".join(gut.split(":")[1:]).strip()
+                if title not in translations:
+                    logger.warning(
+                        f"!!!!!!!!!!  Missing a key in lookup table: {title}"
+                    )
+                line[translations[title]] = content
+            else:
+                if not extras:
+                    extras = gut
+                else:
+                    extras += "!!!" + gut
+        """
+        Need to find a unique identifier here. Tried to build one but the MotorCity casino messed it up.
+        Let's instead use the base PDF filename.
+
+        urlparse weirdly doesn't have this.
+
+        Using the full URL would be ... really unwieldy.
+
+        ... but will actually be the right thing to do. Ack.
+
+
+                    if "jobs" not in line:
+                        jobs = ""
+                    else:
+                        jobs = line['jobs']
+                    if "date_start" not in line:
+                        date_start = ""
+                    else:
+                        date_start = line['date_start']
+
+                    if not jobs:
+                        line["jobs"] = f"jobs_{line['company']}_{date_start}"
+                    if not "date_start":
+                        line["date_start"] = f"date_{line['company']}_{jobs}"
+        """
+        # pdfname = line['link'].split("/")[-1].split("?")[0]
+        if "link" not in line:
+            logger.debug(f"Missing link somehow? {entry}")
+        pdfname = line["link"]
+        if "jobs" not in line:
+            line["jobs"] = pdfname
+        if "date_start" not in line:
+            line["date_start"] = pdfname
+
+        line["extras"] = extras
+        masterlist.append(line)
+
     output_csv = data_dir / "mi.csv"
 
-    # Write out the rows to the export directory
-    utils.write_rows_to_csv(output_csv, cleaned_data)
+    utils.write_disparate_dict_rows_to_csv(output_csv, masterlist)
 
     # Return the path to the final CSV
     return output_csv
-
-
-def _parse_html_table(soup):
-    black_list = [
-        "Number of layoffs indicated Y-T-D",
-        "Number of notices received Y-T-D",
-        "TOTAL:",
-        "TOTALS:",
-        "Total Layoffs:",
-        "Notes:",
-        "",
-    ]
-    row_list = []
-    # Loop through all the rows ...
-    for rows in soup.find_all("tr"):
-        # Grab all the cells
-        vals = []
-        for data in rows.find_all("td"):
-            vals.append(data.text.strip())
-
-        # Quit if there's nothing
-        if not vals:
-            continue
-
-        # If this is a blacklisted row, like the total row, skip it
-        if vals[0] in black_list:
-            continue
-
-        # If we get this far, keep it
-        row_list.append(vals)
-
-    # Return the result
-    return row_list
 
 
 if __name__ == "__main__":
