@@ -55,12 +55,11 @@ def scrape(
     latest_url = f"{baseurl}{fragment}"
 
     # latest_url = "https://kcc.ky.gov/WARN%20notices/WARN%20NOTICES%202022/WARN%20Notice%20Report%2001262022.xls"
-    latest_path = cache.download("ky/latest.xlsx", latest_url)
+    # They changed to CSV late November 2025.
 
-    # Open it up
-    workbook = load_workbook(filename=latest_path)
+    global crosswalk  # type: ignore  # One data set to work with two processing methods, CSV and XLSX
 
-    crosswalk = {
+    crosswalk = {  # type: ignore
         "Closure or Layoff?": "closure_or_layoff",
         "Company Name": "company",
         "Company: Company Name": "company",
@@ -90,7 +89,96 @@ def scrape(
         "union": "union",  # Unclear if different than types of employees affected/union_affected
     }
 
+    if latest_url.endswith(".csv"):
+        latest_path = cache.download("ky/latest.csv", latest_url)
+        masterlist = start_csv(latest_path)
+    elif latest_url.endswith(".xlsx"):
+        latest_path = cache.download("ky/latest.xlsx", latest_url)
+        masterlist = start_xlsx(latest_path)
+    else:
+        logger.error(
+            "Unprecedented file format found for {latest_url}; don't know how to handle it"
+        )
+
+    # Earlier versions of this code needed the archived data to match the new data.
+    # We can no longer expect that since October 2025 data revisions.
+
+    archive_url = "https://storage.googleapis.com/bln-data-public/warn-layoffs/ky-historical-normalized.csv"
+
+    logger.debug("Getting KY historical data")
+    r = requests.get(archive_url)
+
+    reader = list(csv.reader(r.text.splitlines()))
+
+    localheadersraw = reader[0]
+    localheaders: list = []  # type: ignore
+    for entry in localheadersraw:
+        if entry not in crosswalk:  # type: ignore
+            logger.error(f"Cannot match possible header value of {entry} to crosswalk.")
+        else:
+            localheaders.append(crosswalk[entry])  # type: ignore
+    for row in reader[1:]:  # Skip header row
+        line: dict = {}  # type: ignore
+        for i, fieldname in enumerate(localheaders):
+            line[fieldname] = row[i]
+            if isinstance(row[i], str):
+                line[fieldname] = row[i].strip()
+        masterlist.append(line)
+    logger.debug("Historical records folded in.")
+
+    # Write out the results
+    data_path = data_dir / "ky.csv"
+    utils.write_disparate_dict_rows_to_csv(data_path, masterlist)
+
+    # Pass it out
+    return data_path
+
+
+def start_csv(latest_path):
+    """Begin processing a CSV file.
+
+    Args:
+        latest_path: Path to the CSV file. Was it a path or a string?
+
+    Returns:
+        masterlist: list, containing parsed results.
+    """
     masterlist: list = []
+
+    with open(latest_path) as infile:
+        reader = list(csv.reader(infile))
+
+    localheadersraw = reader[0]
+    localheaders: list = []  # type: ignore
+    for entry in localheadersraw:
+        if entry not in crosswalk:
+            logger.error(f"Cannot match possible header value of {entry} to crosswalk.")
+        else:
+            localheaders.append(crosswalk[entry])
+    for row in reader[1:]:  # Skip header row
+        line: dict = {}  # type: ignore
+        for i, fieldname in enumerate(localheaders):
+            line[fieldname] = row[i]
+            if isinstance(row[i], str):
+                line[fieldname] = row[i].strip()
+        masterlist.append(line)
+    logger.debug(f"{len(masterlist):,} records found in current data set.")
+    return masterlist
+
+
+def start_xlsx(latest_path):
+    """Begin processing an Excel file, using the parse_xlsx function.
+
+    Args:
+        latest_path: Path to the Excel file. Was it a path or a string?
+
+    Returns:
+        masterlist: list = [], containing parsed results.
+    """
+    masterlist: list = []
+
+    workbook = load_workbook(filename=latest_path)
+
     for sheet in workbook.worksheets:
         localrows = parse_xlsx(sheet)
 
@@ -141,40 +229,8 @@ def scrape(
                         line[fieldname] = row[i].strip()
                 masterlist.append(line)
 
-    logger.debug(f"Successfully merged {len(masterlist)} records from new spreadsheet.")
-
-    # Earlier versions of this code needed the archived data to match the new data.
-    # We can no longer expect that since October 2025 data revisions.
-
-    archive_url = "https://storage.googleapis.com/bln-data-public/warn-layoffs/ky-historical-normalized.csv"
-
-    logger.debug("Getting KY historical data")
-    r = requests.get(archive_url)
-
-    reader = list(csv.reader(r.text.splitlines()))
-
-    localheadersraw = reader[0]
-    localheaders: list = []  # type: ignore
-    for entry in localheadersraw:
-        if entry not in crosswalk:
-            logger.error(f"Cannot match possible header value of {entry} to crosswalk.")
-        else:
-            localheaders.append(crosswalk[entry])
-    for row in reader[1:]:  # Skip header row
-        line: dict = {}  # type: ignore
-        for i, fieldname in enumerate(localheaders):
-            line[fieldname] = row[i]
-            if isinstance(row[i], str):
-                line[fieldname] = row[i].strip()
-        masterlist.append(line)
-    logger.debug("Historical records folded in.")
-
-    # Write out the results
-    data_path = data_dir / "ky.csv"
-    utils.write_disparate_dict_rows_to_csv(data_path, masterlist)
-
-    # Pass it out
-    return data_path
+    logger.debug(f"{len(masterlist):,} records found in current data set.")
+    return masterlist
 
 
 def parse_xlsx(worksheet) -> typing.List[typing.List]:
