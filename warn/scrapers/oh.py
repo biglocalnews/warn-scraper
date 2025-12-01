@@ -38,11 +38,12 @@ def scrape(
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0",
     }
 
-    latesturl = "https://jfs.ohio.gov/wps/portal/gov/jfs/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa/current-public-notices-of-layoffs-and-closures"
+    # latesturl = "https://jfs.ohio.gov/wps/portal/gov/jfs/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa/current-public-notices-of-layoffs-and-closures"
+    latesturl = "https://jfs.ohio.gov/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa"
 
-    logger.debug("Attempting to fetch current data")
+    logger.debug(f"Attempting to fetch current data from {latesturl}")
     r = requests.get(latesturl, headers=headers)
-    soup = BeautifulSoup(r.content)
+    soup = BeautifulSoup(r.content, features="lxml")
     logger.debug("Attempting to get JSON data from Ohio file")
     data_div = soup.find("div", {"id": "js-placeholder-json-data"})
     if isinstance(data_div, Tag):
