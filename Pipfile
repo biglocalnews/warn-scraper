@@ -53,11 +53,11 @@ urllib3 = "*"
 cryptography = "*"
 retry2 = "*"
 setuptools = "*"
-pyquery = "==2.0.1"
-bln = "==2.3.12"
+pyquery = ">=2.0.1"
+bln = ">=2.3.12"
 
 [requires]
-python_version = "3.12"
+python_version = "3.14"
 
 [pipenv]
 allow_prereleases = false
