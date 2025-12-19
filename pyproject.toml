@@ -4,9 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "warn-scraper"
-authors = [
-    {name = "Big Local News"},
-]
+author = "Big Local News"
 description = "Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -33,6 +31,13 @@ dependencies = [
 ]
 dynamic = ["version"]
 
+[project.urls]
+"Documentation" = "https://warn-scraper.readthedocs.io"
+"Maintainer" = "https://github.com/biglocalnews"
+"Source" = "https://github.com/biglocalnews/warn-scraper"
+"Tracker" = "https://github.com/biglocalnews/warn-scraper/issues"
+
+
 [tool.setuptools_scm]
 
 
@@ -45,4 +50,3 @@ dynamic = ["version"]
 
 # ... other project metadata fields as listed in:
 #     https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
-
