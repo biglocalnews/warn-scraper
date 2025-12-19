@@ -142,7 +142,7 @@ setup(
         "xvfbwrapper",
         "webdriver-manager",
     ],
-    license="Apache 2.0 license",
+    license="Apache License 2.0",
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
