@@ -115,4 +115,10 @@ class TallyCommand(distutils.cmd.Command):
             fh.write(md)
 
 
-setup()
+setup(
+    test_suite="tests",
+    tests_require=[
+        "pytest",
+        "pytest-vcr",
+    ],
+)
