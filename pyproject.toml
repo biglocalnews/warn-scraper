@@ -1,13 +1,15 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+# requires = ["setuptools", "setuptools-scm"]
+# build-backend == "setuptools.build_meta"
 
 [project]
 name = "warn-scraper"
-author = "Big Local News"
 description = "Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites"
+authors = [
+    {name = "Big Local News", email = "biglocalnews@stanford.edu"}
+]
 readme = "README.md"
-requires-python = ">=3.10"
+# requires-python = ">=3.10"
 keywords = ["WARN Act", "scrapers", "WARN Act data", "WARN Act scrapers"]
 license = "Apache-2.0"
 classifiers = [
@@ -29,6 +31,7 @@ dependencies = [
     "xvfbwrapper",
     "webdriver-manager",
 ]
+
 dynamic = ["version"]
 
 [project.urls]
@@ -36,6 +39,8 @@ dynamic = ["version"]
 "Maintainer" = "https://github.com/biglocalnews"
 "Source" = "https://github.com/biglocalnews/warn-scraper"
 "Tracker" = "https://github.com/biglocalnews/warn-scraper/issues"
+
+# [project.authors]
 
 
 [tool.setuptools_scm]

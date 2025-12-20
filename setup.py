@@ -7,9 +7,11 @@ from pathlib import Path
 
 import jinja2
 import us
-from setuptools import find_packages, setup
+from setuptools import setup
 
 import warn
+
+# from setuptools import find_packages, setup
 
 
 def read(file_name):
@@ -113,5 +115,4 @@ class TallyCommand(distutils.cmd.Command):
             fh.write(md)
 
 
-setup(
-)
+setup()
