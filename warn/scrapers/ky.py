@@ -5,6 +5,7 @@ from pathlib import Path
 
 import requests
 from openpyxl import load_workbook
+from pyquery import PyQuery as pq
 
 from .. import utils
 from ..cache import Cache
@@ -42,20 +43,34 @@ def scrape(
     """
     # Get the latest workbook
     cache = Cache(cache_dir)
-    hostpage = "https://kcc.ky.gov/Pages/News.aspx"
-    baseurl = "https://kcc.ky.gov"
+    # hostpage = "https://kcc.ky.gov/Pages/News.aspx"
+    hostpage = (
+        "https://kyworks.ky.gov/Services/Pages/Rapid-Response-Layoffs-and-Closures.aspx"
+    )
+    baseurl = "https://kyworks.ky.gov"
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
     }
     r = requests.get(hostpage, headers=headers)
-    html = r.text
-    subpage = html.split("WARN Notices by Year</h4")[-1]
+    html = r.content
+    buttons = pq(html)("a.btn-block")
+    latest_url = None
+    for button in buttons:
+        if "report" in pq(button).text().lower():
+            latest_url = pq(button)("a").attr("href")
+            logger.debug(f"Found likely report address: {latest_url}")
+
+    if not latest_url:
+        logger.error("Could not identify a URL to download")
+
+    # subpage = html.split("WARN Notices by Year</h4")[-1]
     # mypy and BeautifulSoup are not cooperating. So ... extract the URL in a dumb way.
-    fragment = subpage.split('href="')[1].split('"')[0]
-    latest_url = f"{baseurl}{fragment}"
+    # fragment = subpage.split('href="')[1].split('"')[0]
+    # latest_url = f"{baseurl}{fragment}"
 
     # latest_url = "https://kcc.ky.gov/WARN%20notices/WARN%20NOTICES%202022/WARN%20Notice%20Report%2001262022.xls"
     # They changed to CSV late November 2025.
+    # Then changed to XLS in December 2025, but not XLSX? Except somewhere else is XLSX?
 
     global crosswalk  # type: ignore  # One data set to work with two processing methods, CSV and XLSX
 
@@ -89,15 +104,21 @@ def scrape(
         "union": "union",  # Unclear if different than types of employees affected/union_affected
     }
 
-    if latest_url.endswith(".csv"):
-        latest_path = cache.download("ky/latest.csv", latest_url)
+    if "http" not in latest_url:  # type: ignore
+        latest_url = baseurl + latest_url  # type: ignore
+
+    if latest_url.endswith(".csv"):  # type: ignore
+        latest_path = cache.download("ky/latest.csv", latest_url)  # type: ignore
         masterlist = start_csv(latest_path)
-    elif latest_url.endswith(".xlsx"):
-        latest_path = cache.download("ky/latest.xlsx", latest_url)
+    elif latest_url.endswith(".xlsx"):  # type: ignore
+        latest_path = cache.download("ky/latest.xlsx", latest_url)  # type: ignore
         masterlist = start_xlsx(latest_path)
+    #    elif latest_url.endswith(".xls"):
+    #        latest_path = cache.download("ky/latest.xls", latest_url)
+    #        masterlist = start_xls(latest_path)
     else:
         logger.error(
-            "Unprecedented file format found for {latest_url}; don't know how to handle it"
+            f"Unprecedented file format found for {latest_url}; don't know how to handle it"
         )
 
     # Earlier versions of this code needed the archived data to match the new data.
