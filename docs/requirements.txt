@@ -1,4 +1,4 @@
 Sphinx
 myst-parser
-sphinxcontrib-napoleon
+# sphinxcontrib-napoleon
 openpyxl
