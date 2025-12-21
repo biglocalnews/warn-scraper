@@ -121,4 +121,7 @@ setup(
         "pytest",
         "pytest-vcr",
     ],
+    cmdclass={
+        "tallysources": TallyCommand,
+    },
 )
