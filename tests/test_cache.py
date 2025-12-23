@@ -1,4 +1,5 @@
-from pathlib import Path
+from os.path import normpath as normpath
+from pathlib import Path, PurePosixPath
 from unittest.mock import patch
 
 import pytest
@@ -14,7 +15,9 @@ def test_default_cache_dir():
     with patch(to_patch) as mock_func:
         mock_func.return_value = "/Users/you"
         cache = Cache()
-        assert cache.path == "/Users/you/.warn-scraper/cache"
+        assert normpath(PurePosixPath(cache.path)) == normpath(
+            PurePosixPath("/Users/you/.warn-scraper/cache")
+        )
 
 
 def test_custom_cache_path(tmpdir):
@@ -47,7 +50,7 @@ def test_files(cache_dir):
 
     cache = Cache(path=cache_dir)
     # Base cache dir only contains fl/ dir
-    assert cache.files()[0].endswith("/fl")
+    assert cache.files()[0].endswith("/fl") or cache.files()[0].endswith("\\fl")
     # HTML files are stored in fl/ directory
     actual = [str(p) for p in Path(cache_dir, "fl").glob("*.html")]
     assert cache.files(subdir="fl/") == actual
