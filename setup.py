@@ -7,9 +7,11 @@ from pathlib import Path
 
 import jinja2
 import us
-from setuptools import find_packages, setup
+from setuptools import setup
 
 import warn
+
+# from setuptools import find_packages, setup
 
 
 def read(file_name):
@@ -114,62 +116,11 @@ class TallyCommand(distutils.cmd.Command):
 
 
 setup(
-    name="warn-scraper",
-    description="Command-line interface for downloading WARN Act notices of qualified plant closings and mass layoffs from state government websites",
-    long_description=read("README.md"),
-    long_description_content_type="text/markdown",
-    author="Big Local News",
-    url="https://github.com/biglocalnews/warn-scraper",
-    packages=find_packages(),
-    include_package_data=True,
-    entry_points="""
-        [console_scripts]
-        warn-scraper=warn.cli:main
-    """,
-    install_requires=[
-        "click",
-        "beautifulsoup4",
-        "html5lib",
-        "pdfplumber",
-        "requests",
-        "openpyxl",
-        "pyopenssl",
-        "retry2",
-        "selenium",
-        "stealthenium",
-        "tenacity",
-        "xlrd",
-        "xvfbwrapper",
-        "webdriver-manager",
-    ],
-    license="Apache 2.0 license",
-    zip_safe=False,
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: Apache Software License",
-        "Natural Language :: English",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-    ],
     test_suite="tests",
     tests_require=[
         "pytest",
         "pytest-vcr",
     ],
-    setup_requires=["setuptools_scm"],
-    use_scm_version={"version_scheme": version_scheme, "local_scheme": local_version},
-    project_urls={
-        "Documentation": "https://warn-scraper.readthedocs.io",
-        "Maintainer": "https://github.com/biglocalnews",
-        "Source": "https://github.com/biglocalnews/warn-scraper",
-        "Tracker": "https://github.com/biglocalnews/warn-scraper/issues",
-    },
     cmdclass={
         "tallysources": TallyCommand,
     },
