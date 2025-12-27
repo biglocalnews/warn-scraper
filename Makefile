@@ -92,7 +92,7 @@ mypy: ## run mypy type checks
 
 test: ## run all tests
 	$(call banner,       🤖 Running tests 🤖)
-	@$(PIPENV) coverage run setup.py -q test
+	@$(PIPENV) pytest --cov=warn tests/
 
 
 coverage: ## check code coverage

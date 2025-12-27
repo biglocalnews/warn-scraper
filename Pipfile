@@ -32,6 +32,7 @@ setuptools = "*"
 jinja2 = "*"
 pytest = "*"
 isort = "*"
+pytest-cov = "*"
 
 [packages]
 beautifulsoup4 = "*"
