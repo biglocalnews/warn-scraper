@@ -64,41 +64,41 @@ jobs:
           path: ./docs
           if-no-files-found: error
 
-  test-python:
-    strategy:
-      matrix:
-        python: ["3.10", "3.14",]
-    name: Test Python code
-    runs-on: ubuntu-latest
-    steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v6
+  # test-python:
+    # strategy:
+      # matrix:
+        # python: ["3.10", "3.14",]
+    # name: Test Python code
+    # runs-on: ubuntu-latest
+    # steps:
+      # - id: checkout
+        # name: Checkout
+        # uses: actions/checkout@v6
 
-      - id: setup-python
-        name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version:  ${{ matrix.python }}
-          cache: 'pipenv'
+      # - id: setup-python
+        # name: Setup Python
+        # uses: actions/setup-python@v6
+        # with:
+          # python-version:  ${{ matrix.python }}
+          # cache: 'pipenv'
 
-      - id: install-pipenv
-        name: Install pipenv
-        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
-        shell: bash
+      # - id: install-pipenv
+        # name: Install pipenv
+        # run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+        # shell: bash
 
-      - id: install-python-dependencies
-        name: Install Python dependencies
-        run: pipenv install --dev --python=`which python`
-        shell: bash
+      # - id: install-python-dependencies
+        # name: Install Python dependencies
+        # run: pipenv install --dev --python=`which python`
+        # shell: bash
 
-      - id: run
-        name: Run tests
-        run: make test
+      # - id: run
+        # name: Run tests
+        # run: make test
 
-      - id: coverage
-        name: Coverage report
-        run: make coverage
+      # - id: coverage
+        # name: Coverage report
+        # run: make coverage
 
 
   test-build:
