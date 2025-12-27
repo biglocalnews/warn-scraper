@@ -116,11 +116,6 @@ class TallyCommand(distutils.cmd.Command):
 
 
 setup(
-    test_suite="tests",
-    tests_require=[
-        "pytest",
-        "pytest-vcr",
-    ],
     cmdclass={
         "tallysources": TallyCommand,
     },
