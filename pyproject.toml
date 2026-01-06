@@ -34,7 +34,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.scripts]
-warn-scraper = "warn.cli:cli"
+warn-scraper = "warn.cli:main"
 
 [project.urls]
 "Documentation" = "https://warn-scraper.readthedocs.io"
