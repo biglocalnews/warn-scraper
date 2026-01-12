@@ -54,17 +54,19 @@ def scrape(
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
     }
     url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
-    response = requests.get(url, headers=headers, verify=False)
+    response = requests.get(url, headers=headers, verify=True)
     logger.debug(f"Request status is {response.status_code} for {url}")
     soup = BeautifulSoup(response.text, "html.parser")
-    pageholder = soup.select("div.content")[0]
+    pageholder = soup.select("div.mainContentArea")[0]
     pagesection = pageholder.select("div.sfContentBlock")[0]
     href_lookup = {}
     for atag in pagesection.find_all("a"):
         href = atag["href"]
         tagyear = href[-4:]
-        href_lookup[tagyear] = href
+        if tagyear not in ["orts"]:
+            href_lookup[tagyear] = href
 
+    # logger.debug(href_lookup)
     # logger.debug(pagesection)
 
     base_url = "https://reactwarn.floridajobs.org/WarnList/"
