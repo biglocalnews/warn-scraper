@@ -51,6 +51,7 @@ def scrape(
     else:
         raise ValueError("Could not find JSON data div")
     rawheaders = data[1]
+    logger.debug(f"Found headers: {rawheaders}")
     masterlist = []
     for row in data[2:]:
         if len(row) == len(rawheaders):
@@ -65,7 +66,7 @@ def scrape(
     lookup = {
         "Company": "Company",
         "DateReceived": "Date Received",
-        "URL": None,
+        #         "URL": "URL",
         "City/County": "City/County",
         "Potential NumberAffected": "Potential Number Affected",
         "LayoffDate(s)": "Layoff Date(s)",
@@ -90,13 +91,7 @@ def scrape(
     # Write out
     data_path = data_dir / f"{state_code}.csv"
 
-    utils.write_dict_rows_to_csv(
-        data_path,
-        list(masterlist[0].keys()),
-        masterlist,
-        mode="w",
-        extrasaction="raise",
-    )
+    utils.write_disparate_dict_rows_to_csv(data_path, masterlist)
 
     # Return the path to the CSV
     return data_path
