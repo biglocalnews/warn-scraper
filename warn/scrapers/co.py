@@ -186,6 +186,7 @@ def scrape(
         "Notes": "notes",
         "12/1/25`": "company",
         "Total Notified": "total_notified",
+        "4850 32nd Avenue South, Fargo, North Dakota, United States.": "company",
         # Only add new matches above here, not below here.
     }
 
