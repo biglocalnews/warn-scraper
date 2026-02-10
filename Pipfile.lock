@@ -852,12 +852,12 @@
         },
         "tenacity": {
             "hashes": [
-                "sha256:1169d376c297e7de388d18b4481760d478b0e99a777cad3a9c86e556f4b697cb",
-                "sha256:f77bf36710d8b73a50b2dd155c97b870017ad21afe6ab300326b0371b3b05138"
+                "sha256:6095a360c919085f28c6527de529e76a06ad89b23659fa881ae0649b867a9d55",
+                "sha256:adb31d4c263f2bd041081ab33b498309a57c77f9acf2db65aadf0898179cf93a"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.9'",
-            "version": "==9.1.2"
+            "markers": "python_version >= '3.10'",
+            "version": "==9.1.4"
         },
         "tomli": {
             "hashes": [
