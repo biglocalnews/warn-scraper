@@ -32,7 +32,7 @@ types-requests = "*"
 types-retry = "*"
 typing-extensions = "*"
 us = "*"
-setuptools = "==80.10.2"
+setuptools = "==82.0.0"
 
 [packages]
 beautifulsoup4 = "*"
