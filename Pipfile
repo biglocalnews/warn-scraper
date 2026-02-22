@@ -58,7 +58,7 @@ webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
 
-[requires]
+# [requires]
 # python_version = "3.14"
 
 [pipenv]
