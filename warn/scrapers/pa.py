@@ -89,10 +89,13 @@ def scrape(
             )
             blob = entry.find("div", class_="text").get_text().strip()
             address = blob.split("COUNT")[0].strip()
+            line["addressfull"] = address.replace("\n", ", ")
 
+            # This gets weird if there are no details. Example: Everett Foodliner, February 2026.
             deets = "COUNT" + "COUNT".join(blob.split("COUNT")[1:])  # type: ignore
             deets = deets.split("\n")  # type: ignore
-            line["addressfull"] = address.replace("\n", ", ")
+            if deets == ["COUNT"]:
+                deets = []  # type: ignore # If no details, skip deet handling
             lastkey = None
             for deet in deets:
                 if "PHASE" in deet.upper():
@@ -107,7 +110,7 @@ def scrape(
                     value = ": ".join(deet.split(":")[1:]).strip()
                     line[key] = value
                     lastkey = key
-                else:  # No colon in deet and no Phase
+                else:
                     if len(line[lastkey]) > 0:  # type: ignore
                         line[lastkey] += " ... "  # type: ignore
                     line[lastkey] += deet.strip()  # type: ignore
