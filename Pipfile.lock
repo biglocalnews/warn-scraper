@@ -954,12 +954,12 @@
         },
         "xvfbwrapper": {
             "hashes": [
-                "sha256:08c5ff09594f4f579d251d5e1e85621fef043e4275b98efd14811b1d0f2ee8d3",
-                "sha256:a28a27105b16f88c689c52ca5b9fac34b4c68aad0a80b270fbad723f6f778f5b"
+                "sha256:77139907ecf7819b752d9dd5d7f65229c1c923e5093fa4ff2a0b166b42864cbb",
+                "sha256:bad4c7a0d60feea5f8c7cb0c58bc20dfb48225ca50207e4d9e80360e88b1ecc9"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==0.2.20"
+            "version": "==0.2.21"
         }
     },
     "develop": {
