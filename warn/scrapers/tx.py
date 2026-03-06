@@ -61,6 +61,12 @@ def scrape(
         if year >= 2019:
             href_list.append(href)
 
+    if len(link_list) == 0:
+        message = "No links found! Something went wrong, and the scraper would crash just trying to use headerless archival data."
+        message += " This may be a case of needing to use a proxy or a different User-Agent; such shenanigans were perhaps "
+        message += "in play in March 2026."
+        logger.error(message)
+
     # Loop through the links we want to download
     row_list = []
     for ihref, href in enumerate(href_list):
