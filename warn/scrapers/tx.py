@@ -1,5 +1,6 @@
 import logging
 import re
+import sys
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -61,11 +62,12 @@ def scrape(
         if year >= 2019:
             href_list.append(href)
 
-    if len(link_list) == 0:
-        message = "No links found! Something went wrong, and the scraper would crash just trying to use headerless archival data."
+    if len(href_list) == 0:
+        message = "No links found through href_list! Something went wrong, and the scraper would crash just trying to use headerless archival data."
         message += " This may be a case of needing to use a proxy or a different User-Agent; such shenanigans were perhaps "
         message += "in play in March 2026."
         logger.error(message)
+        sys.exit()
 
     # Loop through the links we want to download
     row_list = []
