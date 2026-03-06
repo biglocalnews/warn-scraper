@@ -31,7 +31,8 @@ def scrape(
     """
     # Grab the page
     page = utils.get_url(
-        "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list"
+        "https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list",
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/999.0.0.0 Safari/537.36",
     )
     html = page.text
 

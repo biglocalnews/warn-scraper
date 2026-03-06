@@ -43,7 +43,7 @@ def scrape(
 
     link_list = soup.find_all("a")
     for link in link_list:
-        if "WARN Log Excel File" in link.text.strip():
+        if "Excel" in link.text.strip():
             excel_url = "https://workforce.iowa.gov" + link.get("href")
 
     # Download the Excel file
