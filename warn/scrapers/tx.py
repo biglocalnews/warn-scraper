@@ -32,14 +32,20 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    ssl_verify = False  # Problems with certificates in November 2024
+    ssl_verify = (
+        True  # Problems with certificates in November 2024; re-enabled March 2026
+    )
 
     # Set up the cache
     cache = Cache(cache_dir)
 
     # Get the root URL
     url = "https://www.twc.texas.gov/data-reports/warn-notice"
-    page = utils.get_url(url, verify=ssl_verify)
+    page = utils.get_url(
+        url,
+        verify=ssl_verify,
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/999.0.0.0 Safari/537.36",
+    )
     html = page.text
 
     # Cache it
@@ -67,7 +73,8 @@ def scrape(
         message += " This may be a case of needing to use a proxy or a different User-Agent; such shenanigans were perhaps "
         message += "in play in March 2026."
         logger.error(message)
-        sys.exit()
+        raise Exception("Scraper isn't scraping.")
+        sys.exit(-1)
 
     # Loop through the links we want to download
     row_list = []
