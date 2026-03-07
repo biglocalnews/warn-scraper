@@ -138,6 +138,23 @@ class Cache:
             fh.write(content)
         return str(out)
 
+    def write_binary(self, name, content):
+        """
+        Write binary data to a file.
+
+        Args:
+            name: Filename
+            content: Binary contents
+        Returns:
+            Path to file
+        """
+        out = Path(self.path, name)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"Writing to cache {out}")
+        with open(out, "wb") as fh:
+            fh.write(content)
+        return out
+
     def files(self, subdir=".", glob_pattern="*"):
         """
         Retrieve all files and folders in a subdir relative to cache dir.

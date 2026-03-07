@@ -41,6 +41,7 @@ def scrape(
 
     # Get the root URL
     url = "https://www.twc.texas.gov/data-reports/warn-notice"
+    #    pagebin, html = utils.get_with_zyte(url)
     page = utils.get_url(
         url,
         verify=ssl_verify,
@@ -52,7 +53,7 @@ def scrape(
     cache.write("tx/source.html", html)
 
     # Get all the Excel links
-    soup = BeautifulSoup(page.text, "html5lib")
+    soup = BeautifulSoup(html, "html5lib")
     link_list = soup.find_all(
         "a", href=re.compile("^/sites/default/files/oei/docs/warn-act-listings-")
     )
@@ -86,6 +87,9 @@ def scrape(
         year = _get_year(href)
         ext = _get_ext(href)
         excel_path = cache.download(f"tx/{year}{ext}", data_url, verify=ssl_verify)
+        # filename = f"tx/{year}{ext}"
+        # excelbin, exceltext = utils.get_with_zyte(data_url)
+        # excel_path = cache.write_binary(filename, excelbin)
 
         # Open it up
         workbook = load_workbook(filename=excel_path)
