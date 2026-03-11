@@ -96,11 +96,12 @@ def save_if_good_url(filename, url, **kwargs):
     return success_flag, content
 
 
-def get_with_zyte(url):
+def get_with_zyte(url, json_extras=None):
     """Use Zyte as a proxy server to retrieve data not available without it.
 
     Args:
         url (str): URL to retrieve
+        json_extras (optional): dictionary of key-values to pass along
     Returns:
         returnbin (bin): raw binary representation of returned data object
         returntext (str): utf-8 conversion of returned data object, e.g., HTML
@@ -118,23 +119,33 @@ def get_with_zyte(url):
         )
         return (None, None)
 
+    myjson = {
+        "url": url,
+        "httpResponseBody": True,
+        "followRedirect": True,
+    }
+    if json_extras:
+        for item in json_extras:
+            myjson[item] = json_extras[item]
+
     api_response = requests.post(
-        "https://api.zyte.com/v1/extract",
-        auth=(zyte_api_key, ""),
-        json={
-            "url": url,
-            "httpResponseBody": True,
-            "followRedirect": True,
-        },
+        "https://api.zyte.com/v1/extract", auth=(zyte_api_key, ""), json=myjson
     )
 
     if not api_response.ok:
         logger.error(
-            f"Error downloading {url} with get_with_zyte. Repsonse code: {api_response.status_code}"
+            f"Error downloading {url} with get_with_zyte. Repsonse: {api_response.json()}"
         )
         return (None, None)
-    returnbin: bytes = b64decode(api_response.json()["httpResponseBody"])
-    returntext: str = returnbin.decode("utf-8", errors="backslashreplace")
+
+    if "browserHtml" in api_response.json():
+        returntext = api_response.json()["browserHtml"]
+        logger.debug(f"Full response: {api_response.json()}")
+        returnbin = returntext.encode("utf-8")
+        # returnbin = bin(returntext)
+    else:
+        returnbin: bytes = b64decode(api_response.json()["httpResponseBody"])
+        returntext: str = returnbin.decode("utf-8", errors="backslashreplace")
     logger.debug(f"Fetched {url}")
     return (returnbin, returntext)
 
