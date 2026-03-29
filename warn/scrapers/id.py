@@ -37,6 +37,7 @@ def scrape(
     base_url = "https://www.labor.idaho.gov"
     start_url = "https://www.labor.idaho.gov/businesss/layoff-assistance/"
     file_name = "WARNNotice.pdf"
+    # file_name = "WARN_Notices_Idaho.pdf"
     # There's a numeric parameter called v on this PDF URL that updates
     # from time to time. Suspect this is a cache-buster. We're using a
     # random number instead.
@@ -52,7 +53,7 @@ def scrape(
 
     # Start finding the link before "Who to contact"
     html = r.text
-    localizedhtml = html.split("<h2>Who to contact")[0]
+    localizedhtml = html.split("<h2>Contact")[0]
     soup = BeautifulSoup(localizedhtml, features="html5lib")
     last_url = soup.find_all("a")[-1]["href"]
     if "https" in last_url:
