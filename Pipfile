@@ -36,7 +36,6 @@ setuptools = "*"
 
 [packages]
 beautifulsoup4 = "*"
-bln = ">=2.3.14"
 cffi = "*"
 click = "*"
 cryptography = "*"
@@ -56,6 +55,7 @@ urllib3 = "*"
 webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
+bln = "==2.3.18"
 
 [requires]
 python_version = "3.14"
