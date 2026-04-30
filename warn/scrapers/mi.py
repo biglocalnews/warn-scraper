@@ -72,6 +72,8 @@ def scrape(
         "Reduction in Hours - Cities": "city",
         "Total number of jobs impacted": "jobs",
         "Type of company action": "action",
+        "Site address": "address",
+        "Reason for company action": "reason",
     }
 
     textfixes = {
