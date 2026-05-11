@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Configure the package for distribution."""
+
 import distutils.cmd
 import os
 from importlib import import_module
