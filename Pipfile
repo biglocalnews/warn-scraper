@@ -5,7 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 Sphinx = "*"
-black = "*"
 coverage = "*"
 flake8 = "*"
 flake8-bugbear = "*"
@@ -33,6 +32,11 @@ types-retry = "*"
 typing-extensions = "*"
 us = "*"
 setuptools = "*"
+pillow = "*"
+black = "*"
+cryptography = "*"
+pyopenssl = "*"
+lxml = "*"
 
 [packages]
 beautifulsoup4 = "*"
