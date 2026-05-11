@@ -52,10 +52,14 @@ def scrape(
     document = BeautifulSoup(html, "html.parser")
     links = document.find_all("a")
     pdf_urls = [
-        f"{base_url}{link['href']}"
+        f"{link['href']}"
         for link in links
         if "WARN" in link.get("href", "") and link.get("href", "").endswith(".pdf")
     ]
+
+    for i, pdf_url in enumerate(pdf_urls):
+        if "http" not in pdf_url:
+            pdf_urls[i] = base_url + pdf_url
 
     output_rows = []
 
