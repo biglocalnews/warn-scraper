@@ -2590,21 +2590,21 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:22e0a2d69474c6ae4feb01951cb69d515ed23728cf96d05513d36e42b62b37cb",
-                "sha256:70b18734b607bd1da571d097d236cfcfacaf01de45717d59e6e04b96877532e0"
+                "sha256:7d872682c5d01cfde07da7bccc7b65469d3dca203318515ada1de5eda35efbf9",
+                "sha256:a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==82.0.0"
+            "version": "==82.0.1"
         },
         "setuptools-scm": {
             "hashes": [
-                "sha256:1c674ab4665686a0887d7e24c03ab25f24201c213e82ea689d2f3e169ef7ef57",
-                "sha256:30e8f84d2ab1ba7cb0e653429b179395d0c33775d54807fc5f1dd6671801aef7"
+                "sha256:bbba8fe754516cdefd017f4456721775e6ef9662bd7887fb52ae26813d4838c3",
+                "sha256:f611037d8aae618221503b8fa89319f073438252ae3420e01c9ceec249131a0a"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==9.2.2"
+            "markers": "python_version >= '3.10'",
+            "version": "==10.0.5"
         },
         "snowballstemmer": {
             "hashes": [
@@ -2798,6 +2798,14 @@
             ],
             "markers": "python_version >= '3.10'",
             "version": "==8.1.1"
+        },
+        "vcs-versioning": {
+            "hashes": [
+                "sha256:b541e2ba79fc6aaa3850f8a7f88af43d97c1c80649c01142ee4146eddbc599e4",
+                "sha256:fabd75a3cab7dd8ac02fe24a3a9ba936bf258667b5a62ed468c9a1da0f5775bc"
+            ],
+            "markers": "python_version >= '3.10'",
+            "version": "==1.1.1"
         },
         "virtualenv": {
             "hashes": [

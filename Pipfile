@@ -31,12 +31,12 @@ types-requests = "*"
 types-retry = "*"
 typing-extensions = "*"
 us = "*"
-setuptools = "*"
 pillow = "*"
 black = "*"
 cryptography = "*"
 pyopenssl = "*"
 lxml = "*"
+setuptools = "*"
 
 [packages]
 beautifulsoup4 = "*"
