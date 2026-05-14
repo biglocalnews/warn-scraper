@@ -49,6 +49,8 @@ def scrape(
     if isinstance(data_div, Tag):
         data = json.loads(data_div.decode_contents().strip())["data"]
     else:
+        logger.debug("!!!!!!!!!!!!!!!!!!!! Could not find JSON data div")
+        logger.debug(soup)
         raise ValueError("Could not find JSON data div")
     rawheaders = data[1]
     logger.debug(f"Found headers: {rawheaders}")

@@ -41,6 +41,14 @@ def scrape(
     Append .csv to the end of that URL:
     https://public.tableau.com/app/profile/kylee.teague2482/viz/WorkerAdjustmentRetrainingNotificationWARN/WARN.csv
     Try it in requests, no good. Try it in browser again. File downloads. Find it in the downloads section of the browser. Right-click, copy download link, try that in requests and ... it worked?
+
+    In 2026, the previous implementation broke. .csv appending gets a 403.
+    Wondering if we should be parsing this:
+    https://public.tableau.com/workbooks/WorkerAdjustmentRetrainingNotificationWARN.twb
+    using the Tableau API
+    https://github.com/tableau/document-api-python
+
+
     """
 
     url = "https://public.tableau.com/views/WorkerAdjustmentRetrainingNotificationWARN/WARN.csv?%3Adisplay_static_image=y&%3AbootstrapWhenNotified=true&%3Aembed=true&%3Alanguage=en-US&:embed=y&:showVizHome=n&:apiID=host0#navType=0&navSrc=Parse"

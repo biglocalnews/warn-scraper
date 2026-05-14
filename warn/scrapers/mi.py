@@ -73,6 +73,7 @@ def scrape(
         "Total number of jobs impacted": "jobs",
         "Type of company action": "action",
         "Site address": "address",
+        "Site addresses": "address",
         "Reason for company action": "reason",
     }
 
