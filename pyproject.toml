@@ -44,7 +44,7 @@ warn-scraper = "warn.cli:main"
 "Tracker" = "https://github.com/biglocalnews/warn-scraper/issues"
 
 [tool.setuptools_scm]
-local_scheme = "no-local-version-strict"
+local_scheme = "no-local-version"
 # local_scheme = "no-local-version-strict"
 # local_scheme = "only-version"
 
