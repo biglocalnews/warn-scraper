@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=80", "setuptools-scm>=10"]
+requires = ["setuptools>=80", "setuptools-scm[toml]>=10"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -44,7 +44,7 @@ warn-scraper = "warn.cli:main"
 "Tracker" = "https://github.com/biglocalnews/warn-scraper/issues"
 
 [tool.setuptools_scm]
-# local_scheme = "no-local-version"
+local_scheme = "no-local-version-strict"
 # local_scheme = "no-local-version-strict"
 # local_scheme = "only-version"
 
