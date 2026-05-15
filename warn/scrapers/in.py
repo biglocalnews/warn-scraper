@@ -70,6 +70,9 @@ def _parse_table(table, include_headers) -> list:
         if not cell_list:
             continue
         cell_list = [c.text.strip() for c in cell_list]
+        for cellindex, cellcontent in enumerate(cell_list):
+            if cellcontent.endswith("/td>"):
+                cell_list[cellindex] = cellcontent.replace("/td>", "")
         row_list.append(cell_list)
 
     # Return it
