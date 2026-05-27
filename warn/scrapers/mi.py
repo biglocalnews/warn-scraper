@@ -75,6 +75,7 @@ def scrape(
         "Site address": "address",
         "Site addresses": "address",
         "Reason for company action": "reason",
+        "Impacted job titles": "titles",
     }
 
     textfixes = {
