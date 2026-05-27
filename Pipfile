@@ -37,6 +37,8 @@ cryptography = "*"
 pyopenssl = "*"
 pytest = "*"
 setuptools-scm = {extras = ["toml"], version = "*"}
+urllib3 = "*"
+idna = "*"
 
 [packages]
 beautifulsoup4 = "*"
