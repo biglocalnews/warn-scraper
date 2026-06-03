@@ -32,11 +32,15 @@ def scrape(
     Returns: the Path where the file is written
     """
     output_csv = data_dir / "al.csv"
-    page = utils.get_url("https://www.madeinalabama.com/warn-list/")
+    # page = utils.get_url("https://www.madeinalabama.com/warn-list/")
+    # URL change in June 2026, maybe led to a HTTP 415 error
+    page = utils.get_url("https://workforce.alabama.gov/warn-list/")
+
     # can't see 2020 listings when I open web page, but they are on the summary in the google search
     soup = BeautifulSoup(page.text, "html.parser")
     table = soup.find_all("table")  # output is list-type
     table_rows = table[0].find_all("tr")
+    logger.debug(f"{len(table_rows):,} total table rows (including header) found")
     # Handle the header
     raw_header = table_rows.pop(0)
     header_row = _extract_fields_from_row(raw_header, "th")

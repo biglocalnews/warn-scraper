@@ -213,7 +213,7 @@ def write_rows_to_csv(output_path: Path, rows: list, mode="w"):
         mode (str): the mode to be used when opening the file (default 'w')
     """
     create_directory(output_path, is_file=True)
-    logger.debug(f"Writing {len(rows)} rows to {output_path}")
+    logger.debug(f"Writing {len(rows):,} rows to {output_path}")
     with open(output_path, mode, newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerows(rows)
@@ -230,7 +230,7 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
         extrasaction (str): what to do if the if a field isn't in the headers (default 'raise')
     """
     create_directory(output_path, is_file=True)
-    logger.debug(f"Writing {len(rows)} rows to {output_path}")
+    logger.debug(f"Writing {len(rows):,} rows to {output_path}")
     with open(output_path, mode, newline="") as f:
         # Create the writer object
         writer = csv.DictWriter(f, fieldnames=headers, extrasaction=extrasaction)
@@ -258,7 +258,7 @@ def write_disparate_dict_rows_to_csv(output_path, rows, mode="w"):
             headers.add(item)
     headers = list(sorted(headers))
     logger.debug(f"Found {len(headers):,} header entries in list of dicts.")
-    logger.debug(f"Writing {len(rows)} rows to {output_path}")
+    logger.debug(f"Writing {len(rows):,} rows to {output_path}")
     with open(output_path, mode, newline="") as outfile:
         # Create the writer object
         writer = csv.writer(outfile)
