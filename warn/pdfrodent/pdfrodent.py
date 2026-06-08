@@ -2,7 +2,7 @@ import json
 import logging
 import re
 
-import camelot  # pip install camelot-py[core]
+import camelot  # pip install camelot-py==1.0.9 for now
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +64,23 @@ def is_mostly_empty(row: list) -> bool:
     return len(list(filter(None, row))) <= 2
 
 
+def has_content(value):
+    """Check if a particular value has any content, e.g. is it a null or an empty string."""
+    if value is list:
+        content = True
+    elif value is dict:
+        content = True
+    elif value is None:
+        content = False
+    else:
+        value = str(value).strip()
+        if len(value) > 0:
+            content = True
+        else:
+            content = False
+    return content
+
+
 def count_data_items(row: list, prefixes=None) -> int:
     """
     Count number of non-blank non-null data items in a row that aren't an internal variable.
@@ -83,17 +100,8 @@ def count_data_items(row: list, prefixes=None) -> int:
             if field.startswith(prefix):
                 goodfieldname = False
         if goodfieldname:
-            value = row[field]
-            if value is list:
+            if has_content(row[field]):
                 good_items += 1
-            elif value is dict:
-                good_items += 1
-            elif value is None:
-                pass
-            else:
-                value = str(value).strip()
-                if len(value) > 0:
-                    good_items += 1
     return good_items
 
 
@@ -114,7 +122,7 @@ def drop_thin_rows(rows: list, cutnumber: int, prefixes=None):
     for row in rows:
         if count_data_items(row, prefixes=prefixes) > cutnumber:
             lines.append(row)
-    return rows
+    return lines
 
 
 internal_documentation_such_as_it_is = """
