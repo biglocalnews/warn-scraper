@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 
@@ -16,6 +17,7 @@ __source__ = {
 }
 
 logger = logging.getLogger(__name__)
+want_debugging_file = True
 
 
 def scrape(
@@ -97,5 +99,10 @@ def scrape(
     )
     # utils.write_disparate_dict_rows_to_csv(targetfilename, masterlist)
     utils.write_disparate_dict_rows_to_csv(targetfilename, cleaned)
+
+    if want_debugging_file:
+        with open(Path(cache_dir) / "ms/debugging.txt", "w") as outfile:
+            for row in rowholder:
+                outfile.write(json.dumps(row) + "\r\n")
 
     return targetfilename
