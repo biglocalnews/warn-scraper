@@ -62,6 +62,7 @@ webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
 bln = "==2.3.18"
+camelot-py = "==1.0.9"
 
 [requires]
 python_version = "3.14"
