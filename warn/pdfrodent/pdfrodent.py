@@ -178,16 +178,24 @@ We probably want code that tells us what PDF this is pulled from, on which row.
 """
 
 
-def parse_pdf(pdffile: str):
+def parse_pdf(pdffile: str, field_fixes: dict | None = None):
     """Parse a PDF file to extract data from tables.
 
     Args:
         Filename (string)
+        field_fixes (string or dict): If supplied, a dictionary of header lookup values with values of the target name
 
     Returns:
         filelist: A list of dictionaries of data rows keyed to headers
         filerowholder: Debugging data showing how row types were determined
     """
+    if not field_fixes:
+        logger.debug(
+            "No 'field_fixes' variable submitted to pdfrodent.parse_pdf function."
+        )
+        field_fixes = {}
+    else:
+        logger.debug(f"{len(field_fixes):,} field_fixes to be used to clean headers.")
     filelist = []
     filerowholder = []
     logger.debug(f"Opening {pdffile} for PDF parsing")
@@ -212,16 +220,29 @@ def parse_pdf(pdffile: str):
             logger.debug("\tOrphaned header detected!")
             filerowholder.append("\tOrphaned header detected!")
             orphanedheader = True
-            orphanholder = {"rawheader": table.data[0]}
+            patchedheaders = []
+            rawheader = table.data[0]
+            for item in clean_row(rawheader):
+                if item in field_fixes:
+                    patchedheaders.append(field_fixes[item])
+                else:
+                    logger.debug(
+                        f"New header type found: {item}, not in {' '.join(sorted(list(field_fixes.keys())))}"
+                    )
+                    patchedheaders.append(item)
+            orphanholder = {
+                "rawheader": rawheader,
+                "patchedheaders": patchedheaders,
+            }
             logger.debug(f"{orphanholder}")
             filerowholder.append(f"{orphanholder}")
-        # If there are multiple rows, there are a bunch of meanings here ...
+        # If there are multiple rows, there are a bunch of possibilities we need to poke ...
         else:
             # If we have a header from a one-row table, prepare to use the orphaned header
             if orphanedheader:
                 isheader = True
                 rawheader = orphanholder["rawheader"]  # type: ignore
-                headerfirst = rawheader
+                headerfirst = orphanholder["patchedheaders"]  # type: ignore
 
             for rowindex, row in enumerate(table.data):
                 filerowholder.append(row)
@@ -230,7 +251,16 @@ def parse_pdf(pdffile: str):
                 # it's an index row
                 if rowindex == 0 and not orphanedheader:
                     rawheader = row
-                    headerfirst = clean_row(row)
+                    patchedheaders = []
+                    for item in clean_row(rawheader):
+                        if item in field_fixes:
+                            patchedheaders.append(field_fixes[item])
+                        else:
+                            logger.debug(
+                                f"New header type found: {item}, not in {' '.join(sorted(list(field_fixes.keys())))}"
+                            )
+                            patchedheaders.append(item)
+                    headerfirst = patchedheaders
                     isheader = True
                     filerowholder.append("\tIndex row!")
 
@@ -293,6 +323,7 @@ def parse_pdf(pdffile: str):
                         isheader = False
 
                 else:
+                    # It's not an orphaned header
                     # It's not the initial header
                     # It's not a supplemental header
                     # It's not an empty row
@@ -303,7 +334,7 @@ def parse_pdf(pdffile: str):
                     isheader = False
                     seendata = True
                     for cellindex, cell in enumerate(row):
-                        line[headerfirst[cellindex]] = cell
+                        line[headerfirst[cellindex]] = clean_cell(cell)
                     filerowholder.append(f"\t\t{line}")
                     locallist.append(line)
 

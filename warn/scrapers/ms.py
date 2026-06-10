@@ -68,34 +68,76 @@ def scrape(
 
     pdffiles = sorted(cache.files(subdir="ms/", glob_pattern="*.pdf"))
 
-    # HEY!!!!!!!!!!!! NEED to do something with this.
     headerfixes = {
-        "Date of\nNotice": "date_notice",
-        "Company Name\n(City) (County) (Zip)": "company_raw",
-        "Workforce\nArea": "workforce_area",
-        "Event\nNumber": "event_number",
-        "NAICS CODE –\nDescription": "NAICS",
-        "Type of\nAction\n#\nAffected": "action",
-        "Date of\nAction": "date_effective",
-        "Reason / Comments": "comments",
+        "": "blank_entry",
+        "# Affected": "affected",
+        "# Of Notices Received": "notices_received",
+        "City": "city",
+        "Company Name": "company",
+        "Company Name (City) (County)": "company",
+        "Company Name (City) (County) (Zip)": "company",
+        "Company Name City (County)": "company",
+        "Company Name City, (County)": "company",
+        "Company Name, City (County)": "company",
+        "Company Name, City, County": "company",
+        "County": "county",
+        "Date of Action": "date_effective",
+        "Date of Notice": "date_notice",
+        "Date of WARN Notice": "date_notice",
+        "Event Number": "event_number",
+        "NAICS CODE & Description": "naics",
+        "NAICS CODE – Description": "naics",
+        "Notices Received": "notices_received",
+        "Number Of Notices Received": "notices_received",
+        "Number Of Notices Received October 2024 – December 2024": "notices_received",
+        "Number Affected": "affected",
+        "Reason / Comments": "reason",
+        "Reason – Comments": "reason",
+        "Type of Action": "action_type",
+        "Type of Action # Affected": "action_type",
+        "T ypes of Notice": "notice_types",
+        "T ypes of Notices Received": "notice_types",
+        "Type of Notice": "notice_types",
+        "Types of Notice": "notice_types",
+        "Types of Notices": "notice_types",
+        "Types of Notices Received": "notice_types",
+        "Workforc e Area": "workforce_area",
+        "Workforce Area": "workforce_area",
+        "_int_accuracy": "_int_accuracy",
+        "_int_data_items": "_int_data_items",
+        "_int_page": "_int_page",
+        "_int_pdf_filename": "_int_pdf_filename",
+        "_int_raw_fields": "_int_raw_fields",
+        "_int_table_number": "_int_table_number",
+        "supplement_0": "supplement_0",
+        "supplement_1": "supplement_1",
+        "supplement_2": "supplement_2",
+        "supplement_5": "supplement_5",
     }
-
-    logger.debug(
-        f"{len(headerfixes):,} headerfixes are drafted but NONE ARE IN USE, WHAT ARE YOU DOING"
-    )
 
     masterlist = []
     rowholder = []
     for pdffile in pdffiles:
-        locallist, localrows = pdfrodent.parse_pdf(pdffile)
+        locallist, localrows = pdfrodent.parse_pdf(pdffile, headerfixes)
         masterlist.extend(locallist)
         rowholder.extend(localrows)
 
+    # Identify all header elements, even in the ones we're about to remove.
+    allheaders = set()
+    for row in masterlist:
+        for item in row:
+            allheaders.add(item)
+    text = ""
+    for item in sorted(allheaders):
+        text += f"\t\t'{item}': ,\n"
+    with open(Path(cache_dir) / "ms/allheaders.txt", "w") as outfile:
+        outfile.write(text)
+
     targetfilename = data_dir / "ms.csv"
     logger.debug(f"Found {len(masterlist):,} extracted rows from the PDFs.")
-    cleaned = pdfrodent.drop_thin_rows(masterlist, 5)
+    cleaned = pdfrodent.drop_thin_rows(masterlist, 6)
     logger.debug(
-        f"After filtering out thin rows, we have {len(masterlist):,} rows of data meeting standards."
+        f"After filtering out thin rows, we have {len(cleaned):,} rows of data meeting standards."
     )
     # utils.write_disparate_dict_rows_to_csv(targetfilename, masterlist)
     utils.write_disparate_dict_rows_to_csv(targetfilename, cleaned)
