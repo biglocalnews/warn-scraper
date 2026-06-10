@@ -243,22 +243,40 @@ def write_dict_rows_to_csv(output_path, headers, rows, mode="w", extrasaction="r
             writer.writerow(row)
 
 
-def write_disparate_dict_rows_to_csv(output_path, rows, mode="w"):
+def write_disparate_dict_rows_to_csv(
+    output_path, rows, mode="w", prefixes: None | list = None
+):
     """Write the provided list of dictionaries to the provided path as comma-separated values, while determining a header.
 
     Args:
         output_path (Path): the Path were the result will be saved
         rows (list): the list of dictionaries to be saved; can have disparate dict keys
         mode (str): the mode to be used when opening the file (default 'w')
+        prefixes(list|None): text strings that determine whether fields should arrive after other fields.
+            Send an empty list, [], to run without any prefixes.
+            Send None or don't send to use default prefixes of _int_ and int_
     """
+    if not prefixes:
+        prefixes = ["int_", "_int_"]
+    logger.debug(f"Writing {(len(rows)+1):,} rows to {output_path}")
     create_directory(output_path, is_file=True)
-    headers: set = set()  # Get all the potential header names
+    headers: list = []  # We want to preserve order, and set won't do it.
+    headerextras: list = []  # stuff that should be at the right of the field list
     for row in rows:
         for item in row:
-            headers.add(item)
-    headers = list(sorted(headers))
-    logger.debug(f"Found {len(headers):,} header entries in list of dicts.")
-    logger.debug(f"Writing {len(rows):,} rows to {output_path}")
+            if item not in headers and item not in headerextras:
+                prefixhere = False
+                for prefix in prefixes:
+                    if item.startswith(prefix):
+                        prefixhere = True
+                if prefixhere:
+                    headerextras.append(item)
+                else:
+                    headers.append(item)
+    logger.debug(
+        f"Found {(len(headers) + len(headerextras)):,} header entries in the supplied list of dicts."
+    )
+    headers.extend(headerextras)
     with open(output_path, mode, newline="") as outfile:
         # Create the writer object
         writer = csv.writer(outfile)
