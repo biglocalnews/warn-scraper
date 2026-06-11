@@ -317,6 +317,11 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                                         logger.warning(
                                             f"Found {fieldname} as {cleancell} but not located in supplemental headers: {headersupplement}"
                                         )
+                                        if fieldname in field_fixes:
+                                            logger.debug(
+                                                f"Shifting cell with {fieldname} to {field_fixes[fieldname]}"
+                                            )
+                                            fieldname = field_fixes[fieldname]
                                     locallist[-1][
                                         fieldname
                                     ] = cleancell  # Add it to the previous line

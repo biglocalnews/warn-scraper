@@ -112,7 +112,7 @@ def scrape(
         "supplement_0": "supplement_0",
         "supplement_1": "supplement_1",
         "supplement_2": "supplement_2",
-        "supplement_5": "supplement_5",
+        "supplement_5": "affected",  # Only carries from 2025sq2
     }
 
     masterlist = []
