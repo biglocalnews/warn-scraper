@@ -42,6 +42,7 @@ idna = "*"
 
 [packages]
 beautifulsoup4 = "*"
+bln = "==2.3.18"
 cffi = "*"
 click = "*"
 cryptography = "*"
@@ -61,7 +62,7 @@ urllib3 = "*"
 webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
-bln = "==2.3.18"
+opencv-python-headless = "*"
 camelot-py = "==1.0.9"
 
 [requires]
