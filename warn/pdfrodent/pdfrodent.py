@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 
@@ -227,7 +226,7 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                     patchedheaders.append(field_fixes[item])
                 else:
                     logger.debug(
-                        f"New header type found: {item}, not in {' '.join(sorted(list(field_fixes.keys())))}"
+                        f"New header type found: {item}, not in field_fixes: '{' '.join(sorted(list(field_fixes.keys())))}'"
                     )
                     patchedheaders.append(item)
             orphanholder = {
@@ -257,7 +256,7 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                             patchedheaders.append(field_fixes[item])
                         else:
                             logger.debug(
-                                f"New header type found: {item}, not in {' '.join(sorted(list(field_fixes.keys())))}"
+                                f"New header type found: {item}, not in field_fixes: '{' '.join(sorted(list(field_fixes.keys())))}'"
                             )
                             patchedheaders.append(item)
                     headerfirst = patchedheaders
@@ -286,7 +285,7 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                             isheader = False
                             orphanedheader = False
 
-                    else:  # seenheader
+                    else:  # seendata
                         if isheader:  # Supplement to a header on a latter page
                             filerowholder.append(
                                 "\tMostly empty row, seems to be appending to a header"
@@ -325,6 +324,7 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                                     locallist[-1][
                                         fieldname
                                     ] = cleancell  # Add it to the previous line
+                                    locallist[-1]["_int_raw_fields"].extend(row)
                         isheader = False
 
                 else:
@@ -341,16 +341,18 @@ def parse_pdf(pdffile: str, field_fixes: dict | None = None):
                     for cellindex, cell in enumerate(row):
                         line[headerfirst[cellindex]] = clean_cell(cell)
                     filerowholder.append(f"\t\t{line}")
+                    line["_int_raw_fields"] = row
                     locallist.append(line)
 
             report = table.parsing_report
 
             for lineindex, line in enumerate(locallist):
                 line["_int_accuracy"] = report["accuracy"]
-                line["_int_pdf_filename"] = pdffile.split("/")[-1].split("\\")[-1]
+                line["_int_pdf_filename"] = str(pdffile).split("/")[-1].split("\\")[-1]
                 line["_int_page"] = report["page"]
                 line["_int_table_number"] = report["order"]
-                line["_int_raw_fields"] = json.dumps(list(line.values()))
+                # line["_int_raw_fields"] = row    # HEY! Need to handle for supplemented lines
+                # line["_int_raw_fields"] = json.dumps(list(line.values()))
                 line["_int_data_items"] = count_data_items(line)  # type: ignore
                 if "Event Number" in line:
                     line["Event Number"] = line["Event Number"].replace("\n", "")
