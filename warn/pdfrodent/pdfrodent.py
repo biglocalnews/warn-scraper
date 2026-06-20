@@ -1,5 +1,6 @@
 import logging
 import re
+from pathlib import Path
 
 import camelot  # pip install camelot-py==1.0.9 for now
 
@@ -177,7 +178,7 @@ We probably want code that tells us what PDF this is pulled from, on which row.
 """
 
 
-def parse_pdf(pdffile: str, field_fixes: dict | None = None):
+def parse_pdf(pdffile: str | Path, field_fixes: dict | None = None):
     """Parse a PDF file to extract data from tables.
 
     Args:
