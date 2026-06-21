@@ -1,14 +1,14 @@
+import csv
 import logging
-import re
+from io import StringIO
 from pathlib import Path
 
-from bs4 import BeautifulSoup
-
 from .. import utils
+from ..cache import Cache
 
-__authors__ = ["zstumgoren", "Dilcia19"]
+__authors__ = ["zstumgoren", "Dilcia19", "stucka"]
 __tags__ = [
-    "html",
+    "csv",
 ]
 __source__ = {
     "name": "Alabama Department of Commerce",
@@ -31,45 +31,40 @@ def scrape(
 
     Returns: the Path where the file is written
     """
+    cache = Cache()
     output_csv = data_dir / "al.csv"
+
     # page = utils.get_url("https://www.madeinalabama.com/warn-list/")
     # URL change in June 2026, maybe led to a HTTP 415 error
-    page = utils.get_url("https://workforce.alabama.gov/warn-list/")
+    # page = utils.get_url("https://workforce.alabama.gov/warn-list/")
+    # Later in June 2026, they're detecting the automation and blocking us.
+    # But say they won't for the CSV download which, OK.
+    # No headers on the CSV, which they'll probably realize ... sometime.
 
-    # can't see 2020 listings when I open web page, but they are on the summary in the google search
-    soup = BeautifulSoup(page.text, "html.parser")
-    table = soup.find_all("table")  # output is list-type
-    table_rows = table[0].find_all("tr")
-    logger.debug(f"{len(table_rows):,} total table rows (including header) found")
-    # Handle the header
-    raw_header = table_rows.pop(0)
-    header_row = _extract_fields_from_row(raw_header, "th")
-    output_rows = [header_row]
-    # Process remaining rows
-    discarded_rows = []
-    for table_row in table_rows:
-        # Discard bogus data lines (see last lines of source data)
-        # based on check of first field ("Closing or Layoff")
-        data = _extract_fields_from_row(table_row, "td")
-        layoff_type = data[0]
-        if re.match(r"(clos|lay)", layoff_type, re.I):
-            output_rows.append(data)
-        else:
-            discarded_rows.append(data)
-    if discarded_rows:
-        logger.warn(f"Warning: Discarded {len(discarded_rows)} dirty data row(s)")
-    utils.write_rows_to_csv(output_csv, output_rows)
+    targeturl = "https://workforce.alabama.gov/documents/warn-list/"
+    page = utils.get_url(targeturl).text
+    cache.write("al/rawcsv.csv", page)
+
+    headers = [
+        "_id1",
+        "action_type",
+        "date_notice",
+        "date_action",
+        "company",
+        "location",
+        "affected",
+        "_id2",
+    ]
+
+    fileholder = StringIO(page)
+
+    reader = list(csv.DictReader(fileholder, fieldnames=headers))
+
+    utils.write_disparate_dict_rows_to_csv(
+        output_csv, reader, mode="w", prefixes=["_id"]
+    )
+
     return output_csv
-
-
-def _extract_fields_from_row(row, element):
-    """Pluck data from the provided row and element."""
-    row_data = []
-    fields = row.find_all(element)
-    for raw_field in fields:
-        field = raw_field.text.strip()
-        row_data.append(field)
-    return row_data
 
 
 if __name__ == "__main__":
