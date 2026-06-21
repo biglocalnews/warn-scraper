@@ -59,6 +59,8 @@ def fetch_if_not_cached(filename, url, **kwargs):
         url: The URL from which the file may be downloaded.
     Notes: Should this even be in utils vs. cache? Should it exist?
     """
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 120
     create_directory(Path(filename), is_file=True)
     if not os.path.exists(filename):
         logger.debug(f"Fetching {filename} from {url}")
@@ -81,6 +83,8 @@ def save_if_good_url(filename, url, **kwargs):
     Notes: Should this even be in utils vs. cache? Should it exist?
     """
     create_directory(Path(filename), is_file=True)
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 120
     response = requests.get(url, **kwargs)
     if not response.ok:
         logger.error(f"URL {url} fetch failed with {response.status_code}")
@@ -96,7 +100,7 @@ def save_if_good_url(filename, url, **kwargs):
     return success_flag, content
 
 
-def get_with_zyte(url, json_extras=None):
+def get_with_zyte(url, json_extras=None, **kwargs):
     """Use Zyte as a proxy server to retrieve data not available without it.
 
     Args:
@@ -119,6 +123,9 @@ def get_with_zyte(url, json_extras=None):
         )
         return (None, None)
 
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 120
+
     myjson = {
         "url": url,
         "httpResponseBody": True,
@@ -129,7 +136,10 @@ def get_with_zyte(url, json_extras=None):
             myjson[item] = json_extras[item]
 
     api_response = requests.post(
-        "https://api.zyte.com/v1/extract", auth=(zyte_api_key, ""), json=myjson
+        "https://api.zyte.com/v1/extract",
+        auth=(zyte_api_key, ""),
+        json=myjson,
+        **kwargs,
     )
 
     if not api_response.ok:
@@ -150,7 +160,7 @@ def get_with_zyte(url, json_extras=None):
     return (returnbin, returntext)
 
 
-def post_with_zyte(url, payload):
+def post_with_zyte(url, payload, **kwargs):
     """Use Zyte as a proxy server to retrieve data not available without it.
 
     Args:
@@ -175,6 +185,9 @@ def post_with_zyte(url, payload):
         )
         return (None, None)
 
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 120
+
     if isinstance(payload, dict):
         payload = json.dumps(payload)
 
@@ -191,6 +204,7 @@ def post_with_zyte(url, payload):
             "httpResponseBody": True,
             "followRedirect": True,
         },
+        **kwargs,
     )
 
     if not api_response.ok:
@@ -325,6 +339,9 @@ def get_url(
     if "headers" not in kwargs:
         kwargs["headers"] = {}
     kwargs["headers"]["User-Agent"] = user_agent
+
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 120
 
     # Go get it
     if session is not None:
