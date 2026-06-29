@@ -9,6 +9,7 @@ import requests
 import tenacity
 import urllib3
 from bs4 import BeautifulSoup
+from pyquery import PyQuery as pq
 
 from .. import utils
 from ..cache import Cache
@@ -17,7 +18,8 @@ __authors__ = ["zstumgoren", "Dilcia19", "shallotly", "stucka"]
 __tags__ = ["html", "pdf"]
 __source__ = {
     "name": "Florida Department of Economic Opportunity",
-    "url": "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices",
+    # "url": "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices",
+    "url": "https://floridajobs.org/workforce-resources/worker-adjustment-and-retraining-notification-(warn)",
 }
 
 logger = logging.getLogger(__name__)
@@ -53,25 +55,24 @@ def scrape(
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
     }
-    url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
+    # url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
+    url = "https://floridajobs.org/workforce-resources/worker-adjustment-and-retraining-notification-(warn)"
     response = requests.get(url, headers=headers, verify=True)
     logger.debug(f"Request status is {response.status_code} for {url}")
-    soup = BeautifulSoup(response.text, "html.parser")
-    pageholder = soup.select("div.mainContentArea")[0]
-    pagesection = pageholder.select("div.sfContentBlock")[0]
+    html = response.text
+    details = pq(html)("div.contact-details")
     href_lookup = {}
-    for atag in pagesection.find_all("a"):
-        href = atag["href"]
+    for link in pq(details)("a.externalIcon"):
+        # logger.debug(pq(link))
+        href = pq(link)("a").attr("href")
         tagyear = href[-4:]
-        if tagyear not in ["orts"]:
+        if tagyear not in ["orts"]:  # exclude "reports"
             href_lookup[tagyear] = href
-
-    # logger.debug(href_lookup)
-    # logger.debug(pagesection)
 
     base_url = "https://reactwarn.floridajobs.org/WarnList/"
 
     # Loop through years and add any missing to the lookup
+    # logger.debug(href_lookup.keys())
     most_recent_year = int(list(href_lookup.keys())[0])
     earliest_year = 2015  # We expected files to be available for at least 2015
     for year in range(earliest_year, most_recent_year):
