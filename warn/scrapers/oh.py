@@ -1,12 +1,13 @@
 import csv
-import json
 import logging
+import re
+from io import StringIO
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup, Tag
 
 from .. import utils
+from ..cache import Cache
 
 __authors__ = ["zstumgoren", "Dilcia19", "chriszs", "stucka"]
 __tags__ = ["html", "pdf"]
@@ -32,6 +33,7 @@ def scrape(
     Returns: the Path where the file is written
     """
     state_code = "oh"
+    cache = Cache()
 
     # Get the latest HTML
     headers = {
@@ -39,29 +41,26 @@ def scrape(
     }
 
     # latesturl = "https://jfs.ohio.gov/wps/portal/gov/jfs/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa/current-public-notices-of-layoffs-and-closures"
-    latesturl = "https://jfs.ohio.gov/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa"
-
+    # latesturl = "https://jfs.ohio.gov/job-services-and-unemployment/job-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures-sa"
+    latesturl = "https://jfs.ohio.gov/job-workforce-services/job-programs-and-services/submit-a-warn-notice/current-public-notices-of-layoffs-and-closures"
     logger.debug(f"Attempting to fetch current data from {latesturl}")
     r = requests.get(latesturl, headers=headers)
-    soup = BeautifulSoup(r.content, features="lxml")
-    logger.debug("Attempting to get JSON data from Ohio file")
-    data_div = soup.find("div", {"id": "js-placeholder-json-data"})
-    if isinstance(data_div, Tag):
-        data = json.loads(data_div.decode_contents().strip())["data"]
-    else:
-        logger.debug("!!!!!!!!!!!!!!!!!!!! Could not find JSON data div")
-        logger.debug(soup)
-        raise ValueError("Could not find JSON data div")
-    rawheaders = data[1]
-    logger.debug(f"Found headers: {rawheaders}")
-    masterlist = []
-    for row in data[2:]:
-        if len(row) == len(rawheaders):
-            line = {}
-            for i, item in enumerate(rawheaders):
-                if item != "":
-                    line[item] = row[i]
-            masterlist.append(line)
+    cache.write("oh/index.html", r.text)
+    logger.debug("Attempting to get CSV link from Ohio file")
+    html = r.text
+    csv_url = re.findall(r"(\\\"csvUrl\\\":\\\")(.*?)(\\\")", html)[0][1]
+    logger.debug(f"CSV link found at {csv_url}")
+    r = requests.get(csv_url, headers=headers)
+    cache.write("oh/rawdata.csv", r.text)
+
+    # Ohio CSV as of June 2026 was coming in with extra prefacing headers that ... make it not a CSV.
+    # So knock off any lines without useful data.
+    clean = []
+    for myline in r.text.splitlines():
+        if len(myline) > 20:
+            clean.append(myline)
+
+    masterlist = list(csv.DictReader(StringIO("\n".join(clean))))
 
     logger.debug("Get historical data and meld it into current format")
     # Get the historical data, and meld it into the same format
@@ -82,7 +81,7 @@ def scrape(
     )
     reader = list(csv.DictReader(r.text.splitlines()))
     for row in reader:
-        line = {}
+        line: dict = {}
         for item in lookup:
             if not lookup[item]:
                 line[item] = None
