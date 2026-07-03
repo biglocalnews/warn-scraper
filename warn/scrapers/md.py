@@ -61,6 +61,8 @@ def scrape(
     html_list.append(html)  # Save the source HTML for parsing also
 
     old_pages = [
+        "warn2025.shtml",
+        "warn2024.shtml",
         "warn2023.shtml",
         "warn2022.shtml",
         "warn2021.shtml",
@@ -83,6 +85,7 @@ def scrape(
         filename = f"md/{href}.html"
 
         if href not in old_pages:
+            logger.debug(f"Trying special handling on {href}")
             sleep(naptime)  # Try to stop blocked connections by being less aggressive
             r = utils.get_url(url, headers=request_headers, verify=request_verify)
             r.encoding = "utf-8"
@@ -116,6 +119,8 @@ def scrape(
         row_list = table.find_all("tr")
 
         # If it's not the first page, slice off the header
+        if i == 0:
+            logger.debug(f"Found possible header row: {row_list[0]}")
         if i > 0:
             row_list = row_list[1:]
 
@@ -123,6 +128,10 @@ def scrape(
         for row in row_list:
             # Get the cells
             cell_list = row.find_all("td")
+            if not cell_list:
+                cell_list = row.find_all(
+                    "th"
+                )  # Alternate approach for first page's header
 
             # Clean them up
             cell_list = [_clean_text(c.text) for c in cell_list]
