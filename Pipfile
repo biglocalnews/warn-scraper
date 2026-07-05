@@ -65,6 +65,7 @@ xvfbwrapper = "*"
 opencv-python-headless = "*"
 camelot-py = "==1.0.9"
 pypdf = "*"
+niquests = {extras = ["utls"], version = "*"}
 
 [requires]
 python_version = "3.14"
