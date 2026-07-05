@@ -4,8 +4,10 @@ import re
 from os.path import exists
 from pathlib import Path
 
+import niquests
 import pdfplumber
-import requests
+
+# import requests
 import tenacity
 import urllib3
 from bs4 import BeautifulSoup
@@ -51,13 +53,9 @@ def scrape(
     """
     output_csv = data_dir / "fl.csv"
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
-    # FL site requires realistic User-Agent.
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-    }
-    # url = "https://floridajobs.org/office-directory/division-of-workforce-services/workforce-programs/reemployment-and-emergency-assistance-coordination-team-react/warn-notices"
+    session = niquests.Session()
     url = "https://floridajobs.org/workforce-resources/worker-adjustment-and-retraining-notification-(warn)"
-    response = requests.get(url, headers=headers, verify=True)
+    response = session.get(url)
     logger.debug(f"Request status is {response.status_code} for {url}")
     html = response.text
     details = pq(html)("div.contact-details")
@@ -83,9 +81,9 @@ def scrape(
     # Loop through years and scrape data
     for year_url in href_lookup.values():
         if "PDF" in year_url:
-            rows_to_add = _scrape_pdf(cache, cache_dir, year_url, headers)
+            rows_to_add = _scrape_pdf(cache, cache_dir, year_url, session)
         else:
-            html_pages = _scrape_html(cache, year_url, headers)
+            html_pages = _scrape_html(cache, year_url, session)
             rows_to_add = _html_to_rows(html_pages)
         # Convert rows to dicts
         rows_as_dicts = [dict(zip(FIELDS, row)) for row in rows_to_add]
@@ -101,9 +99,9 @@ def scrape(
 # note: no max amount of retries (recursive scraping)
 @tenacity.retry(
     wait=tenacity.wait_exponential(),
-    retry=tenacity.retry_if_exception_type(requests.HTTPError),
+    retry=tenacity.retry_if_exception_type(niquests.HTTPError),
 )
-def _scrape_html(cache, url, headers, page=1):
+def _scrape_html(cache, url, session, page=1):
     urllib3.disable_warnings()  # sidestep SSL error
     # extract year from URL
     year = _extract_year(url)
@@ -124,7 +122,7 @@ def _scrape_html(cache, url, headers, page=1):
             raise FileNotFoundError
     except FileNotFoundError:
         # scrape & cache html
-        response = requests.get(url, headers=headers, verify=False)
+        response = session.get(url)
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         page_text = response.text
@@ -145,7 +143,7 @@ def _scrape_html(cache, url, headers, page=1):
                 "href"
             )  # /WarnList/Records?year=XXXX&page=X
             # recursively make list of all the next pages' html
-            pages_html = _scrape_html(cache, url, headers, next_page)
+            pages_html = _scrape_html(cache, url, session, next_page)
             # add the current page to the recursive list
             pages_html.append(page_text)
             return pages_html
@@ -173,9 +171,9 @@ def _html_to_rows(page_text):
 # download and scrape pdf
 @tenacity.retry(
     wait=tenacity.wait_exponential(),
-    retry=tenacity.retry_if_exception_type(requests.HTTPError),
+    retry=tenacity.retry_if_exception_type(niquests.HTTPError),
 )
-def _scrape_pdf(cache, cache_dir, url, headers):
+def _scrape_pdf(cache, cache_dir, url, session):
     # sidestep SSL error
     urllib3.disable_warnings()
     # extract year from URL
@@ -184,7 +182,7 @@ def _scrape_pdf(cache, cache_dir, url, headers):
     download = ""
     # download pdf if not in the cache
     if not exists(pdf_cache_key):
-        response = requests.get(url, headers=headers, verify=False)
+        response = session.get(url)
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         # download & cache pdf
