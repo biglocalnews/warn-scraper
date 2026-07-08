@@ -63,7 +63,7 @@ webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
 opencv-python-headless = "*"
-camelot-py = "==1.0.9"
+camelot-py = "*"
 pypdf = "*"
 niquests = {extras = ["utls"], version = "*"}
 
