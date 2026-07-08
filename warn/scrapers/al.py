@@ -1,7 +1,11 @@
 import csv
 import logging
+import random
 from io import StringIO
 from pathlib import Path
+from time import sleep
+
+import niquests as requests
 
 from .. import utils
 from ..cache import Cache
@@ -41,8 +45,17 @@ def scrape(
     # But say they won't for the CSV download which, OK.
     # No headers on the CSV, which they'll probably realize ... sometime.
 
-    targeturl = "https://workforce.alabama.gov/documents/warn-list/"
-    page = utils.get_url(targeturl).text
+    people_page = "https://workforce.alabama.gov/warn-list/"
+    data_page = "https://workforce.alabama.gov/documents/warn-list/"
+
+    session = requests.Session()
+
+    page = session.get(people_page).text
+
+    sleep(random.uniform(2, 4))
+
+    page = session.get(data_page).text
+
     cache.write("al/rawcsv.csv", page)
 
     headers = [
