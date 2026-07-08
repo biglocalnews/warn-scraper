@@ -1,8 +1,11 @@
 import logging
+import random
 import re
 import sys
 from pathlib import Path
+from time import sleep
 
+import niquests as requests
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
@@ -32,22 +35,23 @@ def scrape(
 
     Returns: the Path where the file is written
     """
-    ssl_verify = (
-        True  # Problems with certificates in November 2024; re-enabled March 2026
-    )
-
     # Set up the cache
     cache = Cache(cache_dir)
 
     # Get the root URL
     url = "https://www.twc.texas.gov/data-reports/warn-notice"
     #    pagebin, html = utils.get_with_zyte(url)
-    page = utils.get_url(
-        url,
-        verify=ssl_verify,
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/999.0.0.0 Safari/537.36",
-    )
+    session = requests.Session()
+
+    page = session.get(url)
+
+    #    page = utils.get_url(
+    #        url,
+    #        verify=ssl_verify,
+    #        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/999.0.0.0 Safari/537.36",
+    #    )
     html = page.text
+    sleep(random.uniform(2, 4))
 
     # Cache it
     cache.write("tx/source.html", html)
@@ -86,7 +90,14 @@ def scrape(
         # download the excel file
         year = _get_year(href)
         ext = _get_ext(href)
-        excel_path = cache.download(f"tx/{year}{ext}", data_url, verify=ssl_verify)
+        #        excel_path = cache.download(f"tx/{year}{ext}", data_url, verify=ssl_verify)
+        r = session.get(data_url)
+        excel_path = cache_dir / f"tx/{year}{ext}"
+
+        with open(excel_path, "wb") as outfile:
+            outfile.write(r.content)
+        sleep(random.uniform(2, 4))
+
         # filename = f"tx/{year}{ext}"
         # excelbin, exceltext = utils.get_with_zyte(data_url)
         # excel_path = cache.write_binary(filename, excelbin)
