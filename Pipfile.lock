@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4579fc8ce9a4e9519b6e908178c577bd545c63d3517b0942d07b11f7ad772207"
+            "sha256": "967ad0a91b46396a8fcf4db7b20e7034ae7b2679c463dd79ebc13b84bb944e59"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -148,13 +148,9 @@
             "version": "==1.2.0"
         },
         "camelot-py": {
-            "hashes": [
-                "sha256:d43d88766f7c3462803ff11464e7d3d15a9223e845972de2b61ef7c3f62d3200",
-                "sha256:f4c78dc5eef879040219ee9cb8b0caeab6b95d52128eec96f6e0ae94fdd910fb"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==1.0.9"
+            "git": "git+https://github.com/stucka/camelot-olde.git",
+            "markers": "python_version >= '3.10'",
+            "ref": "a3dc76add5465db9f7296b557294ceed781d476e"
         },
         "certifi": {
             "hashes": [
@@ -789,11 +785,11 @@
                 "utls"
             ],
             "hashes": [
-                "sha256:86281a62314d7395f049d748480589e273dc1f429953afbac377fff142860429",
-                "sha256:dba85ce23ac5052f0a1e1c1cf1c017511a993f906686e8b6c84e0b54818fd1dc"
+                "sha256:55951812cf997963bfef8e4f797ff0460ca571e53ec184039b010e12152c0e41",
+                "sha256:71062880739c94d67aead1f8b7972baad3236b97a55a490493729789d1639fc4"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==3.20.0"
+            "version": "==3.20.1"
         },
         "numpy": {
             "hashes": [
@@ -1069,12 +1065,12 @@
         },
         "pypdf": {
             "hashes": [
-                "sha256:30f67a614d558e495e1fbb157ba58c1de91ffc1718f5e0dfeb82a029233890a1",
-                "sha256:be10a4c54202f46d9daceaa8788be07aa8cd5ea8c25c529c50dd509206382c35"
+                "sha256:3f07891af76dc002657e04993ab9b4de81de29f9013b9761d0b7968bff12e946",
+                "sha256:7873f502fe4385e79539b21d872392dc0c4e3714327c15881cbc7fbfd1f95b25"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==5.9.0"
+            "markers": "python_version >= '3.9'",
+            "version": "==6.14.2"
         },
         "pypdfium2": {
             "hashes": [
@@ -1437,11 +1433,11 @@
                 "utls"
             ],
             "hashes": [
-                "sha256:3161900c00cf41db90dd3d938c1d14960faab475dd6ca0bf5ecd06112327c714",
-                "sha256:803976fe865f03d61d5ddc17dbdbac2bacc08202aad303f282cc4af319ddbfd2"
+                "sha256:dc2d4572ba612be69e3f6db87d1f469b7d08f107e80fd8749081d7e6a5a2fe10",
+                "sha256:fbece0ff51299a213c926897ffbed61d820ab5ef2ba81cece361c049fe2f51a9"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2.22.900"
+            "version": "==2.22.901"
         },
         "utls": {
             "hashes": [
@@ -2976,11 +2972,11 @@
         },
         "python-discovery": {
             "hashes": [
-                "sha256:ad57d7045a862460d4a235986c33f13ed707d3aeb9153fa47eb7dfd0d4673289",
-                "sha256:b6e1e4a7d9e3f6948c39746ffe8218225162d738ba39d05ab1d2f6c1cac4878c"
+                "sha256:5cad33982d412c1f3ffb8f9ca4ea292c9680bca3942451d30b69c37fce53a4a3",
+                "sha256:abebe9120b43453b68c908acfb1e72a19d1a959ed2cb620ad38fc57d08056dbe"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==1.4.3"
+            "version": "==1.4.4"
         },
         "pytokens": {
             "hashes": [

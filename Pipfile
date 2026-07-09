@@ -63,9 +63,9 @@ webdriver-manager = "*"
 xlrd = "*"
 xvfbwrapper = "*"
 opencv-python-headless = "*"
-camelot-py = "==1.0.9"
 pypdf = "*"
 niquests = {extras = ["utls"], version = "*"}
+camelot-py = {git = "git+https://github.com/stucka/camelot-olde.git"}
 
 [requires]
 python_version = "3.14"
