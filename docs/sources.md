@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 39 of America's 56 states and territories.
+There are currently scrapers for 40 of America's 56 states and territories.
 
 | State | Source | Docs | Authors | Tags |
 | :---- | :----: | :--: | :------ | :--- |
@@ -22,6 +22,7 @@ There are currently scrapers for 39 of America's 56 states and territories.
 |[Louisiana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/la.py)|[🔗](https://www.laworks.net/Downloads/Downloads_WFD.asp)||[chriszs](https://github.com/chriszs)|html, pdf|
 |[Maine](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/me.py)|[🔗](https://joblink.maine.gov/search/warn_lookups/new)|[📃](scrapers/me.md)|[zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Maryland](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/md.py)|[🔗](http://www.dllr.state.md.us/employment/warn.shtml)|[📃](scrapers/md.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
+|[Massachusetts](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ma.py)|[🔗](https://www.mass.gov/info-details/worker-adjustment-and-retraining-notification-act-warn-layoff-and-closure-updates)||[riordan](https://github.com/riordan)|csv, excel, historical|
 |[Michigan](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mi.py)|[🔗](https://milmi.org/warn/)||[anikasikka](https://github.com/anikasikka)|html, pdf|
 |[Missouri](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mo.py)|[🔗](https://jobs.mo.gov/content/2022-warn-notices)|[📃](scrapers/mo.md)|[Dilcia19](https://github.com/Dilcia19), [shallotly](https://github.com/shallotly), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Montana](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/mt.py)|[🔗](https://wsd.dli.mt.gov/wioa/related-links/warn-notice-page)||[ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, html|
@@ -47,11 +48,10 @@ There are currently scrapers for 39 of America's 56 states and territories.
 
 ## To do
 
-These 17 areas need a scraper:
+These 16 areas need a scraper:
 
 - Arkansas
 - Hawaii
-- Massachusetts
 - Minnesota
 - Mississippi
 - Nevada
