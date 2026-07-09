@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "967ad0a91b46396a8fcf4db7b20e7034ae7b2679c463dd79ebc13b84bb944e59"
+            "sha256": "35b4a9e0b8cb98bb2a3a9c986b8ebbc416bbf2a60c83c468920956ac1d4ed66b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -148,7 +148,7 @@
             "version": "==1.2.0"
         },
         "camelot-py": {
-            "git": "git+https://github.com/stucka/camelot-olde.git",
+            "git": "git+https://github.com/biglocalnews/camelot-olde.git",
             "markers": "python_version >= '3.10'",
             "ref": "a3dc76add5465db9f7296b557294ceed781d476e"
         },
