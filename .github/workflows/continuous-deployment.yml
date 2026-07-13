@@ -21,7 +21,7 @@ jobs:
 
       - id: pre-commit
         name: Pre-commit
-        uses: pre-commit/action@v3.0.1
+        uses: biglocalnews/pre-commit-action@v4.0.0
 
   test-docs:
     name: Test Sphinx build
