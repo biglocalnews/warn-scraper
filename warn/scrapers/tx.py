@@ -44,6 +44,7 @@ def scrape(
     session = requests.Session()
 
     page = session.get(url)
+    logger.debug(f"Page retrieval with response code {page.status_code}")
 
     #    page = utils.get_url(
     #        url,
