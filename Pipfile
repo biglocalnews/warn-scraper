@@ -64,8 +64,8 @@ xlrd = "*"
 xvfbwrapper = "*"
 opencv-python-headless = "*"
 pypdf = "*"
-niquests = {extras = ["utls"], version = "*"}
 camelot-py = {git = "git+https://github.com/biglocalnews/camelot-olde.git"}
+niquests = {extras = ["utls"], version = "*"}
 
 [requires]
 python_version = "3.14"
