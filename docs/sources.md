@@ -7,6 +7,7 @@ There are currently scrapers for 40 of America's 56 states and territories.
 |[Alabama](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/al.py)|[🔗](https://www.madeinalabama.com/warn-list/)|[📃](scrapers/al.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Alaska](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ak.py)|[🔗](https://jobs.alaska.gov/RR/WARN_notices.htm)||[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|html|
 |[Arizona](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/az.py)|[🔗](https://www.azjobconnection.gov/search/warn_lookups/new)|[📃](scrapers/az.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
+|[Arkansas](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ar.py)|[🔗](https://www.arjoblink.arkansas.gov/search/warn_lookups/new)||[riordan](https://github.com/riordan)|jobcenter|
 |[California](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ca.py)|[🔗](https://edd.ca.gov/en/Jobs_and_Training/Layoff_Services_WARN)|[📃](scrapers/ca.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, html, pdf|
 |[Colorado](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/co.py)|[🔗](https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list)|[📃](scrapers/co.md)|[anikasikka](https://github.com/anikasikka)|html|
 |[Connecticut](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ct.py)|[🔗](https://www.ctdol.state.ct.us/progsupt/bussrvce/warnreports/warnreports.htm)||[Dilcia19](https://github.com/Dilcia19), [stucka](https://github.com/stucka), [zstumgoren](https://github.com/zstumgoren)|html|
@@ -50,7 +51,6 @@ There are currently scrapers for 40 of America's 56 states and territories.
 
 These 16 areas need a scraper:
 
-- Arkansas
 - Hawaii
 - Massachusetts
 - Minnesota
