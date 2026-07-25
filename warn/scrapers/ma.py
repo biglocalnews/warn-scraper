@@ -122,12 +122,14 @@ def _find_source_links(soup: BeautifulSoup) -> tuple:
     for link in soup.find_all("a", href=True):
         href = link["href"]
         lower = href.lower()
+        if "http" not in lower:
+            href = urljoin(BASE_URL, href)
         # Fiscal-year workbooks live at /doc/fyNN-warn-report.../download
         if "/doc/" in lower and "warn-report" in lower:
-            excel_urls.add(urljoin(BASE_URL, href))
+            excel_urls.add(href)
         # The weekly feed is a WARN Report CSV under /files/
         elif lower.endswith(".csv") and "warn" in lower:
-            csv_urls.add(urljoin(BASE_URL, href))
+            csv_urls.add(href)
     return sorted(excel_urls), sorted(csv_urls)
 
 
