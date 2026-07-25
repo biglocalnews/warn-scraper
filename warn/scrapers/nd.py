@@ -48,7 +48,7 @@ def scrape(
         for page_index, page in enumerate(pdf.pages):
             rows = page.extract_table() or []
 
-            for rowindex, row in enumerate(rows):
+            for row in rows:
                 # Standardize each cell
                 output_row = [_clean_text(cell) for cell in row]
 
@@ -65,9 +65,6 @@ def scrape(
                         continue
                     header_written = True
 
-                if rowindex > 0:  # If not a header row
-                    if output_row[1].endswith(", ND"):
-                        output_row[1] = output_row[1][:-4]
                 output_rows.append(output_row)
 
     # Write out to CSV

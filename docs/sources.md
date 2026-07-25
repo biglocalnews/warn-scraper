@@ -1,6 +1,6 @@
 # Sources
 
-There are currently scrapers for 39 of America's 56 states and territories.
+There are currently scrapers for 40 of America's 56 states and territories.
 
 | State | Source | Docs | Authors | Tags |
 | :---- | :----: | :--: | :------ | :--- |
@@ -29,6 +29,7 @@ There are currently scrapers for 39 of America's 56 states and territories.
 |[New Jersey](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/nj.py)|[🔗](https://www.nj.gov/labor/employer-services/warn/)||[Dilcia19](https://github.com/Dilcia19), [palewire](https://github.com/palewire), [zstumgoren](https://github.com/zstumgoren)|html|
 |[New Mexico](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/nm.py)|[🔗](https://www.dws.state.nm.us/Rapid-Response)||[chriszs](https://github.com/chriszs)|pdf|
 |[New York](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ny.py)|[🔗](https://dol.ny.gov/warn-notices)|[📃](scrapers/ny.md)|[Dilcia19](https://github.com/Dilcia19), [palewire](https://github.com/palewire), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, historical|
+|[North Dakota](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/nd.py)|[🔗](https://www.jobsnd.com/documents)||[riordan](https://github.com/riordan)|pdf|
 |[Ohio](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/oh.py)|[🔗](https://jfs.ohio.gov/warn/index.stm)||[Dilcia19](https://github.com/Dilcia19), [chriszs](https://github.com/chriszs), [zstumgoren](https://github.com/zstumgoren)|html, pdf|
 |[Oklahoma](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/ok.py)|[🔗](https://okjobmatch.com/search/warn_lookups/new)|[📃](scrapers/ok.md)|[Dilcia19](https://github.com/Dilcia19), [zstumgoren](https://github.com/zstumgoren)|jobcenter|
 |[Oregon](https://github.com/biglocalnews/warn-scraper/blob/main/warn/scrapers/or.py)|[🔗](https://ccwd.hecc.oregon.gov/Layoff/WARN)|[📃](scrapers/or.md)|[Dilcia19](https://github.com/Dilcia19), [ydoc5212](https://github.com/ydoc5212), [zstumgoren](https://github.com/zstumgoren)|excel, historical|
@@ -47,7 +48,7 @@ There are currently scrapers for 39 of America's 56 states and territories.
 
 ## To do
 
-These 17 areas need a scraper:
+These 16 areas need a scraper:
 
 - Arkansas
 - Hawaii
@@ -57,7 +58,6 @@ These 17 areas need a scraper:
 - Nevada
 - New Hampshire
 - North Carolina
-- North Dakota
 - Pennsylvania
 - West Virginia
 - Wyoming
