@@ -4,7 +4,7 @@ import re
 from io import StringIO
 from pathlib import Path
 
-import requests
+import niquests as requests  # Avoid some detection schemes
 
 from .. import utils
 from ..cache import Cache
@@ -48,7 +48,12 @@ def scrape(
     cache.write("oh/index.html", r.text)
     logger.debug("Attempting to get CSV link from Ohio file")
     html = r.text
-    csv_url = re.findall(r"(\\\"csvUrl\\\":\\\")(.*?)(\\\")", html)[0][1]
+    try:
+        csv_url = re.findall(r"(\\\"csvUrl\\\":\\\")(.*?)(\\\")", html)[0][1]
+    except IndexError:
+        logger.debug(f"csvUrl not found. Response code: {r.status_code}")
+        logger.error(html)
+
     logger.debug(f"CSV link found at {csv_url}")
     r = requests.get(csv_url, headers=headers)
     cache.write("oh/rawdata.csv", r.text)
