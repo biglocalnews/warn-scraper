@@ -281,8 +281,9 @@ def write_disparate_dict_rows_to_csv(
             if item not in headers and item not in headerextras:
                 prefixhere = False
                 for prefix in prefixes:
-                    if item.startswith(prefix):
-                        prefixhere = True
+                    if item:
+                        if item.startswith(prefix):
+                            prefixhere = True
                 if prefixhere:
                     headerextras.append(item)
                 else:
