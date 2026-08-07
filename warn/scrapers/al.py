@@ -56,10 +56,9 @@ def scrape(
 
     page = session.get(data_page).text
 
-    if "sans-serif;" in page:
-        logger.error("Scraper failed on 'sans-serif;'")
-    elif "<title>" in page:
-        logger.error("Scraper failed on finding <title>")
+    if "sans-serif;" in page or "<title>" in page:
+        logger.error("Scraper failed")
+        assert "scraper" == "working"
 
     cache.write("al/rawcsv.csv", page)
 
