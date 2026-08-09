@@ -49,7 +49,8 @@ def scrape(
         subpageurl = href
         if usegooglecache:
             subpageurl = cacheprefix + quote(subpageurl)
-        subpageurls.append(subpageurl)
+        if "email-protection" not in subpageurl:
+            subpageurls.append(subpageurl)
 
     masterlist = []
     headers = ["Company", "Date", "PDF url", "location", "jobs"]
