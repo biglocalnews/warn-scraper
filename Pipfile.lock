@@ -1212,12 +1212,12 @@
         },
         "pypdf": {
             "hashes": [
-                "sha256:595647f6191de6f402cfde1d0c455d6cbccbd509aac32b34783009c032de5d6e",
-                "sha256:c8b09a59399062fb45a1b8156c18a787a10a3dae03ac9674397a226712c94604"
+                "sha256:7e5d6e730e7dae87d560a2cee218b852f6498c8be61966f3cd02ead971e48d14",
+                "sha256:bbc43aca292369ccc6cbc8a921991ecf2538a3587ab5a116eff06c321d647155"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==6.16.2"
+            "version": "==6.19.0"
         },
         "pypdfium2": {
             "hashes": [
