@@ -45,6 +45,9 @@ def scrape(
 
     if not success:  # If we don't have a file for a new year
         targetfile = cache_dir / f"dc/{current_year - 1}.html"
+        logger.warn(
+            f"Could not find a file for {current_year} -- do we have a bad URL?"
+        )
         url = f"https://does.dc.gov/page/industry-closings-and-layoffs-warn-notifications-{current_year - 1}"
         success, content = utils.save_if_good_url(targetfile, url)
 
@@ -62,12 +65,14 @@ def scrape(
 
     # Parse the list of links
     soup = BeautifulSoup(root_html, "html5lib")
-    table_list = soup.find_all("div", {"class": "field-items"})
+    # table_list = soup.find_all("div", {"class": "field-items"})
+    table_list = soup.find_all("div", {"class": "field-item"})
     assert len(table_list) > 0
 
     # Grab all the links
     link_table = table_list[0]
     link_lookup = {_extract_year(a.string): a["href"] for a in link_table.find_all("a")}
+    logger.debug(f"{link_lookup}")
 
     # As documented in #238, the page for 2014 is missing. We're
     # testing whether the URL for the 2019 page is the same as the
