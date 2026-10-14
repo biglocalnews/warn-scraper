@@ -55,7 +55,7 @@ def scrape(
     cache = Cache(cache_dir)  # ~/.warn-scraper/cache
     session = niquests.Session()
     url = "https://floridajobs.org/workforce-resources/worker-adjustment-and-retraining-notification-(warn)"
-    response = session.get(url)
+    response = session.get(url, impersonate="chrome")
     logger.debug(f"Request status is {response.status_code} for {url}")
     html = response.text
     details = pq(html)("div.contact-details")
@@ -122,7 +122,7 @@ def _scrape_html(cache, url, session, page=1):
             raise FileNotFoundError
     except FileNotFoundError:
         # scrape & cache html
-        response = session.get(url)
+        response = session.get(url, impersonate="chrome")
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         page_text = response.text
@@ -182,7 +182,7 @@ def _scrape_pdf(cache, cache_dir, url, session):
     download = ""
     # download pdf if not in the cache
     if not exists(pdf_cache_key):
-        response = session.get(url)
+        response = session.get(url, impersonate="chrome")
         logger.debug(f"Request status is {response.status_code} for {url}")
         response.raise_for_status()
         # download & cache pdf
