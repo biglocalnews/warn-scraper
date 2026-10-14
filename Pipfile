@@ -65,7 +65,7 @@ xvfbwrapper = "*"
 opencv-python-headless = "*"
 pypdf = "*"
 camelot-py = {git = "git+https://github.com/biglocalnews/camelot-olde.git"}
-niquests = {extras = ["utls"], version = "*"}
+niquests = {extras = ["utls", "http3"], version = "*"}
 
 [requires]
 python_version = "3.14"
