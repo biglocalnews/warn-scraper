@@ -9,7 +9,7 @@ authors = [
   { name = "Big Local News", email = "biglocalnews@stanford.edu" }
 ]
 readme = "README.md"
-# requires-python = ">=3.10"
+requires-python = ">=3.10"
 keywords = ["WARN Act", "scrapers", "WARN Act data", "WARN Act scrapers"]
 license = "Apache-2.0"
 classifiers = [
@@ -20,10 +20,12 @@ dependencies = [
   "click",
   "beautifulsoup4",
   "html5lib",
+  "niquests[utls,http3]",
   "pdfplumber",
   "requests",
   "openpyxl",
   "pyopenssl",
+  "pyquery>=2.0.1",
   "retry2",
   "selenium",
   "stealthenium",
