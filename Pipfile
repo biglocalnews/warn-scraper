@@ -68,7 +68,7 @@ camelot-py = {git = "git+https://github.com/biglocalnews/camelot-olde.git"}
 niquests = {extras = ["utls", "http3"], version = "*"}
 
 [requires]
-python_version = "3.14"
+python_version = "3.15"
 
 [pipenv]
 allow_prereleases = false

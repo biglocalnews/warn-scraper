@@ -17,7 +17,7 @@ jobs:
         name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: '3.15'
 
       - id: pre-commit
         name: Pre-commit
@@ -35,7 +35,7 @@ jobs:
         name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: '3.15'
           cache: 'pipenv'
 
       - id: install-pipenv
@@ -114,12 +114,13 @@ jobs:
         name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: '3.15'
           cache: 'pipenv'
 
       - id: install-pipenv
         name: Install pipenv
-        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+        run: pip install --user pipenv
+        # run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
         shell: bash
 
       - id: install-python-dependencies
@@ -153,7 +154,7 @@ jobs:
         name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: '3.15'
 
       - id: fetch
         name: Fetch artifact
