@@ -1171,14 +1171,6 @@
             "markers": "python_version >= '3.10'",
             "version": "==3.1.0"
         },
-        "pdfminer.six": {
-            "hashes": [
-                "sha256:366585ba97e80dffa8f00cebe303d2f381884d8637af4ce422f1df3ef38111a9",
-                "sha256:96bfd431e3577a55a0efd25676968ca4ce8fd5b53f14565f85716ff363889602"
-            ],
-            "markers": "python_version >= '3.10'",
-            "version": "==20260107"
-        },
         "pdfplumber": {
             "hashes": [
                 "sha256:7741ea81bf165b474b153e6789d10d18e06b6ddcf3ec84289c3ef2fed6802580",
@@ -1296,12 +1288,12 @@
         },
         "pypdf": {
             "hashes": [
-                "sha256:0a3e1c5c886a1be03646c16a04827cc166c2a0575c971b26a4bf89686551c2d4",
-                "sha256:1d44d1a3a200f25062adff0085b02040e4646431ac2ccac22e42679e91466084"
+                "sha256:33e4fb41ca352810eb4e9838aa0d82d6888a5f8bf682f43e99cce5faa666255c",
+                "sha256:c8817e3f888d47a087872ded69812c1ef30cacb871d6e053e0c00bbaf0bc2163"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==6.21.2"
+            "version": "==6.21.4"
         },
         "pypdfium2": {
             "hashes": [
