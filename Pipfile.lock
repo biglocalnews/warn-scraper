@@ -1171,14 +1171,6 @@
             "markers": "python_version >= '3.10'",
             "version": "==3.1.0"
         },
-        "pdfminer.six": {
-            "hashes": [
-                "sha256:366585ba97e80dffa8f00cebe303d2f381884d8637af4ce422f1df3ef38111a9",
-                "sha256:96bfd431e3577a55a0efd25676968ca4ce8fd5b53f14565f85716ff363889602"
-            ],
-            "markers": "python_version >= '3.10'",
-            "version": "==20260107"
-        },
         "pdfplumber": {
             "hashes": [
                 "sha256:7741ea81bf165b474b153e6789d10d18e06b6ddcf3ec84289c3ef2fed6802580",
@@ -1555,11 +1547,12 @@
         },
         "soupsieve": {
             "hashes": [
-                "sha256:8412826614f9c632227067d0985aeb9f584bd15efc852955430e097a9fe7afbf",
-                "sha256:924fab84ae21604c19e175e1f39815eb6fa83ba23836e09e9de180925e5bc4c0"
+                "sha256:5e7494bfce90e06676cfb4c5c2cf22243e98e5cf24646bb1ecdda46d318550a0",
+                "sha256:ccd6470b256394ac44b08b86fd94b30a17d335a5335c8a3d15565f7b03d3c8cf"
             ],
+            "index": "pypi",
             "markers": "python_full_version >= '3.11.5'",
-            "version": "==3.0.4"
+            "version": "==4.0"
         },
         "stealthenium": {
             "hashes": [
